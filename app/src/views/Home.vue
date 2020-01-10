@@ -15,7 +15,7 @@
           >
             <img src="@/assets/logo.png" alt="Vuetify.js" height="200">
             <h1 class="white--text mb-2 display-1 text-center">Buana Paksa Indonesia</h1>
-            <div class="subheading mb-4 text-center">Powered by Vuetify</div>
+            <div class="subheading mb-4 text-center"></div>
             <v-btn
               class="mt-12"
               color="orange darken-2"
@@ -108,9 +108,9 @@
               color="orange darken-2"
               dark
               large
-              href="/pre-made-themes"
+              href="http://retail.buanapaksa.com"
             >
-              Get Started
+              Lihat Katalog
             </v-btn>
           </v-layout>
         </v-parallax>
