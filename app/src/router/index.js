@@ -18,7 +18,7 @@ const routes = [
     component: Try
   },
   {
-    path: '/home',
+    path: '/',
     component: Home
   },
   {
