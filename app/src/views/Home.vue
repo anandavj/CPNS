@@ -21,9 +21,9 @@
               color="orange darken-2"
               dark
               large
-              href="/pre-made-themes"
+              href="http://retail.buanapaksa.com"
             >
-              Get Started
+              Lihat Katalog
             </v-btn>
           </v-layout>
         </v-parallax>
@@ -99,7 +99,31 @@
       </section>
 
       <section>
-        <v-parallax src="@/assets/home-bg.jpg" height="380">
+       
+  <v-carousel
+    cycle
+    height="400"
+    hide-delimiter-background
+    show-arrows-on-hover
+  >
+  
+    <v-carousel-item
+      v-for="(item, i) in items"
+      :key="i"
+      :src="item.src"
+    >
+    
+      <!-- <v-sheet
+        :item="items[i]"
+        height="100%"
+        
+      >
+      
+      
+      </v-sheet> -->
+    </v-carousel-item>
+  </v-carousel>
+        <!-- <v-parallax src="@/assets/home-bg.jpg" height="380">
           <v-layout column align-center justify-center>
             <div class="headline white--text mb-4 text-center">Web development has never been easier</div>
             <em>Kick-start your application today</em>
@@ -113,7 +137,7 @@
               Lihat Katalog
             </v-btn>
           </v-layout>
-        </v-parallax>
+        </v-parallax> -->
       </section>
 
       <section>
@@ -177,10 +201,11 @@
         <v-layout row wrap align-center>
           <v-flex xs12>
             <div class="white--text ml-4">
-              Made with
-              <v-icon class="red--text">mdi-heart</v-icon>
+              
+              Buana Paksa Indonesia ©{{ new Date().getFullYear() }}
+              <!-- <v-icon class="red--text">mdi-heart</v-icon>
               by <a class="white--text" href="https://vuetifyjs.com" target="_blank">Vuetify</a>
-              and <a class="white--text" href="https://github.com/vwxyzjn">Costa Huang</a>
+              and <a class="white--text" href="https://github.com/vwxyzjn">Costa Huang</a> -->
             </div>
           </v-flex>
         </v-layout>
@@ -192,6 +217,36 @@
 <script>
 export default {
     name: "Home",
+    data() {
+        return {
+          items: [
+          {
+            src: 'https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg',
+          },
+          {
+            src: 'https://cdn.vuetifyjs.com/images/carousel/sky.jpg',
+          },
+          {
+            src: 'https://cdn.vuetifyjs.com/images/carousel/bird.jpg',
+          },
+          {
+            src: 'https://cdn.vuetifyjs.com/images/carousel/planet.jpg',
+          },
+        ],
+        slides: [
+          'First',
+          'Second',
+          'Third',
+          'Fourth',
+          'Fifth',
+        ],
+        }
+    },
+    methods:{
+        getYear(){
+            return Date().getFullYear();
+        }
+    },
     components: {},
     props: {}
 
@@ -199,7 +254,5 @@ export default {
 </script>
 
 <style>
-    .bgimg{
-        /* filter: brightness(30%); */
-    }
+    
 </style>
