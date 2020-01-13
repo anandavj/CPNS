@@ -1,42 +1,55 @@
-<template>  
+<template>
+  <v-app id="inspire">
+    <v-navigation-drawer show-md-and-up color="primary" dark
+      v-model="drawer"
+      app
+      clipped
+    >
+      <v-list dense
+      v-for="x in 10"
+      :key="x">
+        <v-list-item link>
+          <v-list-item-action>
+            <v-icon>mdi-view-dashboard</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Kategori {{ x }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+
+      </v-list>
+    </v-navigation-drawer>
   <div>
-    <v-toolbar color="orange darken-3" dark height="80px">
-      <v-app-bar-nav-icon></v-app-bar-nav-icon>
 
+    <v-app-bar
+      app
+      clipped-left
+      color="primary"
+      dark
+    >
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title>Buana Paksa Indonesia</v-toolbar-title>
-
-      <v-spacer></v-spacer>
-
-      <v-btn icon>
-        <v-icon>mdi-magnify</v-icon>
-      </v-btn>
-
-      <v-btn icon>
-        <v-icon>mdi-heart</v-icon>
-      </v-btn>
-
-      <v-btn icon>
-        <v-icon>mdi-dots-vertical</v-icon>
-      </v-btn>
-    </v-toolbar>
+    </v-app-bar>
   </div>
+   
+
+   
+    <v-footer app>
+      <span>&copy; 2019</span>
+    </v-footer>
+  </v-app>
 </template>
 
-
 <script>
-export default {
-  name: "Toolbar",
-  props: {
-    source: String
-  },
-
-  components: {},
-  methods: {}
-};
+  export default {
+    props: {
+      source: String,
+    },
+    data: () => ({
+      drawer: null,
+    }),
+    created () {
+      this.$vuetify.theme.dark = false
+    },
+  }
 </script>
-
-<style>
-/* .v-navigation-drawer_content{
-      background-color: skyblue;
-  } */
-</style>>

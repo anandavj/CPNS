@@ -1,22 +1,31 @@
 <template>
   <v-app>
-      
-        <router-view></router-view>
-      
+    <v-layout>
+    <Toolbar />
+
+    <v-content absolute>
+      <router-view></router-view>
+    </v-content>
+    </v-layout>
+
+    <!-- </v-layout> -->
   </v-app>
 </template>
 
 <script>
-// import Toolbar from '@/components/Toolbar'
+import Toolbar from "@/components/Toolbar";
+import "@/store/index.js";
+
 export default {
-  name: 'App',
+  name: "App",
 
   components: {
-    // Toolbar
+    Toolbar
+    
   },
 
   data: () => ({
     //
-  }),
+  })
 };
 </script>

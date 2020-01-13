@@ -1,16 +1,16 @@
 <template>
   <v-app>
-      <v-col-12 color="#fff222">boi</v-col-12>
-
+    <v-row no-gutters>
+      <v-col sm="2" >
+        <v-card
+          class="pa-2"
+          outlined
+          tile
+        >
+          Level 1: .col-sm-9
+        </v-card>
+       
+      </v-col>
+    </v-row>
   </v-app>
 </template>
-
-<script>
-export default {
-    name:"Grid"
-}
-</script>
-
-<style>
-
-</style>

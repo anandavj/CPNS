@@ -1,50 +1,29 @@
 <template>
   <v-app>
-    
-    <v-col class="pa-0">
-
-    <v-col class="ma-0 pa-0"><Toolbar/></v-col>
-     <v-col>
-       <v-row no-gutters
-        v-for="n in 4"
-        :key="n"
-        class=ma-0>
-        <v-col
-        v-for="k in 4"
-        :key="k"
-          >
-        <v-card
-          class="pa-2 ma-0"
-          outlined
-          tile
-        >
-          boi
+    <v-layout row wrap class="pa-10">
+      <v-flex 
+      v-for="n in 20"
+      :key="n"
+      xs6 md4 lg3 xl2 color="primary">
+        <v-card class="ma-2">
+        <v-img src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg" :aspect-ratio="1/1"></v-img>
+        <v-card-title primary-title>
+          Nama Barang
+        </v-card-title>
+        
         </v-card>
-        </v-col>
-        </v-row> 
-        </v-col>
-    </v-col>
+      </v-flex>
+    </v-layout>
     
-
   </v-app>
 </template>
 
-
 <script>
-import Toolbar from '@/components/Toolbar'
 export default {
-  name: "Try",
-  props: {
-    source: String
-  },
 
-  components: {Toolbar},
-  methods: {}
-};
+}
 </script>
 
 <style>
-  .cont{
-    margin:0px;
-  }
-</style>>
+
+</style>
