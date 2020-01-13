@@ -6,7 +6,7 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/login',
-    name: 'login',
+    name: 'Login',
     component: () => import('../views/Login.vue'),
     meta: {
       drawer:false
@@ -14,8 +14,16 @@ const routes = [
   },
   {
     path: '/dashboard',
-    name: 'dashboard',
+    name: 'Dashboard',
     component: () => import('../views/Dashboard.vue'),
+    meta: {
+      drawer: true
+    }
+  },
+  {
+    path:'/karyawan',
+    name:'Karyawan',
+    component: () => import('../views/Karyawan.vue'),
     meta: {
       drawer: true
     }
