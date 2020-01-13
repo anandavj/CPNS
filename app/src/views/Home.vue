@@ -18,7 +18,7 @@
             <div class="subheading mb-4 text-center"></div>
             <v-btn
               class="mt-12"
-              color="orange darken-2"
+              color="primary"
               dark
               large
               href="http://retail.buanapaksa.com"
@@ -129,7 +129,7 @@
             <em>Kick-start your application today</em>
             <v-btn
               class="mt-12"
-              color="orange darken-2"
+              color="primary"
               dark
               large
               href="http://retail.buanapaksa.com"
@@ -197,7 +197,7 @@
         </v-container>
       </section>
 
-      <v-footer color="orange darken-2">
+      <v-footer color="primary">
         <v-layout row wrap align-center>
           <v-flex xs12>
             <div class="white--text ml-4">
