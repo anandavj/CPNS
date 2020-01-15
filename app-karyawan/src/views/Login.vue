@@ -58,7 +58,6 @@ export default {
         signIn() {
             firebase.auth().signInWithEmailAndPassword(this.email,this.password)
                 .then( () => {
-                    this.$route.meta.drawer = true
                     this.$router.push('dashboard')
                 })
                 .catch( (err) => {
