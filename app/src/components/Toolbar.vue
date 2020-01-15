@@ -35,7 +35,7 @@
 
    
     <v-footer app>
-      <span>&copy; 2019</span>
+      <span>&copy; {{ new Date().getFullYear() }}</span>
     </v-footer>
   </v-app>
 </template>
@@ -46,7 +46,8 @@
       source: String,
     },
     data: () => ({
-      drawer: null,
+        drawer: null,
+        
     }),
     created () {
       this.$vuetify.theme.dark = false

@@ -15,10 +15,12 @@
         </v-flex>-->
       </v-layout>
     </v-toolbar>
-    <v-layout row wrap justify-center hidden-sm-and-down>
-      <v-card color="primary" dark raised width="700px" class="ma-4" height="550px">
-        <v-img src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg" height="550px"></v-img>
-      </v-card>
+    <v-layout row wrap justify-center>
+      <v-flex xs6>
+        <v-card color="primary" dark raised class="ma-2">
+          <v-img src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg" height="550px"></v-img>
+        </v-card>
+      </v-flex>
       <v-card color="white" dark flat width="700" class="ma-4" height="550px">
         <v-layout row wrap justify-center>
           <v-card v-for="i in 4" :key="i" color="primary" dark raised width="260px" class="ma-3">
