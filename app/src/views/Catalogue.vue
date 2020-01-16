@@ -47,7 +47,7 @@
     </v-layout>
 
     <!-- horizontal-scroll-wrapper -->
-    <v-layout row wrap class="ma-0 mb-2">
+    <v-layout row wrap class="ma-0 mb-2 hidden-md-and-up">
       <v-flex xs2 mt-2>
         <v-btn color="primary" text>
           <v-layout column>
@@ -74,17 +74,35 @@
         </div>
       </v-flex>
     </v-layout>
-    
+
     <!-- Product Card Contents -->
     <v-layout row wrap justify-space-around class="ma-3">
-      <v-flex xs6 md3 lg-3 v-for="i in 12" :key="i">
-        <v-card outlined class="ma-1">
-          <v-img src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg" class="card-image"></v-img>
-          <v-card-title>Nama Barang</v-card-title>
-          <v-card-actions>
-            <v-btn outlined justify-end color="indigo" dark>Lihat Detail</v-btn>
-          </v-card-actions>
-        </v-card>
+      <v-flex xs6 md3 lg-3 v-for="i in 12" :key="i" class="product-card">
+    
+          <v-card @mouseover="show = !show" @mouseleave="show = !show" :loading="loading" class="mx-auto my-12" max-width="374">
+            <v-img src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg"></v-img>
+
+            <v-card-title>Nama Barang</v-card-title>
+            <v-card-actions>
+              <v-btn color="indigo" text >
+                Deskripsi
+                <v-spacer></v-spacer>
+                <v-icon>mdi-chevron-down</v-icon>
+              </v-btn>
+            </v-card-actions>
+            <v-divider class="mx-4"></v-divider>
+            <v-expand-transition>
+              <div v-show="show">
+                <v-divider></v-divider>
+
+                <v-card-text>I'm a thing. But, like most politicians, he promised more than he could deliver. You won't have time for sleeping, soldier, not with all the bed making you'll be doing. Then we'll go with that data file! Hey, you add a one and two zeros to that or we walk! You're going to do his laundry? I've got to find a way to escape.</v-card-text>
+              </div>
+            </v-expand-transition>
+            <v-card-actions>
+              <v-btn color="deep-purple accent-4" text>Lihat Selengkapnya</v-btn>
+            </v-card-actions>
+          </v-card>
+    
       </v-flex>
     </v-layout>
   </v-layout>
@@ -99,8 +117,11 @@ export default {
         "https://cdn.vuetifyjs.com/images/carousel/sky.jpg",
         "https://cdn.vuetifyjs.com/images/carousel/bird.jpg",
         "https://cdn.vuetifyjs.com/images/carousel/planet.jpg"
-      ]
+      ],
+      
+      show: false
     };
+    
   },
   props: {
     source: String
@@ -109,8 +130,8 @@ export default {
 
   components: {},
   methods: {
-    showNavbar() {
-      return this.$store.state.UI.showNavbar;
+    showDescription() {
+      this.show = !this.show;
     }
   }
 };
@@ -132,5 +153,12 @@ div.scrollmenu {
 
 .category-caption {
   font-size: 6pt;
+}
+.product-card {
+  transition: all 0.2s ease-in-out;
+}
+.product-card:hover {
+  transform: scale(1.2);
+  z-index: 1;
 }
 </style>
