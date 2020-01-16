@@ -27,14 +27,17 @@
       color="primary"
       dark
     >
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
+      <!-- <v-col hidden-sm-and-up>  -->
+        
+      <v-app-bar-nav-icon  class="hidden-sm-and-down" @click.stop="drawer = !drawer" />
+      <!-- </v-col> -->
       <v-toolbar-title>Buana Paksa Indonesia</v-toolbar-title>
     </v-app-bar>
   </div>
    
 
    
-    <v-footer app>
+    <v-footer app color="primary" dark>
       <span>&copy; {{ new Date().getFullYear() }}</span>
     </v-footer>
   </v-app>
