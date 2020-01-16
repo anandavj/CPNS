@@ -35,6 +35,14 @@ const routes = [
     meta: {
       drawer: true
     }
+  },
+  {
+    path:'/baranginout',
+    name:'BarangInOut',
+    component: () => import('../views/BarangMasukKeluar.vue'),
+    meta: {
+      drawer: true
+    }
   }
 ]
 

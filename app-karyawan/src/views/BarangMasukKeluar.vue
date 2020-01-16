@@ -1,0 +1,139 @@
+<template>
+    <v-app>
+        <h1 class="text-center font-weight-thin">Stock Update List</h1>
+        <v-container  class="mt-n3">
+            <v-dialog v-model="popUpModal" persistent max-width='600px'>
+                <template v-slot:activator="{ on }">
+                    <v-row justify="center" v-if="items.length == 0">
+                        <v-col lg="11">
+                            <v-card outlined class="text-center" v-on="on" color="light-green">
+                                <v-card-text class="white--text"><v-icon class="white--text">mdi-plus</v-icon>Tambah List</v-card-text>
+                            </v-card>
+                        </v-col>
+                    </v-row>
+                    <v-row justify="end" v-else>
+                        <v-col cols="5">
+                            <v-btn block v-on="on" color="light-green" class="white--text">
+                                <v-icon>mdi-plus</v-icon>Tambah
+                            </v-btn>
+                        </v-col>
+                    </v-row>
+                </template>
+                <v-card>
+                    <v-card-title>Tambah List</v-card-title>
+                    <v-card-text>
+                        <v-container>
+                            <v-row>
+                                <v-col cols="12">
+                                    <v-text-field v-model="editableItem.nama" label="Nama Barang" required/>
+                                </v-col>
+                                <v-col cols="12">
+                                    <v-radio-group v-model="editableItem.status" row label="Status:">
+                                        <v-radio label="Masuk" value="masuk"/>
+                                        <v-radio label="Keluar" value="keluar"/>
+                                    </v-radio-group>
+                                </v-col>
+                                <v-col cols="12">
+                                    <v-text-field v-model="editableItem.jumlah" label="Jumlah" required/>
+                                </v-col>
+                                <v-col cols="12">
+                                    <v-textarea v-model="editableItem.keterangan" outlined label="Keterangan"></v-textarea>
+                                </v-col>
+                            </v-row>
+                        </v-container>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-container>
+                            <v-row justify="center">
+                                <v-btn class="mt-n12" color="red darken-1" text @click="close">Close</v-btn>
+                                <v-btn class="mt-n12" color="blue darken-1" text @click="save">Save</v-btn>
+                            </v-row>
+                        </v-container>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+        </v-container>
+        <v-container v-if="items.length > 0" class="mt-n5">
+            <v-row justify="center">
+                <v-col lg="11">
+                    <v-data-table :headers="headers" :items="items" disable-sort="true" disable-filtering="true" hide-default-footer="true">
+                        <template v-slot:item.actions="{ item }">
+                            <v-icon class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
+                            <v-icon @click="deleteItem(item)">mdi-delete</v-icon>
+                        </template>
+                    </v-data-table>
+                </v-col>
+            </v-row>
+        </v-container>
+        <v-container v-if="items.length > 0">
+            <v-row justify="end">
+                <v-col cols="5">
+                    <v-btn></v-btn>
+                </v-col>
+                <v-col cols="5">
+
+                </v-col>
+            </v-row>
+        </v-container>
+    </v-app>
+</template>
+
+<script>
+export default {
+    name:'BarangMasukKeluar',
+    data() {
+        return {
+            headers: [
+                {text:'Nama',   value:'nama', width: '60%'},
+                {text:'Status', value:'status'},
+                {text:'Jumlah', value:'jumlah'},
+                {text:'',       value:'actions', width: '10%'}
+            ],
+            items: [],
+            editableItem: {
+                nama:'',
+                status:'',
+                jumlah:'',
+                keterangan:''
+            },
+            defaultItem: {
+                nama:'',
+                status:'',
+                jumlah:'',
+                keterangan:''
+            },
+            popUpModal: false,
+            editedIndex: -1
+        }
+    },
+    methods: {
+        save() {
+            if(this.editedIndex > -1) {
+                Object.assign(this.items[this.editedIndex],this.editableItem)
+            } else {
+                this.items.push(this.editableItem)
+            }
+            this.close()
+        },
+        close() {
+            this.popUpModal = false
+            setTimeout(() => {
+                this.editableItem = Object.assign({}, this.defaultItem)
+                this.editedIndex = -1
+            }, 300)
+        },
+        editItem(item) {
+            this.editedIndex = this.items.indexOf(item)
+            this.editableItem = Object.assign({}, item)
+            this.popUpModal = true
+        },
+        deleteItem(item) {
+            const index = this.items.indexOf(item)
+            confirm('Apakah Anda yakin ingin menghapus item ini?') && this.items.splice(index, 1)
+        },
+        updateStock() {
+
+        }
+    }
+}
+</script>

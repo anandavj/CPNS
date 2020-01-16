@@ -6,10 +6,14 @@
                 solo
                 clearable
                 append-icon="mdi-magnify"
+                v-model="search"
             />
             <v-data-table
                 :headers="headers"
                 :items="barang"
+                :search="search"
+                disable-filtering="true"
+                hide-default-footer="true"
             >                
             </v-data-table>
         </div>
@@ -31,7 +35,8 @@ export default {
             barang: [
                 {no:1, namaBarang:'Paku', harga:50000, stock:20, satuan:'kotak'},
                 {no:2, namaBarang:'Balok', harga:2000, stock:20, satuan:'meter persegi'}                
-            ]
+            ],
+            search: ''
         }
     }
 }

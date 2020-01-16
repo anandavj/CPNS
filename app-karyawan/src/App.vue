@@ -20,11 +20,11 @@
       <v-list dense>
           <v-list-item link>
             <v-list-item-icon><v-icon>mdi-home-variant</v-icon></v-list-item-icon>
-            <v-list-item-title @click="goTo('dashboard')">Dashboard</v-list-item-title>
+            <v-list-item-title @click="goTo('Dashboard')">Dashboard</v-list-item-title>
           </v-list-item>
           <v-list-group prepend-icon="mdi-account-group" no-action>
             <template v-slot:activator><v-list-item-content><v-list-item-title>Karyawan</v-list-item-title></v-list-item-content></template>
-            <v-list-item link class="caption" @click="goTo('karyawan')">
+            <v-list-item link class="caption" @click="goTo('Karyawan')">
               <v-list-item-title>Lihat Karyawan</v-list-item-title>
               <v-list-item-icon><v-icon>mdi-account-group</v-icon></v-list-item-icon>
             </v-list-item>
@@ -35,17 +35,20 @@
           </v-list-group>
           <v-list-group prepend-icon="mdi-cube-outline" no-action>
             <template v-slot:activator><v-list-item-content><v-list-item-title>Barang</v-list-item-title></v-list-item-content></template>
-            <v-list-item link class="caption" @click="goTo('barang')">
+            <v-list-item link class="caption" @click="goTo('Barang')">
               <v-list-item-title>Lihat Barang</v-list-item-title>
               <v-list-item-icon><v-icon>mdi-cube-outline</v-icon></v-list-item-icon>
             </v-list-item>
-            <v-list-item link class="caption">
-              <v-list-item-title>Barang Masuk</v-list-item-title>
-              <v-list-item-icon><v-icon>mdi-arrow-down-bold</v-icon></v-list-item-icon>
+            <v-list-item link class="caption" @click="goTo('baranginout','Barang Masuk Keluar')">
+              <v-list-item-title>Barang Masuk/Keluar</v-list-item-title>
+              <v-list-item-icon><v-icon>mdi-ballot-recount-outline</v-icon></v-list-item-icon>
             </v-list-item>
-            <v-list-item link class="caption">
-              <v-list-item-title>Barang Keluar</v-list-item-title>
-              <v-list-item-icon><v-icon>mdi-arrow-up-bold</v-icon></v-list-item-icon>
+          </v-list-group>
+          <v-list-group prepend-icon="mdi-currency-usd" no-action>
+            <template v-slot:activator><v-list-item-content><v-list-item-title>Pricelist</v-list-item-title></v-list-item-content></template>
+            <v-list-item link class="caption" @click="goTo('/pricelist')">
+              <v-list-item-title>Atur Pricelist</v-list-item-title>
+              <v-list-item-icon><v-icon>mdi-wallet-outline</v-icon></v-list-item-icon>
             </v-list-item>
           </v-list-group>
           <v-list-item link @click="logOut">
@@ -62,7 +65,7 @@
 
 <script>
 import firebase from 'firebase'
-import _ from 'lodash'
+// import _ from 'lodash'
 
 export default {
   name: 'App',
@@ -86,9 +89,9 @@ export default {
   },
 
   methods: {
-    goTo(route) {
+    goTo(route, title = route) {
       this.$router.push(route)
-      this.titleBar = _.upperFirst(route)
+      this.titleBar = title
     },
     logOut() {
       firebase.auth().signOut()
