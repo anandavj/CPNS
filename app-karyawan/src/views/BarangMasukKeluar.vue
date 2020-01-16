@@ -12,7 +12,7 @@
                         </v-col>
                     </v-row>
                     <v-row justify="end" v-else>
-                        <v-col cols="5">
+                        <v-col md="5" lg="2">
                             <v-btn block v-on="on" color="light-green" class="white--text">
                                 <v-icon>mdi-plus</v-icon>Tambah
                             </v-btn>
@@ -55,7 +55,7 @@
         </v-container>
         <v-container v-if="items.length > 0" class="mt-n5">
             <v-row justify="center">
-                <v-col lg="11">
+                <v-col lg="12">
                     <v-data-table :headers="headers" :items="items" disable-sort="true" disable-filtering="true" hide-default-footer="true">
                         <template v-slot:item.actions="{ item }">
                             <v-icon class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
@@ -67,11 +67,11 @@
         </v-container>
         <v-container v-if="items.length > 0">
             <v-row justify="end">
-                <v-col cols="5">
-                    <v-btn></v-btn>
+                <v-col md="4" lg="2">
+                    <v-btn block outlined color="red">Cancel</v-btn>
                 </v-col>
-                <v-col cols="5">
-
+                <v-col md="4" lg="2">
+                    <v-btn block color="light-green" dark>Save</v-btn>
                 </v-col>
             </v-row>
         </v-container>
