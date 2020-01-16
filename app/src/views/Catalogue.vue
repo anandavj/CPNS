@@ -1,53 +1,73 @@
 <template>
-  <div>
+  <v-layout column pa-md-3 pa-xs-0>
+    
+    <!-- Search bar -->
     <v-toolbar flat dense relative height="60">
-      <v-layout row class="justify-center mt-5">
-        <v-flex xs10 md3 class="mt-5">
+      <v-layout row class="justify-start mt-5">
+        <v-flex xs12 md4 class="mt-5">
           <div>
-            <v-text-field outlined rounded clearable single-line dense label="search"></v-text-field>
+            <v-text-field outlined rounded clearable single-line dense label="search" append-icon="mdi-magnify"></v-text-field>
           </div>
         </v-flex>
-        <v-btn icon x-large color="primary" class="mt-4">
-          <v-icon>mdi-magnify</v-icon>
-        </v-btn>
-        <!-- <v-flex xs4 md2 class="mt-7">
-          <v-select label="pilih kategori"></v-select>
-        </v-flex>-->
       </v-layout>
     </v-toolbar>
-    <v-layout row wrap justify-center>
+
+
+    <!-- carousel -->
+    <v-layout row wrap justify-center class="ma-2">
+      <v-flex xs12>
+        <v-carousel cycle show-arrows-on-hover height="250" class="ma-0">
+          <v-carousel-item v-for="i in images" :key="i" :src="i"></v-carousel-item>
+        </v-carousel>
+      </v-flex>
+    </v-layout>
+
+    <!-- Highlighted products -->
+    <v-layout row wrap class="ma-2"  hidden-sm-and-down>
       <v-flex xs6>
-        <v-card color="primary" dark raised class="ma-2">
-          <v-img src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg" height="550px"></v-img>
+        <v-card flat class="ma-2 mt-5">
+          <v-img src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg" class="card-image"></v-img>
         </v-card>
       </v-flex>
-      <v-card color="white" dark flat width="700" class="ma-4" height="550px">
-        <v-layout row wrap justify-center>
-          <v-card v-for="i in 4" :key="i" color="primary" dark raised width="260px" class="ma-3">
-            <v-img src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg" height="250px"></v-img>
+      <v-flex xs6>
+        <v-layout row wrap class>
+          <v-flex xs6 v-for="i in 4" :key="i" >
+            <v-card flat class="ma-2">
+              <v-img src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg" class="card-image"></v-img>
+            </v-card>
+          </v-flex>
+        </v-layout>
+      </v-flex>
+    </v-layout>
+
+    <!-- Product Card Contents -->
+    <v-layout row wrap justify-center ma-0>
+      <v-layout row wrap justify-space-around ma-2>
+        <v-flex xs6 md3 lg-3 v-for="i in 12" :key="i">
+          <v-card outlined class="ma-0">
+            <v-img src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg" class="card-image"></v-img>
+            <v-card-title>
+              Nama Barang
+            </v-card-title>
+            <v-card-actions>
+              <v-btn outlined justify-end color="indigo" dark>Lihat Detail</v-btn>
+            </v-card-actions>
           </v-card>
-        </v-layout>
-      </v-card>
+        </v-flex>
+      </v-layout>
     </v-layout>
-    <v-layout row wrap justify-center>
-      <v-card v-for="x in 10" :key="x" raised width="260px" class="ma-4">
-        <v-img src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg" height="250px"></v-img>
-        <v-card-title primary-title>Nama Barang</v-card-title>
-        <v-layout row wrap>
-          <v-card>boi</v-card>
-        </v-layout>
-      </v-card>
-    </v-layout>
-  </div>
+  </v-layout>
 </template>
 <script>
 export default {
   name: "Catalogue",
   data() {
     return {
-      items: [
-        { title: "Home", icon: "dashboard" },
-        { title: "About", icon: "question_answer" }
+      images: [
+        "https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg",
+        "https://cdn.vuetifyjs.com/images/carousel/sky.jpg",
+        "https://cdn.vuetifyjs.com/images/carousel/bird.jpg",
+        "https://cdn.vuetifyjs.com/images/carousel/planet.jpg"
       ]
     };
   },
