@@ -12,8 +12,8 @@
                         </v-col>
                     </v-row>
                     <v-row justify="end" v-else>
-                        <v-col cols="5">
-                            <v-btn block v-on="on" color="light-green" class="white--text">
+                        <v-col cols="5" lg="2">
+                            <v-btn block v-on="on" color="light-blue" class="white--text">
                                 <v-icon>mdi-plus</v-icon>Tambah
                             </v-btn>
                         </v-col>
@@ -22,7 +22,6 @@
                 <v-card>
                     <v-card-title>Tambah List</v-card-title>
                     <v-card-text>
-                        <v-container>
                             <v-row>
                                 <v-col cols="12">
                                     <v-text-field v-model="editableItem.nama" label="Nama Barang" required/>
@@ -40,7 +39,6 @@
                                     <v-textarea v-model="editableItem.keterangan" outlined label="Keterangan"></v-textarea>
                                 </v-col>
                             </v-row>
-                        </v-container>
                     </v-card-text>
                     <v-card-actions>
                         <v-container>
@@ -55,11 +53,11 @@
         </v-container>
         <v-container v-if="items.length > 0" class="mt-n5">
             <v-row justify="center">
-                <v-col lg="11">
+                <v-col lg="12">
                     <v-data-table :headers="headers" :items="items" disable-sort="true" disable-filtering="true" hide-default-footer="true">
                         <template v-slot:item.actions="{ item }">
                             <v-icon class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
-                            <v-icon @click="deleteItem(item)">mdi-delete</v-icon>
+                            <v-icon @click="confirmDelete(item)">mdi-delete</v-icon>
                         </template>
                     </v-data-table>
                 </v-col>
@@ -67,14 +65,28 @@
         </v-container>
         <v-container v-if="items.length > 0">
             <v-row justify="end">
-                <v-col cols="5">
-                    <v-btn></v-btn>
+                <v-col md="4" lg="2">
+                    <v-btn block outlined color="red">Cancel</v-btn>
                 </v-col>
-                <v-col cols="5">
-
+                <v-col md="4" lg="2">
+                    <v-btn block color="light-green" dark>Save</v-btn>
                 </v-col>
             </v-row>
         </v-container>
+        <v-dialog v-model="confirmModal" persistent max-width='350px'>
+            <v-card>
+                <v-card-title>Confirmation</v-card-title>
+                <v-card-text>Apakah Anda Yakin Ingin Menghapus List Ini?</v-card-text>
+                <v-card-actions>
+                    <v-container>
+                        <v-row justify="center">
+                            <v-btn class="mt-n5" color="red darken-1" text @click="cancel">Tidak</v-btn>
+                            <v-btn class="mt-n5" color="blue darken-1" text @click="deleteItem">Ya</v-btn>
+                        </v-row>
+                    </v-container>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </v-app>
 </template>
 
@@ -103,6 +115,7 @@ export default {
                 keterangan:''
             },
             popUpModal: false,
+            confirmModal: false,
             editedIndex: -1
         }
     },
@@ -122,14 +135,25 @@ export default {
                 this.editedIndex = -1
             }, 300)
         },
+        cancel() {
+            this.confirmModal = false
+            setTimeout(() => {
+                this.editedIndex = -1
+            }, 300)
+        },
         editItem(item) {
             this.editedIndex = this.items.indexOf(item)
             this.editableItem = Object.assign({}, item)
             this.popUpModal = true
         },
-        deleteItem(item) {
-            const index = this.items.indexOf(item)
-            confirm('Apakah Anda yakin ingin menghapus item ini?') && this.items.splice(index, 1)
+        confirmDelete(item) {
+            this.confirmModal = true
+            this.editedIndex = this.items.indexOf(item)
+        },
+        deleteItem() {
+            this.items.splice(this.editedIndex, 1)
+            this.editedIndex = -1
+            this.confirmModal = false
         },
         updateStock() {
 
