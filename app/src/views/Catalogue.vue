@@ -79,7 +79,7 @@
     <v-layout row wrap justify-space-around class="ma-3">
       <v-flex xs6 md3 lg-3 v-for="i in 12" :key="i" class="product-card">
     
-          <v-card @mouseover="show = !show" @mouseleave="show = !show" :loading="loading" class="mx-auto my-12" max-width="374">
+          <v-card  @mouseover="show = !show" @mouseleave="show = !show" :loading="loading" class="pa-2">
             <v-img src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg"></v-img>
 
             <v-card-title>Nama Barang</v-card-title>
@@ -87,7 +87,7 @@
               <v-btn color="indigo" text >
                 Deskripsi
                 <v-spacer></v-spacer>
-                <v-icon>mdi-chevron-down</v-icon>
+                <v-icon>{{ show ? 'mdi-chevron-up' : 'mdi-chevron-down'}}</v-icon>
               </v-btn>
             </v-card-actions>
             <v-divider class="mx-4"></v-divider>
@@ -144,13 +144,6 @@ div.scrollmenu {
   white-space: nowrap;
 }
 
-/* div.scrollmenu a {
-  display: inline-block;
-  text-align: center;
-  padding: 14px;
-  text-decoration: none;
-} */
-
 .category-caption {
   font-size: 6pt;
 }
@@ -160,5 +153,6 @@ div.scrollmenu {
 .product-card:hover {
   transform: scale(1.2);
   z-index: 1;
+  overflow-y:auto;
 }
 </style>

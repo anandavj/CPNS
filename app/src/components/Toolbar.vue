@@ -1,6 +1,6 @@
 <template>
-  <v-app id="inspire">
-    <v-navigation-drawer show-md-and-up color="primary" dark
+  <v-app id="inspire" v-if="!this.$route.meta.drawer">
+    <v-navigation-drawer show-sm-and-up color="primary" dark
       v-model="drawer"
       app
       clipped

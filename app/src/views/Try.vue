@@ -29,7 +29,7 @@
     </v-layout>
 
     <!-- Highlighted products -->
-    <v-layout row wrap class="ma-2" hidden-sm-and-down>
+    <v-layout row wrap class="ma-2" hidden-sm-and-down v-show="!showProduct">
       <v-flex xs6>
         <v-card flat class="ma-2 mt-5">
           <v-img src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg" class="card-image"></v-img>
@@ -43,6 +43,30 @@
             </v-card>
           </v-flex>
         </v-layout>
+      </v-flex>
+    </v-layout>
+
+    <v-layout row wrap ma-2 v-show="showProduct">
+      <v-flex xs12>
+        <v-card>
+          <v-layout row wrap>
+            <v-flex xs12 md6>
+              <v-img
+                class="ma-3"
+                :aspect-ratio="1/1"
+                max-height="400px"
+                src="https://cdn.vuetifyjs.com/images/carousel/bird.jpg"
+              ></v-img>
+            </v-flex>
+            <v-flex xs12 md6 align-end pa-2>
+              <v-card-title primary-title>Nama Barang</v-card-title>
+              <v-card-text>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eleifend lacinia arcu quis varius. Pellentesque dapibus sem vitae aliquam tempor. Integer ligula erat, iaculis sit amet leo et, porta consectetur est. Proin accumsan orci mi, ac dignissim ex scelerisque a. Fusce gravida eros eget erat sagittis vehicula. Pellentesque faucibus malesuada dolor, congue pulvinar enim egestas a. Suspendisse ac purus sed erat tincidunt egestas dictum in lectus. Aenean sodales, nibh ut semper maximus, diam eros cursus dolor, ut tristique neque neque non ligula. Mauris eget metus dictum, congue felis in, sollicitudin leo. Nulla finibus nulla eget cursus euismod. Cras neque augue, commodo sed euismod quis, consequat a purus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vitae cursus justo.</v-card-text>
+              <div class="ma-2">
+                <v-chip v-for="i in 5" :key="i" class="ma-2" color="primary">Ukuran {{ i }}</v-chip>
+              </div>
+            </v-flex>
+          </v-layout>
+        </v-card>
       </v-flex>
     </v-layout>
 
@@ -77,34 +101,37 @@
 
     <!-- Product Card Contents -->
     <v-layout row wrap justify-space-around class="ma-3">
-      <v-flex xs6 md3 lg-3 v-for="i in 12" :key="i" class="product-card">
-        <p> {{ pushShow(i) }}</p>
-        <!-- <div>{{ pushShow(i) }}</div> -->
-        <!-- <v-hover @hover="showDescription()" open-delay="200">
-          <v-card @mouseover="this.show[i] = !this.show[i]" @mouseleave="this.show[i] = !this.show[i]" class="mx-auto my-12" max-width="374">
-            <v-img src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg"></v-img>
+      <v-flex xs6 md3 lg-3 v-for="i in 12" :key="i" class="product-card pa-2">
+        <!-- @click="showProduct = !showProduct"
+          @mouseover="show = !show"
+        @mouseleave="show = !show"-->
 
-            <v-card-title>Nama Barang</v-card-title>
-            <v-card-actions>
-              <v-btn color="indigo" text >
-                Deskripsi
-                <v-spacer></v-spacer>
-                <v-icon>mdi-chevron-down</v-icon>
-              </v-btn>
-            </v-card-actions>
-            <v-divider class="mx-4"></v-divider>
-            <v-expand-transition>
-              <div v-show="this.show[i]">
-                <v-divider></v-divider>
+        <v-card class="pa-2">
+          <v-img src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg"></v-img>
+          <v-card-title>Nama Barang</v-card-title>
+          <v-card-actions>
+            <v-layout row wrap>
+            <v-flex xs12 md6>
+              <v-btn color="indigo" @click="showProduct = !showProduct" text>Lihat Detail</v-btn>
+            </v-flex>
+              <v-flex xs12 md6>
+                <v-btn color="indigo" @click="show = !show" text>
+                  Deskripsi
+                  <v-spacer></v-spacer>
+                  <v-icon>{{ show ? 'mdi-chevron-up' : 'mdi-chevron-down'}}</v-icon>
+                </v-btn>
+              </v-flex>
+            </v-layout>
+          </v-card-actions>
+          <v-divider class="mx-4"></v-divider>
+          <v-expand-transition>
+            <div v-show="show">
+              <v-divider></v-divider>
 
-                <v-card-text>I'm a thing. But, like most politicians, he promised more than he could deliver. You won't have time for sleeping, soldier, not with all the bed making you'll be doing. Then we'll go with that data file! Hey, you add a one and two zeros to that or we walk! You're going to do his laundry? I've got to find a way to escape.</v-card-text>
-              </div>
-            </v-expand-transition>
-            <v-card-actions>
-              <v-btn color="deep-purple accent-4" text>Lihat Selengkapnya</v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-hover> -->
+              <v-card-text>I'm a thing. But, like most politicians, he promised more than he could deliver. You won't have time for sleeping, soldier, not with all the bed making you'll be doing. Then we'll go with that data file! Hey, you add a one and two zeros to that or we walk! You're going to do his laundry? I've got to find a way to escape.</v-card-text>
+            </div>
+          </v-expand-transition>
+        </v-card>
       </v-flex>
     </v-layout>
   </v-layout>
@@ -120,10 +147,10 @@ export default {
         "https://cdn.vuetifyjs.com/images/carousel/bird.jpg",
         "https://cdn.vuetifyjs.com/images/carousel/planet.jpg"
       ],
-      
-      show: [0]
+
+      showProduct: false,
+      show: false
     };
-    
   },
   props: {
     source: String
@@ -131,17 +158,7 @@ export default {
   },
 
   components: {},
-  methods: {
-    showDescription() {
-      this.show = !this.show;
-    },
-    pushShow(i){
-      this.show.push(i);
-      // console.log(val);
-    }
-  },
- 
-
+  methods: {}
 };
 </script>
   
@@ -152,21 +169,17 @@ div.scrollmenu {
   white-space: nowrap;
 }
 
-/* div.scrollmenu a {
-  display: inline-block;
-  text-align: center;
-  padding: 14px;
-  text-decoration: none;
-} */
-
 .category-caption {
   font-size: 6pt;
 }
-.product-card {
+/* .product-card {
   transition: all 0.2s ease-in-out;
-}
-.product-card:hover {
-  transform: scale(1.2);
-  z-index: 1;
-}
+} */
+/* @media not all and (pointer: coarse) {
+  .product-card:hover {
+    transform: scale(1.2);
+    z-index: 1;
+    overflow-y: auto;
+  }
+} */
 </style>

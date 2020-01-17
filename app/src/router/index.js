@@ -3,7 +3,7 @@ import VueRouter from 'vue-router'
 import Login from '../views/Login.vue'
 import Try from '../views/Try.vue'
 import Catalogue from '../views/Catalogue'
-import Grid from '@/views/Grid'
+
 import Home from '@/views/Home'
 
 Vue.use(VueRouter)
@@ -11,7 +11,10 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/login',
-    component: Login
+    component: Login,
+    meta:{
+      drawer: true
+    }
   },
   {
     path: '/try',
@@ -19,16 +22,16 @@ const routes = [
   },
   {
     path: '/',
-    component: Home
+    component: Home,
+    meta:{
+      drawer: true
+    }
   },
   {
     path: '/katalog',
-    component: Catalogue
+    component: Catalogue,
   },
-  {
-    path: '/grid',
-    component: Grid
-  }
+
 ]
 
 export default new VueRouter({

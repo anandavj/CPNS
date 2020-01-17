@@ -1,11 +1,11 @@
 <template>
   <v-app>
     <v-layout>
-    <Toolbar />
+      <Toolbar />
 
-    <v-content absolute>
-      <router-view></router-view>
-    </v-content>
+      <v-content>
+        <router-view></router-view>
+      </v-content>
     </v-layout>
 
     <!-- </v-layout> -->
@@ -21,7 +21,6 @@ export default {
 
   components: {
     Toolbar
-    
   },
 
   data: () => ({
@@ -29,3 +28,7 @@ export default {
   })
 };
 </script>
+
+<style>
+
+</style>
