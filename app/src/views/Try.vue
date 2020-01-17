@@ -1,185 +1,67 @@
 <template>
-  <v-layout column pa-md-3 pa-xs-0>
-    <!-- Search bar -->
-    <v-toolbar flat dense relative height="60">
-      <v-layout row class="justify-start mt-5">
-        <v-flex xs12 md4 class="mt-5">
-          <div>
-            <v-text-field
-              outlined
-              rounded
-              clearable
-              single-line
-              dense
-              label="search"
-              append-icon="mdi-magnify"
-            ></v-text-field>
-          </div>
-        </v-flex>
-      </v-layout>
-    </v-toolbar>
-
-    <!-- carousel -->
-    <v-layout row wrap justify-center class="ma-2">
-      <v-flex xs12>
-        <v-carousel cycle show-arrows-on-hover height="250" class="ma-0">
-          <v-carousel-item v-for="i in images" :key="i" :src="i"></v-carousel-item>
-        </v-carousel>
-      </v-flex>
-    </v-layout>
-
-    <!-- Highlighted products -->
-    <v-layout row wrap class="ma-2" hidden-sm-and-down v-show="!showProduct">
-      <v-flex xs6>
-        <v-card flat class="ma-2 mt-5">
-          <v-img src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg" class="card-image"></v-img>
-        </v-card>
-      </v-flex>
-      <v-flex xs6>
-        <v-layout row wrap class>
-          <v-flex xs6 v-for="i in 4" :key="i">
-            <v-card flat class="ma-2">
-              <v-img src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg" class="card-image"></v-img>
-            </v-card>
-          </v-flex>
-        </v-layout>
-      </v-flex>
-    </v-layout>
-
-    <v-layout row wrap ma-2 v-show="showProduct">
-      <v-flex xs12>
-        <v-card>
-          <v-layout row wrap>
-            <v-flex xs12 md6>
-              <v-img
-                class="ma-3"
-                :aspect-ratio="1/1"
-                max-height="400px"
-                src="https://cdn.vuetifyjs.com/images/carousel/bird.jpg"
-              ></v-img>
-            </v-flex>
-            <v-flex xs12 md6 align-end pa-2>
-              <v-card-title primary-title>Nama Barang</v-card-title>
-              <v-card-text>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eleifend lacinia arcu quis varius. Pellentesque dapibus sem vitae aliquam tempor. Integer ligula erat, iaculis sit amet leo et, porta consectetur est. Proin accumsan orci mi, ac dignissim ex scelerisque a. Fusce gravida eros eget erat sagittis vehicula. Pellentesque faucibus malesuada dolor, congue pulvinar enim egestas a. Suspendisse ac purus sed erat tincidunt egestas dictum in lectus. Aenean sodales, nibh ut semper maximus, diam eros cursus dolor, ut tristique neque neque non ligula. Mauris eget metus dictum, congue felis in, sollicitudin leo. Nulla finibus nulla eget cursus euismod. Cras neque augue, commodo sed euismod quis, consequat a purus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vitae cursus justo.</v-card-text>
-              <div class="ma-2">
-                <v-chip v-for="i in 5" :key="i" class="ma-2" color="primary">Ukuran {{ i }}</v-chip>
-              </div>
-            </v-flex>
-          </v-layout>
-        </v-card>
-      </v-flex>
-    </v-layout>
-
-    <!-- horizontal-scroll-wrapper -->
-    <v-layout row wrap class="ma-0 mb-2 hidden-md-and-up">
-      <v-flex xs2 mt-2>
-        <v-btn color="primary" text>
-          <v-layout column>
-            <v-icon>mdi-view-grid</v-icon>
-            <div class="category-caption">
-              Semua
-              <br />Kategori
-            </div>
-          </v-layout>
-        </v-btn>
-      </v-flex>
-
-      <v-flex xs9>
-        <div class="scrollmenu ml-2" hidden-sm-and-up>
-          <v-btn color="primary" text dark v-for="i in 10" :key="i" class="mt-2 mb-2 ma-1">
-            <v-layout column>
-              <v-icon>mdi-border-all</v-icon>
-              <div class="category-caption">
-                Kategori
-                {{ i }}
-              </div>
-            </v-layout>
+  <v-row justify="center">
+    <v-dialog v-model="dialog" fullscreen hide-overlay transition="dialog-bottom-transition">
+      <template v-slot:activator="{ on }">
+        <v-btn color="primary" dark v-on="on">Open Dialog</v-btn>
+      </template>
+      <v-card>
+        <v-toolbar dark color="primary">
+          <v-btn icon dark @click="dialog = false">
+            <v-icon>mdi-close</v-icon>
           </v-btn>
-        </div>
-      </v-flex>
-    </v-layout>
-
-    <!-- Product Card Contents -->
-    <v-layout row wrap justify-space-around class="ma-3">
-      <v-flex xs6 md3 lg-3 v-for="i in 12" :key="i" class="product-card pa-2">
-        <!-- @click="showProduct = !showProduct"
-          @mouseover="show = !show"
-        @mouseleave="show = !show"-->
-
-        <v-card class="pa-2">
-          <v-img src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg"></v-img>
-          <v-card-title>Nama Barang</v-card-title>
-          <v-card-actions>
-            <v-layout row wrap>
-            <v-flex xs12 md6>
-              <v-btn color="indigo" @click="showProduct = !showProduct" text>Lihat Detail</v-btn>
-            </v-flex>
-              <v-flex xs12 md6>
-                <v-btn color="indigo" @click="show = !show" text>
-                  Deskripsi
-                  <v-spacer></v-spacer>
-                  <v-icon>{{ show ? 'mdi-chevron-up' : 'mdi-chevron-down'}}</v-icon>
-                </v-btn>
-              </v-flex>
-            </v-layout>
-          </v-card-actions>
-          <v-divider class="mx-4"></v-divider>
-          <v-expand-transition>
-            <div v-show="show">
-              <v-divider></v-divider>
-
-              <v-card-text>I'm a thing. But, like most politicians, he promised more than he could deliver. You won't have time for sleeping, soldier, not with all the bed making you'll be doing. Then we'll go with that data file! Hey, you add a one and two zeros to that or we walk! You're going to do his laundry? I've got to find a way to escape.</v-card-text>
-            </div>
-          </v-expand-transition>
-        </v-card>
-      </v-flex>
-    </v-layout>
-  </v-layout>
+          <v-toolbar-title>Settings</v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-toolbar-items>
+            <v-btn dark text @click="dialog = false">Save</v-btn>
+          </v-toolbar-items>
+        </v-toolbar>
+        <v-list three-line subheader>
+          <v-subheader>User Controls</v-subheader>
+          <v-list-item>
+            <v-list-item-content>
+              <v-list-item-title>Content filtering</v-list-item-title>
+              <v-list-item-subtitle>Set the content filtering level to restrict apps that can be downloaded</v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item>
+            <v-list-item-content>
+              <v-list-item-title>Password</v-list-item-title>
+              <v-list-item-subtitle>Require password for purchase or use password to restrict purchase</v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+        <v-divider></v-divider>
+        <v-list three-line subheader>
+          <v-subheader>General</v-subheader>
+          <v-list-item>
+            <v-list-item-action>
+              <v-checkbox v-model="notifications"></v-checkbox>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title>Notifications</v-list-item-title>
+              <v-list-item-subtitle>Notify me about updates to apps or games that I downloaded</v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item>
+            <v-list-item-action>
+              <v-checkbox v-model="sound"></v-checkbox>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title>Sound</v-list-item-title>
+              <v-list-item-subtitle>Auto-update apps at any time. Data charges may apply</v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item>
+            <v-list-item-action>
+              <v-checkbox v-model="widgets"></v-checkbox>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title>Auto-add widgets</v-list-item-title>
+              <v-list-item-subtitle>Automatically add home screen widgets</v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+      </v-card>
+    </v-dialog>
+  </v-row>
 </template>
-<script>
-export default {
-  name: "Catalogue",
-  data() {
-    return {
-      images: [
-        "https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg",
-        "https://cdn.vuetifyjs.com/images/carousel/sky.jpg",
-        "https://cdn.vuetifyjs.com/images/carousel/bird.jpg",
-        "https://cdn.vuetifyjs.com/images/carousel/planet.jpg"
-      ],
-
-      showProduct: false,
-      show: false
-    };
-  },
-  props: {
-    source: String
-    // showNav: this.$store.state.UI.showNavbar
-  },
-
-  components: {},
-  methods: {}
-};
-</script>
-  
-<style scoped>
-div.scrollmenu {
-  overflow-x: auto;
-  overflow-y: hidden;
-  white-space: nowrap;
-}
-
-.category-caption {
-  font-size: 6pt;
-}
-/* .product-card {
-  transition: all 0.2s ease-in-out;
-} */
-/* @media not all and (pointer: coarse) {
-  .product-card:hover {
-    transform: scale(1.2);
-    z-index: 1;
-    overflow-y: auto;
-  }
-} */
-</style>
