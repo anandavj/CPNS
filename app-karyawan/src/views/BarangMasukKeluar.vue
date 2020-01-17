@@ -22,7 +22,6 @@
                 <v-card>
                     <v-card-title>Tambah List</v-card-title>
                     <v-card-text>
-                        <v-container>
                             <v-row>
                                 <v-col cols="12">
                                     <v-text-field v-model="editableItem.nama" label="Nama Barang" required/>
@@ -40,7 +39,6 @@
                                     <v-textarea v-model="editableItem.keterangan" outlined label="Keterangan"></v-textarea>
                                 </v-col>
                             </v-row>
-                        </v-container>
                     </v-card-text>
                     <v-card-actions>
                         <v-container>
