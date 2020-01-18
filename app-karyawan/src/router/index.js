@@ -51,6 +51,14 @@ const routes = [
     meta: {
       drawer: true
     }
+  },
+  {
+    path:'/listpricelist',
+    name:'listPriceList',
+    component: () => import('../views/ListPriceList.vue'),
+    meta: {
+      drawer: true
+    }
   }
 ]
 

@@ -50,11 +50,11 @@
           </v-list-group>
           <v-list-group prepend-icon="mdi-currency-usd" no-action>
             <template v-slot:activator><v-list-item-content><v-list-item-title>Pricelist</v-list-item-title></v-list-item-content></template>
-            <v-list-item link class="caption" @click="goTo('')">
+            <v-list-item link class="caption" @click="goTo('listpricelist','Pricelist')">
               <v-list-item-title>List Pricelist</v-list-item-title>
               <v-list-item-icon><v-icon>mdi-format-list-text</v-icon></v-list-item-icon>
             </v-list-item>
-            <v-list-item link class="caption" @click="goTo('/pricelist')">
+            <v-list-item link class="caption" @click="goTo('')">
               <v-list-item-title>Atur Pricelist</v-list-item-title>
               <v-list-item-icon><v-icon>mdi-wallet-outline</v-icon></v-list-item-icon>
             </v-list-item>
