@@ -12,6 +12,8 @@
                 :headers="headers"
                 :items="barang"
                 :search="searchBarang"
+                mobile-breakpoint="1"
+                disable-sort
                 hide-default-footer="true"
             >                
             </v-data-table>
@@ -25,8 +27,8 @@ export default {
     data() {
         return {
             barang: [
-                {no:1, namaBarang:'Paku', harga:50000, stock:20, satuan:'kotak'},
-                {no:2, namaBarang:'Balok', harga:2000, stock:20, satuan:'meter persegi'}                
+                {no:1, namaBarang:'Paku', stock:20, satuan:'kotak'},
+                {no:2, namaBarang:'Balok', stock:20, satuan:'meter persegi'}                
             ],
             searchBarang: ''
         }
@@ -35,8 +37,7 @@ export default {
         headers() {
             return [
                 {text:'No', value:'no',filter: () => true},
-                {text:'Nama Barang', value:'namaBarang'},
-                {text:'Harga', value:'harga',filter: () => true},
+                {text:'Nama Barang', width:'40%', value:'namaBarang'},
                 {text:'Stock', value:'stock',filter: () => true},
                 {text:'Satuan', value: 'satuan',filter: () => true}
             ]
