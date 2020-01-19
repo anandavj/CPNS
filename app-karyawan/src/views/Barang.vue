@@ -3,8 +3,8 @@
         <div>
             <v-text-field
                 placeholder="Cari Barang"
-                solo
-                clearable
+                :solo='true'
+                :clearable='true'
                 append-icon="mdi-magnify"
                 v-model="searchBarang"
             />
@@ -12,9 +12,9 @@
                 :headers="headers"
                 :items="barang"
                 :search="searchBarang"
-                mobile-breakpoint="1"
-                disable-sort
-                hide-default-footer="true"
+                :mobile-breakpoint="1"
+                :disable-sort='true'
+                :hide-default-footer="true"
             >                
             </v-data-table>
         </div>

@@ -54,7 +54,7 @@
         <v-container v-if="items.length > 0" class="mt-n5">
             <v-row justify="center">
                 <v-col lg="12">
-                    <v-data-table :headers="headers" :items="items" disable-sort="true" disable-filtering="true" hide-default-footer="true">
+                    <v-data-table :headers="headers" :items="items" :disable-sort="true" :disable-filtering="true" :hide-default-footer="true">
                         <template v-slot:item.actions="{ item }">
                             <v-icon class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
                             <v-icon @click="confirmDelete(item)">mdi-delete</v-icon>

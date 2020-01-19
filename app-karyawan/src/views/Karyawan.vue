@@ -3,14 +3,19 @@
         <div>
             <v-text-field
                 placeholder="Cari Karyawan"
-                solo
-                clearable
+                :solo='true'
+                :clearable='true'
                 append-icon="mdi-magnify"
             />
-            <v-card :elevation="2" min-height="112">
-                <v-card-title>Mahendra Fajar</v-card-title>
-                <v-card-text>CEO</v-card-text>
-            </v-card>
+            <v-data-table
+                :headers="karyawanHeaders"
+                :items="karyawans"
+                :disable-sort="true"
+                :disable-filtering="true"
+                :mobile-breakpoint="1"
+                :hide-default-footer="true"
+            >
+            </v-data-table>
         </div>
     </v-app>
 </template>
@@ -21,6 +26,20 @@ export default {
 
     data() {
         return {
+            karyawans: [
+                {no:1, nama:'Mahendra Fajar'},
+                {no:2, nama:'Ananda Vijaya'},
+                {no:3, nama:'Satria Kemal'},
+            ]
+        }
+    },
+
+    computed: {
+        karyawanHeaders() {
+            return [
+                {text:'No',value:'no',width:'20%',filter: () => true},
+                {text:'Nama',value:'nama'}
+            ]
         }
     }
     

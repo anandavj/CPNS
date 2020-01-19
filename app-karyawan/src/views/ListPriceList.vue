@@ -4,18 +4,18 @@
             <v-text-field
                 v-model="searchPricelist"
                 placeholder="Cari Barang"
-                solo
-                clearable
+                :solo="true"
+                :clearable="true"
                 append-icon="mdi-magnify"
             />
             <v-data-table
                 :headers="headers"
                 :items="barang"
                 :search="searchPricelist"
-                disable-sort
+                :disable-sort="true"
                 no-data-text="Tidak ada Data T_T"
                 no-results-text="Barang tidak ditemukan"
-                hide-default-footer="true"
+                :hide-default-footer="true"
             >
             </v-data-table>
         </div>

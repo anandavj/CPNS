@@ -3,8 +3,8 @@
         <div>
             <v-text-field
                 placeholder="Cari Nomor"
-                solo
-                clearable
+                :solo="true"
+                :clearable="true"
                 append-icon="mdi-magnify"
                 @click:append="doNothing"
                 v-model="searchNomor"
@@ -13,8 +13,8 @@
                 :headers="headers"
                 :items="items"
                 :search="searchNomor"
-                disable-sort
-                hide-default-footer="true"
+                :disable-sort='true'
+                :hide-default-footer="true"
             >
             <template v-slot:item.actions="{ item }">
                 <v-dialog fullscreen v-model="dialog" scrollable max-width="300px">
@@ -27,11 +27,11 @@
                                 :headers="barangsHeader"
                                 :items="barangs"
                                 v-model="barangsSelected"
-                                show-select
-                                disable-sort
-                                disable-filtering
-                                mobile-breakpoint="1"
-                                hide-default-footer="true"
+                                :show-select="true"
+                                :disable-sort="true"
+                                :disable-filtering="true"
+                                :mobile-breakpoint="1"
+                                :hide-default-footer="true"
                             >
                             </v-data-table>
                         </v-card-text>
@@ -83,6 +83,10 @@ export default {
     methods: {
         doNothing() {
 
+        },
+        close() {
+            this.barangsSelected = []
+            this.dialog = false
         }
     },
     computed: {
