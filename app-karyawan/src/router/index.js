@@ -67,6 +67,14 @@ const routes = [
     meta: {
       drawer: true
     }
+  },
+  {
+    path:'/profil',
+    name:'profil',
+    component: () => import('../views/Profil.vue'),
+    meta: {
+      drawer: true
+    }
   }
 ]
 
