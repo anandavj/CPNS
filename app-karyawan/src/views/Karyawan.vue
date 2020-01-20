@@ -15,7 +15,20 @@
                 :mobile-breakpoint="1"
                 :hide-default-footer="true"
             >
+                <template v-slot:item.actions="{ item }">
+                    <template>
+                        <v-btn @click="details(item)" color="light-blue" dark class="caption">Details</v-btn>
+                    </template>
+                </template>
             </v-data-table>
+        <v-dialog v-model="popupDetails" fullscreen hide-overlay transition="dialog-bottom-transition">
+            <v-card>
+                <v-toolbar dense flat>
+                    <v-btn absolute right icon @click="close"><v-icon>mdi-close</v-icon></v-btn>
+                </v-toolbar>
+                {{karyawan}}
+            </v-card>
+        </v-dialog>
         </div>
     </v-app>
 </template>
@@ -30,7 +43,30 @@ export default {
                 {no:1, nama:'Mahendra Fajar'},
                 {no:2, nama:'Ananda Vijaya'},
                 {no:3, nama:'Satria Kemal'},
-            ]
+            ],
+            popupDetails: false,
+            karyawan: {
+                no:null,
+                nama:''
+            },
+            karyawanDefault: {
+                no:null,
+                nama:''
+            },
+            selectedIndex: -1
+        }
+    },
+    
+    methods: {
+        details(item) {
+            this.selectedIndex = this.karyawans.indexOf(item)
+            this.karyawan = Object.assign({},item)
+            this.popupDetails = true
+        },
+        close() {
+            this.karyawan = Object.assign({},this.karyawanDefault)
+            this.popupDetails = false
+            this.selectedIndex = -1
         }
     },
 
@@ -38,7 +74,8 @@ export default {
         karyawanHeaders() {
             return [
                 {text:'No',value:'no',width:'20%',filter: () => true},
-                {text:'Nama',value:'nama'}
+                {text:'Nama',value:'nama'},
+                {text:'',value:'actions'}
             ]
         }
     }
