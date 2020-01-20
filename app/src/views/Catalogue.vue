@@ -47,7 +47,7 @@
     </v-layout>
 
     <!-- Selected Product -->
-    <v-layout row hidden-md-and-down wrap ma-2 v-show="showProduct" class="selected-product">
+     <v-layout row hidden-md-and-down wrap ma-2 v-show="showProduct" class="selected-product">
       <v-flex xs12>
         <v-card>
           <v-layout row wrap>
@@ -78,8 +78,8 @@
       </v-flex>
     </v-layout>
 
-    <v-layout row wrap v-show="showProduct" class="selected-product ma-0">
-      <v-dialog hidden-sm-and-down v-model="showProduct" fullscreen transition="dialog-bottom-transition">
+    <v-layout row wrap  v-show="showProductSM" class="selected-product ma-0">
+     <v-dialog hidden-sm-and-down v-model="showProductSM" fullscreen transition="dialog-bottom-transition">
         <v-flex xs12>
           <v-card >
             <v-layout row wrap ma-0>
@@ -92,7 +92,7 @@
                   src="https://cdn.vuetifyjs.com/images/carousel/bird.jpg"
                 >
                   <v-layout row wrap justify-end>
-                    <v-btn text color="white" @click="showProduct = !showProduct">
+                    <v-btn text color="white" @click="showProductSM = !showProductSM">
                       Tutup
                       <v-icon>mdi-close</v-icon>
                     </v-btn>
@@ -110,7 +110,7 @@
           </v-card>
         </v-flex>
       </v-dialog>
-    </v-layout>
+    </v-layout> 
 
     <!-- horizontal-scroll-wrapper -->
     <v-layout row wrap class="ma-0 mb-2 hidden-md-and-up">
@@ -149,13 +149,13 @@
         @mouseleave="show = !show"-->
         
 
-        <v-card class="pa-2" @click="showProduct = !showProduct">
+        <v-card class="pa-2" @click="showSelectedProduct()">
           <v-img src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg"></v-img>
           <v-card-title>Nama Barang</v-card-title>
           <v-card-actions>
             <v-layout row wrap>
               <v-flex xs12 md6>
-                <v-btn color="indigo" @click="showProduct = !showProduct" text>Lihat Detail</v-btn>
+                <v-btn color="indigo" @click="showSelectedProduct()" text>Lihat Detail</v-btn>
               </v-flex>
               <v-flex xs12 md6>
                 <v-btn color="indigo" @click.stop="show = !show" text z-index="100"> 
@@ -191,6 +191,7 @@ export default {
         "https://cdn.vuetifyjs.com/images/carousel/planet.jpg"
       ],
 
+      showProductSM: false,
       showProduct: false,
       show: false
     };
@@ -201,7 +202,29 @@ export default {
   },
 
   components: {},
-  methods: {}
+  methods: {
+    showSelectedProduct(){
+      this.showProduct = !this.showProduct
+      if(window.innerWidth < 992){
+        this.showProductSM = !this.showProductSM
+        // alert(window.innerHeight)
+      
+        
+      }
+    },
+    checkSelectedProduct(){
+        alert("resized");
+      if(this.showProductSM){
+        if(window.innerWidth > 992) this.showProductSM = !this.showProductSM
+      }
+    }
+  },
+  mounted() {
+    this.$nextTick(function(){
+      window.addEventListener('resize', this.checkSelectedProduct());
+    
+    })
+  }
 };
 </script>
   
@@ -221,7 +244,7 @@ div.scrollmenu {
   position: sticky;
   top: 0;
   z-index: 1;
-  padding-top: 60px;
+  
 }
 
 /* .product-card {
