@@ -127,7 +127,7 @@
       </v-flex>
 
       <v-flex xs9>
-        <div class="scrollmenu ml-2" hidden-md-and-up>
+        <div class="scrollmenu ml-2" hidden-sm-and-up>
           <v-btn color="primary" text dark v-for="i in 10" :key="i" class="mt-2 mb-2 ma-1">
             <v-layout column>
               <v-icon>mdi-border-all</v-icon>

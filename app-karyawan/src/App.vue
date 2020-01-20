@@ -61,7 +61,7 @@
               <v-list-item-title>Bongkar/Muat</v-list-item-title>
               <v-list-item-icon><v-icon>mdi-truck-outline</v-icon></v-list-item-icon>
             </v-list-item>
-            <v-list-item link class="caption" @click="goTo('')">
+            <v-list-item link class="caption" @click="goTo('opname')">
               <v-list-item-title>Stock Opname</v-list-item-title>
               <v-list-item-icon><v-icon>mdi-clipboard-check-outline</v-icon></v-list-item-icon>
             </v-list-item>

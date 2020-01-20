@@ -84,6 +84,14 @@ const routes = [
       drawer: true
     }
   },
+  {
+    path:'/opname',
+    name:'stockOpname',
+    component: () => import('../views/StockOpname.vue'),
+    meta: {
+      drawer: true
+    }
+  },
 ]
 
 const router = new VueRouter({
