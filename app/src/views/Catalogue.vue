@@ -127,7 +127,7 @@
       </v-flex>
 
       <v-flex xs9>
-        <div class="scrollmenu ml-2" hidden-sm-and-up>
+        <div class="scrollmenu ml-2" hidden-md-and-up>
           <v-btn color="primary" text dark v-for="i in 10" :key="i" class="mt-2 mb-2 ma-1">
             <v-layout column>
               <v-icon>mdi-border-all</v-icon>
@@ -202,13 +202,23 @@ export default {
   },
 
   components: {},
+  ready: function(){
+    window.addEventListener('resize', this.checkSelectedProduct())
+  },
   methods: {
     showSelectedProduct(){
       this.showProduct = !this.showProduct
       if(window.innerWidth < 992){
-        this.showProductSM = !this.showProductSM
-        // alert(window.innerHeight)
-      
+        if (this.showProduct){
+          this.showProduct = false;
+          this.showProductSM = true;
+        }
+        // alert(window.innerHeight
+        else if(this.showProductSM){
+          this.showProductSM = false;
+          this.showProduct = true;
+        }
+      }
         
       }
     },
@@ -218,13 +228,9 @@ export default {
         if(window.innerWidth > 992) this.showProductSM = !this.showProductSM
       }
     }
-  },
-  mounted() {
-    this.$nextTick(function(){
-      window.addEventListener('resize', this.checkSelectedProduct());
-    
-    })
-  }
+  
+  
+  
 };
 </script>
   
