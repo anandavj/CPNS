@@ -17,7 +17,7 @@
             >
                 <template v-slot:item.actions="{ item }">
                     <template>
-                        <v-btn @click="details(item)" color="light-blue" dark class="caption">Details</v-btn>
+                        <v-btn @click="details(item)" color="light-blue" dark class="overline">Details</v-btn>
                     </template>
                 </template>
             </v-data-table>

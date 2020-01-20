@@ -19,8 +19,8 @@
       <v-divider/>
       <v-list dense>
           <v-list-item link>
-            <v-list-item-icon><v-icon>mdi-home-variant</v-icon></v-list-item-icon>
-            <v-list-item-title @click="goTo('Dashboard')">Dashboard</v-list-item-title>
+            <v-list-item-icon><v-icon>mdi-home-variant-outline</v-icon></v-list-item-icon>
+            <v-list-item-title @click="goTo('/','Dashboard')">Dashboard</v-list-item-title>
           </v-list-item>
           <v-list-group prepend-icon="mdi-account-group" no-action>
             <template v-slot:activator><v-list-item-content><v-list-item-title>Karyawan</v-list-item-title></v-list-item-content></template>
@@ -30,7 +30,7 @@
             </v-list-item>
             <v-list-item link class="caption">
               <v-list-item-title>Roles & Permission</v-list-item-title>
-              <v-list-item-icon><v-icon>mdi-key</v-icon></v-list-item-icon>
+              <v-list-item-icon><v-icon>mdi-key-outline</v-icon></v-list-item-icon>
             </v-list-item>
           </v-list-group>
           <v-list-group prepend-icon="mdi-cube-outline" no-action>
@@ -42,10 +42,6 @@
             <v-list-item link class="caption" @click="goTo('baranginout','Barang Masuk Keluar')">
               <v-list-item-title>Barang Masuk/Keluar</v-list-item-title>
               <v-list-item-icon><v-icon>mdi-clipboard-flow-outline</v-icon></v-list-item-icon>
-            </v-list-item>
-            <v-list-item link class="caption" @click="goTo('barangbongkarmuat','Bongkar Muat Barang')">
-              <v-list-item-title>Bongkar/Muat</v-list-item-title>
-              <v-list-item-icon><v-icon>mdi-truck-outline</v-icon></v-list-item-icon>
             </v-list-item>
           </v-list-group>
           <v-list-group prepend-icon="mdi-currency-usd" no-action>
@@ -59,10 +55,35 @@
               <v-list-item-icon><v-icon>mdi-wallet-outline</v-icon></v-list-item-icon>
             </v-list-item>
           </v-list-group>
-          <v-list-item link @click="logOut">
+          <v-list-group prepend-icon="mdi-store" no-action>
+            <template v-slot:activator><v-list-item-content><v-list-item-title>Gudang</v-list-item-title></v-list-item-content></template>
+            <v-list-item link class="caption" @click="goTo('barangbongkarmuat','Bongkar Muat Barang')">
+              <v-list-item-title>Bongkar/Muat</v-list-item-title>
+              <v-list-item-icon><v-icon>mdi-truck-outline</v-icon></v-list-item-icon>
+            </v-list-item>
+            <v-list-item link class="caption" @click="goTo('')">
+              <v-list-item-title>Stock Opname</v-list-item-title>
+              <v-list-item-icon><v-icon>mdi-clipboard-check-outline</v-icon></v-list-item-icon>
+            </v-list-item>
+          </v-list-group>
+          <v-list-item link @click="logOutDialog = true">
             <v-list-item-icon><v-icon class="red--text">mdi-power</v-icon></v-list-item-icon>
             <v-list-item-title class="red--text">Keluar</v-list-item-title>
           </v-list-item>
+          <v-dialog v-model="logOutDialog">
+            <v-card>
+              <v-card-title>Confirmation</v-card-title>
+                <v-card-text>Apakah Anda Yakin Ingin Keluar?</v-card-text>
+                <v-card-actions>
+                    <v-container>
+                        <v-row justify="center">
+                            <v-btn class="mt-n5" color="red darken-1" text @click="logOutDialog = false">Tidak</v-btn>
+                            <v-btn class="mt-n5" color="blue darken-1" text @click="logOut">Ya</v-btn>
+                        </v-row>
+                    </v-container>
+                </v-card-actions>
+            </v-card>
+          </v-dialog>
       </v-list>
     </v-navigation-drawer>
     <v-content app class="mx-4 my-4 mx-md-10 my-md-n5">
@@ -93,6 +114,7 @@ export default {
       //   {title:'Barang', icon:'mdi-cube-outline'},
       // ],
       titleBar: 'Dashboard',
+      logOutDialog: false
     }
   },
 
@@ -102,6 +124,7 @@ export default {
       this.titleBar = title
     },
     logOut() {
+      this.logOutDialog = false
       firebase.auth().signOut()
         .then( () => {
           this.$router.push('/login')
