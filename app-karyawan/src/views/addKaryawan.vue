@@ -1,8 +1,8 @@
 <template>
     <v-app>
-        <h1 class="text-center font-weight-thin">Stock Update List</h1>
-        <v-container  class="mt-n3">
-            <v-dialog v-model="popUpModal" persistent max-width='600px'>
+        <h1 class="text-center font-weight-thin">List Karyawan</h1>
+        <v-container class="mt-n3">
+            <v-dialog v-model="popupModal" persistent max-width='600px'>
                 <template v-slot:activator="{ on }">
                     <v-row justify="center" v-if="items.length == 0">
                         <v-col lg="11">
@@ -20,31 +20,34 @@
                     </v-row>
                 </template>
                 <v-card>
-                    <v-card-title>Tambah List</v-card-title>
+                    <v-card-title>Tambah Karyawan</v-card-title>
                     <v-card-text>
                             <v-row>
                                 <v-col cols="12">
-                                    <v-text-field v-model="editableItem.nama" label="Nama Barang" required/>
+                                    <v-text-field v-model="editableKaryawan.nama" label="Nama Lengkap" required/>
                                 </v-col>
                                 <v-col cols="12">
-                                    <v-radio-group v-model="editableItem.status" row label="Status:">
-                                        <v-radio label="Masuk" value="masuk"/>
-                                        <v-radio label="Keluar" value="keluar"/>
-                                    </v-radio-group>
+                                    <v-text-field
+                                        label="E-mail"
+                                        v-model="editableKaryawan.email"
+                                    ></v-text-field>
                                 </v-col>
                                 <v-col cols="12">
-                                    <v-text-field v-model="editableItem.jumlah" label="Jumlah" required/>
-                                </v-col>
-                                <v-col cols="12">
-                                    <v-textarea v-model="editableItem.keterangan" outlined label="Keterangan"></v-textarea>
+                                    <v-text-field
+                                        v-model="editableKaryawan.password"
+                                        label="Enter your password"
+                                        hint="At least 8 characters"
+                                        min="8"
+                                        type="password"
+                                    ></v-text-field>
                                 </v-col>
                             </v-row>
                     </v-card-text>
                     <v-card-actions>
                         <v-container>
                             <v-row justify="center">
-                                <v-btn class="mt-n12" color="red darken-1" text @click="close">Close</v-btn>
-                                <v-btn class="mt-n12" color="blue darken-1" text @click="save">Save</v-btn>
+                                <v-btn class="mt-n5" color="red darken-1" text @click="close">Close</v-btn>
+                                <v-btn class="mt-n5" color="blue darken-1" text @click="save">Save</v-btn>
                             </v-row>
                         </v-container>
                     </v-card-actions>
@@ -56,7 +59,7 @@
                 <v-col lg="12">
                     <v-data-table :headers="headers" :items="items" :disable-sort="true" :disable-filtering="true" :hide-default-footer="true">
                         <template v-slot:item.actions="{ item }">
-                            <v-icon class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
+                            <v-icon class="mr-2" @click="editKaryawan(item)">mdi-pencil</v-icon>
                             <v-icon @click="confirmDelete(item)">mdi-delete</v-icon>
                         </template>
                     </v-data-table>
@@ -81,7 +84,7 @@
                     <v-container>
                         <v-row justify="center">
                             <v-btn class="mt-n5" color="red darken-1" text @click="cancel">Tidak</v-btn>
-                            <v-btn class="mt-n5" color="blue darken-1" text @click="deleteItem">Ya</v-btn>
+                            <v-btn class="mt-n5" color="blue darken-1" text @click="deleteKaryawan">Ya</v-btn>
                         </v-row>
                     </v-container>
                 </v-card-actions>
@@ -92,29 +95,27 @@
 
 <script>
 export default {
-    name:'BarangMasukKeluar',
+    name:'addKaryawan',
     data() {
         return {
             headers: [
-                {text:'Nama',   value:'nama', width: '60%'},
-                {text:'Status', value:'status'},
-                {text:'Jumlah', value:'jumlah'},
-                {text:'',       value:'actions', width: '10%'}
+                {text:'Nama', value:'nama'},
+                {text:'Email', value:'email'},
+                {text:'', value:'actions', width: '10%'}  
             ],
+            editableKaryawan: {
+                nama:'',
+                email:'',
+                password:''
+
+            },
+            defaultKaryawan: {
+                nama:'',
+                email:'',
+                password:''
+            },
             items: [],
-            editableItem: {
-                nama:'',
-                status:'',
-                jumlah:'',
-                keterangan:''
-            },
-            defaultItem: {
-                nama:'',
-                status:'',
-                jumlah:'',
-                keterangan:''
-            },
-            popUpModal: false,
+            popupModal: false,
             confirmModal: false,
             editedIndex: -1
         }
@@ -122,35 +123,35 @@ export default {
     methods: {
         save() {
             if(this.editedIndex > -1) {
-                Object.assign(this.items[this.editedIndex],this.editableItem)
+                Object.assign(this.items[this.editedIndex],this.editableKaryawan)
             } else {
-                this.items.push(this.editableItem)
+                this.items.push(this.editableKaryawan)
             }
             this.close()
         },
         close() {
-            this.popUpModal = false
+            this.popupModal = false
             setTimeout(() => {
-                this.editableItem = Object.assign({}, this.defaultItem)
+                this.editableKaryawan = Object.assign({}, this.defaultKaryawan)
                 this.editedIndex = -1
-            }, 300)
+            }, 300);
         },
         cancel() {
             this.confirmModal = false
             setTimeout(() => {
                 this.editedIndex = -1
-            }, 300)
+            }, 300);
         },
-        editItem(item) {
+        editKaryawan(item) {
             this.editedIndex = this.items.indexOf(item)
-            this.editableItem = Object.assign({}, item)
-            this.popUpModal = true
+            this.editableKaryawan = Object.assign({},item)
+            this.popupModal = true
         },
         confirmDelete(item) {
             this.confirmModal = true
             this.editedIndex = this.items.indexOf(item)
         },
-        deleteItem() {
+        deleteKaryawan() {
             this.items.splice(this.editedIndex, 1)
             this.editedIndex = -1
             this.confirmModal = false

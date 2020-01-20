@@ -37,6 +37,14 @@ const routes = [
     }
   },
   {
+    path:'/addKaryawan',
+    name:'addKaryawan',
+    component: () => import('../views/addKaryawan.vue'),
+    meta: {
+      drawer: true
+    }
+  },
+  {
     path:'/barang',
     name:'Barang',
     component: () => import('../views/Barang.vue'),
@@ -75,7 +83,7 @@ const routes = [
     meta: {
       drawer: true
     }
-  }
+  },
 ]
 
 const router = new VueRouter({
