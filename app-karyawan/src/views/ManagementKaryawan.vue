@@ -1,6 +1,6 @@
 <template>
     <v-app>
-        <v-card :elevation="1" link color="blue" dark class="mb-5" @click="goTo('addKaryawan')">
+        <!-- <v-card :elevation="1" link color="blue" dark class="mb-5" @click="goTo('addKaryawan')">
             <div class="d-flex flex-no-wrap justify-space-between align-center">
                 <div>
                     <v-card-title>Tambah Karyawan</v-card-title>
@@ -10,7 +10,7 @@
                     <v-card-text><v-icon size="50">mdi-account-plus</v-icon></v-card-text>
                 </div>
             </div>
-        </v-card>
+        </v-card> -->
         <v-card :elevation="1" link color="blue" dark class="mb-5">
             <div class="d-flex flex-no-wrap justify-space-between align-center">
                 <div>
