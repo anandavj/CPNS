@@ -29,6 +29,14 @@ const routes = [
     }
   },
   {
+    path:'/managementKaryawan',
+    name:'ManagementKaryawan',
+    component: () => import('../views/ManagementKaryawan.vue'),
+    meta: {
+      drawer: true
+    }
+  },
+  {
     path:'/barang',
     name:'Barang',
     component: () => import('../views/Barang.vue'),

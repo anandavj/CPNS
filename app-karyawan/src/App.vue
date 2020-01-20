@@ -29,8 +29,8 @@
               <v-list-item-icon><v-icon>mdi-account-group</v-icon></v-list-item-icon>
             </v-list-item>
             <v-list-item link class="caption">
-              <v-list-item-title>Roles & Permission</v-list-item-title>
-              <v-list-item-icon><v-icon>mdi-key-outline</v-icon></v-list-item-icon>
+              <v-list-item-title>Pengaturan Karyawan</v-list-item-title>
+              <v-list-item-icon><v-icon>mdi-account-key-outline</v-icon></v-list-item-icon>
             </v-list-item>
           </v-list-group>
           <v-list-group prepend-icon="mdi-cube-outline" no-action>
