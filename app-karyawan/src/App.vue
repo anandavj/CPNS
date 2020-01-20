@@ -10,7 +10,7 @@
           <v-list-item-avatar size="60">
             <img src="https://image.flaticon.com/icons/svg/194/194938.svg" alt="">
           </v-list-item-avatar>
-          <v-list-item-content>
+          <v-list-item-content @click="goTo('Profil')">
             <v-list-item-title>Ananda Vijaya</v-list-item-title>
             <v-list-item-subtitle>Manager</v-list-item-subtitle>
           </v-list-item-content>
