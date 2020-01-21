@@ -16,31 +16,31 @@
                 :hide-default-footer="true"
             >
                 <template v-slot:item.actions="{ item }">
-                    <v-dialog fullscreen v-model="pricelistDialog" scrollable>
-                        <template v-slot:activator="{on}">
-                            <v-btn @click="details(item)" v-on="on" width="80px" color="light-blue" dark class="caption">Details</v-btn>
-                        </template>
-                        <v-card>
-                            <div>
-                                <v-toolbar dense flat>
-                                    <v-btn absolute right icon @click="close"><v-icon>mdi-close</v-icon></v-btn>
-                                </v-toolbar>
-                                <v-card-text>
-                                    <v-data-table
-                                        :headers="karyawansHeader"
-                                        :items="karyawan"
-                                        :disable-sort="true"
-                                        :disable-filtering="true"
-                                        mobile-breakpoint="1"
-                                        hide-default-footer="true"
-                                    >
-                                    </v-data-table>
-                                </v-card-text>
-                            </div>
-                        </v-card>
-                    </v-dialog>
+                    <template>
+                        <v-btn @click="details(item)" width="80px" color="light-blue" dark class="caption">Details</v-btn>
+                    </template>
                 </template>
             </v-data-table>
+            <v-dialog fullscreen v-model="pricelistDialog" scrollable hide-overlay transition="dialog-bottom-transition">
+                <v-card>
+                    <div>
+                        <v-toolbar dense flat>
+                            <v-btn absolute right icon @click="close"><v-icon>mdi-close</v-icon></v-btn>
+                        </v-toolbar>
+                        <v-card-text>
+                            <v-data-table
+                                :headers="karyawansHeader"
+                                :items="karyawan.karyawans"
+                                :disable-sort="true"
+                                :disable-filtering="true"
+                                :mobile-breakpoint="1"
+                                :hide-default-footer="true"
+                            >
+                            </v-data-table>
+                        </v-card-text>
+                    </div>
+                </v-card>
+            </v-dialog>
         </div>
     </v-app>
 </template>
@@ -72,12 +72,22 @@ export default {
                     hargaAtas:14000,
                     karyawans: [
                         {no:1, nama:'Mahendra Fajar', margin:'5'},
-                        {no:2, nama:'Satria Kemal', margin:'10'}
+                        {no:2, nama:'Satria Kemal', margin:'10'},
                     ]
                 },
-                {namaBarang:'Paku', stock:'10', rataRataBawah:500, hargaAtas:1000}
+                {
+                    namaBarang:'Paku', 
+                    stock:'10', 
+                    rataRataBawah:500, 
+                    hargaAtas:1000,
+                    karyawans: [
+                        {no:1, nama:'Mahendra Fajar', margin:'5'},
+                        {no:2, nama:'Satria Kemal', margin:'10'}
+                    ]
+                }
             ],
             karyawan: [],
+            karyawanDefault: [],
             searchPricelistBarang:'',
             pricelistDialog: false,
             selectedIndex: -1
@@ -85,12 +95,13 @@ export default {
     },
     methods: {
         close() {
+            this.karyawan = Object.assign({},this.karyawanDefault)
             this.selectedIndex = -1
             this.pricelistDialog = false
         },
         details(item) {
             this.selectedIndex = this.barangs.indexOf(item)
-            this.karyawan = Object.assign({},item.karyawans)
+            this.karyawan = Object.assign({},item)
             this.pricelistDialog = true
         }
     },

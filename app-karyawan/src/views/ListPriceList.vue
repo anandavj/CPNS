@@ -13,6 +13,7 @@
                 :items="barang"
                 :search="searchPricelist"
                 :disable-sort="true"
+                :mobile-breakpoint="1"
                 no-data-text="Tidak ada Data T_T"
                 no-results-text="Barang tidak ditemukan"
                 :hide-default-footer="true"
@@ -36,11 +37,7 @@ export default {
     computed: {
         headers() {
             return [
-                {text:'Nama Barang', value:'namaBarang', width:'40%'},
-                {text:'Stock', value:'stock',filter: () => true},
-                {text:'Harga Bawah', value:'hargaBawah',filter: () => true},
-                {text:'Harga Atas', value:'hargaAtas',filter: () => true},
-                {text:'Satuan', value: 'satuan',filter: () => true}
+                {text:'Nama Barang', value:'namaBarang'},
             ]
         }
     }
