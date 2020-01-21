@@ -11,7 +11,7 @@
                 </div>
             </div>
         </v-card> -->
-        <v-card :elevation="1" link color="blue" dark class="mb-5">
+        <v-card :elevation="1" link color="blue" dark class="mb-5" @click="goTo('addDivisi')">
             <div class="d-flex flex-no-wrap justify-space-between align-center">
                 <div>
                     <v-card-title>Tambah Divisi</v-card-title>

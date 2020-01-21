@@ -107,6 +107,14 @@ const routes = [
     meta: {
       drawer: true
     }
+  },
+  {
+    path:'/addDivisi',
+    name:'addDivisi',
+    component: () => import('../views/addDivisi.vue'),
+    meta: {
+      drawer: true
+    }
   }
 ]
 

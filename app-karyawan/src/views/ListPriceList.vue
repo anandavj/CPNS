@@ -24,7 +24,7 @@
             >
                 <template v-slot:expanded-item="{ headers, item }">
                     <td :colspan="headers.length">
-                        {{ item }}
+                        {{ item.hargaBawah }}
                     </td>
                 </template>
             </v-data-table>
@@ -33,14 +33,10 @@
 </template>
 
 <script>
+
 export default {
     name:'ListPriceList',
-    methods:{
-        clicked(value) {
-            console.log(value)
-            this.expanded.push(value)
-        }
-    },
+    
     data() {
         return {
             expanded: [],

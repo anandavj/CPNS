@@ -34,7 +34,7 @@
                                 :disable-filtering="true"
                                 :mobile-breakpoint="1"
                                 :hide-default-footer="true"
-                                :items-per-page="itemPage"
+                                :items-per-page=9999
                             >
                             </v-data-table>
                         </v-card-text>
