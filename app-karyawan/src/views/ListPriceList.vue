@@ -17,7 +17,16 @@
                 no-data-text="Tidak ada Data T_T"
                 no-results-text="Barang tidak ditemukan"
                 :hide-default-footer="true"
+                item-key="namaBarang"
+                :single-expand="singleExpand"
+                :expanded.sync="expanded"
+                show-expand
             >
+                <template v-slot:expanded-item="{ headers, item }">
+                    <td :colspan="headers.length">
+                        {{ item }}
+                    </td>
+                </template>
             </v-data-table>
         </div>
     </v-app>
@@ -26,10 +35,19 @@
 <script>
 export default {
     name:'ListPriceList',
+    methods:{
+        clicked(value) {
+            console.log(value)
+            this.expanded.push(value)
+        }
+    },
     data() {
         return {
+            expanded: [],
+            singleExpand: false,
             barang: [
-                {namaBarang:'Kayu',stock:'100',hargaBawah:50000,hargaAtas:100000,satuan:'batang'}
+                {namaBarang:'Kayu',stock:'100',hargaBawah:50000,hargaAtas:100000,satuan:'batang'},
+                {namaBarang:'Besi',stock:'100',hargaBawah:50000,hargaAtas:100000,satuan:'batang'}
             ],
             searchPricelist:''
         }
