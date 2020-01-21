@@ -99,6 +99,14 @@ const routes = [
     meta: {
       drawer: true
     }
+  },
+  {
+    path:'/try',
+    name:'try',
+    component: () => import('../views/Try.vue'),
+    meta: {
+      drawer: true
+    }
   }
 ]
 
