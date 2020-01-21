@@ -92,6 +92,14 @@ const routes = [
       drawer: true
     }
   },
+  {
+    path:'/aturPricelist',
+    name:'aturPricelist',
+    component: () => import('../views/aturPricelist.vue'),
+    meta: {
+      drawer: true
+    }
+  }
 ]
 
 const router = new VueRouter({

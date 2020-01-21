@@ -50,7 +50,7 @@
               <v-list-item-title>List Pricelist</v-list-item-title>
               <v-list-item-icon><v-icon>mdi-format-list-text</v-icon></v-list-item-icon>
             </v-list-item>
-            <v-list-item link class="caption" @click="goTo('')">
+            <v-list-item link class="caption" @click="goTo('aturpricelist','Atur Pricelist')">
               <v-list-item-title>Atur Pricelist</v-list-item-title>
               <v-list-item-icon><v-icon>mdi-wallet-outline</v-icon></v-list-item-icon>
             </v-list-item>

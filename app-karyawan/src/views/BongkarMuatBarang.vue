@@ -17,7 +17,7 @@
                 :hide-default-footer="true"
             >
             <template v-slot:item.actions="{ item }">
-                <v-dialog fullscreen v-model="dialog" scrollable max-width="300px">
+                <v-dialog fullscreen v-model="dialog" scrollable>
                     <template v-slot:activator="{on}">
                         <v-btn @click="open(item)" v-on="on" width="130px" color="light-blue" dark>Detail</v-btn>
                     </template>

@@ -65,8 +65,8 @@ export default {
         },
         close() {
             this.karyawan = Object.assign({},this.karyawanDefault)
-            this.popupDetails = false
             this.selectedIndex = -1
+            this.popupDetails = false
         }
     },
 
