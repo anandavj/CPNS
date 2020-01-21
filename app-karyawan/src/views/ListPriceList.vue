@@ -13,10 +13,20 @@
                 :items="barang"
                 :search="searchPricelist"
                 :disable-sort="true"
+                :mobile-breakpoint="1"
                 no-data-text="Tidak ada Data T_T"
                 no-results-text="Barang tidak ditemukan"
                 :hide-default-footer="true"
+                item-key="namaBarang"
+                :single-expand="singleExpand"
+                :expanded.sync="expanded"
+                show-expand
             >
+                <template v-slot:expanded-item="{ headers, item }">
+                    <td :colspan="headers.length">
+                        {{ item }}
+                    </td>
+                </template>
             </v-data-table>
         </div>
     </v-app>
@@ -25,10 +35,19 @@
 <script>
 export default {
     name:'ListPriceList',
+    methods:{
+        clicked(value) {
+            console.log(value)
+            this.expanded.push(value)
+        }
+    },
     data() {
         return {
+            expanded: [],
+            singleExpand: false,
             barang: [
-                {namaBarang:'Kayu',stock:'100',hargaBawah:50000,hargaAtas:100000,satuan:'batang'}
+                {namaBarang:'Kayu',stock:'100',hargaBawah:50000,hargaAtas:100000,satuan:'batang'},
+                {namaBarang:'Besi',stock:'100',hargaBawah:50000,hargaAtas:100000,satuan:'batang'}
             ],
             searchPricelist:''
         }
@@ -36,11 +55,7 @@ export default {
     computed: {
         headers() {
             return [
-                {text:'Nama Barang', value:'namaBarang', width:'40%'},
-                {text:'Stock', value:'stock',filter: () => true},
-                {text:'Harga Bawah', value:'hargaBawah',filter: () => true},
-                {text:'Harga Atas', value:'hargaAtas',filter: () => true},
-                {text:'Satuan', value: 'satuan',filter: () => true}
+                {text:'Nama Barang', value:'namaBarang'},
             ]
         }
     }
