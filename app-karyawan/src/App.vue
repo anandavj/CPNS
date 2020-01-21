@@ -43,6 +43,10 @@
               <v-list-item-title>Barang Masuk/Keluar</v-list-item-title>
               <v-list-item-icon><v-icon>mdi-clipboard-flow-outline</v-icon></v-list-item-icon>
             </v-list-item>
+            <v-list-item link class="caption" @click="goTo('kelolabarang','Kelola Barang')">
+              <v-list-item-title>Highlight</v-list-item-title>
+              <v-list-item-icon><v-icon>mdi-briefcase-check-outline</v-icon></v-list-item-icon>
+            </v-list-item>
           </v-list-group>
           <v-list-group prepend-icon="mdi-currency-usd" no-action>
             <template v-slot:activator><v-list-item-content><v-list-item-title>Pricelist</v-list-item-title></v-list-item-content></template>
@@ -61,7 +65,7 @@
               <v-list-item-title>Bongkar/Muat</v-list-item-title>
               <v-list-item-icon><v-icon>mdi-truck-outline</v-icon></v-list-item-icon>
             </v-list-item>
-            <v-list-item link class="caption" @click="goTo('opname')">
+            <v-list-item link class="caption" @click="goTo('opname', 'Stock Opname')">
               <v-list-item-title>Stock Opname</v-list-item-title>
               <v-list-item-icon><v-icon>mdi-clipboard-check-outline</v-icon></v-list-item-icon>
             </v-list-item>

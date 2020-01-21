@@ -109,6 +109,14 @@ const routes = [
     }
   },
   {
+    path:'/kelolabarang',
+    name:'highlight',
+    component: () => import('../views/Highlight.vue'),
+    meta: {
+      drawer: true
+    }
+  },
+  {
     path:'/addDivisi',
     name:'addDivisi',
     component: () => import('../views/addDivisi.vue'),
