@@ -24,6 +24,7 @@
         <v-dialog v-model="popupDetails" fullscreen hide-overlay transition="dialog-bottom-transition">
             <v-card>
                 <v-toolbar dense flat>
+                    <span class="title font-weight-light">Profil</span>
                     <v-btn absolute right icon @click="close"><v-icon>mdi-close</v-icon></v-btn>
                 </v-toolbar>
                 {{karyawan}}
