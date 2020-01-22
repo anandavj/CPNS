@@ -34,8 +34,8 @@ export default {
     data() {
         return {
             karyawans: [
-                {nama:'Mahendra Fajar', margin:'5'},
-                {nama:'Satria Kemal', margin:'10'}
+                {id:1, nama:'Mahendra Fajar', margin:'5'},
+                {id:2, nama:'Satria Kemal', margin:'10'}
             ],
             karyawansSelected: [],
             editableKaryawan: {
