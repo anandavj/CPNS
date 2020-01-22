@@ -69,6 +69,10 @@
               <v-list-item-title>Stock Opname</v-list-item-title>
               <v-list-item-icon><v-icon>mdi-clipboard-check-outline</v-icon></v-list-item-icon>
             </v-list-item>
+            <v-list-item link class="caption" @click="goTo('monitorOpname', 'Monitor Stock Opname')">
+              <v-list-item-title>Monitor Opname</v-list-item-title>
+              <v-list-item-icon><v-icon>mdi-monitor</v-icon></v-list-item-icon>
+            </v-list-item>
           </v-list-group>
           <v-list-item link @click="logOutDialog = true">
             <v-list-item-icon><v-icon class="red--text">mdi-power</v-icon></v-list-item-icon>

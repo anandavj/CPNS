@@ -127,7 +127,15 @@ const routes = [
   {
     path:'/editPricelist',
     name:'editPricelist',
-    component: () => import('../views/EditPricelist.vue'),
+    component: () => import('../views/editPricelist.vue'),
+    meta: {
+      drawer: true
+    }
+  },
+  {
+    path:'/monitorOpname',
+    name:'editPricelist',
+    component: () => import('../views/MonitorOpname.vue'),
     meta: {
       drawer: true
     }
