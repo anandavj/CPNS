@@ -24,7 +24,18 @@
             >
                 <template v-slot:expanded-item="{ headers, item }">
                     <td :colspan="headers.length">
-                        {{ item.hargaBawah }}
+                        <!-- {{ item.hargaBawah }} -->
+                        <v-data-table
+                            :headers="itemHeaders"
+                            :items="item.details"
+                            :disable-filtering="true"
+                            :disable-sort="true"
+                            :hide-default-footer="true"
+                            :hide-default-header="true"
+                            :mobile-breakpoint="4000"
+                            class="transparent"
+                        >
+                        </v-data-table>
                     </td>
                 </template>
             </v-data-table>
@@ -41,18 +52,31 @@ export default {
         return {
             expanded: [],
             singleExpand: false,
-            barang: [
-                {namaBarang:'Kayu',stock:'100',hargaBawah:50000,hargaAtas:100000,satuan:'batang'},
-                {namaBarang:'Besi',stock:'100',hargaBawah:50000,hargaAtas:100000,satuan:'batang'}
-            ],
-            searchPricelist:''
-        }
-    },
-    computed: {
-        headers() {
-            return [
+            headers: [
                 {text:'Nama Barang', value:'namaBarang'},
-            ]
+            ],
+            barang: [
+                {
+                    namaBarang:'Kayu',
+                    details: [
+                        {hargaBawah:1000, hargaAtas:5000, stock: 100, satuan:'Batang'}
+                    ]
+                },
+                {
+                    namaBarang:'Besi',
+                    details: [
+                        {hargaBawah:1000, hargaAtas:5000, stock: 100, satuan:'Batang'}
+                    ]    
+                }
+            ],
+            itemHeaders: [
+                {text:'Harga Bawah', value:'hargaBawah'},
+                {text:'Harga Atas', value:'hargaAtas'},
+                {text:'Stock', value:'stock'},
+                {text:'Satuan', value:'satuan'}
+            ],
+
+            searchPricelist:''
         }
     }
 }

@@ -123,6 +123,14 @@ const routes = [
     meta: {
       drawer: true
     }
+  },
+  {
+    path:'/editPricelist',
+    name:'editPricelist',
+    component: () => import('../views/editPricelist.vue'),
+    meta: {
+      drawer: true
+    }
   }
 ]
 

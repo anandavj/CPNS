@@ -25,6 +25,8 @@
                 <v-card>
                     <div>
                         <v-toolbar dense flat>
+                            <span class="title font-weight-light">List Karyawan</span>
+                            <v-btn absolute right icon @click="edit(item)"></v-btn>
                             <v-btn absolute right icon @click="close"><v-icon>mdi-close</v-icon></v-btn>
                         </v-toolbar>
                         <v-card-text>
