@@ -17,6 +17,7 @@
             >
                 <template v-slot:item.actions="{ item }">
                     <template>
+                        <v-btn @click="edit(item)" width="80px" color="orange" dark class="caption mr-2">Edit</v-btn>
                         <v-btn @click="details(item)" width="80px" color="light-blue" dark class="caption">Details</v-btn>
                     </template>
                 </template>
@@ -26,7 +27,6 @@
                     <div>
                         <v-toolbar dense flat>
                             <span class="title font-weight-light">List Karyawan</span>
-                            <v-btn absolute right icon @click="edit(item)"></v-btn>
                             <v-btn absolute right icon @click="close"><v-icon>mdi-close</v-icon></v-btn>
                         </v-toolbar>
                         <v-card-text>
