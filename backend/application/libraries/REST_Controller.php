@@ -1666,15 +1666,15 @@ abstract class REST_Controller extends \CI_Controller {
      */
     public function delete($key = NULL, $xss_clean = NULL)
     {
-        $input = json_decode(file_get_contents('php://input'));
+        // $input = json_decode(file_get_contents('php://input'), true);
         if ($key === NULL)
         {
-            // return $this->_delete_args;
-            return $input;
+            return $this->_delete_args;
+            // return $input;
         }
 
-        // return isset($this->_delete_args[$key]) ? $this->_xss_clean($this->_delete_args[$key], $xss_clean) : NULL;
-        return isset($input) ? $input->$key : NULL;
+        return isset($this->_delete_args[$key]) ? $this->_xss_clean($this->_delete_args[$key], $xss_clean) : NULL;
+        // return isset($input) ? $input->$key : NULL;
     }
 
     /**
