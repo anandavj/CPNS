@@ -1,0 +1,34 @@
+identifikasi barang keluar masuk : suart jalan
+
+Delivery order: barang masuk
+
+
+Stock update list: Delivery Order / Surat Jalan
+
+Stock update list dibagi 2
+
+tambah barang CRUD
+CRUD pengKategorian
+
+status surat jalan
+
+ngubah satuan2
+
+open price (harga Umum) bottom price (limit harga bawah)
+
+label
+
+stock opname order by category
+barang warehouse many to many
+
+margin dalam bentuk rupiah
+
+exchange rate untuk kategori semua barang atau tertentu
+
+----
+
+user story
+As a <role> backoffice | gudang | drivers | sales
+I want to
+So that <impact>
+
