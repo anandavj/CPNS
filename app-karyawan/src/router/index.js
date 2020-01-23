@@ -141,7 +141,7 @@ const routes = [
     }
   },
   {
-    path:'/addSatuan',
+    path:'/kelolaSatuan',
     name:'Tambah Satuan',
     component: () => import('../views/BarangManageUnit.vue'),
     meta: {
@@ -149,7 +149,7 @@ const routes = [
     }
   },
   {
-    path:'/addKategori',
+    path:'/kelolaKategori',
     name:'Kelola Kategori',
     component: () => import('../views/BarangManageCategory.vue'),
     meta: {

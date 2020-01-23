@@ -1,88 +1,112 @@
 <template>
   <v-app>
-    <h1 class="text-center font-weight-thin">List Barang</h1>
+    <h1 class="text-center font-weight-thin">List Satuan</h1>
 
-    <v-container class="mt-n3">
-      <v-dialog v-model="popupModal" persistent max-width="400px">
-        <template v-slot:activator="{ on }">
-          <v-row justify="center" v-if="items.length == 0">
-            <v-col lg="11">
-              <v-card outlined class="text-center" v-on="on" color="light-green">
-                <v-card-text class="white--text">
-                  <v-icon class="white--text">mdi-plus</v-icon>Tambah List
-                </v-card-text>
-              </v-card>
-            </v-col>
-          </v-row>
-          <v-row justify="end" v-else>
-            <v-col cols="12" md="2">
-              <v-btn block v-on="on" color="light-blue" class="white--text">
-                <v-icon>mdi-plus</v-icon>Tambah
-              </v-btn>
-            </v-col>
-          </v-row>
-        </template>
-        <v-card>
-          <v-card-title>Tambah Barang</v-card-title>
-          <v-card-text>
-            <v-row>
-              <v-col cols="12">
-                <v-text-field v-model="editableUnit.name" label="Nama Barang" required />
-              </v-col>
-             
-            </v-row>
-          </v-card-text>
-          <v-card-actions>
-            <v-container>
-              <v-row justify="center">
-                <v-btn class="mt-n5" color="red darken-1" text @click="close">Close</v-btn>
-                <v-btn class="mt-n5" color="blue darken-1" text @click="save">Save</v-btn>
-              </v-row>
-            </v-container>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    </v-container>
+    <template>
+  <v-data-table
+    :headers="headers"
+    :items="desserts"
+    sort-by="calories"
+    class="elevation-1"
+  >
+    <template v-slot:top>
+      <v-toolbar flat color="white">
+        <v-toolbar-title>My CRUD</v-toolbar-title>
+        <v-divider
+          class="mx-4"
+          inset
+          vertical
+        ></v-divider>
+        <v-spacer></v-spacer>
+        <v-dialog v-model="dialog" max-width="500px">
+          <template v-slot:activator="{ on }">
+            <v-btn color="primary" dark class="mb-2" v-on="on">New Item</v-btn>
+          </template>
+          <v-card>
+            <v-card-title>
+              <span class="headline">{{ formTitle }}</span>
+            </v-card-title>
 
-    <v-container v-if="items.length > 0" class="mt-n5">
-      <v-row justify="center">
-        <v-col lg="12">
-          <v-data-table
-            :headers="headers"
-            :items="items"
-            :disable-sort="true"
-            :disable-filtering="true"
-            :hide-default-footer="true"
-          >
-            <template v-slot:item.actions="{ item }">
-              <v-icon class="mr-2" @click="editUnit(item)">mdi-pencil</v-icon>
-              <v-icon @click="confirmDelete(item)">mdi-delete</v-icon>
-            </template>
-          </v-data-table>
-        </v-col>
+            <v-card-text>
+              <v-container>
+                <v-row>
+                  <v-col cols="12" sm="6" md="4">
+                    <v-text-field v-model="editedItem.name" label="Dessert name"></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="4">
+                    <v-text-field v-model="editedItem.calories" label="Calories"></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="4">
+                    <v-text-field v-model="editedItem.fat" label="Fat (g)"></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="4">
+                    <v-text-field v-model="editedItem.carbs" label="Carbs (g)"></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="4">
+                    <v-text-field v-model="editedItem.protein" label="Protein (g)"></v-text-field>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-card-text>
+
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
+              <v-btn color="blue darken-1" text @click="save">Save</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </v-toolbar>
+    </template>
+    <template v-slot:item.action="{ item }">
+      <v-icon
+        small
+        class="mr-2"
+        @click="editItem(item)"
+      >
+        edit
+      </v-icon>
+      <v-icon
+        small
+        @click="deleteItem(item)"
+      >
+        delete
+      </v-icon>
+    </template>
+    <template v-slot:no-data>
+      <v-btn color="primary" @click="initialize">Reset</v-btn>
+    </template>
+  </v-data-table>
+</template>
+
+    <v-layout row wrap mt-4 ma-2>
+      <v-row row md2 justify="end">
+        <div>
+          <v-btn color="success" large block @click="addDialog = true">
+            Tambah
+            <v-spacer></v-spacer>
+            <v-icon>mdi-plus</v-icon>
+          </v-btn>
+        </div>
       </v-row>
-    </v-container>
-    <v-container v-if="items.length > 0">
-      <v-row justify="end">
-        <v-col md="4" lg="2">
-          <v-btn block outlined color="red">Cancel</v-btn>
-        </v-col>
-        <v-col md="4" lg="2">
-          <v-btn block color="light-green" dark>Save</v-btn>
-        </v-col>
-      </v-row>
-    </v-container>
-    <v-dialog v-model="confirmModal" persistent max-width="350px">
+    </v-layout>
+
+    <v-dialog
+      v-model="addDialog"
+      persistent
+      :overlay="false"
+      max-width="300px"
+      transition="dialog-transition"
+    >
       <v-card>
-        <v-card-title>Confirmation</v-card-title>
-        <v-card-text>Apakah Anda Yakin Ingin Menghapus List Ini?</v-card-text>
+        <v-card-title class="headline">Tambah Satuan</v-card-title>
+        <v-col>
+          <v-text-field name="name" label="Masukan nama satuan"></v-text-field>
+        </v-col>
         <v-card-actions>
-          <v-container>
-            <v-row justify="center">
-              <v-btn class="mt-n5" color="red darken-1" text @click="cancel">Tidak</v-btn>
-              <v-btn class="mt-n5" color="blue darken-1" text @click="deleteUnit">Ya</v-btn>
-            </v-row>
-          </v-container>
+          <v-spacer></v-spacer>
+          <v-btn color="red" text @click="addDialog = false">Cancel</v-btn>
+          <v-btn color="green" text @click="addDialog = false">Add</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -90,64 +114,159 @@
 </template>
 
 <script>
-export default {
-  name: "addUnit",
-  data() {
-    return {
+  export default {
+    data: () => ({
+      dialog: false,
       headers: [
-        { text: "Nama", value: "name" },
-      
+        {
+          text: 'Dessert (100g serving)',
+          align: 'left',
+          sortable: false,
+          value: 'name',
+        },
+        { text: 'Calories', value: 'calories' },
+        { text: 'Fat (g)', value: 'fat' },
+        { text: 'Carbs (g)', value: 'carbs' },
+        { text: 'Protein (g)', value: 'protein' },
+        { text: 'Actions', value: 'action', sortable: false },
       ],
-      editableUnit: {
-        name: "",
-      
+      desserts: [],
+      editedIndex: -1,
+      editedItem: {
+        name: '',
+        calories: 0,
+        fat: 0,
+        carbs: 0,
+        protein: 0,
       },
-      defaultUnit: {
-        name: "",
-       
+      defaultItem: {
+        name: '',
+        calories: 0,
+        fat: 0,
+        carbs: 0,
+        protein: 0,
       },
-      items: [],
-      popupModal: false,
-      confirmModal: false,
-      editedIndex: -1
-    };
-  },
-  methods: {
-    save() {
-      if (this.editedIndex > -1) {
-        Object.assign(this.items[this.editedIndex], this.editableUnit);
-      } else {
-        this.items.push(this.editableUnit);
-      }
-      this.close();
+    }),
+
+    computed: {
+      formTitle () {
+        return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
+      },
     },
-    close() {
-      this.popupModal = false;
-      setTimeout(() => {
-        this.editableUnit = Object.assign({}, this.defaultUnit);
-        this.editedIndex = -1;
-      }, 300);
+
+    watch: {
+      dialog (val) {
+        val || this.close()
+      },
     },
-    cancel() {
-      this.confirmModal = false;
-      setTimeout(() => {
-        this.editedIndex = -1;
-      }, 300);
+
+    created () {
+      this.initialize()
     },
-    editUnit(item) {
-      this.editedIndex = this.items.indexOf(item);
-      this.editableUnit = Object.assign({}, item);
-      this.popupModal = true;
+
+    methods: {
+      initialize () {
+        this.desserts = [
+          {
+            name: 'Frozen Yogurt',
+            calories: 159,
+            fat: 6.0,
+            carbs: 24,
+            protein: 4.0,
+          },
+          {
+            name: 'Ice cream sandwich',
+            calories: 237,
+            fat: 9.0,
+            carbs: 37,
+            protein: 4.3,
+          },
+          {
+            name: 'Eclair',
+            calories: 262,
+            fat: 16.0,
+            carbs: 23,
+            protein: 6.0,
+          },
+          {
+            name: 'Cupcake',
+            calories: 305,
+            fat: 3.7,
+            carbs: 67,
+            protein: 4.3,
+          },
+          {
+            name: 'Gingerbread',
+            calories: 356,
+            fat: 16.0,
+            carbs: 49,
+            protein: 3.9,
+          },
+          {
+            name: 'Jelly bean',
+            calories: 375,
+            fat: 0.0,
+            carbs: 94,
+            protein: 0.0,
+          },
+          {
+            name: 'Lollipop',
+            calories: 392,
+            fat: 0.2,
+            carbs: 98,
+            protein: 0,
+          },
+          {
+            name: 'Honeycomb',
+            calories: 408,
+            fat: 3.2,
+            carbs: 87,
+            protein: 6.5,
+          },
+          {
+            name: 'Donut',
+            calories: 452,
+            fat: 25.0,
+            carbs: 51,
+            protein: 4.9,
+          },
+          {
+            name: 'KitKat',
+            calories: 518,
+            fat: 26.0,
+            carbs: 65,
+            protein: 7,
+          },
+        ]
+      },
+
+      editItem (item) {
+        this.editedIndex = this.desserts.indexOf(item)
+        this.editedItem = Object.assign({}, item)
+        this.dialog = true
+      },
+
+      deleteItem (item) {
+        const index = this.desserts.indexOf(item)
+        confirm('Are you sure you want to delete this item?') && this.desserts.splice(index, 1)
+      },
+
+      close () {
+        this.dialog = false
+        setTimeout(() => {
+          this.editedItem = Object.assign({}, this.defaultItem)
+          this.editedIndex = -1
+        }, 300)
+      },
+
+      save () {
+        if (this.editedIndex > -1) {
+          Object.assign(this.desserts[this.editedIndex], this.editedItem)
+        } else {
+          this.desserts.push(this.editedItem)
+        }
+        this.close()
+      },
     },
-    confirmDelete(item) {
-      this.confirmModal = true;
-      this.editedIndex = this.items.indexOf(item);
-    },
-    deleteUnit() {
-      this.items.splice(this.editedIndex, 1);
-      this.editedIndex = -1;
-      this.confirmModal = false;
-    }
   }
-};
 </script>

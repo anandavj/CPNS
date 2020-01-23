@@ -14,12 +14,12 @@
             </div>
         </v-card>
 
-        <!-- add unit -->
-        <v-card :elevation="1" link color="indigo darken-1" dark class="mb-5" @click="goTo('addSatuan')">
+        <!-- manage unit -->
+        <v-card :elevation="1" link color="indigo darken-1" dark class="mb-5" @click="goTo('kelolaSatuan')">
             <div class="d-flex flex-no-wrap justify-space-between align-center">
                 <div>
-                    <v-card-title>Tambah Satuan</v-card-title>
-                    <v-card-subtitle>Menambahkan satuan baru</v-card-subtitle>
+                    <v-card-title>Kelola Satuan</v-card-title>
+                    <v-card-subtitle>Mengelola dan menampilkan list satuan barang</v-card-subtitle>
                 </div>
                 <div>
                     <v-card-text><v-icon size="50">mdi-plus-box-outline</v-icon></v-card-text>
@@ -27,12 +27,12 @@
             </div>
         </v-card>
 
-        <!-- add category -->
-        <v-card :elevation="1" link color="teal darken-1" dark class="mb-5" @click="goTo('addKategori')">
+        <!-- manage category -->
+        <v-card :elevation="1" link color="teal darken-1" dark class="mb-5" @click="goTo('kelolaKategori')">
             <div class="d-flex flex-no-wrap justify-space-between align-center">
                 <div>
-                    <v-card-title>Tambah kategori</v-card-title>
-                    <v-card-subtitle>Menambahkan kategori baru</v-card-subtitle>
+                    <v-card-title>Kelola Kategori</v-card-title>
+                    <v-card-subtitle>Mengelola dan melihat list kategori barang</v-card-subtitle>
                 </div>
                 <div>
                     <v-card-text><v-icon size="50">mdi-plus-box-outline</v-icon></v-card-text>
