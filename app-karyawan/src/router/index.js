@@ -143,15 +143,15 @@ const routes = [
   {
     path:'/addSatuan',
     name:'Tambah Satuan',
-    component: () => import('../views/BarangAddUnit.vue'),
+    component: () => import('../views/BarangManageUnit.vue'),
     meta: {
       drawer: true
     }
   },
   {
     path:'/addKategori',
-    name:'Tambah Kategori',
-    component: () => import('../views/BarangAddCategory.vue'),
+    name:'Kelola Kategori',
+    component: () => import('../views/BarangManageCategory.vue'),
     meta: {
       drawer: true
     }
