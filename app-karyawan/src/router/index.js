@@ -110,16 +110,48 @@ const routes = [
   },
   {
     path:'/kelolabarang',
-    name:'highlight',
+    name:'KelolaBarang',
+    component: () => import('../views/BarangKelola.vue'),
+    meta: {
+      drawer: true
+    }
+  },
+  {
+    path:'/highlight',
+    name:'hightlightBarang',
     component: () => import('../views/Highlight.vue'),
     meta: {
       drawer: true
     }
   },
   {
-    path:'/addDivisi',
-    name:'addDivisi',
-    component: () => import('../views/addDivisi.vue'),
+    path:'/highlight',
+    name:'hightlightBarang',
+    component: () => import('../views/Highlight.vue'),
+    meta: {
+      drawer: true
+    }
+  },
+  {
+    path:'/addBarang',
+    name:'Tambah Barang',
+    component: () => import('../views/BarangAdd.vue'),
+    meta: {
+      drawer: true
+    }
+  },
+  {
+    path:'/addSatuan',
+    name:'Tambah Satuan',
+    component: () => import('../views/BarangManageUnit.vue'),
+    meta: {
+      drawer: true
+    }
+  },
+  {
+    path:'/addKategori',
+    name:'Kelola Kategori',
+    component: () => import('../views/BarangManageCategory.vue'),
     meta: {
       drawer: true
     }

@@ -44,7 +44,7 @@
               <v-list-item-icon><v-icon>mdi-clipboard-flow-outline</v-icon></v-list-item-icon>
             </v-list-item>
             <v-list-item link class="caption" @click="goTo('kelolabarang','Kelola Barang')">
-              <v-list-item-title>Highlight</v-list-item-title>
+              <v-list-item-title>Kelola Barang</v-list-item-title>
               <v-list-item-icon><v-icon>mdi-briefcase-check-outline</v-icon></v-list-item-icon>
             </v-list-item>
           </v-list-group>
