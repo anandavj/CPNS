@@ -3,7 +3,7 @@
     <h1 class="text-center font-weight-thin">List Barang</h1>
 
     <v-container class="mt-n3">
-      <v-dialog v-model="popupModal" persistent max-width="600px">
+      <v-dialog v-model="popupModal" persistent max-width="400px">
         <template v-slot:activator="{ on }">
           <v-row justify="center" v-if="items.length == 0">
             <v-col lg="11">
@@ -27,37 +27,8 @@
           <v-card-text>
             <v-row>
               <v-col cols="12">
-                <v-text-field v-model="editableProduct.name" label="Nama Barang" required />
+                <v-text-field v-model="editableUnit.name" label="Nama Barang" required />
               </v-col>
-              <v-col cols="12">
-                <v-select label="Kategori" v-model="editableProduct.category"></v-select>
-              </v-col>
-              <v-col cols="12">
-                <v-select v-model="editableProduct.unit" label="Satuan"></v-select>
-              </v-col>
-              <v-col cols="12">
-                <v-row wrap>
-                  <v-flex xs6>
-                    <v-text-field v-model="editableProduct.price" label="Harga" class="pa-2"></v-text-field>
-                  </v-flex>
-                  <v-flex xs6>
-                    <v-text-field
-                      v-model="editableProduct.priceMin"
-                      label="Harga Bawah"
-                      class="pa-2"
-                    ></v-text-field>
-                  </v-flex>
-                </v-row>
-              </v-col>
-              <v-col cols="6">
-                <v-text-field v-model="editableProduct.stock" label="Jumlah"></v-text-field>
-              </v-col>
-              <v-col cols="12">
-                <v-textarea v-model="editableProduct.description" label="Deskripsi" outlined
-                  name="input-7-1">
-                  </v-textarea>
-              </v-col>
-
              
             </v-row>
           </v-card-text>
@@ -84,7 +55,7 @@
             :hide-default-footer="true"
           >
             <template v-slot:item.actions="{ item }">
-              <v-icon class="mr-2" @click="editProduct(item)">mdi-pencil</v-icon>
+              <v-icon class="mr-2" @click="editUnit(item)">mdi-pencil</v-icon>
               <v-icon @click="confirmDelete(item)">mdi-delete</v-icon>
             </template>
           </v-data-table>
@@ -109,7 +80,7 @@
           <v-container>
             <v-row justify="center">
               <v-btn class="mt-n5" color="red darken-1" text @click="cancel">Tidak</v-btn>
-              <v-btn class="mt-n5" color="blue darken-1" text @click="deleteProduct">Ya</v-btn>
+              <v-btn class="mt-n5" color="blue darken-1" text @click="deleteUnit">Ya</v-btn>
             </v-row>
           </v-container>
         </v-card-actions>
@@ -120,35 +91,20 @@
 
 <script>
 export default {
-  name: "addProduct",
+  name: "addUnit",
   data() {
     return {
       headers: [
         { text: "Nama", value: "name" },
-        { text: "Kateogri", value: "category" },
-        { text: "Satuan", value: "unit" },
-        { text: "Harga", value: "price" },
-        { text: "Harga Bawah", value: "priceMin" },
-        { text: "Deskripsi", value: "description" },
-        { text: "", value: "actions", width: "10%" }
+      
       ],
-      editableProduct: {
+      editableUnit: {
         name: "",
-        category: "",
-        unit: "",
-        price: "",
-        priceMin: "",
-        description: "",
-        stock: ""
+      
       },
-      defaultProduct: {
+      defaultUnit: {
         name: "",
-        category: "",
-        unit: "",
-        price: "",
-        priceMin: "",
-        description: "",
-        stock: ""
+       
       },
       items: [],
       popupModal: false,
@@ -159,16 +115,16 @@ export default {
   methods: {
     save() {
       if (this.editedIndex > -1) {
-        Object.assign(this.items[this.editedIndex], this.editableProduct);
+        Object.assign(this.items[this.editedIndex], this.editableUnit);
       } else {
-        this.items.push(this.editableProduct);
+        this.items.push(this.editableUnit);
       }
       this.close();
     },
     close() {
       this.popupModal = false;
       setTimeout(() => {
-        this.editableProduct = Object.assign({}, this.defaultProduct);
+        this.editableUnit = Object.assign({}, this.defaultUnit);
         this.editedIndex = -1;
       }, 300);
     },
@@ -178,16 +134,16 @@ export default {
         this.editedIndex = -1;
       }, 300);
     },
-    editProduct(item) {
+    editUnit(item) {
       this.editedIndex = this.items.indexOf(item);
-      this.editableProduct = Object.assign({}, item);
+      this.editableUnit = Object.assign({}, item);
       this.popupModal = true;
     },
     confirmDelete(item) {
       this.confirmModal = true;
       this.editedIndex = this.items.indexOf(item);
     },
-    deleteProduct() {
+    deleteUnit() {
       this.items.splice(this.editedIndex, 1);
       this.editedIndex = -1;
       this.confirmModal = false;
