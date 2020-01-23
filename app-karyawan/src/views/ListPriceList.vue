@@ -47,6 +47,24 @@
                     <v-card-text>{{barang}}</v-card-text>
                 </v-card>
             </v-dialog>
+            <v-dialog v-model="editDialog" persistent max-width='350px'>
+                <v-card>
+                    <v-toolbar dense flat>
+                        <span class="title font-weight-light"> Edit Open Price</span>
+                        <v-btn absolute right icon @click="close"><v-icon>mdi-close</v-icon></v-btn>
+                    </v-toolbar>
+                        <v-card-title>{{editedItem.namaItem}}</v-card-title>
+                        <v-card-text><v-text-field color="blue" outlined v-model="editedItem.hargaItem" placeholder="Harga Barang"></v-text-field></v-card-text>
+                        <v-card-actions>
+                            <v-container>
+                                <v-row justify="center">
+                                    <v-btn class="mt-n12" color="red darken-1" text @click="close">Tidak</v-btn>
+                                    <v-btn class="mt-n12" color="blue darken-1" text @click="saveEditedPrice">Ya</v-btn>
+                                </v-row>
+                            </v-container>
+                        </v-card-actions>
+                </v-card>
+            </v-dialog>
         </div>
     </v-app>
 </template>
@@ -91,7 +109,18 @@ export default {
             editDialog: false,
             barang: [],
             barangDefault: [],
-            selectedIndex: -1
+            editedItem: {
+                idItem:null,
+                namaItem:'',
+                hargaItem:null
+            },
+            editedItemDefault: {
+                idItem:null,
+                namaItem:'',
+                hargaItem:null
+            },
+            editedlist:[],
+            selectedIndex: -1,
         }
     },
 
@@ -102,9 +131,34 @@ export default {
             this.detailsDialog = true
         },
         close() {
-            this.barang = Object.assign({},this.barangDefault)
-            this.selectedIndex = -1
-            this.detailsDialog = false
+            if(this.detailsDialog) {
+                this.barang = Object.assign({},this.barangDefault)
+                this.selectedIndex = -1
+                this.detailsDialog = false
+            } else if (this.editDialog) {
+                this.editedItem = Object.assign({},this.editedItemDefault)
+                this.selectedIndex = -1
+                this.editDialog = false
+            }
+        },
+        quickEdit(item) {
+            this.selectedIndex = this.barangs.indexOf(item)
+            this.editedItem.hargaItem = item.openPriceEdit
+            this.editedItem.namaItem = item.namaBarang
+            this.editedItem.idItem = item.no
+            this.editDialog = true
+        },
+        saveEditedPrice() {
+            this.editedItem.hargaItem = parseInt(this.editedItem.hargaItem)
+            let obj = this.editedlist.find( ({idItem}) => idItem === this.editedItem.idItem )
+            if (!obj) {
+                this.editedlist.push(this.editedItem)
+            } else {
+                let editedIndex = this.editedlist.indexOf(obj)
+                this.editedlist.splice(editedIndex,1)
+                this.editedlist.push(this.editedItem)
+            }
+            this.close()
         }
     }
 }
