@@ -1,14 +1,17 @@
 <template>
   <v-layout row wrap>
-    <v-text-field
-      v-model="searchPricelist"
-      placeholder="Cari Barang"
-      :solo="true"
-      :clearable="true"
-      append-icon="mdi-magnify"
-      class="ma-0"
-    />
-    <v-flex xs6>
+    <v-flex xs12 md6>
+      <v-text-field
+        v-model="searchOpname"
+        placeholder="Cari Barang"
+        :solo="true"
+        :clearable="true"
+        append-icon="mdi-magnify"
+        class="ma-0"
+      />
+    </v-flex>
+
+    <v-flex xs4 md2 ml-2>
       <v-menu
         ref="menu"
         v-model="menu"
@@ -35,8 +38,11 @@
       </v-menu>
     </v-flex>
 
-    
-
+    <v-flex xs12>
+      <v-card>
+        <v-data-table :headers="headers" :items="records" :search="search"></v-data-table>
+      </v-card>
+    </v-flex>
     <v-spacer></v-spacer>
   </v-layout>
 </template>
@@ -46,9 +52,93 @@
 export default {
   data: () => ({
     date: new Date().toISOString().substr(0, 10),
+    search: '',
+    searchOpname: '',
     menu: false,
-    modal: false,
-    menu2: false
-  })
+    headers: [
+      { text: "Tanggal", value: "date" },
+      {
+        text: "Nama barang",
+        align: "left",
+        filterable: false,
+        value: "name"
+      },
+      { text: "Stok gudang", value: "stockReal" },
+      { text: "Stok database", value: "stockDatabase" },
+      { text: "Pemeriksa", value: "employee" }
+    ],
+    records: [
+      {
+        date: "2020-01-20",
+        name: "Atap",
+        stockReal: 400,
+        stockDatabase: 400,
+        employee: "Fajar"
+      },
+      {
+        date: "2020-01-19",
+        name: "Galvalume",
+        stockReal: 450,
+        stockDatabase: 450,
+        employee: "Nanda"
+      },
+      {
+        date: "2020-01-20",
+        name: "Atap 2",
+        stockReal: 300,
+        stockDatabase: 350,
+        employee: "Fajar"
+      },
+      {
+        date: "2020-01-20",
+        name: "Atap",
+        stockReal: 400,
+        stockDatabase: 400,
+        employee: "Fajar"
+      },
+      {
+        date: "2020-01-19",
+        name: "Galvalume",
+        stockReal: 450,
+        stockDatabase: 450,
+        employee: "Nanda"
+      },
+      {
+        date: "2020-01-20",
+        name: "Atap 2",
+        stockReal: 300,
+        stockDatabase: 350,
+        employee: "Fajar"
+      },
+      {
+        date: "2020-01-20",
+        name: "Atap",
+        stockReal: 400,
+        stockDatabase: 400,
+        employee: "Fajar"
+      },
+      {
+        date: "2020-01-19",
+        name: "Galvalume",
+        stockReal: 450,
+        stockDatabase: 450,
+        employee: "Nanda"
+      },
+      {
+        date: "2020-01-20",
+        name: "Atap 2",
+        stockReal: 300,
+        stockDatabase: 350,
+        employee: "Fajar"
+      },
+    ]
+  }),
+  methods: {
+    setDate(year, month, day) {
+      return new Date(year, month, day);
+    }
+  },
+
+  computed: {}
 };
 </script>
