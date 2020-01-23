@@ -6,6 +6,7 @@
                 :solo='true'
                 :clearable='true'
                 append-icon="mdi-magnify"
+                class="font-regular font-weight-light"
                 v-model="searchBarang"
             />
             <v-data-table
@@ -14,6 +15,7 @@
                 :search="searchBarang"
                 :mobile-breakpoint="1"
                 :disable-sort='true'
+                class="font-regular font-weight-light"
                 :hide-default-footer="true"
             >                
             </v-data-table>

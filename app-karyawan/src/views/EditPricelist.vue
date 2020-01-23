@@ -6,6 +6,7 @@
                 :solo="true"
                 :clearable="true"
                 append-icon="mdi-magnify"
+                class="font-regular font-weight-light"
                 v-model="searchKaryawan"
             />
             <v-data-table
@@ -17,9 +18,10 @@
                 :mobile-breakpoint="1"
                 :hide-default-footer="true"
                 :items-per-page=9999
+                class="font-regular font-weight-light"
             >
             <template v-slot:item.actions="{ item }">
-                <v-icon class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
+                <v-icon class="mr-2" @click="editItem(item)" :disabled="karyawansSelected.length > 0">mdi-pencil</v-icon>
                 <v-icon @click="confirmDelete(item)" :disabled="karyawansSelected.length > 0">mdi-delete</v-icon>
             </template>
             </v-data-table>
@@ -55,7 +57,7 @@ export default {
             return [
                 {text:'Nama', value:'nama', width:'50%'},
                 {text:'Margin', value:'margin', filter: () => true},
-                {text:'', value:'actions', width:'40%', filter: () => true}
+                {text:'', value:'actions', width:'50%', filter: () => true}
             ]
         }
     }

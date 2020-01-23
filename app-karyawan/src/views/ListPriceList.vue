@@ -7,38 +7,46 @@
                 :solo="true"
                 :clearable="true"
                 append-icon="mdi-magnify"
+                class="font-regular font-weight-light"
             />
+            <v-switch value v-model="editToggle" class="pa-0 ma-0" label="Edit Price"></v-switch>
             <v-data-table
                 :headers="headers"
-                :items="barang"
+                :items="barangs"
                 :search="searchPricelist"
                 :disable-sort="true"
                 :mobile-breakpoint="1"
                 no-data-text="Tidak ada Data T_T"
                 no-results-text="Barang tidak ditemukan"
                 :hide-default-footer="true"
-                item-key="namaBarang"
-                :single-expand="singleExpand"
-                :expanded.sync="expanded"
-                show-expand
+                item-key="no"
+                class="font-regular font-weight-light"
+                @click:row="openDetails"
             >
-                <template v-slot:expanded-item="{ headers, item }">
-                    <td :colspan="headers.length">
-                        <!-- {{ item.hargaBawah }} -->
-                        <v-data-table
-                            :headers="itemHeaders"
-                            :items="item.details"
-                            :disable-filtering="true"
-                            :disable-sort="true"
-                            :hide-default-footer="true"
-                            :hide-default-header="true"
-                            :mobile-breakpoint="4000"
-                            class="transparent"
+                <template v-slot:item.openPrice="{ item }">
+                    <template v-if="editToggle">
+                        <v-btn
+                        text 
+                        @click.stop="quickEdit(item)" 
+                        class="blue--text pa-0 font-weight-light"
                         >
-                        </v-data-table>
-                    </td>
+                            {{ item.openPriceEdit }}
+                        </v-btn>
+                    </template>
+                    <template v-else>
+                        <v-layout justify-center >{{item.openPriceEdit}}</v-layout>
+                    </template>
                 </template>
             </v-data-table>
+            <v-dialog v-model="detailsDialog" fullscreen hide-overlay transition="dialog-bottom-transition">
+                <v-card>
+                    <v-toolbar dense flat>
+                        <span class="title font-weight-light">Detail Barang</span>
+                        <v-btn absolute right icon @click="close"><v-icon>mdi-close</v-icon></v-btn>
+                    </v-toolbar>
+                    <v-card-text>{{barang}}</v-card-text>
+                </v-card>
+            </v-dialog>
         </div>
     </v-app>
 </template>
@@ -50,33 +58,53 @@ export default {
     
     data() {
         return {
-            expanded: [],
-            singleExpand: false,
             headers: [
-                {text:'Nama Barang', value:'namaBarang'},
+                {text:'Nama Barang', value:'namaBarang', width:'60%'},
+                {text:'Open Price', value:'openPrice', align:'center'}
             ],
-            barang: [
+            barangs: [
                 {
+                    no:1,
                     namaBarang:'Kayu',
+                    openPriceEdit: 10000,
                     details: [
-                        {hargaBawah:1000, hargaAtas:5000, stock: 100, satuan:'Batang'}
+                        {bottomPrice:1000, stock: 100, satuan:'Batang'}
                     ]
                 },
                 {
+                    no:2,
                     namaBarang:'Besi',
+                    openPriceEdit: 5000,
                     details: [
-                        {hargaBawah:1000, hargaAtas:5000, stock: 100, satuan:'Batang'}
+                        {bottomPrice:1000, stock: 100, satuan:'Batang'}
                     ]    
                 }
             ],
             itemHeaders: [
-                {text:'Harga Bawah', value:'hargaBawah'},
-                {text:'Harga Atas', value:'hargaAtas'},
+                {text:'Bottom Price', value:'bottomPrice'},
                 {text:'Stock', value:'stock'},
                 {text:'Satuan', value:'satuan'}
             ],
+            searchPricelist:'',
+            editToggle: false,
+            detailsDialog: false,
+            editDialog: false,
+            barang: [],
+            barangDefault: [],
+            selectedIndex: -1
+        }
+    },
 
-            searchPricelist:''
+    methods: {
+        openDetails(item) {
+            this.selectedIndex = this.barangs.indexOf(item)
+            this.barang = Object.assign({},item)
+            this.detailsDialog = true
+        },
+        close() {
+            this.barang = Object.assign({},this.barangDefault)
+            this.selectedIndex = -1
+            this.detailsDialog = false
         }
     }
 }

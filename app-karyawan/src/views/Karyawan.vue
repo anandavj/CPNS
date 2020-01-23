@@ -6,6 +6,7 @@
                 :solo='true'
                 :clearable='true'
                 append-icon="mdi-magnify"
+                class="font-regular font-weight-light"
             />
             <v-data-table
                 :headers="karyawanHeaders"
@@ -14,6 +15,7 @@
                 :disable-filtering="true"
                 :mobile-breakpoint="1"
                 :hide-default-footer="true"
+                class="font-regular font-weight-light"
             >
                 <template v-slot:item.actions="{ item }">
                     <template>

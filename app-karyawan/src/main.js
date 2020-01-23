@@ -9,14 +9,13 @@ import firebase from'firebase';
 Vue.config.productionTip = false
 
 const config = {
-  apiKey: "AIzaSyAobkxlDIvHQzVCZAWHbdMkp-s7pBMxbIQ",
-  authDomain: "buana-paksa.firebaseapp.com",
-  databaseURL: "https://buana-paksa.firebaseio.com",
-  projectId: "buana-paksa",
-  storageBucket: "buana-paksa.appspot.com",
-  messagingSenderId: "759752117446",
-  appId: "1:759752117446:web:99cbb7601d135e5fc39bc7",
-  measurementId: "G-BENKLSZT65"
+  apiKey: "AIzaSyAGXPPSZkTQC0Qq5zoFmoDe3AdvbPBHYKE",
+  authDomain: "test-7a393.firebaseapp.com",
+  databaseURL: "https://test-7a393.firebaseio.com",
+  projectId: "test-7a393",
+  storageBucket: "test-7a393.appspot.com",
+  messagingSenderId: "41585094071",
+  appId: "1:41585094071:web:7ea0c93d5c38f5f0ac8c32"
 }
 
 firebase.initializeApp(config)
