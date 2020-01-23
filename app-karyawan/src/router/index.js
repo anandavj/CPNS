@@ -141,6 +141,22 @@ const routes = [
     }
   },
   {
+    path:'/addSatuan',
+    name:'Tambah Satuan',
+    component: () => import('../views/BarangAddUnit.vue'),
+    meta: {
+      drawer: true
+    }
+  },
+  {
+    path:'/addKategori',
+    name:'Tambah Kategori',
+    component: () => import('../views/BarangAddCategory.vue'),
+    meta: {
+      drawer: true
+    }
+  },
+  {
     path:'/editPricelist',
     name:'editPricelist',
     component: () => import('../views/EditPricelist.vue'),
