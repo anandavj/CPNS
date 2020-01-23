@@ -104,10 +104,22 @@ export default {
                 {text:'Satuan', value:'satuan'}
             ],
             searchPricelist:'',
+            //switch on off buat toggle edit
             editToggle: false,
+            //pop up detail pricelist
             detailsDialog: false,
+            //pop up edit open price barang
             editDialog: false,
-            barang: [],
+            //data ini berisi detail data yang di ingin lihat
+            barang: {
+                no:null,
+                namaBarang:'Kayu',
+                openPriceEdit: 10000,
+                details: [
+                    {bottomPrice:1000, stock: 100, satuan:'Batang'}
+                ]
+            },
+            //untuk assign data 
             barangDefault: [],
             editedItem: {
                 idItem:null,
@@ -119,6 +131,7 @@ export default {
                 namaItem:'',
                 hargaItem:null
             },
+            //list barang yang akan di POST
             editedlist:[],
             selectedIndex: -1,
         }
