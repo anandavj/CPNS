@@ -1,196 +1,168 @@
 <template>
-  <v-app>
-    <h1 class="text-center font-weight-thin">List Barang</h1>
+  <v-container>
 
-    <v-container class="mt-n3">
-      <v-dialog v-model="popupModal" persistent max-width="600px">
-        <template v-slot:activator="{ on }">
-          <v-row justify="center" v-if="items.length == 0">
-            <v-col lg="11">
-              <v-card outlined class="text-center" v-on="on" color="light-green">
-                <v-card-text class="white--text">
-                  <v-icon class="white--text">mdi-plus</v-icon>Tambah List
+    <template>
+      <v-data-table :headers="headers" :items="units" sort-by="calories" class="elevation-1">
+        <template v-slot:top>
+          <v-toolbar flat color="white">
+            <v-toolbar-title>List Satuan</v-toolbar-title>
+            <v-divider class="mx-4" inset vertical></v-divider>
+            <v-spacer></v-spacer>
+            <v-dialog v-model="dialog" max-width="500px">
+              <template v-slot:activator="{ on }">
+                <v-btn color="primary" dark class="mb-2" v-on="on">
+                  Tambah
+                  <v-icon>mdi-plus</v-icon>
+                </v-btn>
+              </template>
+              <v-card>
+                <v-card-title>
+                  <span class="headline">{{ formTitle }}</span>
+                </v-card-title>
+
+                <v-card-text>
+                  <v-container>
+                    <v-row>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-text-field v-model="editedItem.name" label="Nama satuan"></v-text-field>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-text-field v-model="editedItem.abbrev" label="singkatan"></v-text-field>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-text-field v-model="editedItem.quantity" label="besaran"></v-text-field>
+                      </v-col>
+                    </v-row>
+                  </v-container>
                 </v-card-text>
+
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
+                  <v-btn color="blue darken-1" text @click="save">Save</v-btn>
+                </v-card-actions>
               </v-card>
-            </v-col>
-          </v-row>
-          <v-row justify="end" v-else>
-            <v-col cols="12" md="2">
-              <v-btn block v-on="on" color="light-blue" class="white--text">
-                <v-icon>mdi-plus</v-icon>Tambah
-              </v-btn>
-            </v-col>
-          </v-row>
+            </v-dialog>
+          </v-toolbar>
         </template>
-        <v-card>
-          <v-card-title>Tambah Barang</v-card-title>
-          <v-card-text>
-            <v-row>
-              <v-col cols="12">
-                <v-text-field v-model="editableProduct.name" label="Nama Barang" required />
-              </v-col>
-              <v-col cols="12">
-                <v-select label="Kategori" v-model="editableProduct.category"></v-select>
-              </v-col>
-              <v-col cols="12">
-                <v-select v-model="editableProduct.unit" label="Satuan"></v-select>
-              </v-col>
-              <v-col cols="12">
-                <v-row wrap>
-                  <v-flex xs6>
-                    <v-text-field v-model="editableProduct.price" label="Harga" class="pa-2"></v-text-field>
-                  </v-flex>
-                  <v-flex xs6>
-                    <v-text-field
-                      v-model="editableProduct.priceMin"
-                      label="Harga Bawah"
-                      class="pa-2"
-                    ></v-text-field>
-                  </v-flex>
-                </v-row>
-              </v-col>
-              <v-col cols="6">
-                <v-text-field v-model="editableProduct.stock" label="Jumlah"></v-text-field>
-              </v-col>
-              <v-col cols="12">
-                <v-textarea v-model="editableProduct.description" label="Deskripsi" outlined
-                  name="input-7-1">
-                  </v-textarea>
-              </v-col>
-
-             
-            </v-row>
-          </v-card-text>
-          <v-card-actions>
-            <v-container>
-              <v-row justify="center">
-                <v-btn class="mt-n5" color="red darken-1" text @click="close">Close</v-btn>
-                <v-btn class="mt-n5" color="blue darken-1" text @click="save">Save</v-btn>
-              </v-row>
-            </v-container>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    </v-container>
-
-    <v-container v-if="items.length > 0" class="mt-n5">
-      <v-row justify="center">
-        <v-col lg="12">
-          <v-data-table
-            :headers="headers"
-            :items="items"
-            :disable-sort="true"
-            :disable-filtering="true"
-            :hide-default-footer="true"
-          >
-            <template v-slot:item.actions="{ item }">
-              <v-icon class="mr-2" @click="editProduct(item)">mdi-pencil</v-icon>
-              <v-icon @click="confirmDelete(item)">mdi-delete</v-icon>
-            </template>
-          </v-data-table>
-        </v-col>
-      </v-row>
-    </v-container>
-    <v-container v-if="items.length > 0">
-      <v-row justify="end">
-        <v-col md="4" lg="2">
-          <v-btn block outlined color="red">Cancel</v-btn>
-        </v-col>
-        <v-col md="4" lg="2">
-          <v-btn block color="light-green" dark>Save</v-btn>
-        </v-col>
-      </v-row>
-    </v-container>
-    <v-dialog v-model="confirmModal" persistent max-width="350px">
-      <v-card>
-        <v-card-title>Confirmation</v-card-title>
-        <v-card-text>Apakah Anda Yakin Ingin Menghapus List Ini?</v-card-text>
-        <v-card-actions>
-          <v-container>
-            <v-row justify="center">
-              <v-btn class="mt-n5" color="red darken-1" text @click="cancel">Tidak</v-btn>
-              <v-btn class="mt-n5" color="blue darken-1" text @click="deleteProduct">Ya</v-btn>
-            </v-row>
-          </v-container>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-  </v-app>
+        <template v-slot:item.action="{ item }">
+          <v-icon small class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
+          <v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
+        </template>
+        <template v-slot:no-data>
+          <v-btn color="primary" @click="initialize">Reset</v-btn>
+        </template>
+      </v-data-table>
+    </template>
+  </v-container>
 </template>
+
 
 <script>
 export default {
-  name: "addProduct",
-  data() {
-    return {
-      headers: [
-        { text: "Nama", value: "name" },
-        { text: "Kateogri", value: "category" },
-        { text: "Satuan", value: "unit" },
-        { text: "Harga", value: "price" },
-        { text: "Harga Bawah", value: "priceMin" },
-        { text: "Deskripsi", value: "description" },
-        { text: "", value: "actions", width: "10%" }
-      ],
-      editableProduct: {
-        name: "",
-        category: "",
-        unit: "",
-        price: "",
-        priceMin: "",
-        description: "",
-        stock: ""
+  data: () => ({
+    dialog: false,
+    headers: [
+      {
+        text: "Nama Satuan",
+        align: "left",
+        // sortable: false,
+        value: "name",
+        width: "20%"
       },
-      defaultProduct: {
-        name: "",
-        category: "",
-        unit: "",
-        price: "",
-        priceMin: "",
-        description: "",
-        stock: ""
+      {
+        text: "Singkatan",
+        align: " d-sm-none d-lg-table-cell",
+        value: "abbrev",
+        width: "10%"
       },
-      items: [],
-      popupModal: false,
-      confirmModal: false,
-      editedIndex: -1
-    };
+      {
+        text: "Besaran",
+        align: " d-none d-lg-table-cell",
+        value: "quantity",
+        width: "10%"
+      },
+      {
+        text: "Atction",
+        align: " d-none d-lg-table-cell",
+        value: "action",
+        width: "10%"
+      }
+    ],
+    units: [],
+    editedIndex: -1,
+    editedItem: {
+      name: ""
+    },
+    defaultItem: {
+      name: ""
+    }
+  }),
+
+  computed: {
+    formTitle() {
+      return this.editedIndex === -1 ? "Satuan Baru" : "Edit satuan";
+    }
   },
+
+  watch: {
+    dialog(val) {
+      val || this.close();
+    }
+  },
+
+  created() {
+    this.initialize();
+  },
+
   methods: {
+    initialize() {
+      this.units = [
+        {
+          name: "kilogram",
+          abbrev: "kg",
+          quantity: "massa"
+        },
+        {
+          name: "gram",
+          abbrev: "gr",
+          quantity: "massa"
+        },
+        {
+          name: "meter",
+          abbrev: "m",
+          quantity: "panjang"
+        }
+      ];
+    },
+
+    editItem(item) {
+      this.editedIndex = this.units.indexOf(item);
+      this.editedItem = Object.assign({}, item);
+      this.dialog = true;
+    },
+
+    deleteItem(item) {
+      const index = this.units.indexOf(item);
+      confirm("Apakah anda yakin akan menghapus satuan tersebut?") &&
+        this.units.splice(index, 1);
+    },
+
+    close() {
+      this.dialog = false;
+      setTimeout(() => {
+        this.editedItem = Object.assign({}, this.defaultItem);
+        this.editedIndex = -1;
+      }, 300);
+    },
+
     save() {
       if (this.editedIndex > -1) {
-        Object.assign(this.items[this.editedIndex], this.editableProduct);
+        Object.assign(this.units[this.editedIndex], this.editedItem);
       } else {
-        this.items.push(this.editableProduct);
+        this.units.push(this.editedItem);
       }
       this.close();
-    },
-    close() {
-      this.popupModal = false;
-      setTimeout(() => {
-        this.editableProduct = Object.assign({}, this.defaultProduct);
-        this.editedIndex = -1;
-      }, 300);
-    },
-    cancel() {
-      this.confirmModal = false;
-      setTimeout(() => {
-        this.editedIndex = -1;
-      }, 300);
-    },
-    editProduct(item) {
-      this.editedIndex = this.items.indexOf(item);
-      this.editableProduct = Object.assign({}, item);
-      this.popupModal = true;
-    },
-    confirmDelete(item) {
-      this.confirmModal = true;
-      this.editedIndex = this.items.indexOf(item);
-    },
-    deleteProduct() {
-      this.items.splice(this.editedIndex, 1);
-      this.editedIndex = -1;
-      this.confirmModal = false;
     }
   }
 };
