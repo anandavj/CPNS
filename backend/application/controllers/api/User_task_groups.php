@@ -26,7 +26,7 @@ class User_task_groups extends REST_Controller {
             return;
         }
 
-        if($this->user_task_groups_model->insert_user_task_groups($name)){
+        if($this->user_task_groups_model->insert_user_task_group($name)){
             $this->response(
                 array(
                     'status' => TRUE,
@@ -46,7 +46,7 @@ class User_task_groups extends REST_Controller {
     public function index_get(){
         $id = $this->get('id');
 
-        if(isset($id)) $this->response($this->user_task_groups_model->get_user_task_groups_where($id));
+        if(isset($id)) $this->response($this->user_task_groups_model->get_user_task_group_where($id));
         else $this->response($this->user_task_groups_model->get_all_user_task_groups());
     }
 
@@ -74,7 +74,7 @@ class User_task_groups extends REST_Controller {
             return;
         }
 
-        if($this->user_task_groups_model->update_user_task_groups($id, $name)){
+        if($this->user_task_groups_model->update_user_task_group($id, $name)){
             $this->response(
                 array(
                     'status' => TRUE,
@@ -114,7 +114,7 @@ class User_task_groups extends REST_Controller {
             return;
         }
 
-        if($this->user_task_groups_model->delete_user_task_groups($id)){
+        if($this->user_task_groups_model->delete_user_task_group($id)){
             $this->response(
                 array(
                     'status' => TRUE,

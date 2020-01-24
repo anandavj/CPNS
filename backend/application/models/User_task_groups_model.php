@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class User_task_groups_model extends CI_Model{
     private const TABLE_NAME = 'user_task_groups';
 
-    public function insert_user_task_groups($name){
+    public function insert_user_task_group($name){
         $this->db->insert($this::TABLE_NAME, array(
             'name' => $name
         ));
@@ -16,7 +16,7 @@ class User_task_groups_model extends CI_Model{
         return $this->db->get($this::TABLE_NAME)->result_array();
     }
 
-    public function get_user_task_groups_where($id){
+    public function get_user_task_group_where($id){
         return $this->db->get_where($this::TABLE_NAME, "id='{$id}'");
     }
 
@@ -25,7 +25,7 @@ class User_task_groups_model extends CI_Model{
         else false;
     }
 
-    public function update_user_task_groups($id, $name){
+    public function update_user_task_group($id, $name){
         // Check apakah tidak merubah apa-apa?
         // kenapa perlu? karena jika update tidak ada perubahan affected_rows() return 0
         $result = $this->db->get_where($this::TABLE_NAME, array(
@@ -42,7 +42,7 @@ class User_task_groups_model extends CI_Model{
         return $this->db->affected_rows();
     }
 
-    public function delete_user_task_groups($id){
+    public function delete_user_task_group($id){
         $this->db->delete($this::TABLE_NAME, "id='{$id}'");
         return $this->db->affected_rows();
     }

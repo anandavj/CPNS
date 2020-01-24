@@ -6,20 +6,21 @@ require APPPATH . '/libraries/REST_Controller.php';
 
 use Restserver\Libraries\REST_Controller;
 
-class Group_tasks extends REST_Controller {
+class Users extends REST_Controller {
 
     public function __construct(){
         parent::__construct();
-        $this->load->model('group_tasks_model');
-        $this->load->model('user_task_groups_model');
-        $this->load->model('tasks_model');
+        $this->load->model('users_model');
     }
 
     public function index_post(){
-        $user_task_group_id = $this->post('userTaskGroupId');
-        $task_id = $this->post('taskId');
+        $user_task_group_id = $this->post('userTaskGroupId'); 
+        $name = $this->post('name'); 
+        $telephone = $this->post('telephone'); 
+        $address = $this->post('address'); 
+        $uid = $this->post('uid');
 
-        if(!isset($user_task_group_id) || !isset($user_task_group_id)){
+        if(!isset($user_task_group_id) || !isset($name) || !isset($telephone) || !isset($address) || !isset($uid)){
             $this->response(
                 array(
                     'status' => FALSE,
@@ -29,18 +30,7 @@ class Group_tasks extends REST_Controller {
             return;
         }
 
-        if($this->user_task_groups_model->is_not_exists($user_task_group_id) ||
-        $this->tasks_model->is_not_exists($task_id)){
-            $this->response(
-                array(
-                    'status' => FALSE,
-                    'message' => $this::INVALID_ID_MESSAGE
-                )
-            );
-            return;
-        }
-
-        if($this->group_tasks_model->insert_group_task($user_task_group_id, $task_id)){
+        if($this->users_model->insert_user($user_task_group_id, $name, $telephone, $address, $uid)){
             $this->response(
                 array(
                     'status' => TRUE,
@@ -60,16 +50,15 @@ class Group_tasks extends REST_Controller {
     public function index_get(){
         $id = $this->get('id');
 
-        if(isset($id)) $this->response($this->group_tasks_model->get_group_task_where($id));
-        else $this->response($this->group_tasks_model->get_all_group_tasks());
+        if(isset($id)) $this->response($this->users_model->get_user_where($id));
+        else $this->response($this->users_model->get_all_users());
     }
 
     public function index_put(){
         $id = $this->put('id');
-        $user_task_group_id = $this->put('userTaskGroupId');
-        $task_id = $this->put('taskId');
+        $name = $this->put('name');
 
-        if(!isset($id) || !isset($user_task_group_id) || !isset($task_id)){
+        if(!isset($id) || !isset($name)){
             $this->response(
                 array(
                     'status' => FALSE,
@@ -79,9 +68,7 @@ class Group_tasks extends REST_Controller {
             return;
         }
 
-        if($this->group_tasks_model->is_not_exists($id) || 
-        $this->user_task_groups_model->is_not_exists($user_task_group_id) ||
-        $this->tasks_model->is_not_exists($task_id)){
+        if($this->user_task_groups_model->is_not_exists($id)){
             $this->response(
                 array(
                     'status' => FALSE,
@@ -91,7 +78,7 @@ class Group_tasks extends REST_Controller {
             return;
         }
 
-        if($this->group_tasks_model->update_group_task($id, $user_task_group_id, $task_id)){
+        if($this->user_task_groups_model->update_user_task_groups($id, $name)){
             $this->response(
                 array(
                     'status' => TRUE,
@@ -121,7 +108,7 @@ class Group_tasks extends REST_Controller {
             return;
         }
 
-        if($this->group_tasks_model->is_not_exists($id)){
+        if($this->user_task_groups_model->is_not_exists($id)){
             $this->response(
                 array(
                     'status' => FALSE,
@@ -131,7 +118,7 @@ class Group_tasks extends REST_Controller {
             return;
         }
 
-        if($this->group_tasks_model->delete_user_task_groups($id)){
+        if($this->user_task_groups_model->delete_user_task_groups($id)){
             $this->response(
                 array(
                     'status' => TRUE,
