@@ -6,11 +6,11 @@ require APPPATH . '/libraries/REST_Controller.php';
 
 use Restserver\Libraries\REST_Controller;
 
-class Tasks extends REST_Controller {
+class Task extends REST_Controller {
 
     public function __construct(){
         parent::__construct();
-        $this->load->model("tasks_model");
+        $this->load->model("task_model");
     }
 
     public function index_post(){
@@ -26,7 +26,7 @@ class Tasks extends REST_Controller {
             return;
         }
 
-        if($this->tasks_model->insert_task($action)){
+        if($this->task_model->insert_task($action)){
             $this->response(
                 array(
                     'status' => TRUE,
@@ -46,8 +46,8 @@ class Tasks extends REST_Controller {
     public function index_get(){
         $id = $this->get('id');
 
-        if(isset($id)) $this->response($this->tasks_model->get_task_where($id));
-        else $this->response($this->tasks_model->get_all_tasks());
+        if(isset($id)) $this->response($this->task_model->get_task_where($id));
+        else $this->response($this->task_model->get_all_task());
     }
 
     public function index_put(){
@@ -64,7 +64,7 @@ class Tasks extends REST_Controller {
             return;
         }
 
-        if($this->tasks_model->is_not_exists($id)){
+        if($this->task_model->is_not_exists($id)){
             $this->response(
                 array(
                     'status' => FALSE,
@@ -74,7 +74,7 @@ class Tasks extends REST_Controller {
             return;
         }
         
-        if($this->tasks_model->update_task($id, $action)){
+        if($this->task_model->update_task($id, $action)){
             $this->response(
                 array(
                     'status' => TRUE,
@@ -104,7 +104,7 @@ class Tasks extends REST_Controller {
             return;
         }
 
-        if($this->tasks_model->is_not_exists($id)){
+        if($this->task_model->is_not_exists($id)){
             $this->response(
                 array(
                     'status' => FALSE,
@@ -114,7 +114,7 @@ class Tasks extends REST_Controller {
             return;
         }
 
-        if($this->tasks_model->delete_task($id)){
+        if($this->task_model->delete_task($id)){
             $this->response(
                 array(
                     'status' => TRUE,

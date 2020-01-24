@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 24 Jan 2020 pada 03.53
+-- Waktu pembuatan: 24 Jan 2020 pada 09.45
 -- Versi server: 10.1.38-MariaDB
 -- Versi PHP: 7.3.3
 
@@ -25,10 +25,10 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `group_tasks`
+-- Struktur dari tabel `group_task`
 --
 
-CREATE TABLE `group_tasks` (
+CREATE TABLE `group_task` (
   `id` int(11) NOT NULL,
   `user_task_group_id` int(11) NOT NULL,
   `task_id` int(11) NOT NULL
@@ -37,10 +37,10 @@ CREATE TABLE `group_tasks` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `tasks`
+-- Struktur dari tabel `task`
 --
 
-CREATE TABLE `tasks` (
+CREATE TABLE `task` (
   `id` int(11) NOT NULL,
   `action` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -48,10 +48,10 @@ CREATE TABLE `tasks` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `users`
+-- Struktur dari tabel `user`
 --
 
-CREATE TABLE `users` (
+CREATE TABLE `user` (
   `id` int(11) NOT NULL,
   `user_task_group_id` int(11) DEFAULT NULL,
   `name` varchar(50) NOT NULL,
@@ -63,10 +63,10 @@ CREATE TABLE `users` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `user_tasks`
+-- Struktur dari tabel `user_task`
 --
 
-CREATE TABLE `user_tasks` (
+CREATE TABLE `user_task` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `task_id` int(11) NOT NULL
@@ -75,10 +75,10 @@ CREATE TABLE `user_tasks` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `user_task_groups`
+-- Struktur dari tabel `user_task_group`
 --
 
-CREATE TABLE `user_task_groups` (
+CREATE TABLE `user_task_group` (
   `id` int(11) NOT NULL,
   `name` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -88,38 +88,38 @@ CREATE TABLE `user_task_groups` (
 --
 
 --
--- Indeks untuk tabel `group_tasks`
+-- Indeks untuk tabel `group_task`
 --
-ALTER TABLE `group_tasks`
+ALTER TABLE `group_task`
   ADD PRIMARY KEY (`id`),
   ADD KEY `id_user_task_group` (`user_task_group_id`),
   ADD KEY `id_task` (`task_id`);
 
 --
--- Indeks untuk tabel `tasks`
+-- Indeks untuk tabel `task`
 --
-ALTER TABLE `tasks`
+ALTER TABLE `task`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `users`
+-- Indeks untuk tabel `user`
 --
-ALTER TABLE `users`
+ALTER TABLE `user`
   ADD PRIMARY KEY (`id`),
   ADD KEY `id_user_task_group` (`user_task_group_id`);
 
 --
--- Indeks untuk tabel `user_tasks`
+-- Indeks untuk tabel `user_task`
 --
-ALTER TABLE `user_tasks`
+ALTER TABLE `user_task`
   ADD PRIMARY KEY (`id`),
   ADD KEY `id_user` (`user_id`),
   ADD KEY `id_task` (`task_id`);
 
 --
--- Indeks untuk tabel `user_task_groups`
+-- Indeks untuk tabel `user_task_group`
 --
-ALTER TABLE `user_task_groups`
+ALTER TABLE `user_task_group`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -127,33 +127,33 @@ ALTER TABLE `user_task_groups`
 --
 
 --
--- AUTO_INCREMENT untuk tabel `group_tasks`
+-- AUTO_INCREMENT untuk tabel `group_task`
 --
-ALTER TABLE `group_tasks`
+ALTER TABLE `group_task`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `tasks`
+-- AUTO_INCREMENT untuk tabel `task`
 --
-ALTER TABLE `tasks`
+ALTER TABLE `task`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `users`
+-- AUTO_INCREMENT untuk tabel `user`
 --
-ALTER TABLE `users`
+ALTER TABLE `user`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `user_tasks`
+-- AUTO_INCREMENT untuk tabel `user_task`
 --
-ALTER TABLE `user_tasks`
+ALTER TABLE `user_task`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `user_task_groups`
+-- AUTO_INCREMENT untuk tabel `user_task_group`
 --
-ALTER TABLE `user_task_groups`
+ALTER TABLE `user_task_group`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
@@ -161,24 +161,24 @@ ALTER TABLE `user_task_groups`
 --
 
 --
--- Ketidakleluasaan untuk tabel `group_tasks`
+-- Ketidakleluasaan untuk tabel `group_task`
 --
-ALTER TABLE `group_tasks`
-  ADD CONSTRAINT `group_tasks_ibfk_1` FOREIGN KEY (`user_task_group_id`) REFERENCES `user_task_groups` (`id`),
-  ADD CONSTRAINT `group_tasks_ibfk_2` FOREIGN KEY (`task_id`) REFERENCES `tasks` (`id`);
+ALTER TABLE `group_task`
+  ADD CONSTRAINT `group_task_ibfk_1` FOREIGN KEY (`user_task_group_id`) REFERENCES `user_task_group` (`id`),
+  ADD CONSTRAINT `group_task_ibfk_2` FOREIGN KEY (`task_id`) REFERENCES `task` (`id`);
 
 --
--- Ketidakleluasaan untuk tabel `users`
+-- Ketidakleluasaan untuk tabel `user`
 --
-ALTER TABLE `users`
-  ADD CONSTRAINT `users_ibfk_1` FOREIGN KEY (`user_task_group_id`) REFERENCES `user_task_groups` (`id`);
+ALTER TABLE `user`
+  ADD CONSTRAINT `user_ibfk_1` FOREIGN KEY (`user_task_group_id`) REFERENCES `user_task_group` (`id`);
 
 --
--- Ketidakleluasaan untuk tabel `user_tasks`
+-- Ketidakleluasaan untuk tabel `user_task`
 --
-ALTER TABLE `user_tasks`
-  ADD CONSTRAINT `user_tasks_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `user_tasks_ibfk_2` FOREIGN KEY (`task_id`) REFERENCES `tasks` (`id`);
+ALTER TABLE `user_task`
+  ADD CONSTRAINT `user_task_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
+  ADD CONSTRAINT `user_task_ibfk_2` FOREIGN KEY (`task_id`) REFERENCES `task` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

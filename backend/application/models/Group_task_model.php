@@ -1,8 +1,8 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Group_tasks_model extends CI_Model{
-    private const TABLE_NAME = 'group_tasks';
+class Group_task_model extends CI_Model{
+    private const TABLE_NAME = 'group_task';
 
     public function insert_group_task($user_task_group_id, $task_id){
         $this->db->insert($this::TABLE_NAME, array(
@@ -13,12 +13,20 @@ class Group_tasks_model extends CI_Model{
         return $this->db->affected_rows();
     }
 
-    public function get_all_group_tasks(){
-        return $this->db->get($this::TABLE_NAME)->result_array();
+    public function get_all_group_task(){
+        $id = 1;
+        $this->db->select('id, user_task_group_id as '.Schema::USER_TASK_GROUP_ID.
+        ', task_id as '.Schema::USER_TASK_ID);
+        $this->db->from($this::TABLE_NAME);
+        return $this->db->get()->result_array();
     }
 
     public function get_group_task_where($id){
-        return $this->db->get_where($this::TABLE_NAME, "id='{$id}'")->result_array();
+        $this->db->select('id, user_task_group_id as '.Schema::USER_TASK_GROUP_ID.
+        ', task_id as '.Schema::USER_TASK_ID);
+        $this->db->from($this::TABLE_NAME);
+        $this->db->where("id='{$id}'");
+        return $this->db->get()->result_array();
     }
 
     public function is_not_exists($id){
