@@ -19,6 +19,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @version         3.0.0
  */
 abstract class REST_Controller extends \CI_Controller {
+    
+    // Message Information by Fajar
+    const INSERT_SUCCESS_MESSSAGE = 'Insert success.';
+    const INSERT_FAILED_MESSAGE = 'Insert success.';
+    const UPDATE_SUCCESS_MESSSAGE = 'Update success.';
+    const UPDATE_FAILED_MESSAGE = 'Update success.';
+    const DELETE_SUCCESS_MESSSAGE = 'Delete success.';
+    const DELETE_FAILED_MESSAGE = 'Delete success.';
+    const ID_ALREADY_EXISTS_MESSAGE = 'Id already exists.';
+    const INVALID_ID_MESSAGE = 'Invalid Id.';
+    const REQUIRED_PARAMETER_MESSAGE = 'Required parameter is not specified.';
 
     // Note: Only the widely used HTTP status codes are documented
 
