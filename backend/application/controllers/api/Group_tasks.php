@@ -6,17 +6,18 @@ require APPPATH . '/libraries/REST_Controller.php';
 
 use Restserver\Libraries\REST_Controller;
 
-class Tasks extends REST_Controller {
+class Group_tasks extends REST_Controller {
 
     public function __construct(){
         parent::__construct();
-        $this->load->model("tasks_model");
+        $this->load->model('group_tasks_model');
     }
 
     public function index_post(){
-        $action = $this->post('action');
+        $user_task_group_id = $this->post('userTaskGroupId');
+        $task_id = $this->post('taskId');
 
-        if(!isset($action)){
+        if(!isset($user_task_group_id) || !isset($user_task_group_id)){
             $this->response(
                 array(
                     'status' => FALSE,
@@ -26,7 +27,7 @@ class Tasks extends REST_Controller {
             return;
         }
 
-        if($this->tasks_model->insert_task($action)){
+        if($this->group_tasks_model->insert_group_task($user_task_group_id, $task_id)){
             $this->response(
                 array(
                     'status' => TRUE,
@@ -46,15 +47,16 @@ class Tasks extends REST_Controller {
     public function index_get(){
         $id = $this->get('id');
 
-        if(isset($id)) $this->response($this->tasks_model->get_task_where($id));
-        else $this->response($this->tasks_model->get_all_tasks());
+        if(isset($id)) $this->response($this->group_tasks_model->get_group_task_where($id));
+        else $this->response($this->group_tasks_model->get_all_group_tasks());
     }
 
     public function index_put(){
         $id = $this->put('id');
-        $action = $this->put('action');
+        $user_task_group_id = $this->put('userTaskGroupId');
+        $task_id = $this->put('taskId');
 
-        if(!isset($id) || !isset($action)){
+        if(!isset($id) || !isset($user_task_group_id) || !isset($task_id)){
             $this->response(
                 array(
                     'status' => FALSE,
@@ -64,7 +66,7 @@ class Tasks extends REST_Controller {
             return;
         }
 
-        if($this->tasks_model->is_not_exists($id)){
+        if($this->group_tasks_model->is_not_exists($id)){
             $this->response(
                 array(
                     'status' => FALSE,
@@ -73,8 +75,8 @@ class Tasks extends REST_Controller {
             );
             return;
         }
-        
-        if($this->tasks_model->update_task($id, $action)){
+
+        if($this->group_tasks_model->update_group_task($id, $user_task_group_id, $task_id)){
             $this->response(
                 array(
                     'status' => TRUE,
@@ -104,7 +106,7 @@ class Tasks extends REST_Controller {
             return;
         }
 
-        if($this->tasks_model->is_not_exists($id)){
+        if($this->group_tasks_model->is_not_exists($id)){
             $this->response(
                 array(
                     'status' => FALSE,
@@ -114,7 +116,7 @@ class Tasks extends REST_Controller {
             return;
         }
 
-        if($this->tasks_model->delete_task($id)){
+        if($this->group_tasks_model->delete_user_task_groups($id)){
             $this->response(
                 array(
                     'status' => TRUE,

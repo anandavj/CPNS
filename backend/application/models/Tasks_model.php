@@ -8,8 +8,7 @@ class Tasks_model extends CI_Model{
             'action' => $action
         ));
         
-        if($this->db->affected_rows()) return true;
-        else return false;
+        return $this->db->affected_rows();
     }
 
     public function get_all_tasks(){
@@ -26,18 +25,24 @@ class Tasks_model extends CI_Model{
     }
 
     public function update_task($id, $action){
+        // Check apakah tidak merubah apa-apa?
+        // kenapa perlu? karena jika update tidak ada perubahan affected_rows() return 0
+        $result = $this->db->get_where('tasks', array(
+            'id' => $id,
+            'action' => $action
+        ));
+        if($result->num_rows() > 0) return true;
+
+        // Update
         $this->db->update('tasks', array(
             'action' => $action
         ), "id='{$id}'");
         
-        if($this->db->affected_rows()) return true;
-        else return false;
+        return $this->db->affected_rows();
     }
 
     public function delete_task($id){
         $this->db->delete('tasks', "id='{$id}'");
-
-        if($this->db->affected_rows()) return true;
-        else return false;
+        return $this->db->affected_rows();
     }
 }

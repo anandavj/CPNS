@@ -7,9 +7,8 @@ class User_task_groups_model extends CI_Model{
         $this->db->insert('user_task_groups', array(
             'name' => $name
         ));
-        
-        if($this->db->affected_rows()) return true;
-        else return false;
+
+        return $this->db->affected_rows();
     }
 
     public function get_all_user_task_groups(){
@@ -26,18 +25,24 @@ class User_task_groups_model extends CI_Model{
     }
 
     public function update_user_task_groups($id, $name){
+        // Check apakah tidak merubah apa-apa?
+        // kenapa perlu? karena jika update tidak ada perubahan affected_rows() return 0
+        $result = $this->db->get_where('user_task_groups', array(
+            'id' => $id,
+            'name' => $name
+        ));
+        if($result->num_rows() > 0) return true;
+
+        // Update
         $this->db->update('user_task_groups', array(
             'name' => $name
         ), "id='{$id}'");
         
-        if($this->db->affected_rows()) return true;
-        else return false;
+        return $this->db->affected_rows();
     }
 
     public function delete_user_task_groups($id){
         $this->db->delete('user_task_groups', "id='{$id}'");
-
-        if($this->db->affected_rows()) return true;
-        else return false;
+        return $this->db->affected_rows();
     }
 }
