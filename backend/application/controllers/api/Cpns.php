@@ -22,6 +22,7 @@ class Cpns extends REST_Controller {
         parent::__construct();
 
         $this->load->model("tasks_model");
+        $this->load->model("user_task_groups_model");
         $this->load->model("users_model");
 
         header('Access-Control-Allow-Origin: *');
@@ -41,6 +42,16 @@ class Cpns extends REST_Controller {
     public function tasks_post(){
         $action = $this->post('action');
 
+        if(!isset($action)){
+            $this->response(
+                array(
+                    'status' => FALSE,
+                    'message' => Cpns::REQUIRED_PARAMETER_MESSAGE
+                )
+            );
+            return;
+        }
+
         if($this->tasks_model->insert_task($action)){
             $this->response(
                 array(
@@ -59,20 +70,24 @@ class Cpns extends REST_Controller {
     }
 
     public function tasks_get(){
-        $this->response($this->tasks_model->get_all_tasks());
+        $id = $this->get('id');
+
+        if(isset($id)) $this->response($this->tasks_model->get_task_where($id));
+        else $this->response($this->tasks_model->get_all_tasks());
     }
 
     public function tasks_put(){
         $id = $this->put('id');
         $action = $this->put('action');
 
-        if(!isset($id) && !isset($id)){
+        if(!isset($id) || !isset($action)){
             $this->response(
                 array(
                     'status' => FALSE,
                     'message' => Cpns::REQUIRED_PARAMETER_MESSAGE
                 )
             );
+            return;
         }
 
         if($this->tasks_model->is_not_exists($id)){
@@ -82,6 +97,7 @@ class Cpns extends REST_Controller {
                     'message' => Cpns::INVALID_ID_MESSAGE
                 )
             );
+            return;
         }
 
         if($this->tasks_model->update_task($id, $action)){
@@ -95,7 +111,7 @@ class Cpns extends REST_Controller {
             $this->response(
                 array(
                     'status' => FALSE,
-                    'message' => Cpns::INSERT_FAILED_MESSAGE
+                    'message' => Cpns::UPDATE_FAILED_MESSAGE
                 )
             );
         }
@@ -111,6 +127,7 @@ class Cpns extends REST_Controller {
                     'message' => Cpns::REQUIRED_PARAMETER_MESSAGE
                 )
             );
+            return;
         }
 
         if($this->tasks_model->is_not_exists($id)){
@@ -120,6 +137,7 @@ class Cpns extends REST_Controller {
                     'message' => Cpns::INVALID_ID_MESSAGE
                 )
             );
+            return;
         }
 
         if($this->tasks_model->delete_task($id)){
@@ -139,24 +157,21 @@ class Cpns extends REST_Controller {
         }
     }
 
-    //USERS
-    public function users_post(){
-        $user_task_group_id = $this->post('userTaskGroupId');
+    //USER TASK GROUPS
+    public function user_task_groups_post(){
         $name = $this->post('name');
-        $telephone = $this->post('telephone');
-        $address = $this->post('address');
-        $uid = $this->post('uid');
 
-        if(!isset($user_task_group_id) && !isset($name) && !isset($telephone) && !isset($address) && !isset($uid)){
+        if(!isset($name)){
             $this->response(
                 array(
                     'status' => FALSE,
                     'message' => Cpns::REQUIRED_PARAMETER_MESSAGE
                 )
             );
+            return;
         }
 
-        if($this->users_model->insert_user($user_task_group_id, $name, $telephone, $address, $uid)){
+        if($this->user_task_groups_model->insert_user_task_groups($name)){
             $this->response(
                 array(
                     'status' => TRUE,
@@ -167,66 +182,61 @@ class Cpns extends REST_Controller {
             $this->response(
                 array(
                     'status' => FALSE,
-                    'message' => Cpns::INSERT_FAILED_MESSAGE
+                    'message' => Cpns::REQUIRED_PARAMETER_MESSAGE
                 )
             );
         }
     }
 
-    public function users_get(){
+    public function user_task_groups_get(){
         $id = $this->get('id');
 
-        if(isset($id)){
-            $this->response($this->users_model->get_user_where($id));
-        }else{
-            $this->response($this->users_model->get_all_users());
-        }
+        if(isset($id)) $this->response($this->user_task_groups_model->get_user_task_groups_where($id));
+        else $this->response($this->user_task_groups_model->get_all_user_task_groups());
     }
 
-    public function users_put(){
+    public function user_task_groups_put(){
         $id = $this->put('id');
-        $user_task_group_id = $this->put('userTaskGroupId');
         $name = $this->put('name');
-        $telephone = $this->put('telephone');
-        $address = $this->put('address');
-        $uid = $this->put('uid');
 
-        if(!isset($user_task_group_id) && !isset($name) && !isset($telephone) && !isset($address) && !isset($uid)){
+        if(!isset($id) || !isset($name)){
             $this->response(
                 array(
                     'status' => FALSE,
                     'message' => Cpns::REQUIRED_PARAMETER_MESSAGE
                 )
             );
+            return;
         }
 
-        if($this->users_model->is_not_exists($id)){
+        if($this->user_task_groups_model->is_not_exists($id)){
             $this->response(
                 array(
                     'status' => FALSE,
                     'message' => Cpns::INVALID_ID_MESSAGE
                 )
             );
+            return;
         }
 
-        if($this->users_model->update_user($id, $user_task_group_id, $name, $telephone, $address, $uid)){    
+        if($this->user_task_groups_model->update_user_task_groups($id, $name)){
             $this->response(
                 array(
                     'status' => TRUE,
-                    'message' => Cpns::INSERT_SUCCESS_MESSSAGE
+                    'message' => Cpns::UPDATE_SUCCESS_MESSSAGE
                 )
             );
         }else{
             $this->response(
                 array(
                     'status' => FALSE,
-                    'message' => Cpns::INSERT_FAILED_MESSAGE
+                    'message' => Cpns::UPDATE_FAILED_MESSAGE
                 )
             );
         }
     }
 
-    public function users_delete(){
+    public function user_task_groups_delete(){
         $id = $this->delete('id');
 
         if(!isset($id)){
@@ -236,21 +246,36 @@ class Cpns extends REST_Controller {
                     'message' => Cpns::REQUIRED_PARAMETER_MESSAGE
                 )
             );
+            return;
         }
 
-        if($this->users_model->is_not_exists($id)){
+        if($this->user_task_groups_model->is_not_exists($id)){
             $this->response(
                 array(
                     'status' => FALSE,
                     'message' => Cpns::INVALID_ID_MESSAGE
                 )
             );
+            return;
         }
 
-        $this->response(
-            array(
-                'status' => $this->users_model->delete_user($id)
-            )
-        );
+        if($this->user_task_groups_model->delete_user_task_groups($id)){
+            $this->response(
+                array(
+                    'status' => TRUE,
+                    'message' => Cpns::DELETE_SUCCESS_MESSSAGE
+                )
+            );
+        }else{
+            $this->response(
+                array(
+                    'status' => FALSE,
+                    'message' => Cpns::DELETE_FAILED_MESSAGE
+                )
+            );
+        }
     }
+
+    //USERS
+    
 }

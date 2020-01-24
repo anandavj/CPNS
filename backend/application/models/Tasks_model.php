@@ -21,7 +21,7 @@ class Tasks_model extends CI_Model{
     }
 
     public function is_not_exists($id){
-        if($this->db->get_where('tasks', "id='{$id}'")->num_rows() > 0) return true;
+        if($this->db->get_where('tasks', "id='{$id}'")->num_rows() == 0) return true;
         else return false;
     }
 
