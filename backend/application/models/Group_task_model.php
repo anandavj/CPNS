@@ -14,9 +14,8 @@ class Group_task_model extends CI_Model{
     }
 
     public function get_all_group_task(){
-        $id = 1;
         $this->db->select('id, user_task_group_id as '.Schema::USER_TASK_GROUP_ID.
-        ', task_id as '.Schema::USER_TASK_ID);
+        ', task_id as '.Schema::TASK_ID);
         $this->db->from($this::TABLE_NAME);
         return $this->db->get()->result_array();
     }

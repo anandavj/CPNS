@@ -29,7 +29,7 @@ class Group_task extends REST_Controller {
             return;
         }
 
-        if($this->user_task_groups_model->is_not_exists($user_task_group_id) ||
+        if($this->user_task_group_model->is_not_exists($user_task_group_id) ||
         $this->task_model->is_not_exists($task_id)){
             $this->response(
                 array(
@@ -80,7 +80,7 @@ class Group_task extends REST_Controller {
         }
 
         if($this->group_task_model->is_not_exists($id) || 
-        $this->user_task_groups_model->is_not_exists($user_task_group_id) ||
+        $this->user_task_group_model->is_not_exists($user_task_group_id) ||
         $this->task_model->is_not_exists($task_id)){
             $this->response(
                 array(
@@ -131,7 +131,7 @@ class Group_task extends REST_Controller {
             return;
         }
 
-        if($this->group_task_model->delete_user_task_groups($id)){
+        if($this->group_task_model->delete_user_task_group($id)){
             $this->response(
                 array(
                     'status' => TRUE,

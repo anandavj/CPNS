@@ -1,8 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-use Restserver\Libraries\Schema;
-
 class User_model extends CI_Model{
     const TABLE_NAME = "user";
 
@@ -19,14 +17,14 @@ class User_model extends CI_Model{
     }
 
     public function get_all_user(){
-        $this->db->select('id, user_task_group_id as '.$this->Schema::USER_TASK_GROUP_ID.', name,
+        $this->db->select('id, user_task_group_id as '.Schema::USER_TASK_GROUP_ID.', name,
         telephone, address, uid');
         $this->db->from('user');
         return $this->db->get()->result_array();
     }
 
     public function get_user_where($id){
-        $this->db->select('id, user_task_group_id as '.$this->Schema::USER_TASK_GROUP_ID.', name,
+        $this->db->select('id, user_task_group_id as '.Schema::USER_TASK_GROUP_ID.', name,
         telephone, address, uid');
         $this->db->from('user');
         $this->db->where("id='{$id}'");
