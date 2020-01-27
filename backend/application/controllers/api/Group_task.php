@@ -58,9 +58,9 @@ class Group_task extends REST_Controller {
     }
 
     public function index_get(){
-        $id = $this->get('id');
+        $user_task_group_id = $this->get('userTaskGroupId');
 
-        if(isset($id)) $this->response($this->group_task_model->get_group_task_where($id));
+        if(isset($user_task_group_id)) $this->response($this->group_task_model->get_group_task_where($user_task_group_id));
         else $this->response($this->group_task_model->get_all_group_task());
     }
 
