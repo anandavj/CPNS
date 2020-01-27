@@ -14,19 +14,28 @@ class Group_task_model extends CI_Model{
     }
 
     public function get_all_group_task(){
-        $id = 1;
         $this->db->select('id, user_task_group_id as '.Schema::USER_TASK_GROUP_ID.
-        ', task_id as '.Schema::USER_TASK_ID);
+        ', task_id as '.Schema::TASK_ID);
         $this->db->from($this::TABLE_NAME);
         return $this->db->get()->result_array();
     }
 
-    public function get_group_task_where($id){
-        $this->db->select('id, user_task_group_id as '.Schema::USER_TASK_GROUP_ID.
-        ', task_id as '.Schema::USER_TASK_ID);
+    public function get_group_task_where($user_task_group_id){
+        $this->db->select('group_task.user_task_group_id as '.Schema::USER_TASK_GROUP_ID.
+        ', user_task_group.name, task.action');
         $this->db->from($this::TABLE_NAME);
-        $this->db->where("id='{$id}'");
-        return $this->db->get()->result_array();
+        $this->db->join('user_task_group', 'group_task.user_task_group_id=user_task_group.id');
+        $this->db->join('task', 'group_task.task_id=task.id');
+        $this->db->where($this::TABLE_NAME.".user_task_group_id='{$user_task_group_id}'");
+        
+        $result = array();
+        $action = array();
+        foreach($this->db->get()->result_array() as $row){
+            $result[Schema::USER_TASK_GROUP_ID] = $row[Schema::USER_TASK_GROUP_ID];
+            array_push($action, $row['action']);
+        }
+        $result['action'] = $action;
+        return $result;
     }
 
     public function is_not_exists($id){
