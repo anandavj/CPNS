@@ -211,8 +211,6 @@ export default {
                 nama:''
             },
             tempNamaKaryawan:'',
-            // This Var will be sent to the Database
-            editedKaryawan: [],
             searchKaryawan:'',
             popUpNew: false,
             popupDetails: false,
@@ -260,8 +258,6 @@ export default {
             }
         },
         saveNewKaryawan() {
-            //API 
-            //Promise
             if(this.$refs.form.validate()) {
                 this.karyawans.push(this.karyawan)
                 this.karyawan = Object.assign({},this.karyawanDefault)
@@ -284,24 +280,16 @@ export default {
 
         //this need promise to ensure that the data in the db and vue in synced !!! IMPORTANT !!!
         save() {
-            //to find the object inside editedKaryawan array
-            let obj = this.editedKaryawan.find( ({id}) => id === this.karyawan.id )
             //to find the object inside karyawans
-            let obj2 = this.karyawans.find( ({id}) => id === this.karyawan.id )
-            if (obj) {
-                this.editedIndex = this.editedKaryawan.indexOf(obj)
-                this.editedKaryawan.splice(this.editedIndex,1)
-            }
+            let obj = this.karyawans.find( ({id}) => id === this.karyawan.id )
             //get all of the property name of karyawans
-            var loop = Object.getOwnPropertyNames(this.karyawans[this.karyawans.indexOf(obj2)])
+            var loop = Object.getOwnPropertyNames(this.karyawans[this.karyawans.indexOf(obj)])
             //get rid of the __ob__ property to ensure that the looping is safe and secure
             loop.splice(loop.indexOf('__ob__'),1)
             //assign all the value of the property of obj2 in karyawans with karyawan
             for(let i=0; i<loop.length; i++) {
-                this.karyawans[this.karyawans.indexOf(obj2)][loop[i]] = this.karyawan[loop[i]]
+                this.karyawans[this.karyawans.indexOf(obj)][loop[i]] = this.karyawan[loop[i]]
             }
-            //save the edited karyawan into the array, the array will be sent into the db
-            this.editedKaryawan.push(this.karyawan)
             this.popUpConfirmSave = false
             this.karyawan = Object.assign({},this.karyawanDefault)
         }
