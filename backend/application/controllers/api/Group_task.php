@@ -13,6 +13,7 @@ class Group_task extends REST_Controller {
         $this->load->model('group_task_model');
         $this->load->model('user_task_group_model');
         $this->load->model('task_model');
+        $this->load->model('user_task_model');
     }
 
 
@@ -84,7 +85,7 @@ class Group_task extends REST_Controller {
         $user_task_group_id = $this->put('userTaskGroupId');
         $task_id = $this->put('taskId');
 
-        if(!isset($id) || !isset($user_task_group_id) || !isset($task_id)){
+        if(!isset($user_task_group_id) || !isset($task_id)){
             $this->response(
                 array(
                     'status' => FALSE,
@@ -94,9 +95,7 @@ class Group_task extends REST_Controller {
             return;
         }
 
-        if($this->group_task_model->is_not_exists($id) || 
-        $this->user_task_group_model->is_not_exists($user_task_group_id) ||
-        $this->task_model->is_not_exists($task_id)){
+        if($this->user_task_group_model->is_not_exists($user_task_group_id) ){
             $this->response(
                 array(
                     'status' => FALSE,
@@ -106,8 +105,21 @@ class Group_task extends REST_Controller {
             return;
         }
 
+        foreach($task_id as $item){
+            if($this->task_model->is_not_exists($item)){
+                $this->response(
+                    array(
+                        'status' => FALSE,
+                        'message' => 'There is an invalid taskId.'
+                    )
+                );
+                return;
+            }
+        }
+
         $new_task = $this->group_task_model->update_group_task($user_task_group_id, $task_id);
 
+        // $this->response($new_task);
         if($new_task){
             $this->user_task_model->update_user_task($user_task_group_id, $new_task);
             $this->response(
