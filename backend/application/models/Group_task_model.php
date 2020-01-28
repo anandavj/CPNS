@@ -48,27 +48,46 @@ class Group_task_model extends CI_Model{
         else return false;
     }
 
-    public function update_group_task($id, $user_task_group_id, $task_id){
+    public function update_group_task($user_task_group_id, $task_id){
         // Check apakah tidak merubah apa-apa?
         // kenapa perlu? karena jika update tidak ada perubahan affected_rows() return 0
         $result = $this->db->get_where($this::TABLE_NAME, array(
-            'id' => $id,
             'user_task_group_id' => $user_task_group_id,
             'task_id' => $task_id
         ));
-        if($result->num_rows() > 0) return true;
-
-        // Update
-        $this->db->update($this::TABLE_NAME, array(
-            'user_task_group_id' => $user_task_group_id,
-            'task_id' => $task_id
-        ), "id='{$id}'");
         
-        return $this->db->affected_rows();
+        $current_tasks = [];
+        foreach($result as $row){
+            array_push($current_tasks, $row['task_id']);
+        }
+
+        $insert_data = array_diff($task_id, $current_tasks);
+        $delete_data = array_diff($current_tasks, $task_id);
+
+        $this->insert_group_task($user_task_group_id, $insert_data);
+        
+        foreach($delete_data as $task){
+            $this->db->delete($this::TABLE_NAME, array(
+                'user_task_group_id' => $user_task_group_id,
+                'task_id' => $task
+            ));
+        }
+
+        
+        // Update task pada semua user dalam grup
+        $new_task = [];
+        $result = $this->db->get_where($this::TABLE_NAME, array(
+            'user_task_group_id' => $user_task_group_id 
+        ));
+        foreach($result as $row){
+            array_push($new_task, $row['task_id']);
+        }
+
+        return $new_task;
     }
 
-    public function delete_group_task($id){
-        $this->db->delete($this::TABLE_NAME, "id='{$id}'");
+    public function delete_group_task($user_task_group_id){
+        $this->db->delete($this::TABLE_NAME, "user_task_group_id='{$user_task_group_id}'");
         return $this->db->affected_rows();
     }
 }

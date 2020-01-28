@@ -15,6 +15,8 @@ class Group_task extends REST_Controller {
         $this->load->model('task_model');
     }
 
+
+    // POST - input data baru
     public function index_post(){
         $user_task_group_id = $this->post('userTaskGroupId');
         $task_id = $this->post('taskId');
@@ -68,6 +70,7 @@ class Group_task extends REST_Controller {
         }
     }
 
+    // GET - mengambil data
     public function index_get(){
         $user_task_group_id = $this->get('userTaskGroupId');
 
@@ -75,6 +78,7 @@ class Group_task extends REST_Controller {
         else $this->response($this->group_task_model->get_all_group_task());
     }
 
+    // PUT - update data sesuai dengan id grup user task, kemudian merubah semua task yang dimiliki oleh user pada grup tersebut
     public function index_put(){
         $id = $this->put('id');
         $user_task_group_id = $this->put('userTaskGroupId');
@@ -102,7 +106,10 @@ class Group_task extends REST_Controller {
             return;
         }
 
-        if($this->group_task_model->update_group_task($id, $user_task_group_id, $task_id)){
+        $new_task = $this->group_task_model->update_group_task($user_task_group_id, $task_id);
+
+        if($new_task){
+            $this->user_task_model->update_user_task($user_task_group_id, $new_task);
             $this->response(
                 array(
                     'status' => TRUE,
@@ -119,10 +126,12 @@ class Group_task extends REST_Controller {
         }
     }
 
-    public function index_delete(){
-        $id = $this->delete('id');
 
-        if(!isset($id)){
+    // DELETE - menghapus seluruh record sesuai dengan id grup user task
+    public function index_delete(){
+        $user_task_group_id = $this->delete('userTaskGroupId');
+
+        if(!isset($user_task_group_id)){
             $this->response(
                 array(
                     'status' => FALSE,
@@ -132,7 +141,7 @@ class Group_task extends REST_Controller {
             return;
         }
 
-        if($this->group_task_model->is_not_exists($id)){
+        if($this->group_task_model->is_not_exists($user_task_group_id)){
             $this->response(
                 array(
                     'status' => FALSE,
@@ -142,7 +151,7 @@ class Group_task extends REST_Controller {
             return;
         }
 
-        if($this->group_task_model->delete_group_task($id)){
+        if($this->group_task_model->delete_group_task($user_task_group_id)){
             $this->response(
                 array(
                     'status' => TRUE,
