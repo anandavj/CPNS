@@ -6,29 +6,27 @@ require APPPATH . '/libraries/REST_Controller.php';
 
 use Restserver\Libraries\REST_Controller;
 
-class User_task extends REST_Controller {
+class Category extends REST_Controller {
 
     public function __construct(){
         parent::__construct();
-        $this->load->model('user_task_model');
+        $this->load->model("category_model");
     }
 
     public function index_post(){
-        $user_id = $this->post('userId');
-        $data = $this->post('taskId'); //array of task_id
-       
+        $name = $this->post('name');
 
-        if(!isset($user_id) || !isset($data)){
+        if(!isset($name)){
             $this->response(
                 array(
                     'status' => FALSE,
-                    'message' => 'boi'
+                    'message' => $this::REQUIRED_PARAMETER_MESSAGE
                 )
             );
             return;
         }
 
-        if($this->user_task_model->insert_user_task($user_id, $data)){
+        if($this->category_model->insert_category($name)){
             $this->response(
                 array(
                     'status' => TRUE,
@@ -43,22 +41,20 @@ class User_task extends REST_Controller {
                 )
             );
         }
-
     }
 
     public function index_get(){
         $id = $this->get('id');
-        
-        if(isset($id)) $this->response($this->user_task_model->get_user_task_where($id));
-        else $this->response($this->user_task_model->get_all_user_task());
+
+        if(isset($id)) $this->response($this->category_model->get_category_where($id));
+        else $this->response($this->category_model->get_all_category());
     }
 
     public function index_put(){
-        // $id = $this->put('id');
-        $user_id = $this->put('userId');
-        $data = $this->put('taskId');
+        $id = $this->put('id');
+        $name = $this->put('name');
 
-        if(!isset($user_id)){
+        if(!isset($id) || !isset($name)){
             $this->response(
                 array(
                     'status' => FALSE,
@@ -68,7 +64,7 @@ class User_task extends REST_Controller {
             return;
         }
 
-        if($this->user_task_model->is_not_exists($user_id)){
+        if($this->category_model->is_not_exists($id)){
             $this->response(
                 array(
                     'status' => FALSE,
@@ -77,8 +73,8 @@ class User_task extends REST_Controller {
             );
             return;
         }
-
-        if($this->user_task_model->update_user_task($user_id, $data)){
+        
+        if($this->category_model->update_category($id, $name)){
             $this->response(
                 array(
                     'status' => TRUE,
@@ -96,9 +92,9 @@ class User_task extends REST_Controller {
     }
 
     public function index_delete(){
-        $user_id = $this->delete('userId');
+        $id = $this->delete('id');
 
-        if(!isset($user_id)){
+        if(!isset($id)){
             $this->response(
                 array(
                     'status' => FALSE,
@@ -108,7 +104,7 @@ class User_task extends REST_Controller {
             return;
         }
 
-        if($this->user_task_model->is_not_exists($user_id)){
+        if($this->category_model->is_not_exists($id)){
             $this->response(
                 array(
                     'status' => FALSE,
@@ -118,7 +114,7 @@ class User_task extends REST_Controller {
             return;
         }
 
-        if($this->user_task_model->delete_user_task($user_id)){
+        if($this->category_model->delete_category($id)){
             $this->response(
                 array(
                     'status' => TRUE,

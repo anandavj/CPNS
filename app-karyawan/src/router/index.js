@@ -37,6 +37,14 @@ const routes = [
     }
   },
   {
+    path: '/addDivisi',
+    name: 'addDivisi',
+    component: () => import('../views/addDivisi.vue'),
+    meta: {
+      drawer: true
+    }
+  },
+  {
     path:'/addKaryawan',
     name:'addKaryawan',
     component: () => import('../views/addKaryawan.vue'),

@@ -6,23 +6,19 @@ require APPPATH . '/libraries/REST_Controller.php';
 
 use Restserver\Libraries\REST_Controller;
 
-class Group_task extends REST_Controller {
+class Image extends REST_Controller {
 
     public function __construct(){
         parent::__construct();
-        $this->load->model('group_task_model');
-        $this->load->model('user_task_group_model');
-        $this->load->model('task_model');
-        $this->load->model('user_task_model');
+        $this->load->model("image_model");
+        $this->load->model('product_model');
     }
 
-
-    // POST - input data baru
     public function index_post(){
-        $user_task_group_id = $this->post('userTaskGroupId');
-        $task_id = $this->post('taskId');
+        $product_id = $this->post('productId');
+        $image = $this->post('image');
 
-        if(!isset($user_task_group_id) || !isset($task_id)){
+        if(!isset($product_id) || !isset($image)){
             $this->response(
                 array(
                     'status' => FALSE,
@@ -32,7 +28,7 @@ class Group_task extends REST_Controller {
             return;
         }
 
-        if($this->user_task_group_model->is_not_exists($user_task_group_id)){
+        if($this->product_model->is_not_exists($product_id)){
             $this->response(
                 array(
                     'status' => FALSE,
@@ -40,21 +36,9 @@ class Group_task extends REST_Controller {
                 )
             );
             return;
-        }
+        };
 
-        foreach($task_id as $item){
-            if($this->task_model->is_not_exists($item)){
-                $this->response(
-                    array(
-                        'status' => FALSE,
-                        'message' => 'There is an invalid taskId.'
-                    )
-                );
-                return;
-            }
-        }
-
-        if($this->group_task_model->insert_group_task($user_task_group_id, $task_id)){
+        if($this->image_model->insert_image($product_id, $image)){
             $this->response(
                 array(
                     'status' => TRUE,
@@ -71,21 +55,19 @@ class Group_task extends REST_Controller {
         }
     }
 
-    // GET - mengambil data
     public function index_get(){
-        $user_task_group_id = $this->get('userTaskGroupId');
+        $id = $this->get('id');
 
-        if(isset($user_task_group_id)) $this->response($this->group_task_model->get_group_task_where($user_task_group_id));
-        else $this->response($this->group_task_model->get_all_group_task());
+        if(isset($id)) $this->response($this->image_model->get_image_where($id));
+        else $this->response($this->image_model->get_all_image());
     }
 
-    // PUT - update data sesuai dengan id grup user task, kemudian merubah semua task yang dimiliki oleh user pada grup tersebut
     public function index_put(){
         $id = $this->put('id');
-        $user_task_group_id = $this->put('userTaskGroupId');
-        $task_id = $this->put('taskId');
+        $product_id = $this->put('productId');
+        $image = $this->put('image');
 
-        if(!isset($user_task_group_id) || !isset($task_id)){
+        if(!isset($id) || !isset($product_id) || !isset($image)){
             $this->response(
                 array(
                     'status' => FALSE,
@@ -95,7 +77,7 @@ class Group_task extends REST_Controller {
             return;
         }
 
-        if($this->user_task_group_model->is_not_exists($user_task_group_id) ){
+        if($this->product_model->is_not_exists($product_id)){
             $this->response(
                 array(
                     'status' => FALSE,
@@ -103,25 +85,9 @@ class Group_task extends REST_Controller {
                 )
             );
             return;
-        }
-
-        foreach($task_id as $item){
-            if($this->task_model->is_not_exists($item)){
-                $this->response(
-                    array(
-                        'status' => FALSE,
-                        'message' => 'There is an invalid taskId.'
-                    )
-                );
-                return;
-            }
-        }
-
-        $new_task = $this->group_task_model->update_group_task($user_task_group_id, $task_id);
-
-        // $this->response($new_task);
-        if($new_task){
-            $this->user_task_model->update_user_task($user_task_group_id, $new_task);
+        };
+        
+        if($this->image_model->update_image($id, $product_id, $image)){
             $this->response(
                 array(
                     'status' => TRUE,
@@ -138,12 +104,10 @@ class Group_task extends REST_Controller {
         }
     }
 
-
-    // DELETE - menghapus seluruh record sesuai dengan id grup user task
     public function index_delete(){
-        $user_task_group_id = $this->delete('userTaskGroupId');
+        $id = $this->delete('id');
 
-        if(!isset($user_task_group_id)){
+        if(!isset($id)){
             $this->response(
                 array(
                     'status' => FALSE,
@@ -153,7 +117,7 @@ class Group_task extends REST_Controller {
             return;
         }
 
-        if($this->group_task_model->is_not_exists($user_task_group_id)){
+        if($this->image_model->is_not_exists($id)){
             $this->response(
                 array(
                     'status' => FALSE,
@@ -163,7 +127,7 @@ class Group_task extends REST_Controller {
             return;
         }
 
-        if($this->group_task_model->delete_group_task($user_task_group_id)){
+        if($this->image_model->delete_image($id)){
             $this->response(
                 array(
                     'status' => TRUE,

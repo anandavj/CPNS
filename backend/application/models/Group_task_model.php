@@ -1,36 +1,47 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class Group_task_model extends CI_Model{
+class Group_task_model extends CI_Model
+{
     private const TABLE_NAME = 'group_task';
 
-    public function insert_group_task($user_task_group_id, $task_id){
-        $this->db->insert($this::TABLE_NAME, array(
-            'user_task_group_id' => $user_task_group_id,
-            'task_id' => $task_id
-        ));
-        
+    public function insert_group_task($user_task_group_id, $task_id)
+    {
+
+        foreach ($task_id as $item) {
+            $result = $this->db->get_where($this::TABLE_NAME, "task_id='{$item}' 
+                AND user_task_group_id='{$user_task_group_id}'")->num_rows();
+            if ($result == 0) {
+                $this->db->insert($this::TABLE_NAME, array(
+                    'user_task_group_id' => $user_task_group_id,
+                    'task_id' => $item
+                ));
+            }
+        }
+
         return $this->db->affected_rows();
     }
 
-    public function get_all_group_task(){
-        $this->db->select('id, user_task_group_id as '.Schema::USER_TASK_GROUP_ID.
-        ', task_id as '.Schema::TASK_ID);
+    public function get_all_group_task()
+    {
+        $this->db->select('id, user_task_group_id as ' . Schema::USER_TASK_GROUP_ID .
+            ', task_id as ' . Schema::TASK_ID);
         $this->db->from($this::TABLE_NAME);
         return $this->db->get()->result_array();
     }
 
-    public function get_group_task_where($user_task_group_id){
-        $this->db->select('group_task.user_task_group_id as '.Schema::USER_TASK_GROUP_ID.
-        ', user_task_group.name, task.action');
+    public function get_group_task_where($user_task_group_id)
+    {
+        $this->db->select('group_task.user_task_group_id as ' . Schema::USER_TASK_GROUP_ID .
+            ', user_task_group.name, task.action');
         $this->db->from($this::TABLE_NAME);
         $this->db->join('user_task_group', 'group_task.user_task_group_id=user_task_group.id');
         $this->db->join('task', 'group_task.task_id=task.id');
-        $this->db->where($this::TABLE_NAME.".user_task_group_id='{$user_task_group_id}'");
-        
+        $this->db->where($this::TABLE_NAME . ".user_task_group_id='{$user_task_group_id}'");
+
         $result = array();
         $action = array();
-        foreach($this->db->get()->result_array() as $row){
+        foreach ($this->db->get()->result_array() as $row) {
             $result[Schema::USER_TASK_GROUP_ID] = $row[Schema::USER_TASK_GROUP_ID];
             array_push($action, $row['action']);
         }
@@ -38,32 +49,55 @@ class Group_task_model extends CI_Model{
         return $result;
     }
 
-    public function is_not_exists($id){
-        if($this->db->get_where($this::TABLE_NAME, "id='{$id}'")->num_rows() == 0) return true;
+    public function is_not_exists($id)
+    {
+        if ($this->db->get_where($this::TABLE_NAME, "id='{$id}'")->num_rows() == 0) return true;
         else return false;
     }
 
-    public function update_group_task($id, $user_task_group_id, $task_id){
+    public function update_group_task($user_task_group_id, $task_id)
+    {
         // Check apakah tidak merubah apa-apa?
         // kenapa perlu? karena jika update tidak ada perubahan affected_rows() return 0
         $result = $this->db->get_where($this::TABLE_NAME, array(
-            'id' => $id,
-            'user_task_group_id' => $user_task_group_id,
-            'task_id' => $task_id
-        ));
-        if($result->num_rows() > 0) return true;
+            'user_task_group_id' => $user_task_group_id
+        ))->result_array();
 
-        // Update
-        $this->db->update($this::TABLE_NAME, array(
-            'user_task_group_id' => $user_task_group_id,
-            'task_id' => $task_id
-        ), "id='{$id}'");
-        
-        return $this->db->affected_rows();
+        $current_tasks = [];
+        foreach ($result as $row) {
+            array_push($current_tasks, $row['task_id']);
+        }
+
+        $insert_data = array_diff($task_id, $current_tasks);
+        $delete_data = array_diff($current_tasks, $task_id);
+
+        // return $insert_data;
+
+        $this->insert_group_task($user_task_group_id, $insert_data);
+
+        foreach ($delete_data as $task) {
+            $this->db->delete($this::TABLE_NAME, array(
+                'user_task_group_id' => $user_task_group_id,
+                'task_id' => $task
+            ));
+        }
+
+
+        // Update task pada semua user dalam grup
+        $new_task = [];
+        $result = $this->db->get_where($this::TABLE_NAME, array(
+            'user_task_group_id' => $user_task_group_id
+        ))->result_array();
+        foreach ($result as $row) {
+            array_push($new_task, $row['task_id']);
+        }
+
+        return $new_task;
     }
 
-    public function delete_group_task($id){
-        $this->db->delete($this::TABLE_NAME, "id='{$id}'");
+    public function delete_group_task($user_task_group_id)
+    {
+        $this->db->delete($this::TABLE_NAME, "user_task_group_id='{$user_task_group_id}'");
         return $this->db->affected_rows();
     }
 }
