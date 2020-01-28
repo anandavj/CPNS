@@ -14,19 +14,21 @@ class User_task extends REST_Controller {
     }
 
     public function index_post(){
-        $name = $this->post('name');
+        $user_id = $this->post('userId');
+        $data = $this->post('taskId'); //array of task_id
+       
 
-        if(!isset($name)){
+        if(!isset($user_id) || !isset($data)){
             $this->response(
                 array(
                     'status' => FALSE,
-                    'message' => $this::REQUIRED_PARAMETER_MESSAGE
+                    'message' => 'boi'
                 )
             );
             return;
         }
 
-        if($this->user_task_model->insert_user_task($name)){
+        if($this->user_task_model->insert_user_task($user_id, $data)){
             $this->response(
                 array(
                     'status' => TRUE,
@@ -41,20 +43,22 @@ class User_task extends REST_Controller {
                 )
             );
         }
+
     }
 
     public function index_get(){
         $id = $this->get('id');
-
+        
         if(isset($id)) $this->response($this->user_task_model->get_user_task_where($id));
         else $this->response($this->user_task_model->get_all_user_task());
     }
 
     public function index_put(){
-        $id = $this->put('id');
-        $name = $this->put('name');
+        // $id = $this->put('id');
+        $user_id = $this->put('userId');
+        $data = $this->put('taskId');
 
-        if(!isset($id) || !isset($name)){
+        if(!isset($user_id)){
             $this->response(
                 array(
                     'status' => FALSE,
@@ -64,7 +68,7 @@ class User_task extends REST_Controller {
             return;
         }
 
-        if($this->user_task_model->is_not_exists($id)){
+        if($this->user_task_model->is_not_exists($user_id)){
             $this->response(
                 array(
                     'status' => FALSE,
@@ -74,7 +78,7 @@ class User_task extends REST_Controller {
             return;
         }
 
-        if($this->user_task_model->update_user_task($id, $name)){
+        if($this->user_task_model->update_user_task($user_id, $data)){
             $this->response(
                 array(
                     'status' => TRUE,
@@ -92,9 +96,9 @@ class User_task extends REST_Controller {
     }
 
     public function index_delete(){
-        $id = $this->delete('id');
+        $user_id = $this->delete('userId');
 
-        if(!isset($id)){
+        if(!isset($user_id)){
             $this->response(
                 array(
                     'status' => FALSE,
@@ -104,7 +108,7 @@ class User_task extends REST_Controller {
             return;
         }
 
-        if($this->user_task_model->is_not_exists($id)){
+        if($this->user_task_model->is_not_exists($user_id)){
             $this->response(
                 array(
                     'status' => FALSE,
@@ -114,7 +118,7 @@ class User_task extends REST_Controller {
             return;
         }
 
-        if($this->user_task_model->delete_user_task($id)){
+        if($this->user_task_model->delete_user_task($user_id)){
             $this->response(
                 array(
                     'status' => TRUE,
