@@ -5,10 +5,15 @@ class Group_task_model extends CI_Model{
     private const TABLE_NAME = 'group_task';
 
     public function insert_group_task($user_task_group_id, $task_id){
-        $this->db->insert($this::TABLE_NAME, array(
-            'user_task_group_id' => $user_task_group_id,
-            'task_id' => $task_id
-        ));
+        foreach($task_id as $item){
+            $result = $this->db->get_where($this::TABLE_NAME, "task_id='{$item}'")->num_rows();
+            if($result == 0){
+                $this->db->insert($this::TABLE_NAME, array(
+                    'user_task_group_id' => $user_task_group_id,
+                    'task_id' => $item
+                ));   
+            }
+        }
         
         return $this->db->affected_rows();
     }

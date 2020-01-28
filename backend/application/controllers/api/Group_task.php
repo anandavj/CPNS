@@ -19,7 +19,7 @@ class Group_task extends REST_Controller {
         $user_task_group_id = $this->post('userTaskGroupId');
         $task_id = $this->post('taskId');
 
-        if(!isset($user_task_group_id) || !isset($user_task_group_id)){
+        if(!isset($user_task_group_id) || !isset($task_id)){
             $this->response(
                 array(
                     'status' => FALSE,
@@ -29,8 +29,7 @@ class Group_task extends REST_Controller {
             return;
         }
 
-        if($this->user_task_group_model->is_not_exists($user_task_group_id) ||
-        $this->task_model->is_not_exists($task_id)){
+        if($this->user_task_group_model->is_not_exists($user_task_group_id)){
             $this->response(
                 array(
                     'status' => FALSE,
@@ -38,6 +37,18 @@ class Group_task extends REST_Controller {
                 )
             );
             return;
+        }
+
+        foreach($task_id as $item){
+            if($this->task_model->is_not_exists($item)){
+                $this->response(
+                    array(
+                        'status' => FALSE,
+                        'message' => 'There is an invalid taskId.'
+                    )
+                );
+                return;
+            }
         }
 
         if($this->group_task_model->insert_group_task($user_task_group_id, $task_id)){
@@ -131,7 +142,7 @@ class Group_task extends REST_Controller {
             return;
         }
 
-        if($this->group_task_model->delete_user_task_group($id)){
+        if($this->group_task_model->delete_group_task($id)){
             $this->response(
                 array(
                     'status' => TRUE,
