@@ -15,77 +15,58 @@
       <v-expansion-panel>
         <v-expansion-panel-header>Barang yang disorot</v-expansion-panel-header>
         <v-expansion-panel-content>
-          <v-layout row wrap v-for="i in 5" :key="i" align-center>
-            <v-flex xs4>
-              <v-container grid-list-xs>
-                <v-avatar class="profile ml-2" color="grey" height="80px" width="80px" tile>
+          
+            <v-card  v-for="i in 5" :key="i" class="ma-2" flat>
+              <div class="d-flex">
+                <v-avatar class="profile" color="grey" height="80px" width="80px" tile>
                   <v-img
                     src="http://jayarayabali.com/image/cache/catalog/Metal%20Roofing/COLOR%20PAINT%20FINISHED%20METAL%20ROOF%20RAINBOW%20-%20ROOF-500x500.jpg"
                   ></v-img>
                 </v-avatar>
-              </v-container>
-            </v-flex>
-            <v-flex xs8>
-              <v-card-text>
-                <div class="title" style="font-size:12pt !important; ">Nama barang</div>
-                <div class="subtitle-1">Keterangan</div>
-              </v-card-text>
-            </v-flex>
-            <v-btn color="red" class="cancel" x-large icon>
-              <v-icon>mdi-close</v-icon>
-            </v-btn>
-          </v-layout>
+                <div>
+                  <v-card-title>Nama Barang</v-card-title>
+                  <v-card-subtitle>Deskripsi barang</v-card-subtitle>
+                </div>
+                <v-spacer></v-spacer>
+                <div>
+                  <v-card-text>
+                    <v-icon size="50" color="red">mdi-close</v-icon>
+                  </v-card-text>
+                </div>
+              </div>
+            </v-card>
+
+        <div style="color:red;">*Barang yang disorot maksimal 5</div>
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-expansion-panels>
 
+    
+  <v-card class=pa-5>
+    
     <!-- products -->
-    <v-card>
-      <v-layout row wrap v-for="i in 10" :key="i" align-center pa-2>
-        <v-flex xs4>
-          <v-container grid-list-xs>
-            <v-avatar class="profile ml-2" color="grey" height="80px" width="80px" tile>
-              <v-img
-                src="http://jayarayabali.com/image/cache/catalog/Metal%20Roofing/COLOR%20PAINT%20FINISHED%20METAL%20ROOF%20RAINBOW%20-%20ROOF-500x500.jpg"
-              ></v-img>
-            </v-avatar>
-          </v-container>
-        </v-flex>
-        <v-flex xs8>
-          <v-card-text>
-            <div class="title" style="font-size:12pt !important; ">Nama barang</div>
-            <div class="subtitle-1">Keterangan</div>
-          </v-card-text>
-        </v-flex>
-        <v-btn color="success" class="cancel" x-large icon>
-          <v-icon>mdi-plus-circle-outline</v-icon>
-        </v-btn>
-      </v-layout>
-    </v-card>
-    <v-flex xs12>
-      <!-- <v-btn color="primary" text>Barang teratas</v-btn> -->
-
-      <!-- <v-card class="mx-auto" max-width="300" color="" >
-          <v-layout row wrap>
-            <v-flex xs4>
-              <v-container grid-list-xs>
-                <v-avatar class="profile ml-2" color="grey" height="80px" width="80px" tile>
+    <v-card  v-for="i in 10" :key="i" flat class="ma-2">
+              <div class="d-flex">
+                <v-avatar class="profile ma-1" color="grey" height="80px" width="80px" tile>
                   <v-img
                     src="http://jayarayabali.com/image/cache/catalog/Metal%20Roofing/COLOR%20PAINT%20FINISHED%20METAL%20ROOF%20RAINBOW%20-%20ROOF-500x500.jpg"
                   ></v-img>
                 </v-avatar>
-              </v-container>
-            </v-flex>
-            <v-flex xs8>
-              <v-card-text>
-                <div class="title" style="font-size:12pt !important; ">Nama barang</div>
-                <div class="subtitle-1">Keterangan</div>
-              </v-card-text>
-            </v-flex>
-          </v-layout>
-      </v-card>-->
-    </v-flex>
+                <div>
+                  <v-card-title>Nama Barang</v-card-title>
+                  <v-card-subtitle>Deskripsi barang</v-card-subtitle>
+                </div>
+                <v-spacer></v-spacer>
+                <div>
+                  <v-card-text>
+                    <v-icon size="50" color="green">mdi-plus</v-icon>
+                  </v-card-text>
+                </div>
+              </div>
+            </v-card>
 
+
+  </v-card>
     <!-- <v-card class="mx-auto" max-width="300" tile v-for="i in 5" :key="i">
       <v-img height="100%" src="https://cdn.vuetifyjs.com/images/cards/server-room.jpg">
         <v-row align="end" class="fill-height">
@@ -144,9 +125,9 @@ export default {
 </script>
 
 <style>
-.cancel {
+/* .cancel {
   position: absolute;
   z-index: 1;
   margin-left: 80%;
-}
+} */
 </style>

@@ -124,7 +124,7 @@ export default {
       this.dialogReset = false;
     },
     inputManual() {
-      this.stockReal = document.getElementById("input").value;
+      this.stockReal = parseInt(document.getElementById("input").value);
       if (this.stockReal > this.stockDatabase) this.over = true;
       this.dialogInput = false;
     },
