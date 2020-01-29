@@ -51,20 +51,23 @@
                                     </v-toolbar>
                                     <v-form ref="form">
                                         <v-card-text>
-                                            <v-row>
-                                                <v-col cols="12">
-                                                    <v-text-field v-model="barang.nama" label="Nama Barang"/>
-                                                </v-col>
-                                                <v-col cols="12">
-                                                    <v-text-field v-model="barang.status" label="Status" disabled/>
-                                                </v-col>
-                                                <v-col cols="12">
-                                                    <v-text-field v-model="barang.jumlah" label="Jumlah"/>
-                                                </v-col>
-                                                <v-col cols="12">
-                                                    <v-textarea v-model="barang.keterangan" outlined label="Keterangan"/>
-                                                </v-col>
-                                            </v-row>
+                                            <v-form ref="form">
+                                                <v-row>
+                                                    <v-col cols="12">
+                                                        <v-text-field v-model="barang.nama" label="Nama Barang"/>
+                                                    </v-col>
+                                                    <v-col cols="12">
+                                                        <v-text-field v-if="barang.status" v-model="barang.status" label="Status" disabled/>
+                                                        <v-text-field v-else label="Status" disabled value="Masuk" outlined></v-text-field>
+                                                    </v-col>
+                                                    <v-col cols="12">
+                                                        <v-text-field v-model="barang.jumlah" label="Jumlah"/>
+                                                    </v-col>
+                                                    <v-col cols="12">
+                                                        <v-textarea v-model="barang.keterangan" outlined label="Keterangan"/>
+                                                    </v-col>
+                                                </v-row>
+                                            </v-form>
                                         </v-card-text>
                                     </v-form>
                                     <v-card-actions>
@@ -80,6 +83,9 @@
                             <v-data-table v-if="barangs.length > 0"
                                 :headers="headers"
                                 :items="barangs"
+                                :disable-sort="true"
+                                :hide-default-footer="true"
+                                :disable-filtering="true"
                             >
                             </v-data-table>
                         </v-container>
@@ -143,19 +149,19 @@
                     <!-- *************************************************************************************************************** -->
                     <!-- *************************************************************************************************************** -->
 
+                    <v-container v-if="barangs.length > 0">
+                        <v-row justify="end">
+                            <v-col md="4" lg="2">
+                                <v-btn block outlined color="red">Cancel</v-btn>
+                            </v-col>
+                            <v-col md="4" lg="2">
+                                <v-btn block color="light-green" dark>Save</v-btn>
+                            </v-col>
+                        </v-row>
+                    </v-container>
                 </v-tabs-items>
             </v-card>
         </div>
-            <v-container v-if="barangs.length > 0">
-                <v-row justify="end">
-                    <v-col md="4" lg="2">
-                        <v-btn block outlined color="red">Cancel</v-btn>
-                    </v-col>
-                    <v-col md="4" lg="2">
-                        <v-btn block color="light-green" dark>Save</v-btn>
-                    </v-col>
-                </v-row>
-            </v-container>
         
         <v-dialog v-model="popUpConfirmSave" persistent max-width='350px'>
             <v-card>
