@@ -38,12 +38,12 @@
               <v-col cols="12">
                 <v-row wrap>
                   <v-flex xs6>
-                    <v-text-field v-model="editableProduct.price" label="Harga" class="pa-2"></v-text-field>
+                    <v-text-field v-model="editableProduct.price" label="Open Price" class="pa-2"></v-text-field>
                   </v-flex>
                   <v-flex xs6>
                     <v-text-field
                       v-model="editableProduct.priceMin"
-                      label="Harga Bawah"
+                      label="Bottom Price"
                       class="pa-2"
                     ></v-text-field>
                   </v-flex>
@@ -53,12 +53,20 @@
                 <v-text-field v-model="editableProduct.stock" label="Jumlah"></v-text-field>
               </v-col>
               <v-col cols="12">
+                <v-combobox
+                  v-model="editableProduct.tag"
+                  :items="tags"
+                  label="Tags"
+                  multiple
+                  chips
+                ></v-combobox>
+              </v-col>
+              <v-col cols="12">
                 <v-textarea v-model="editableProduct.description" label="Deskripsi" outlined
                   name="input-7-1">
                   </v-textarea>
               </v-col>
 
-             
             </v-row>
           </v-card-text>
           <v-card-actions>
@@ -123,6 +131,9 @@ export default {
   name: "addProduct",
   data() {
     return {
+      tags: [
+        'Tag 1','Tag 2','Tag 3','Tag 4'
+      ],
       headers: [
         { text: "Nama", value: "name" },
         { text: "Kateogri", value: "category" },
@@ -139,7 +150,8 @@ export default {
         price: "",
         priceMin: "",
         description: "",
-        stock: ""
+        stock: "",
+        tag:[]
       },
       defaultProduct: {
         name: "",
@@ -148,7 +160,8 @@ export default {
         price: "",
         priceMin: "",
         description: "",
-        stock: ""
+        stock: "",
+        tag:[]
       },
       items: [],
       popupModal: false,

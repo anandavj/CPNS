@@ -59,10 +59,11 @@ export default {
         return {
             items: [
                 {
-                    nomor:'INV/XXX/XX',
-                    status:'Bongkar',
+                    nomor:'XXXT',
+                    jenis:'Bongkar',
                     tanggal:'10 Januari 2020',
                     keterangan:'Ini hanya test',
+                    status:'Pengiriman',
                     barangs: [
                         {id:1, name: 'barang 1', jumlah: 21},
                         {id:2, name: 'barang 1', jumlah: 213},
@@ -82,10 +83,11 @@ export default {
                     ]
                 },
                 {
-                    nomor:'INV/XXX/XY',
-                    status:'Muat',
+                    nomor:'XXX',
+                    jenis:'Muat',
                     tanggal:'10 Januari 2020',
                     keterangan:'Ini hanya test',
+                    status:'Selesai',
                     barangs: [
                         {id:1, name: 'barang 1', jumlah: 21},
                         {id:2, name: 'barang 1', jumlah: 213},
@@ -97,7 +99,7 @@ export default {
             barangsHeader: [
                 {text:'ID', value:'id'},
                 {text:'Nama Barang', value:'name'},
-                {text:'Jumlah', value:'jumlah'}
+                {text:'Jumlah', value:'jumlah'},
             ],
             listSelected: [],
             barangsSelected: [],
@@ -124,10 +126,11 @@ export default {
     computed: {
         headers() {
             return [
-                {text:'Nomor', value:'nomor'},
-                {text:'Status', value:'status',filter: () => true},
+                {text:'Surat Jalan', value:'nomor'},
+                {text:'Jenis', value:'jenis',filter: () => true},
                 {text:'Tanggal', value:'tanggal',filter: () => true},
                 {text:'Keterangan', value:'keterangan',filter: () => true},
+                {text:'Status', value:'status',filter: () => true},
                 {text:'', value:'actions',width:'10%',filter: () => true}
             ]
         }

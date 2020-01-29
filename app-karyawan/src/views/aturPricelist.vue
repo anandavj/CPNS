@@ -55,7 +55,7 @@ export default {
             karyawansHeader: [
                 {text:'No', value:'no', width:'5%'},
                 {text:'Nama', value:'nama', width:'90%'},
-                {text:'Margin(%)', value:'margin'}
+                {text:'Margin(Rp)', value:'margin'}
             ],
             barangs: [
                 {
@@ -64,7 +64,7 @@ export default {
                     rataRataBawah:100000, 
                     hargaAtas:140000,
                     karyawans: [
-                        {no:1, nama:'Ananda Vijaya', margin:'5'}
+                        {no:1, nama:'Ananda Vijaya', margin:'9000'}
                     ]
                 },
                 {
@@ -73,8 +73,8 @@ export default {
                     rataRataBawah:1000, 
                     hargaAtas:14000,
                     karyawans: [
-                        {no:1, nama:'Mahendra Fajar', margin:'5'},
-                        {no:2, nama:'Satria Kemal', margin:'10'},
+                        {no:1, nama:'Mahendra Fajar', margin:'5200'},
+                        {no:2, nama:'Satria Kemal', margin:'10000'},
                     ]
                 },
                 {
@@ -83,8 +83,8 @@ export default {
                     rataRataBawah:500, 
                     hargaAtas:1000,
                     karyawans: [
-                        {no:1, nama:'Mahendra Fajar', margin:'5'},
-                        {no:2, nama:'Satria Kemal', margin:'10'}
+                        {no:1, nama:'Mahendra Fajar', margin:'5300'},
+                        {no:2, nama:'Satria Kemal', margin:'10000'}
                     ]
                 }
             ],
