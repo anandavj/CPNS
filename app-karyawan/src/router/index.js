@@ -20,6 +20,30 @@ const routes = [
       drawer: true
     }
   },
+  {
+    path: '/karyawan',
+    name: 'Karyawan',
+    component: () => import('../views/Karyawan.vue'),
+    meta: {
+      drawer: true
+    }
+  },
+  {
+    path: '/daftarBarang',
+    name: 'Barang',
+    component: () => import('../views/Barang.vue'),
+    meta: {
+      drawer: true
+    }
+  },
+  {
+    path: '/suratJalan',
+    name: 'SuratJalan',
+    component: () => import('../views/SuratJalan.vue'),
+    meta: {
+      drawer: true
+    }
+  }
 ]
 
 const router = new VueRouter({
