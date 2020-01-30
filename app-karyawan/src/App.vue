@@ -17,81 +17,18 @@
         </v-list-item>
       </template>
       <v-divider/>
-      <v-list dense>
-          <v-list-item link>
-            <v-list-item-icon><v-icon>mdi-home-variant-outline</v-icon></v-list-item-icon>
-            <v-list-item-title @click="goTo('/','Dashboard')">Dashboard</v-list-item-title>
+      <v-list dense v-for="(menu,index) in menus" :key="index" class="mb-n4">
+        <v-list-group :prepend-icon="menu.icon" no-action v-if="menu.children">
+          <template v-slot:activator><v-list-item-content><v-list-item-title>{{menu.name}}</v-list-item-title></v-list-item-content></template>
+          <v-list-item v-for="(child,idx) in menu.children" :key="idx" link class="caption" @click="goTo('')">
+            <v-list-item-title>{{child.name}}</v-list-item-title>
+            <v-list-item-icon><v-icon>{{child.icon}}</v-icon></v-list-item-icon>
           </v-list-item>
-          <v-list-group prepend-icon="mdi-account-group" no-action>
-            <template v-slot:activator><v-list-item-content><v-list-item-title>Karyawan</v-list-item-title></v-list-item-content></template>
-            <v-list-item link class="caption" @click="goTo('Karyawan')">
-              <v-list-item-title>Lihat Karyawan</v-list-item-title>
-              <v-list-item-icon><v-icon>mdi-account-group</v-icon></v-list-item-icon>
-            </v-list-item>
-            <v-list-item link class="caption" @click="goTo('managementKaryawan','Pengaturan Karyawan')">
-              <v-list-item-title>Pengaturan Karyawan</v-list-item-title>
-              <v-list-item-icon><v-icon>mdi-account-key-outline</v-icon></v-list-item-icon>
-            </v-list-item>
-          </v-list-group>
-          <v-list-group prepend-icon="mdi-cube-outline" no-action>
-            <template v-slot:activator><v-list-item-content><v-list-item-title>Barang</v-list-item-title></v-list-item-content></template>
-            <v-list-item link class="caption" @click="goTo('Barang','Kartu Stock Barang')">
-              <v-list-item-title>Kartu Stock Barang</v-list-item-title>
-              <v-list-item-icon><v-icon>mdi-ballot-recount-outline</v-icon></v-list-item-icon>
-            </v-list-item>
-            <v-list-item link class="caption" @click="goTo('baranginout','Barang Masuk Keluar')">
-              <v-list-item-title>Barang Masuk/Keluar</v-list-item-title>
-              <v-list-item-icon><v-icon>mdi-clipboard-flow-outline</v-icon></v-list-item-icon>
-            </v-list-item>
-            <v-list-item link class="caption" @click="goTo('kelolabarang','Kelola Barang')">
-              <v-list-item-title>Kelola Barang</v-list-item-title>
-              <v-list-item-icon><v-icon>mdi-briefcase-check-outline</v-icon></v-list-item-icon>
-            </v-list-item>
-          </v-list-group>
-          <v-list-group prepend-icon="mdi-currency-usd" no-action>
-            <template v-slot:activator><v-list-item-content><v-list-item-title>Pricelist</v-list-item-title></v-list-item-content></template>
-            <v-list-item link class="caption" @click="goTo('listpricelist','Pricelist')">
-              <v-list-item-title>List Pricelist</v-list-item-title>
-              <v-list-item-icon><v-icon>mdi-format-list-text</v-icon></v-list-item-icon>
-            </v-list-item>
-            <v-list-item link class="caption" @click="goTo('aturpricelist','Atur Pricelist')">
-              <v-list-item-title>Atur Pricelist</v-list-item-title>
-              <v-list-item-icon><v-icon>mdi-wallet-outline</v-icon></v-list-item-icon>
-            </v-list-item>
-          </v-list-group>
-          <v-list-group prepend-icon="mdi-store" no-action>
-            <template v-slot:activator><v-list-item-content><v-list-item-title>Gudang</v-list-item-title></v-list-item-content></template>
-            <v-list-item link class="caption" @click="goTo('barangbongkarmuat','Bongkar Muat Barang')">
-              <v-list-item-title>Bongkar/Muat</v-list-item-title>
-              <v-list-item-icon><v-icon>mdi-truck-outline</v-icon></v-list-item-icon>
-            </v-list-item>
-            <v-list-item link class="caption" @click="goTo('opname', 'Stock Opname')">
-              <v-list-item-title>Stock Opname</v-list-item-title>
-              <v-list-item-icon><v-icon>mdi-clipboard-check-outline</v-icon></v-list-item-icon>
-            </v-list-item>
-            <v-list-item link class="caption" @click="goTo('monitorOpname', 'Monitor Stock Opname')">
-              <v-list-item-title>Monitor Opname</v-list-item-title>
-              <v-list-item-icon><v-icon>mdi-monitor</v-icon></v-list-item-icon>
-            </v-list-item>
-          </v-list-group>
-          <v-list-item link @click="logOutDialog = true">
-            <v-list-item-icon><v-icon class="red--text">mdi-power</v-icon></v-list-item-icon>
-            <v-list-item-title class="red--text">Keluar</v-list-item-title>
-          </v-list-item>
-          <v-dialog v-model="logOutDialog">
-            <v-card>
-              <v-card-title>Confirmation</v-card-title>
-                <v-card-text>Apakah Anda Yakin Ingin Keluar?</v-card-text>
-                <v-card-actions>
-                    <v-container>
-                        <v-row justify="center">
-                            <v-btn class="mt-n5" color="red darken-1" text @click="logOutDialog = false">Tidak</v-btn>
-                            <v-btn class="mt-n5" color="blue darken-1" text @click="logOut">Ya</v-btn>
-                        </v-row>
-                    </v-container>
-                </v-card-actions>
-            </v-card>
-          </v-dialog>
+        </v-list-group>
+        <v-list-item link v-else>
+          <v-list-item-icon><v-icon>{{menu.icon}}</v-icon></v-list-item-icon>
+          <v-list-item-title @click="goTo('')">{{menu.name}}</v-list-item-title>
+        </v-list-item>
       </v-list>
     </v-navigation-drawer>
     <v-content app class="mx-4 my-4 mx-md-10 my-md-n5">
@@ -115,12 +52,16 @@ export default {
 
   data() {
     return {
+      menus: [
+        {name:'Dashboard',route:'/',icon:'mdi-home-variant-outline'},
+        {name:'Karyawan',route:'/karyawan',icon:'mdi-account-group',children:[
+          {name:'List Karyawan',route:'/karyawan',icon:'mdi-account-group'}
+        ]},
+        {name:'Daftar Barang',route:'/daftarBarang',icon:'mdi-cube-outline'},
+        {name:'Surat Jalan',route:'/suratJalan',icon:'mdi-ballot-recount-outline'},
+        {name:'Stock Opname',route:'/stockOpname',icon:'mdi-clipboard-check-outline'}
+      ],
       drawer: null,
-      // menus: [
-      //   {title:'Dashboard', icon:'mdi-home-variant'},
-      //   {title:'Karyawan', icon:'mdi-account-group'},
-      //   {title:'Barang', icon:'mdi-cube-outline'},
-      // ],
       titleBar: 'Dashboard',
       logOutDialog: false
     }
