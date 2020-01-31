@@ -6,20 +6,23 @@ require APPPATH . '/libraries/REST_Controller.php';
 
 use Restserver\Libraries\REST_Controller;
 
-class Task extends REST_Controller
+class warehouse_product extends REST_Controller
 {
 
     public function __construct()
     {
         parent::__construct();
-        $this->load->model("task_model");
+        $this->load->model('warehouse_model');
+        $this->load->model('product_model');
+        $this->load->model('warehouse_product_model');
     }
 
     public function index_post()
     {
-        $action = $this->post('action');
+        $warehouse_id = $this->post('warehouseId');
+        $product_id = $this->post('productId');
 
-        if (!isset($action)) {
+        if (!isset($warehouse_id) || !isset($product_id)) {
             $this->response(
                 array(
                     'status' => FALSE,
@@ -29,7 +32,7 @@ class Task extends REST_Controller
             return;
         }
 
-        if ($this->task_model->insert_task($action)) {
+        if ($this->warehouse_product_model->insert_warehouse_product($warehouse_id, $product_id)) {
             $this->response(
                 array(
                     'status' => TRUE,
@@ -50,16 +53,17 @@ class Task extends REST_Controller
     {
         $id = $this->get('id');
 
-        if (isset($id)) $this->response($this->task_model->get_task_where($id));
-        else $this->response($this->task_model->get_all_task());
+        if (isset($id)) $this->response($this->warehouse_product_model->get_warehouse_product_where($id));
+        else $this->response($this->warehouse_product_model->get_all_warehouse_product());
     }
 
     public function index_put()
     {
         $id = $this->put('id');
-        $action = $this->put('action');
+        $warehouse_id = $this->put('warehouseId');
+        $product_id = $this->put('productId');
 
-        if (!isset($id) || !isset($action)) {
+        if (!isset($id) || !isset($warehouse_id) || !isset($product_id)) {
             $this->response(
                 array(
                     'status' => FALSE,
@@ -69,7 +73,7 @@ class Task extends REST_Controller
             return;
         }
 
-        if ($this->task_model->is_not_exists($id)) {
+        if ($this->warehouse_product_model->is_not_exists($id)) {
             $this->response(
                 array(
                     'status' => FALSE,
@@ -79,7 +83,17 @@ class Task extends REST_Controller
             return;
         }
 
-        if ($this->task_model->update_task($id, $action)) {
+        if ($this->warehouse_product_model->is_not_exists($id)) {
+            $this->response(
+                array(
+                    'status' => FALSE,
+                    'message' => $this::INVALID_ID_MESSAGE
+                )
+            );
+            return;
+        }
+
+        if ($this->warehouse_product_model->update_warehouse_product($id, $warehouse_id, $product_id)) {
             $this->response(
                 array(
                     'status' => TRUE,
@@ -110,7 +124,7 @@ class Task extends REST_Controller
             return;
         }
 
-        if ($this->task_model->is_not_exists($id)) {
+        if ($this->warehouse_product_model->is_not_exists($id)) {
             $this->response(
                 array(
                     'status' => FALSE,
@@ -120,7 +134,7 @@ class Task extends REST_Controller
             return;
         }
 
-        if ($this->task_model->delete_task($id)) {
+        if ($this->warehouse_product_model->delete_warehouse_product($id)) {
             $this->response(
                 array(
                     'status' => TRUE,

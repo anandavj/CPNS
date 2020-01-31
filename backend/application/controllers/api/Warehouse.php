@@ -6,20 +6,21 @@ require APPPATH . '/libraries/REST_Controller.php';
 
 use Restserver\Libraries\REST_Controller;
 
-class Task extends REST_Controller
+class warehouse extends REST_Controller
 {
 
     public function __construct()
     {
         parent::__construct();
-        $this->load->model("task_model");
+        $this->load->model('warehouse_model');
     }
 
     public function index_post()
     {
-        $action = $this->post('action');
+        $name = $this->post('name');
+        $address = $this->post('address');
 
-        if (!isset($action)) {
+        if (!isset($name) || !isset($address)) {
             $this->response(
                 array(
                     'status' => FALSE,
@@ -29,7 +30,17 @@ class Task extends REST_Controller
             return;
         }
 
-        if ($this->task_model->insert_task($action)) {
+        // if ($this->warehouse_model->!is_not_exists($id)) {
+        //     $this->response(
+        //         array(
+        //             'status' => FALSE,
+        //             'message' => $this::INVALID_ID_MESSAGE
+        //         )
+        //     );
+        //     return;
+        // }
+
+        if ($this->warehouse_model->insert_warehouse($name, $address)) {
             $this->response(
                 array(
                     'status' => TRUE,
@@ -50,16 +61,17 @@ class Task extends REST_Controller
     {
         $id = $this->get('id');
 
-        if (isset($id)) $this->response($this->task_model->get_task_where($id));
-        else $this->response($this->task_model->get_all_task());
+        if (isset($id)) $this->response($this->warehouse_model->get_warehouse_where($id));
+        else $this->response($this->warehouse_model->get_all_warehouse());
     }
 
     public function index_put()
     {
         $id = $this->put('id');
-        $action = $this->put('action');
+        $name = $this->put('name');
+        $address = $this->put('address');
 
-        if (!isset($id) || !isset($action)) {
+        if (!isset($id) || !isset($name) || !isset($address)) {
             $this->response(
                 array(
                     'status' => FALSE,
@@ -69,7 +81,7 @@ class Task extends REST_Controller
             return;
         }
 
-        if ($this->task_model->is_not_exists($id)) {
+        if ($this->warehouse_model->is_not_exists($id)) {
             $this->response(
                 array(
                     'status' => FALSE,
@@ -79,7 +91,17 @@ class Task extends REST_Controller
             return;
         }
 
-        if ($this->task_model->update_task($id, $action)) {
+        if ($this->warehouse_model->is_not_exists($id)) {
+            $this->response(
+                array(
+                    'status' => FALSE,
+                    'message' => $this::INVALID_ID_MESSAGE
+                )
+            );
+            return;
+        }
+
+        if ($this->warehouse_model->update_warehouse($id, $name, $address)) {
             $this->response(
                 array(
                     'status' => TRUE,
@@ -110,7 +132,7 @@ class Task extends REST_Controller
             return;
         }
 
-        if ($this->task_model->is_not_exists($id)) {
+        if ($this->warehouse_model->is_not_exists($id)) {
             $this->response(
                 array(
                     'status' => FALSE,
@@ -120,7 +142,7 @@ class Task extends REST_Controller
             return;
         }
 
-        if ($this->task_model->delete_task($id)) {
+        if ($this->warehouse_model->delete_warehouse($id)) {
             $this->response(
                 array(
                     'status' => TRUE,
