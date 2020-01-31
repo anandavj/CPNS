@@ -4,13 +4,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Product_model extends CI_Model{
 
     private const TABLE_NAME = 'product';
-    public function insert_product($name, $category_id, $description, $stock, $unit, $open_price, $bottom_price){
+    public function insert_product($name, $category_id, $description, $stock, $unit_id, $open_price, $bottom_price){
         $this->db->insert($this::TABLE_NAME, array(
             'name' => $name,
             'category_id ' => $category_id,
             'description' => $description,
             'stock' => $stock,
-            'unit' => $unit,
+            'unit_id' => $unit_id,
             'open_price' => $open_price,
             'bottom_price' => $bottom_price
         ));

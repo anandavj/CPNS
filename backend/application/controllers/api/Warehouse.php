@@ -30,16 +30,6 @@ class warehouse extends REST_Controller
             return;
         }
 
-        // if ($this->warehouse_model->!is_not_exists($id)) {
-        //     $this->response(
-        //         array(
-        //             'status' => FALSE,
-        //             'message' => $this::INVALID_ID_MESSAGE
-        //         )
-        //     );
-        //     return;
-        // }
-
         if ($this->warehouse_model->insert_warehouse($name, $address)) {
             $this->response(
                 array(

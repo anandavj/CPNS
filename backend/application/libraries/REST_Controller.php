@@ -22,14 +22,14 @@ abstract class REST_Controller extends \CI_Controller {
     
     // Message Information by Fajar
     const INSERT_SUCCESS_MESSSAGE = 'Insert success.';
-    const INSERT_FAILED_MESSAGE = 'Insert success.';
+    const INSERT_FAILED_MESSAGE = 'Insert failed.';
     const UPDATE_SUCCESS_MESSSAGE = 'Update success.';
-    const UPDATE_FAILED_MESSAGE = 'Update success.';
+    const UPDATE_FAILED_MESSAGE = 'Update failed.';
     const DELETE_SUCCESS_MESSSAGE = 'Delete success.';
-    const DELETE_FAILED_MESSAGE = 'Delete success.';
-    const ID_ALREADY_EXISTS_MESSAGE = 'Id already exists.';
-    const INVALID_ID_MESSAGE = 'Invalid Id.';
-    const REQUIRED_PARAMETER_MESSAGE = 'Required parameter is not specified.';
+    const DELETE_FAILED_MESSAGE = 'Delete failed.';
+    const ID_ALREADY_EXISTS_MESSAGE = 'ID already exists.';
+    const INVALID_ID_MESSAGE = 'Invalid ID.';
+    const REQUIRED_PARAMETER_MESSAGE = 'Required parameter is not specified. Invalid parameter(s): ';
 
     // Note: Only the widely used HTTP status codes are documented
 
@@ -1786,7 +1786,7 @@ abstract class REST_Controller extends \CI_Controller {
             'basedn' => $this->config->item('basedn', 'ldap'),
         ];
 
-        log_message('debug', 'LDAP Auth: Connect to ' . (isset($ldaphost) ? $ldaphost : '[ldap not configured]'));
+        // log_message('debug', 'LDAP Auth: Connect to ' . (isset($ldaphost) ? $ldaphost : '[ldap not configured]'));
 
         // Connect to the ldap server
         $ldapconn = ldap_connect($ldap['host'], $ldap['port']);

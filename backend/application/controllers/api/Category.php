@@ -20,8 +20,8 @@ class Category extends REST_Controller {
             $this->response(
                 array(
                     'status' => FALSE,
-                    'message' => $this::REQUIRED_PARAMETER_MESSAGE
-                )
+                    'message' => $this::REQUIRED_PARAMETER_MESSAGE." Required parameter(s): name"
+                ),REST_Controller::HTTP_BAD_REQUEST
             );
             return;
         }
@@ -31,14 +31,14 @@ class Category extends REST_Controller {
                 array(
                     'status' => TRUE,
                     'message' => $this::INSERT_SUCCESS_MESSSAGE
-                )
+                ),REST_Controller::HTTP_CREATED
             );
         }else{
             $this->response(
                 array(
                     'status' => FALSE,
-                    'message' => $this::REQUIRED_PARAMETER_MESSAGE
-                )
+                    'message' => $this::INSERT_FAILED_MESSAGE
+                ),REST_Controller::HTTP_BAD_GATEWAY
             );
         }
     }
@@ -55,11 +55,15 @@ class Category extends REST_Controller {
         $name = $this->put('name');
 
         if(!isset($id) || !isset($name)){
+            $required_parameters = [];
+            if(!isset($id)) array_push($required_parameters, 'id');
+            if(!isset($name)) array_push($required_parameters, 'name');
+            
             $this->response(
                 array(
                     'status' => FALSE,
-                    'message' => $this::REQUIRED_PARAMETER_MESSAGE
-                )
+                    'message' => $this::REQUIRED_PARAMETER_MESSAGE." Required parameter(s): ". implode(', ', $required_parameters)
+                ),REST_Controller::HTTP_BAD_REQUEST
             );
             return;
         }
@@ -69,7 +73,7 @@ class Category extends REST_Controller {
                 array(
                     'status' => FALSE,
                     'message' => $this::INVALID_ID_MESSAGE
-                )
+                ),REST_Controller::HTTP_BAD_REQUEST
             );
             return;
         }
@@ -79,14 +83,14 @@ class Category extends REST_Controller {
                 array(
                     'status' => TRUE,
                     'message' => $this::UPDATE_SUCCESS_MESSSAGE
-                )
+                ),REST_Controller::HTTP_OK
             );
         }else{
             $this->response(
                 array(
                     'status' => FALSE,
                     'message' => $this::UPDATE_FAILED_MESSAGE
-                )
+                ),REST_Controller::HTTP_BAD_GATEWAY
             );
         }
     }
@@ -98,8 +102,8 @@ class Category extends REST_Controller {
             $this->response(
                 array(
                     'status' => FALSE,
-                    'message' => $this::REQUIRED_PARAMETER_MESSAGE
-                )
+                    'message' => $this::REQUIRED_PARAMETER_MESSAGE. "id"
+                ),REST_Controller::HTTP_BAD_REQUEST
             );
             return;
         }
@@ -109,7 +113,7 @@ class Category extends REST_Controller {
                 array(
                     'status' => FALSE,
                     'message' => $this::INVALID_ID_MESSAGE
-                )
+                ),REST_Controller::HTTP_BAD_REQUEST
             );
             return;
         }
@@ -119,14 +123,14 @@ class Category extends REST_Controller {
                 array(
                     'status' => TRUE,
                     'message' => $this::DELETE_SUCCESS_MESSSAGE
-                )
+                ),REST_Controller::HTTP_OK
             );
         }else{
             $this->response(
                 array(
                     'status' => FALSE,
                     'message' => $this::DELETE_FAILED_MESSAGE
-                )
+                ),REST_Controller::HTTP_BAD_GATEWAY
             );
         }
     }
