@@ -1,30 +1,27 @@
 <?php
 
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 require APPPATH . '/libraries/REST_Controller.php';
 
 use Restserver\Libraries\REST_Controller;
 
-class Product extends REST_Controller {
+class Unit extends REST_Controller
+{
 
-    public function __construct(){
+    public function __construct()
+    {
         parent::__construct();
-        $this->load->model('product_model');
-        $this->load->model('category_model');
+        $this->load->model("unit_model");
     }
 
-    public function index_post(){
+    public function index_post()
+    {
         $name = $this->post('name');
-        $category_id = $this->post('categoryId');
+        $abbreviation = $this->post('abbreviation');
         $description = $this->post('description');
-        $stock = $this->post('stock');
-        $unit_id = $this->post('unitId');
-        $open_price = $this->post('openPrice');
-        $bottom_price = $this->post('bottomPrice');
 
-        if(!isset($name) || !isset($category_id) || !isset($description) || !isset($stock) ||
-        !isset($unit_id) || !isset($open_price) || !isset($bottom_price)){
+        if (!isset($name) || !isset($abbreviation)) {
             $this->response(
                 array(
                     'status' => FALSE,
@@ -34,24 +31,14 @@ class Product extends REST_Controller {
             return;
         }
 
-        if($this->category_model->is_not_exists($category_id)){
-            $this->response(
-                array(
-                    'status' => FALSE,
-                    'message' => $this::INVALID_ID_MESSAGE
-                )
-            );
-            return;
-        }
-
-        if($this->product_model->insert_product($name, $category_id, $description, $stock, $unit_id, $open_price, $bottom_price)){
+        if ($this->unit_model->insert_unit($name, $abbreviation, $description)) {
             $this->response(
                 array(
                     'status' => TRUE,
                     'message' => $this::INSERT_SUCCESS_MESSSAGE
                 )
             );
-        }else{
+        } else {
             $this->response(
                 array(
                     'status' => FALSE,
@@ -61,25 +48,22 @@ class Product extends REST_Controller {
         }
     }
 
-    public function index_get(){
+    public function index_get()
+    {
         $id = $this->get('id');
 
-        if(isset($id)) $this->response($this->product_model->get_product_where($id));
-        else $this->response($this->product_model->get_all_product());
+        if (isset($id)) $this->response($this->unit_model->get_unit_where($id));
+        else $this->response($this->unit_model->get_all_unit());
     }
 
-    public function index_put(){
+    public function index_put()
+    {
         $id = $this->put('id');
         $name = $this->put('name');
-        $category_id = $this->put('categoryId');
+        $abbreviation = $this->put('abbreviation');
         $description = $this->put('description');
-        $stock = $this->put('stock');
-        $unit_id = $this->put('unit_id');
-        $open_price = $this->put('openPrice');
-        $bottom_price = $this->put('bottomPrice');
 
-        if(!isset($id) || !isset($name) || !isset($category_id) || !isset($description) || !isset($stock) ||
-        !isset($unit_id) || !isset($open_price) || !isset($bottom_price)){
+        if (!isset($id) || !isset($abbreviation)) {
             $this->response(
                 array(
                     'status' => FALSE,
@@ -89,7 +73,7 @@ class Product extends REST_Controller {
             return;
         }
 
-        if($this->category_model->is_not_exists($category_id)){
+        if ($this->unit_model->is_not_exists($id)) {
             $this->response(
                 array(
                     'status' => FALSE,
@@ -99,24 +83,14 @@ class Product extends REST_Controller {
             return;
         }
 
-        if($this->product_model->is_not_exists($id)){
-            $this->response(
-                array(
-                    'status' => FALSE,
-                    'message' => $this::INVALID_ID_MESSAGE
-                )
-            );
-            return;
-        }
-        
-        if($this->product_model->update_product($id, $name, $category_id, $description, $stock, $unit_id, $open_price, $bottom_price)){
+        if ($this->unit_model->update_unit($id, $name, $abbreviation, $description)) {
             $this->response(
                 array(
                     'status' => TRUE,
                     'message' => $this::UPDATE_SUCCESS_MESSSAGE
                 )
             );
-        }else{
+        } else {
             $this->response(
                 array(
                     'status' => FALSE,
@@ -126,10 +100,11 @@ class Product extends REST_Controller {
         }
     }
 
-    public function index_delete(){
+    public function index_delete()
+    {
         $id = $this->delete('id');
 
-        if(!isset($id)){
+        if (!isset($id)) {
             $this->response(
                 array(
                     'status' => FALSE,
@@ -139,7 +114,7 @@ class Product extends REST_Controller {
             return;
         }
 
-        if($this->product_model->is_not_exists($id)){
+        if ($this->unit_model->is_not_exists($id)) {
             $this->response(
                 array(
                     'status' => FALSE,
@@ -149,14 +124,14 @@ class Product extends REST_Controller {
             return;
         }
 
-        if($this->product_model->delete_product($id)){
+        if ($this->unit_model->delete_unit($id)) {
             $this->response(
                 array(
                     'status' => TRUE,
                     'message' => $this::DELETE_SUCCESS_MESSSAGE
                 )
             );
-        }else{
+        } else {
             $this->response(
                 array(
                     'status' => FALSE,
