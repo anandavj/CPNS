@@ -23,11 +23,14 @@ class Group_task extends REST_Controller {
         $task_id = $this->post('taskId');
 
         if(!isset($user_task_group_id) || !isset($task_id)){
+            $required_parameters = [];
+            if(!isset($user_task_group_id)) array_push($required_parameters, 'userTaskGroupId');
+            if(!isset($task_id)) array_push($required_parameters, 'taskId');
             $this->response(
                 array(
                     'status' => FALSE,
-                    'message' => $this::REQUIRED_PARAMETER_MESSAGE
-                )
+                    'message' => $this::REQUIRED_PARAMETER_MESSAGE. implode(', ', $required_parameters)
+                ),REST_Controller::HTTP_BAD_REQUEST
             );
             return;
         }
@@ -37,7 +40,7 @@ class Group_task extends REST_Controller {
                 array(
                     'status' => FALSE,
                     'message' => $this::INVALID_ID_MESSAGE
-                )
+                ),REST_Controller::HTTP_BAD_REQUEST
             );
             return;
         }
@@ -47,8 +50,8 @@ class Group_task extends REST_Controller {
                 $this->response(
                     array(
                         'status' => FALSE,
-                        'message' => 'There is an invalid taskId.'
-                    )
+                        'message' => $this::INVALID_ID_MESSAGE." taskId"
+                    ),REST_Controller::HTTP_BAD_REQUEST
                 );
                 return;
             }
@@ -59,14 +62,14 @@ class Group_task extends REST_Controller {
                 array(
                     'status' => TRUE,
                     'message' => $this::INSERT_SUCCESS_MESSSAGE
-                )
+                ),REST_Controller::HTTP_CREATED
             );
         }else{
             $this->response(
                 array(
                     'status' => FALSE,
-                    'message' => $this::REQUIRED_PARAMETER_MESSAGE
-                )
+                    'message' => $this::INSERT_FAILED_MESSAGE
+                ),REST_Controller::HTTP_BAD_GATEWAY
             );
         }
     }
@@ -86,11 +89,15 @@ class Group_task extends REST_Controller {
         $task_id = $this->put('taskId');
 
         if(!isset($user_task_group_id) || !isset($task_id)){
+            $required_parameters = [];
+            if(!isset($user_task_group_id)) array_push($required_parameters, 'userTaskGroupId');
+            if(!isset($task_id)) array_push($required_parameters, 'taskId');
+
             $this->response(
                 array(
                     'status' => FALSE,
-                    'message' => $this::REQUIRED_PARAMETER_MESSAGE
-                )
+                    'message' => $this::REQUIRED_PARAMETER_MESSAGE. implode(', ', $required_parameters)
+                ),REST_Controller::HTTP_BAD_REQUEST
             );
             return;
         }
@@ -100,7 +107,7 @@ class Group_task extends REST_Controller {
                 array(
                     'status' => FALSE,
                     'message' => $this::INVALID_ID_MESSAGE
-                )
+                ),REST_Controller::HTTP_BAD_REQUEST
             );
             return;
         }
@@ -110,8 +117,8 @@ class Group_task extends REST_Controller {
                 $this->response(
                     array(
                         'status' => FALSE,
-                        'message' => 'There is an invalid taskId.'
-                    )
+                        'message' => $this::REQUIRED_PARAMETER_MESSAGE . "taskId"
+                    ),REST_Controller::HTTP_BAD_GATEWAY
                 );
                 return;
             }
@@ -126,14 +133,14 @@ class Group_task extends REST_Controller {
                 array(
                     'status' => TRUE,
                     'message' => $this::UPDATE_SUCCESS_MESSSAGE
-                )
+                ),REST_Controller::HTTP_OK
             );
         }else{
             $this->response(
                 array(
                     'status' => FALSE,
                     'message' => $this::UPDATE_FAILED_MESSAGE
-                )
+                ),REST_Controller::HTTP_BAD_GATEWAY
             );
         }
     }
@@ -147,8 +154,8 @@ class Group_task extends REST_Controller {
             $this->response(
                 array(
                     'status' => FALSE,
-                    'message' => $this::REQUIRED_PARAMETER_MESSAGE
-                )
+                    'message' => $this::REQUIRED_PARAMETER_MESSAGE . "userTaskGroupId"
+                ),REST_Controller::HTTP_BAD_REQUEST
             );
             return;
         }
@@ -158,7 +165,7 @@ class Group_task extends REST_Controller {
                 array(
                     'status' => FALSE,
                     'message' => $this::INVALID_ID_MESSAGE
-                )
+                ),REST_Controller::HTTP_BAD_REQUEST
             );
             return;
         }
@@ -168,14 +175,14 @@ class Group_task extends REST_Controller {
                 array(
                     'status' => TRUE,
                     'message' => $this::DELETE_SUCCESS_MESSSAGE
-                )
+                ),REST_Controller::HTTP_OK
             );
         }else{
             $this->response(
                 array(
                     'status' => FALSE,
                     'message' => $this::DELETE_FAILED_MESSAGE
-                )
+                ),REST_Controller::HTTP_BAD_GATEWAY
             );
         }
     }
