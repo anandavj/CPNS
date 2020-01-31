@@ -43,6 +43,14 @@ const routes = [
     meta: {
       drawer: true
     }
+  },
+  {
+    path: '/stockOpname',
+    name: 'StockOpname',
+    component: () => import('../views/StockOpname.vue'),
+    meta: {
+      drawer: true
+    }
   }
 ]
 

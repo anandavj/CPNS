@@ -1,8 +1,10 @@
 <template>
   <v-app>
-    <v-app-bar app dark class="d-flex d-sm-flex d-md-flex d-lg-none" v-if="this.$route.meta.drawer">
+    <v-app-bar app dark class="absolute d-lg-none" v-if="this.$route.meta.drawer">
         <v-app-bar-nav-icon @click.stop="drawer = !drawer"/>
         <v-toolbar-title disabled>{{titleBar}}</v-toolbar-title>
+        <v-spacer></v-spacer>
+        <v-btn icon @click="searchBarangSideBar"><v-icon>mdi-magnify</v-icon></v-btn>
     </v-app-bar>
     <v-navigation-drawer app dark v-model="drawer" v-if="this.$route.meta.drawer">
       <template>
@@ -17,6 +19,15 @@
         </v-list-item>
       </template>
       <v-divider/>
+      <v-text-field
+          placeholder="Cari Barang"
+          :solo='true'
+          :clearable='true'
+          append-icon="mdi-magnify"
+          class="font-regular font-weight-light mt-3 mb-n4 px-2"
+          v-model="searchBarang"
+      />
+      <v-divider></v-divider>
       <v-list dense v-for="(menu,index) in menus" :key="index" class="mb-n4">
         <v-list-group :prepend-icon="menu.icon" no-action v-if="menu.children">
           <template v-slot:activator><v-list-item-content><v-list-item-title>{{menu.name}}</v-list-item-title></v-list-item-content></template>
@@ -25,9 +36,9 @@
             <v-list-item-icon><v-icon>{{child.icon}}</v-icon></v-list-item-icon>
           </v-list-item>
         </v-list-group>
-        <v-list-item link v-else>
+        <v-list-item link v-else  @click="goTo(menu.route)">
           <v-list-item-icon><v-icon>{{menu.icon}}</v-icon></v-list-item-icon>
-          <v-list-item-title @click="goTo(menu.route)">{{menu.name}}</v-list-item-title>
+          <v-list-item-title>{{menu.name}}</v-list-item-title>
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
@@ -59,15 +70,22 @@ export default {
         ]},
         {name:'Daftar Barang',route:'/daftarBarang',icon:'mdi-cube-outline'},
         {name:'Surat Jalan',route:'/suratJalan',icon:'mdi-ballot-recount-outline'},
-        {name:'Stock Opname',route:'/stockOpname',icon:'mdi-clipboard-check-outline'}
+        {name:'Stock Opname',route:'/stockOpname',icon:'mdi-clipboard-check-outline'},
+        {name:'Kelola',route:'/kelola',icon:'mdi-settings-outline',children:[
+          {name:'Kelola Karyawan',route:'/kelolaKaryawan',icon:'mdi-account-key-outline'},
+          {name:'Kelola Barang',route:'/kelolaBarang',icon:'mdi-briefcase-check-outline'}
+        ]}
       ],
       drawer: null,
       titleBar: 'Dashboard',
-      logOutDialog: false
+      logOutDialog: false,
     }
   },
 
   methods: {
+    searchBarangSideBar() {
+      this.drawer = true
+    },
     goTo(route, title = route) {
       this.$router.push(route)
       this.titleBar = title
@@ -86,3 +104,9 @@ export default {
   }
 };
 </script>
+
+<style>
+  html {
+    overflow-y: hidden !important
+  }
+</style>

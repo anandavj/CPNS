@@ -18,9 +18,92 @@
             <!-- *************************************************************************************************************** -->
             <!-- Add Barang -->
             <!-- *************************************************************************************************************** -->
-            <v-btn fab dark large color="primary" fixed right bottom>
+            <v-btn fab dark large color="primary" fixed right bottom @click="popUpNew = !popUpNew">
                 <v-icon dark>mdi-plus</v-icon>
             </v-btn>
+            <v-container class="my-n3">
+                <v-dialog v-model="popUpNew" persistent max-width='1000px'>
+                    <v-card>
+                        <v-toolbar dense flat>
+                            <span class="title font-weight-light">Tambah Barang</span>
+                            <v-btn absolute right icon @click="close"><v-icon>mdi-close</v-icon></v-btn>
+                        </v-toolbar>
+                        <v-form ref="form">
+                            <v-card-text>
+                                <v-row>
+                                    <v-col cols="12">
+                                        <v-text-field label="ID" v-model="barang.id"/>
+                                    </v-col>
+                                    <v-col cols="12">
+                                        <v-text-field label="Nama" v-model="barang.nama"/>
+                                    </v-col>
+                                    <v-col cols="6">
+                                        <v-text-field label="Open Price" v-model="barang.openPrice"/>
+                                    </v-col>
+                                    <v-col cols="6">
+                                        <v-text-field label="Bottom Price" v-model="barang.bottomPrice"/>
+                                    </v-col>
+                                    <v-col cols="6">
+                                        <v-text-field label="Stock" v-model="barang.stock"/>
+                                    </v-col>
+                                    <v-col cols="6">
+                                        <v-text-field label="Satuan" v-model="barang.satuan"/>
+                                    </v-col>
+                                </v-row>
+                            </v-card-text>
+                        </v-form>
+                        <v-card-actions>
+                            <v-container>
+                                <v-row justify="center">
+                                    <v-btn class="mt-n5" color="red darken-1" text @click="close">Cancel</v-btn>
+                                    <v-btn class="mt-n5" color="blue darken-1" text @click="saveNewBarang">Save</v-btn>
+                                </v-row>
+                            </v-container>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
+            </v-container>
+            <!-- *************************************************************************************************************** -->
+            <!-- *************************************************************************************************************** -->
+
+            <!-- *************************************************************************************************************** -->
+            <!-- Edit Barang -->
+            <!-- *************************************************************************************************************** -->
+            <v-switch value v-model="editToggle" class="pa-0 ma-0" label="Edit Price"></v-switch>
+            <v-dialog v-model="popUpQuickEdit" persistent max-width='350px'>
+                <v-card>
+                    <v-toolbar dense flat>
+                        <span class="title font-weight-light"> Edit Open Price</span>
+                        <v-btn absolute right icon @click="close"><v-icon>mdi-close</v-icon></v-btn>
+                    </v-toolbar>
+                        <v-card-title>{{barangQuickEdit.nama}}</v-card-title>
+                       <v-form ref="form">
+                            <v-card-text><v-text-field color="blue" outlined v-model="barangQuickEdit.openPrice" placeholder="Harga Barang"></v-text-field></v-card-text>
+                       </v-form>
+                        <v-card-actions>
+                            <v-container>
+                                <v-row justify="center">
+                                    <v-btn class="mt-n12" color="red darken-1" text @click="close">Tidak</v-btn>
+                                    <v-btn class="mt-n12" color="blue darken-1" text @click="confirmSave">Ya</v-btn>
+                                </v-row>
+                            </v-container>
+                        </v-card-actions>
+                </v-card>
+            </v-dialog>
+            <v-dialog persistent v-model="popUpConfirmSaveQuickEdit" width="500px">
+                <v-card>
+                    <v-card-title>Konfirmasi</v-card-title>
+                    <v-card-text>Apakah Anda Yakin ingin mengubah Harga Barang <b>{{barangQuickEdit.nama}}</b>?</v-card-text>
+                    <v-card-actions>
+                        <v-container>
+                            <v-row justify="center">
+                                <v-btn class="mt-n5" color="red darken-1" text @click="close">Tidak</v-btn>
+                                <v-btn class="mt-n5" color="blue darken-1" text @click="saveEditedPrice">Ya</v-btn>
+                            </v-row>
+                        </v-container>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
             <!-- *************************************************************************************************************** -->
             <!-- *************************************************************************************************************** -->
 
@@ -43,6 +126,20 @@
             >
                 <template v-slot:item.actions="{ item }">
                     <v-icon class="mr-2" @click.stop="editBarang(item)">mdi-pencil</v-icon>
+                </template>
+                <template v-slot:item.openPrice="{ item }">
+                    <template v-if="editToggle">
+                        <v-btn
+                        text 
+                        @click.stop="quickEdit(item)" 
+                        class="blue--text pa-0 font-weight-light"
+                        >
+                            {{ item.openPrice }}
+                        </v-btn>
+                    </template>
+                    <template v-else>
+                        <v-layout justify-center >{{item.openPrice}}</v-layout>
+                    </template>
                 </template>
             </v-data-table>
             <!-- *************************************************************************************************************** -->
@@ -75,13 +172,6 @@
             <!-- *************************************************************************************************************** -->
 
             <!-- *************************************************************************************************************** -->
-            <!-- Edit Barang -->
-            <!-- *************************************************************************************************************** -->
-
-            <!-- *************************************************************************************************************** -->
-            <!-- *************************************************************************************************************** -->
-
-            <!-- *************************************************************************************************************** -->
             <!-- Kartu Stock -->
             <!-- *************************************************************************************************************** -->
 
@@ -97,9 +187,9 @@ export default {
     data() {
         return {
             barangs: [
-                {id:1, nama:'Paku', openPrice:5000, stock:100},
-                {id:2, nama:'Kayu', openPrice:12000, stock:400},
-                {id:3, nama:'Atap', openPrice:100000, stock:1100}
+                {id:1, nama:'Paku', openPrice:5000, bottomPrice:3000, stock:100, satuan:'biji'},
+                {id:2, nama:'Kayu', openPrice:12000, bottomPrice:3000, stock:400, satuan:'biji'},
+                {id:3, nama:'Atap', openPrice:100000, bottomPrice:3000, stock:1100, satuan:'biji'}
             ],
             barang: {
                 id:null,
@@ -113,11 +203,23 @@ export default {
                 openPrice:null,
                 stock:null
             },
+            barangQuickEdit: {
+                id:null,
+                nama:'',
+                openPrice:null
+            },
+            barangQuickEditDefault: {
+                id:null,
+                nama:'',
+                openPrice:null
+            },
             searchBarang:'',
+            editToggle:false,
+            popUpQuickEdit: false,
             popUpNew: false,
             popupDetails: false,
             popUpEdit: false,
-            popUpConfirmSave: false,
+            popUpConfirmSaveQuickEdit: false,
             selectedIndex: -1,
         }
     },
@@ -131,33 +233,47 @@ export default {
         close() {
             if(this.popupDetails) {
                 this.popupDetails = false
-                this.karyawan = Object.assign({},this.karyawanDefault)
+                this.barang = Object.assign({},this.barangDefault)
                 this.selectedIndex = -1
             } else {
-                if(this.popUpEdit) {
-                    this.popUpEdit = false
-                    this.karyawan = Object.assign({},this.karyawanDefault)
-                    this.selectedIndex = -1
+                if(this.popUpNew) {
+                    this.popUpNew = false
+                    this.barang = Object.assign({},this.barangDefault)
                 } else {
-                    if(this.popUpConfirmSave) {
-                        this.popUpConfirmSave = false
-                        this.popUpEdit = true
-                    } else {
-                        if(this.popUpNew) {
-                            this.popUpNew = false
-                            this.karyawan = Object.assign({},this.karyawanDefault)
-                        }
+                    if(this.popUpQuickEdit) {
+                        this.popUpQuickEdit = false
+                        this.barangQuickEdit = Object.assign({},this.barangQuickEditDefault)
                     }
                 }
             }
         },
+        quickEdit(item) {
+            this.selectedIndex = this.barangs.indexOf(item)
+            this.barangQuickEdit.openPrice = item.openPrice
+            this.barangQuickEdit.nama = item.nama
+            this.barangQuickEdit.id = item.id
+            this.popUpQuickEdit = true
+        },
+        confirmSave() {
+            if(this.$refs.form.validate()) {
+                this.popUpQuickEdit = false
+                this.popUpConfirmSaveQuickEdit = true
+            }
+        },
+        //this need promise to ensure that the data in the db and vue in synced !!! IMPORTANT !!!
+        saveEditedPrice() {
+            let obj = this.barangs.find( ({id}) => id === this.barangQuickEdit.id )
+            this.barangs[this.barangs.indexOf(obj)].openPrice = this.barangQuickEdit.openPrice
+            this.popUpConfirmSaveQuickEdit = false
+            this.barangQuickEdit = Object.assign({},this.barangQuickEditDefault)
+        }
     },
     
     computed: {
         barangHeaders() {
             return [
-                {text:'Nama', value:'nama'},
-                {text:'Open Price', value:'openPrice'},
+                {text:'Nama', value:'nama', width:'70%'},
+                {text:'Open Price', value:'openPrice', align:'center'},
                 {text:'Stock', value:'stock'},
                 {text:'',value:'actions',width:'5%'}
             ]
