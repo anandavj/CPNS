@@ -83,7 +83,7 @@ class Product extends REST_Controller
             $this->response(
                 array(
                     'status' => FALSE,
-                    'message' => $this::REQUIRED_PARAMETER_MESSAGE
+                    'message' => $this::INSERT_FAILED_MESSAGE
                 ),
                 REST_Controller::HTTP_BAD_GATEWAY
             );
@@ -93,8 +93,8 @@ class Product extends REST_Controller
     public function index_get()
     {
         $id = $this->get('id');
-        if (isset($id)) $this->response($this->product_model->get_product_where($id));
-        else $this->response($this->product_model->get_all_product());
+        if (isset($id)) $this->response($this->product_model->get_product_where($id),REST_Controller::HTTP_OK);
+        else $this->response($this->product_model->get_all_product(),REST_Controller::HTTP_OK);
     }
 
     public function index_put()
@@ -135,6 +135,17 @@ class Product extends REST_Controller
                 array(
                     'status' => FALSE,
                     'message' => $this::INVALID_ID_MESSAGE . " categoryId does not exist"
+                ),
+                REST_Controller::HTTP_BAD_REQUEST
+            );
+            return;
+        
+        }
+        if ($this->unit_model->is_not_exists($unit_id)) {
+            $this->response(
+                array(
+                    'status' => FALSE,
+                    'message' => $this::INVALID_ID_MESSAGE . " unitId does not exist"
                 ),
                 REST_Controller::HTTP_BAD_REQUEST
             );

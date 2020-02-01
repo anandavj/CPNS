@@ -23,8 +23,8 @@ class Task extends REST_Controller
             $this->response(
                 array(
                     'status' => FALSE,
-                    'message' => $this::REQUIRED_PARAMETER_MESSAGE
-                )
+                    'message' => $this::REQUIRED_PARAMETER_MESSAGE."action"
+                ),REST_Controller::HTTP_BAD_REQUEST
             );
             return;
         }
@@ -34,14 +34,14 @@ class Task extends REST_Controller
                 array(
                     'status' => TRUE,
                     'message' => $this::INSERT_SUCCESS_MESSSAGE
-                )
+                ),REST_Controller::HTTP_OK
             );
         } else {
             $this->response(
                 array(
                     'status' => FALSE,
-                    'message' => $this::REQUIRED_PARAMETER_MESSAGE
-                )
+                    'message' => $this::INSERT_FAILED_MESSAGE
+                ),REST_Controller::HTTP_BAD_GATEWAY
             );
         }
     }
@@ -50,8 +50,8 @@ class Task extends REST_Controller
     {
         $id = $this->get('id');
 
-        if (isset($id)) $this->response($this->task_model->get_task_where($id));
-        else $this->response($this->task_model->get_all_task());
+        if (isset($id)) $this->response($this->task_model->get_task_where($id),REST_Controller::HTTP_OK);
+        else $this->response($this->task_model->get_all_task(),REST_Controller::HTTP_OK);
     }
 
     public function index_put()
@@ -60,11 +60,14 @@ class Task extends REST_Controller
         $action = $this->put('action');
 
         if (!isset($id) || !isset($action)) {
+            $required_parameters = [];
+            if(!isset($id)) array_push($required_parameters, 'id');
+            if(!isset($action)) array_push($required_parameters, 'action');
             $this->response(
                 array(
                     'status' => FALSE,
-                    'message' => $this::REQUIRED_PARAMETER_MESSAGE
-                )
+                    'message' => $this::REQUIRED_PARAMETER_MESSAGE.implode(', ', $required_parameters)
+                ),REST_Controller::HTTP_BAD_REQUEST
             );
             return;
         }
@@ -73,8 +76,8 @@ class Task extends REST_Controller
             $this->response(
                 array(
                     'status' => FALSE,
-                    'message' => $this::INVALID_ID_MESSAGE
-                )
+                    'message' => $this::INVALID_ID_MESSAGE." id does not exist"
+                ),REST_Controller::HTTP_BAD_REQUEST
             );
             return;
         }
@@ -84,14 +87,14 @@ class Task extends REST_Controller
                 array(
                     'status' => TRUE,
                     'message' => $this::UPDATE_SUCCESS_MESSSAGE
-                )
+                ),REST_Controller::HTTP_OK
             );
         } else {
             $this->response(
                 array(
                     'status' => FALSE,
                     'message' => $this::UPDATE_FAILED_MESSAGE
-                )
+                ),REST_Controller::HTTP_BAD_GATEWAY
             );
         }
     }
@@ -104,8 +107,8 @@ class Task extends REST_Controller
             $this->response(
                 array(
                     'status' => FALSE,
-                    'message' => $this::REQUIRED_PARAMETER_MESSAGE
-                )
+                    'message' => $this::REQUIRED_PARAMETER_MESSAGE." id"
+                ),REST_Controller::HTTP_BAD_REQUEST
             );
             return;
         }
@@ -114,8 +117,8 @@ class Task extends REST_Controller
             $this->response(
                 array(
                     'status' => FALSE,
-                    'message' => $this::INVALID_ID_MESSAGE
-                )
+                    'message' => $this::INVALID_ID_MESSAGE." id does not exist"
+                ),REST_Controller::HTTP_BAD_REQUEST
             );
             return;
         }
@@ -125,14 +128,14 @@ class Task extends REST_Controller
                 array(
                     'status' => TRUE,
                     'message' => $this::DELETE_SUCCESS_MESSSAGE
-                )
+                ),REST_Controller::HTTP_OK
             );
         } else {
             $this->response(
                 array(
                     'status' => FALSE,
                     'message' => $this::DELETE_FAILED_MESSAGE
-                )
+                ),REST_Controller::HTTP_BAD_GATEWAY
             );
         }
     }

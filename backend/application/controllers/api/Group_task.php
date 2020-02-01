@@ -78,8 +78,8 @@ class Group_task extends REST_Controller {
     public function index_get(){
         $user_task_group_id = $this->get('userTaskGroupId');
 
-        if(isset($user_task_group_id)) $this->response($this->group_task_model->get_group_task_where($user_task_group_id));
-        else $this->response($this->group_task_model->get_all_group_task());
+        if(isset($user_task_group_id)) $this->response($this->group_task_model->get_group_task_where($user_task_group_id), REST_Controller::HTTP_OK);
+        else $this->response($this->group_task_model->get_all_group_task(),REST_Controller::HTTP_OK);
     }
 
     // PUT - update data sesuai dengan id grup user task, kemudian merubah semua task yang dimiliki oleh user pada grup tersebut

@@ -1,161 +1,193 @@
 <?php
 
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 require APPPATH . '/libraries/REST_Controller.php';
 
 use Restserver\Libraries\REST_Controller;
 
-class User extends REST_Controller {
+class User extends REST_Controller
+{
 
-    public function __construct(){
+    public function __construct()
+    {
         parent::__construct();
         $this->load->model('user_model');
         $this->load->model('user_task_group_model');
     }
 
-    public function index_post(){
-        $user_task_group_id = $this->post(Schema::USER_TASK_GROUP_ID); 
-        $name = $this->post('name'); 
-        $telephone = $this->post('telephone'); 
-        $address = $this->post('address'); 
+    public function index_post()
+    {
+        $user_task_group_id = $this->post(Schema::USER_TASK_GROUP_ID);
+        $name = $this->post('name');
+        $phone = $this->post('phone');
+        $address = $this->post('address');
         $uid = $this->post('uid');
 
-        if(!isset($user_task_group_id) || !isset($name) || !isset($telephone) || !isset($address) || !isset($uid)){
+        if (!isset($user_task_group_id) || !isset($name) || !isset($phone) || !isset($address) || !isset($uid)) {
+            $required_parameters = [];
+            if (!isset($user_task_group_id)) array_push($required_parameters, 'userTaskGroupId');
+            if (!isset($name)) array_push($required_parameters, 'name');
+            if (!isset($phone)) array_push($required_parameters, 'phone');
+            if (!isset($address)) array_push($required_parameters, 'address');
+            if (!isset($uid)) array_push($required_parameters, 'uid');
             $this->response(
                 array(
                     'status' => FALSE,
-                    'message' => $this::REQUIRED_PARAMETER_MESSAGE
-                )
+                    'message' => $this::REQUIRED_PARAMETER_MESSAGE . implode(', ', $required_parameters)
+                ),
+                REST_Controller::HTTP_BAD_REQUEST
             );
             return;
         }
 
-        if($this->user_task_group_model->is_not_exists($user_task_group_id)){
+        if ($this->user_task_group_model->is_not_exists($user_task_group_id)) {
             $this->response(
                 array(
                     'status' => FALSE,
-                    'message' => $this::INVALID_ID_MESSAGE
-                )
+                    'message' => $this::INVALID_ID_MESSAGE . " userTaskGroupId does not exist"
+                ),
+                REST_Controller::HTTP_BAD_REQUEST
             );
             return;
         }
 
-        if($this->user_model->insert_user($user_task_group_id, $name, $telephone, $address, $uid)){
+        if ($this->user_model->insert_user($user_task_group_id, $name, $phone, $address, $uid)) {
             $this->response(
                 array(
                     'status' => TRUE,
                     'message' => $this::INSERT_SUCCESS_MESSSAGE
-                )
+                ),
+                REST_Controller::HTTP_CREATED
             );
-        }else{
+        } else {
             $this->response(
                 array(
                     'status' => FALSE,
-                    'message' => $this::REQUIRED_PARAMETER_MESSAGE
-                )
+                    'message' => $this::INSERT_FAILED_MESSAGE
+                ),
+                REST_Controller::HTTP_BAD_GATEWAY
             );
         }
     }
 
-    public function index_get(){
+    public function index_get()
+    {
         $id = $this->get('id');
 
-        if(isset($id)) $this->response($this->user_model->get_user_where($id));
-        else $this->response($this->user_model->get_all_user());
+        if (isset($id)) $this->response($this->user_model->get_user_where($id), REST_Controller::HTTP_OK);
+        else $this->response($this->user_model->get_all_user(), REST_Controller::HTTP_OK);
     }
 
-    public function index_put(){
+    public function index_put()
+    {
         $id = $this->put('id');
-        $user_task_group_id = $this->put(Schema::USER_TASK_GROUP_ID); 
-        $name = $this->put('name'); 
-        $telephone = $this->put('telephone'); 
-        $address = $this->put('address'); 
+        $user_task_group_id = $this->put(Schema::USER_TASK_GROUP_ID);
+        $name = $this->put('name');
+        $phone = $this->put('phone');
+        $address = $this->put('address');
         $uid = $this->put('uid');
 
-        if(!isset($id) || !isset($user_task_group_id) || !isset($name) || !isset($telephone) || !isset($address) || !isset($uid)){
+        if (!isset($id) || !isset($user_task_group_id) || !isset($name) || !isset($phone) || !isset($address) || !isset($uid)) {
+            $required_parameters = [];
+            if (!isset($id)) array_push($required_parameters, 'id');
+            if (!isset($user_task_group_id)) array_push($required_parameters, 'userTaskGroupId');
+            if (!isset($name)) array_push($required_parameters, 'name');
+            if (!isset($phone)) array_push($required_parameters, 'phone');
+            if (!isset($address)) array_push($required_parameters, 'address');
+            if (!isset($uid)) array_push($required_parameters, 'uid');
             $this->response(
                 array(
                     'status' => FALSE,
-                    'message' => $this::REQUIRED_PARAMETER_MESSAGE
-                )
+                    'message' => $this::REQUIRED_PARAMETER_MESSAGE . implode(', ', $required_parameters)
+                ),
+                REST_Controller::HTTP_BAD_REQUEST
             );
             return;
         }
 
-        if($this->user_model->is_not_exists($id)){
+        if ($this->user_model->is_not_exists($id)) {
             $this->response(
                 array(
                     'status' => FALSE,
-                    'message' => $this::INVALID_ID_MESSAGE
-                )
+                    'message' => $this::INVALID_ID_MESSAGE . " id does not exist"
+                ),
+                REST_Controller::HTTP_BAD_REQUEST
             );
             return;
         }
 
-        if($this->user_task_group_model->is_not_exists($user_task_group_id)){
+        if ($this->user_task_group_model->is_not_exists($user_task_group_id)) {
             $this->response(
                 array(
                     'status' => FALSE,
-                    'message' => $this::INVALID_ID_MESSAGE
-                )
+                    'message' => $this::INVALID_ID_MESSAGE . " userTaskGroupId does not exist"
+                ),
+                REST_Controller::HTTP_BAD_REQUEST
             );
             return;
         }
 
-        if($this->user_model->update_user($id, $user_task_group_id, $name, $telephone, $address, $uid)){
+        if ($this->user_model->update_user($id, $user_task_group_id, $name, $phone, $address, $uid)) {
             $this->response(
                 array(
                     'status' => TRUE,
                     'message' => $this::UPDATE_SUCCESS_MESSSAGE
-                )
+                ),
+                REST_Controller::HTTP_OK
             );
-        }else{
+        } else {
             $this->response(
                 array(
                     'status' => FALSE,
                     'message' => $this::UPDATE_FAILED_MESSAGE
-                )
+                ),
+                REST_Controller::HTTP_BAD_GATEWAY
             );
         }
     }
 
-    public function index_delete(){
+    public function index_delete()
+    {
         $id = $this->delete('id');
 
-        if(!isset($id)){
+        if (!isset($id)) {
             $this->response(
                 array(
                     'status' => FALSE,
-                    'message' => $this::REQUIRED_PARAMETER_MESSAGE
-                )
+                    'message' => $this::REQUIRED_PARAMETER_MESSAGE . "id"
+                ),
+                REST_Controller::HTTP_BAD_REQUEST
             );
             return;
         }
 
-        if($this->user_model->is_not_exists($id)){
+        if ($this->user_model->is_not_exists($id)) {
             $this->response(
                 array(
                     'status' => FALSE,
-                    'message' => $this::INVALID_ID_MESSAGE
-                )
+                    'message' => $this::INVALID_ID_MESSAGE . " id does not exist"
+                ),
+                REST_Controller::HTTP_BAD_REQUEST
             );
             return;
         }
 
-        if($this->user_model->delete_user($id)){
+        if ($this->user_model->delete_user($id)) {
             $this->response(
                 array(
                     'status' => TRUE,
                     'message' => $this::DELETE_SUCCESS_MESSSAGE
-                )
+                ),
+                REST_Controller::HTTP_OK
             );
-        }else{
+        } else {
             $this->response(
                 array(
                     'status' => FALSE,
                     'message' => $this::DELETE_FAILED_MESSAGE
-                )
+                ),
+                REST_Controller::HTTP_BAD_GATEWAY
             );
         }
     }

@@ -20,8 +20,8 @@ class User_task_group extends REST_Controller {
             $this->response(
                 array(
                     'status' => FALSE,
-                    'message' => $this::REQUIRED_PARAMETER_MESSAGE
-                )
+                    'message' => $this::REQUIRED_PARAMETER_MESSAGE."name"
+                ),REST_Controller::HTTP_BAD_REQUEST
             );
             return;
         }
@@ -31,14 +31,14 @@ class User_task_group extends REST_Controller {
                 array(
                     'status' => TRUE,
                     'message' => $this::INSERT_SUCCESS_MESSSAGE
-                )
+                ),REST_Controller::HTTP_CREATED
             );
         }else{
             $this->response(
                 array(
                     'status' => FALSE,
-                    'message' => $this::REQUIRED_PARAMETER_MESSAGE
-                )
+                    'message' => $this::INVALID_ID_MESSAGE
+                ),REST_Controller::HTTP_BAD_GATEWAY
             );
         }
     }
@@ -46,8 +46,8 @@ class User_task_group extends REST_Controller {
     public function index_get(){
         $id = $this->get('id');
 
-        if(isset($id)) $this->response($this->user_task_group_model->get_user_task_group_where($id));
-        else $this->response($this->user_task_group_model->get_all_user_task_group());
+        if(isset($id)) $this->response($this->user_task_group_model->get_user_task_group_where($id),REST_Controller::HTTP_OK);
+        else $this->response($this->user_task_group_model->get_all_user_task_group(),REST_Controller::HTTP_OK);
     }
 
     public function index_put(){
@@ -55,11 +55,15 @@ class User_task_group extends REST_Controller {
         $name = $this->put('name');
 
         if(!isset($id) || !isset($name)){
+            $required_parameters = [];
+            if(!isset($id)) array_push($required_parameters, 'id');
+            if(!isset($name)) array_push($required_parameters, 'name');
+
             $this->response(
                 array(
                     'status' => FALSE,
-                    'message' => $this::REQUIRED_PARAMETER_MESSAGE
-                )
+                    'message' => $this::REQUIRED_PARAMETER_MESSAGE.implode(', ', $required_parameters)
+                ),REST_Controller::HTTP_BAD_REQUEST
             );
             return;
         }
@@ -68,8 +72,8 @@ class User_task_group extends REST_Controller {
             $this->response(
                 array(
                     'status' => FALSE,
-                    'message' => $this::INVALID_ID_MESSAGE
-                )
+                    'message' => $this::INVALID_ID_MESSAGE." id does not exist"
+                ),REST_Controller::HTTP_BAD_REQUEST
             );
             return;
         }
@@ -79,14 +83,14 @@ class User_task_group extends REST_Controller {
                 array(
                     'status' => TRUE,
                     'message' => $this::UPDATE_SUCCESS_MESSSAGE
-                )
+                ),REST_Controller::HTTP_OK
             );
         }else{
             $this->response(
                 array(
                     'status' => FALSE,
                     'message' => $this::UPDATE_FAILED_MESSAGE
-                )
+                ),REST_Controller::HTTP_BAD_GATEWAY
             );
         }
     }
@@ -98,8 +102,8 @@ class User_task_group extends REST_Controller {
             $this->response(
                 array(
                     'status' => FALSE,
-                    'message' => $this::REQUIRED_PARAMETER_MESSAGE
-                )
+                    'message' => $this::REQUIRED_PARAMETER_MESSAGE."id"
+                ),REST_Controller::HTTP_BAD_REQUEST
             );
             return;
         }
@@ -108,8 +112,8 @@ class User_task_group extends REST_Controller {
             $this->response(
                 array(
                     'status' => FALSE,
-                    'message' => $this::INVALID_ID_MESSAGE
-                )
+                    'message' => $this::INVALID_ID_MESSAGE." id does not exist"
+                ),REST_Controller::HTTP_BAD_REQUEST
             );
             return;
         }
@@ -119,14 +123,14 @@ class User_task_group extends REST_Controller {
                 array(
                     'status' => TRUE,
                     'message' => $this::DELETE_SUCCESS_MESSSAGE
-                )
+                ),REST_Controller::HTTP_OK
             );
         }else{
             $this->response(
                 array(
                     'status' => FALSE,
                     'message' => $this::DELETE_FAILED_MESSAGE
-                )
+                ),REST_Controller::HTTP_BAD_GATEWAY
             );
         }
     }

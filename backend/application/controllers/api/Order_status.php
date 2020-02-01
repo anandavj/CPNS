@@ -20,8 +20,8 @@ class Order_status extends REST_Controller {
             $this->response(
                 array(
                     'status' => FALSE,
-                    'message' => $this::REQUIRED_PARAMETER_MESSAGE
-                )
+                    'message' => $this::REQUIRED_PARAMETER_MESSAGE."status"
+                ),REST_Controller::HTTP_BAD_REQUEST
             );
             return;
         }
@@ -31,14 +31,14 @@ class Order_status extends REST_Controller {
                 array(
                     'status' => TRUE,
                     'message' => $this::INSERT_SUCCESS_MESSSAGE
-                )
+                ),REST_Controller::HTTP_CREATED
             );
         }else{
             $this->response(
                 array(
                     'status' => FALSE,
-                    'message' => $this::REQUIRED_PARAMETER_MESSAGE
-                )
+                    'message' => $this::INSERT_FAILED_MESSAGE
+                ),REST_Controller::HTTP_BAD_GATEWAY
             );
         }
     }
@@ -46,8 +46,8 @@ class Order_status extends REST_Controller {
     public function index_get(){
         $id = $this->get('id');
 
-        if(isset($id)) $this->response($this->order_status_model->get_order_status_where($id));
-        else $this->response($this->order_status_model->get_all_order_status());
+        if(isset($id)) $this->response($this->order_status_model->get_order_status_where($id),REST_Controller::HTTP_OK);
+        else $this->response($this->order_status_model->get_all_order_status(),REST_Controller::HTTP_OK);
     }
 
     public function index_put(){
@@ -55,11 +55,15 @@ class Order_status extends REST_Controller {
         $status = $this->put('status');
 
         if(!isset($id) || !isset($status)){
+            $request_parameters = [];
+            if(!isset($id)) array_push($request_parameters, 'id');
+            if(!isset($status)) array_push($request_parameters, 'status');
+
             $this->response(
                 array(
                     'status' => FALSE,
-                    'message' => $this::REQUIRED_PARAMETER_MESSAGE
-                )
+                    'message' => $this::REQUIRED_PARAMETER_MESSAGE. implode(', ', $request_parameters)
+                ),REST_Controller::HTTP_BAD_REQUEST
             );
             return;
         }
@@ -68,8 +72,8 @@ class Order_status extends REST_Controller {
             $this->response(
                 array(
                     'status' => FALSE,
-                    'message' => $this::INVALID_ID_MESSAGE
-                )
+                    'message' => $this::INVALID_ID_MESSAGE." id does not exist"
+                ),REST_Controller::HTTP_BAD_REQUEST
             );
             return;
         }
@@ -79,14 +83,14 @@ class Order_status extends REST_Controller {
                 array(
                     'status' => TRUE,
                     'message' => $this::UPDATE_SUCCESS_MESSSAGE
-                )
+                ),REST_Controller::HTTP_OK
             );
         }else{
             $this->response(
                 array(
                     'status' => FALSE,
                     'message' => $this::UPDATE_FAILED_MESSAGE
-                )
+                ),REST_Controller::HTTP_BAD_GATEWAY
             );
         }
     }
@@ -98,8 +102,8 @@ class Order_status extends REST_Controller {
             $this->response(
                 array(
                     'status' => FALSE,
-                    'message' => $this::REQUIRED_PARAMETER_MESSAGE
-                )
+                    'message' => $this::REQUIRED_PARAMETER_MESSAGE."id"
+                ),REST_Controller::HTTP_BAD_REQUEST
             );
             return;
         }
@@ -108,8 +112,8 @@ class Order_status extends REST_Controller {
             $this->response(
                 array(
                     'status' => FALSE,
-                    'message' => $this::INVALID_ID_MESSAGE
-                )
+                    'message' => $this::INVALID_ID_MESSAGE." id does not exist"
+                ),REST_Controller::HTTP_BAD_REQUEST
             );
             return;
         }
@@ -119,14 +123,14 @@ class Order_status extends REST_Controller {
                 array(
                     'status' => TRUE,
                     'message' => $this::DELETE_SUCCESS_MESSSAGE
-                )
+                ),REST_Controller::HTTP_OK
             );
         }else{
             $this->response(
                 array(
                     'status' => FALSE,
                     'message' => $this::DELETE_FAILED_MESSAGE
-                )
+                ),REST_Controller::HTTP_BAD_GATEWAY
             );
         }
     }
