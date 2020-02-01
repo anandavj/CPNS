@@ -51,6 +51,22 @@ const routes = [
     meta: {
       drawer: true
     }
+  },
+  {
+    path: '/kelolaKaryawan',
+    name: 'KelolaKaryawan',
+    component: () => import('../views/KaryawanKelola.vue'),
+    meta: {
+      drawer: true
+    }
+  },
+  {
+    path: '/divisi',
+    name: 'Divisi',
+    component: () => import('../views/Divisi.vue'),
+    meta: {
+      drawer: true
+    }
   }
 ]
 

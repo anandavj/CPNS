@@ -31,12 +31,12 @@
       <v-list dense v-for="(menu,index) in menus" :key="index" class="mb-n4">
         <v-list-group :prepend-icon="menu.icon" no-action v-if="menu.children">
           <template v-slot:activator><v-list-item-content><v-list-item-title>{{menu.name}}</v-list-item-title></v-list-item-content></template>
-          <v-list-item v-for="(child,idx) in menu.children" :key="idx" link class="caption" @click="goTo(child.route)">
+          <v-list-item v-for="(child,idx) in menu.children" :key="idx" link class="caption" @click="goTo(child.route,child.name)">
             <v-list-item-title>{{child.name}}</v-list-item-title>
             <v-list-item-icon><v-icon>{{child.icon}}</v-icon></v-list-item-icon>
           </v-list-item>
         </v-list-group>
-        <v-list-item link v-else  @click="goTo(menu.route)">
+        <v-list-item link v-else  @click="goTo(menu.route,menu.name)">
           <v-list-item-icon><v-icon>{{menu.icon}}</v-icon></v-list-item-icon>
           <v-list-item-title>{{menu.name}}</v-list-item-title>
         </v-list-item>
@@ -107,6 +107,6 @@ export default {
 
 <style>
   html {
-    overflow-y: hidden !important
+    overflow-y: auto !important
   }
 </style>
