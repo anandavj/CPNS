@@ -21,161 +21,49 @@ const routes = [
     }
   },
   {
-    path:'/karyawan',
-    name:'Karyawan',
+    path: '/karyawan',
+    name: 'Karyawan',
     component: () => import('../views/Karyawan.vue'),
     meta: {
       drawer: true
     }
   },
   {
-    path:'/managementKaryawan',
-    name:'ManagementKaryawan',
-    component: () => import('../views/ManagementKaryawan.vue'),
-    meta: {
-      drawer: true
-    }
-  },
-  {
-    path: '/addDivisi',
-    name: 'addDivisi',
-    component: () => import('../views/addDivisi.vue'),
-    meta: {
-      drawer: true
-    }
-  },
-  {
-    path:'/addKaryawan',
-    name:'addKaryawan',
-    component: () => import('../views/addKaryawan.vue'),
-    meta: {
-      drawer: true
-    }
-  },
-  {
-    path:'/barang',
-    name:'Barang',
+    path: '/daftarBarang',
+    name: 'Barang',
     component: () => import('../views/Barang.vue'),
     meta: {
       drawer: true
     }
   },
   {
-    path:'/baranginout',
-    name:'BarangInOut',
-    component: () => import('../views/BarangMasukKeluar.vue'),
+    path: '/suratJalan',
+    name: 'SuratJalan',
+    component: () => import('../views/SuratJalan.vue'),
     meta: {
       drawer: true
     }
   },
   {
-    path:'/barangbongkarmuat',
-    name:'barangBongkarMuat',
-    component: () => import('../views/BongkarMuatBarang.vue'),
-    meta: {
-      drawer: true
-    }
-  },
-  {
-    path:'/listpricelist',
-    name:'listPriceList',
-    component: () => import('../views/ListPriceList.vue'),
-    meta: {
-      drawer: true
-    }
-  },
-  {
-    path:'/profil',
-    name:'profil',
-    component: () => import('../views/Profil.vue'),
-    meta: {
-      drawer: true
-    }
-  },
-  {
-    path:'/opname',
-    name:'stockOpname',
+    path: '/stockOpname',
+    name: 'StockOpname',
     component: () => import('../views/StockOpname.vue'),
     meta: {
       drawer: true
     }
   },
   {
-    path:'/aturPricelist',
-    name:'aturPricelist',
-    component: () => import('../views/aturPricelist.vue'),
+    path: '/kelolaKaryawan',
+    name: 'KelolaKaryawan',
+    component: () => import('../views/KaryawanKelola.vue'),
     meta: {
       drawer: true
     }
   },
   {
-    path:'/try',
-    name:'try',
-    component: () => import('../views/Try.vue'),
-    meta: {
-      drawer: true
-    }
-  },
-  {
-    path:'/kelolabarang',
-    name:'KelolaBarang',
-    component: () => import('../views/BarangKelola.vue'),
-    meta: {
-      drawer: true
-    }
-  },
-  {
-    path:'/highlight',
-    name:'hightlightBarang',
-    component: () => import('../views/Highlight.vue'),
-    meta: {
-      drawer: true
-    }
-  },
-  {
-    path:'/highlight',
-    name:'hightlightBarang',
-    component: () => import('../views/Highlight.vue'),
-    meta: {
-      drawer: true
-    }
-  },
-  {
-    path:'/addBarang',
-    name:'Tambah Barang',
-    component: () => import('../views/BarangAdd.vue'),
-    meta: {
-      drawer: true
-    }
-  },
-  {
-    path:'/kelolaSatuan',
-    name:'Tambah Satuan',
-    component: () => import('../views/BarangManageUnit.vue'),
-    meta: {
-      drawer: true
-    }
-  },
-  {
-    path:'/kelolaKategori',
-    name:'Kelola Kategori',
-    component: () => import('../views/BarangManageCategory.vue'),
-    meta: {
-      drawer: true
-    }
-  },
-  {
-    path:'/editPricelist',
-    name:'editPricelist',
-    component: () => import('../views/EditPricelist.vue'),
-    meta: {
-      drawer: true
-    }
-  },
-  {
-    path:'/monitorOpname',
-    name:'editPricelist',
-    component: () => import('../views/MonitorOpname.vue'),
+    path: '/divisi',
+    name: 'Divisi',
+    component: () => import('../views/Divisi.vue'),
     meta: {
       drawer: true
     }

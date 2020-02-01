@@ -1,0 +1,29 @@
+primary
+filter di tabel
+detail di barang bongkar muat
+atur pricelist dimatikan tidak masuk rilis pertama
+export harga dari excel (perubahan harga)
+search barang dari dashboard
+
+stock opname -> DIBUAT KALENDER
+
+FILTER PENTING!!!
+
+rekap stock opname per hari
+
+-----
+
+bongkar muat -> surat jalan (isinya barang masuk keluar)
+
+list pricelist -> data barang
+
+tombol tambah kanan bawah (BUAT SURAT JALAN BUKAN TAMBAH SURAT JALAN)
+
+DO -> dO masuk (2)
+surat jalan  ->  DO Keluar (1)
+
+Tambahh -> Terbitkan
+
+Stock opname -> di group / kelompokkan per hari
+tombol melakukan stock opname
+penyesuaian stock gudang dengan karyawan

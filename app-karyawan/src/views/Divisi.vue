@@ -2,21 +2,21 @@
     <v-app>
         <div>
             <!-- *************************************************************************************************************** -->
-            <!-- Search Karyawan in karyawans Array -->
+            <!-- Search Divisi in Divisis Array -->
             <!-- *************************************************************************************************************** -->
             <v-text-field
-                placeholder="Cari Karyawan"
-                :solo='true'
-                :clearable='true'
+                placeholder="Cari Divisi"
+                :solo="true"
+                :clearable="true"
                 append-icon="mdi-magnify"
                 class="font-regular font-weight-light"
-                v-model="searchKaryawan"
-            />
+                v-model="searchDivisi"
+            />    
             <!-- *************************************************************************************************************** -->
             <!-- *************************************************************************************************************** -->
 
             <!-- *************************************************************************************************************** -->
-            <!-- Add Karyawan -->
+            <!-- Add Divisi -->
             <!-- *************************************************************************************************************** -->
             <v-btn fab dark large color="primary" fixed right bottom @click="popUpNew = !popUpNew">
                 <v-icon dark>mdi-plus</v-icon>
@@ -25,17 +25,25 @@
                 <v-dialog v-model="popUpNew" persistent max-width='1000px'>
                     <v-card>
                         <v-toolbar dense flat>
-                            <span class="title font-weight-light">Tambah Karyawan</span>
+                            <span class="title font-weight-light">Tambah Divisi</span>
                             <v-btn absolute right icon @click="close"><v-icon>mdi-close</v-icon></v-btn>
                         </v-toolbar>
                         <v-form ref="form">
                             <v-card-text>
                                 <v-row>
                                     <v-col cols="12">
-                                        <v-text-field label="ID" v-model="karyawan.id"/>
+                                        <v-text-field label="Nama Divisi" v-model="divisi.nama"/>
                                     </v-col>
                                     <v-col cols="12">
-                                        <v-text-field label="Nama" v-model="karyawan.nama" :rules="nameRules"/>
+                                        <div class="title mt-n3">Permission</div>
+                                        <div v-for="(permission,index) in permissions" :key="index">
+                                            <v-checkbox
+                                                v-model="divisi.permissions"
+                                                :label="permission"
+                                                :value="permission"
+                                                class="font-weight-light mb-n2"
+                                            />
+                                        </div>
                                     </v-col>
                                 </v-row>
                             </v-card-text>
@@ -44,7 +52,7 @@
                             <v-container>
                                 <v-row justify="center">
                                     <v-btn class="mt-n5" color="red darken-1" text @click="close">Tidak</v-btn>
-                                    <v-btn class="mt-n5" color="blue darken-1" text @click="saveNewKaryawan">Ya</v-btn>
+                                    <v-btn class="mt-n5" color="blue darken-1" text @click="saveNewDivisi">Ya</v-btn>
                                 </v-row>
                             </v-container>
                         </v-card-actions>
@@ -53,61 +61,58 @@
             </v-container>
             <!-- *************************************************************************************************************** -->
             <!-- *************************************************************************************************************** -->
-
+        
             <!-- *************************************************************************************************************** -->
-            <!-- List Data Karyawan -->
+            <!-- List Divisi -->
             <!-- *************************************************************************************************************** -->
             <v-data-table
-                :headers="karyawanHeaders"
-                :items="karyawans"
-                :search="searchKaryawan"
+                :headers="divisiHeaders"
+                :items="divisis"
                 @click:row="details"
+                :mobile-breakpoint="1"
                 :disable-sort="true"
                 :hide-default-footer="true"
-                :mobile-breakpoint="1"
-                item-key="nama"
-                no-data-text="Data Karyawan Kosong"
-                no-results-text="Data Karyawan Tidak Ditemukan"
+                no-data-text="Belum ada Divisi yang terdaftar"
+                no-results-text="Divisi tidak ditemukan"
                 class="font-regular font-weight-light"
                 style="cursor:pointer"
             >
                 <template v-slot:item.actions="{ item }">
-                    <v-icon class="mr-2" @click.stop="editKaryawan(item)">mdi-pencil</v-icon>
+                    <v-icon class="mr-2" @click.stop="editDivisi(item)">mdi-pencil</v-icon>
                 </template>
             </v-data-table>
             <!-- *************************************************************************************************************** -->
             <!-- *************************************************************************************************************** -->
 
             <!-- *************************************************************************************************************** -->
-            <!-- Details Karyawan -->
+            <!-- Details Divisi -->
             <!-- *************************************************************************************************************** -->
             <!-- Phone / other xs sm device will display fullscreen dialog -->
-            <v-dialog v-if="popUpBreakPoint" v-model="popupDetails" fullscreen hide-overlay transition="dialog-bottom-transition">
+            <v-dialog v-if="popUpBreakPoint" v-model="popUpDetails" fullscreen hide-overlay transition="dialog-bottom-transition">
                 <v-card>
                     <v-toolbar dense flat>
-                        <span class="title font-weight-light">Profil</span>
+                        <span class="title font-weight-light">Detail Divisi</span>
                         <v-btn absolute right icon @click="close"><v-icon>mdi-close</v-icon></v-btn>
                     </v-toolbar>
-                    {{karyawan}}
+                    {{divisi}}
                 </v-card>
-            </v-dialog >
+            </v-dialog>
             <!-- Laptop/PC or other md lg device will not display fullscreen dialog -->
-            <v-dialog v-else v-model="popupDetails" width="1000px">
+            <v-dialog v-else v-model="popUpDetails" width="1000px">
                 <v-card>
                     <v-toolbar dense flat>
-                        <span class="title font-weight-light">Detail Profil</span>
+                        <span class="title font-weight-light">Detail Divisi</span>
                         <v-btn absolute right icon @click="close"><v-icon>mdi-close</v-icon></v-btn>
                     </v-toolbar>
-                    {{karyawan}}
+                    {{divisi}}
                 </v-card>
             </v-dialog>
             <!-- *************************************************************************************************************** -->
             <!-- *************************************************************************************************************** -->
 
             <!-- *************************************************************************************************************** -->
-            <!-- Edit Karyawan -->
+            <!-- Edit Divisi -->
             <!-- *************************************************************************************************************** -->
-            <!-- Phone / other xs sm device will display fullscreen dialog -->
             <v-dialog v-if="popUpBreakPoint" v-model="popUpEdit" fullscreen hide-overlay transition="dialog-bottom-transition">
                 <v-card>
                     <v-toolbar dense flat>
@@ -118,7 +123,18 @@
                         <v-card-text>
                             <v-row>
                                 <v-col cols="12">
-                                    <v-text-field v-model="karyawan.nama" label="Nama" :rules="nameRules"/>
+                                    <v-text-field label="Nama Divisi" v-model="divisi.nama"/>
+                                </v-col>
+                                <v-col cols="12">
+                                    <div class="title mt-n3">Permission</div>
+                                    <div v-for="(permission,index) in permissions" :key="index">
+                                        <v-checkbox
+                                            v-model="divisi.permissions"
+                                            :label="permission"
+                                            :value="permission"
+                                            class="font-weight-light mb-n2"
+                                        />
+                                    </div>
                                 </v-col>
                             </v-row>
                         </v-card-text>
@@ -144,7 +160,18 @@
                         <v-card-text>
                             <v-row>
                                 <v-col cols="12">
-                                    <v-text-field v-model="karyawan.nama" label="Nama" :rules="nameRules"/>
+                                    <v-text-field label="Nama Divisi" v-model="divisi.nama"/>
+                                </v-col>
+                                <v-col cols="12">
+                                    <div class="title mt-n3">Permission</div>
+                                    <div v-for="(permission,index) in permissions" :key="index">
+                                        <v-checkbox
+                                            v-model="divisi.permissions"
+                                            :label="permission"
+                                            :value="permission"
+                                            class="font-weight-light mb-n2"
+                                        />
+                                    </div>
                                 </v-col>
                             </v-row>
                         </v-card-text>
@@ -168,7 +195,7 @@
             <v-dialog persistent v-model="popUpConfirmSave" width="500px">
                 <v-card>
                     <v-card-title>Konfirmasi</v-card-title>
-                    <v-card-text>Apakah Anda Yakin ingin mengubah profil <b>{{tempNamaKaryawan}}</b>?</v-card-text>
+                    <v-card-text>Apakah Anda Yakin ingin mengubah profil <b>{{divisi.nama}}</b>?</v-card-text>
                     <v-card-actions>
                         <v-container>
                             <v-row justify="center">
@@ -187,115 +214,100 @@
 
 <script>
 export default {
-    name: 'Karyawan',
+    name: 'Divisi',
 
     data() {
         return {
-            karyawans: [
-                {id:1, nama:'Mahendra Fajar'},
-                {id:2, nama:'Ananda Vijaya'},
-                {id:3, nama:'Satria Kemal'},
+            divisiHeaders: [
+                {text:'Nama Divisi', value:'nama'},
+                {text:'', value:'actions'}
             ],
-            karyawan: {
+            divisis: [
+                {id:1, nama:'Manager', permissions: [
+                    'Add Barang'
+                ]}
+            ],
+            permissions: [
+                'Add Barang',
+                'View Barang',
+                'Update Barang'
+            ],
+            divisi: {
                 id:null,
-                nama:''
+                nama:'',
+                permissions: []
             },
-            karyawanDefault: {
+            divisiDefault: {
                 id:null,
-                nama:''
+                nama:'',
+                permissions: []
             },
-            tempNamaKaryawan:'',
-            searchKaryawan:'',
+            searchDivisi:'',
+            popUpDetails: false,
             popUpNew: false,
-            popupDetails: false,
             popUpEdit: false,
             popUpConfirmSave: false,
-            selectedIndex: -1,
-            // -----
-            // Rules
-            // -----
-            nameRules: [
-                v => !!v || 'Name Is Required'
-            ]
-            // -----
-            ,editedIndex: null       
+            selectedIndex: -1
         }
     },
-    
+
     methods: {
         details(item) {
-            this.selectedIndex = this.karyawans.indexOf(item)
-            this.karyawan = Object.assign({},item)
-            this.popupDetails = true
+            this.selectedIndex = this.divisis.indexOf(item)
+            this.divisi = Object.assign({},item)
+            this.popUpDetails = true
         },
-        close() {
-            if(this.popupDetails) {
-                this.popupDetails = false
-                this.karyawan = Object.assign({},this.karyawanDefault)
-                this.selectedIndex = -1
-            } else {
-                if(this.popUpEdit) {
-                    this.popUpEdit = false
-                    this.karyawan = Object.assign({},this.karyawanDefault)
-                    this.selectedIndex = -1
-                } else {
-                    if(this.popUpConfirmSave) {
-                        this.popUpConfirmSave = false
-                        this.popUpEdit = true
-                    } else {
-                        if(this.popUpNew) {
-                            this.popUpNew = false
-                            this.karyawan = Object.assign({},this.karyawanDefault)
-                        }
-                    }
-                }
-            }
+        saveNewDivisi() {
+            this.divisis.push(this.divisi)
+            this.close()
         },
-        saveNewKaryawan() {
-            if(this.$refs.form.validate()) {
-                this.karyawans.push(this.karyawan)
-                this.karyawan = Object.assign({},this.karyawanDefault)
-                this.close()
-            }
-        },
-        editKaryawan(item) {
-            this.selectedIndex = this.karyawans.indexOf(item)
-            this.tempNamaKaryawan = item.nama
-            this.karyawan = Object.assign({},item)
+        editDivisi(item) {
+            this.selectedIndex = this.divisis.indexOf(item)
+            this.divisi = Object.assign({},item)
             this.popUpEdit = true
         },
-        // Save Karyawan
         confirmSave() {
             if(this.$refs.form.validate()) {
                 this.popUpEdit = false
                 this.popUpConfirmSave = true
             }
         },
-
         //this need promise to ensure that the data in the db and vue in synced !!! IMPORTANT !!!
         save() {
             //to find the object inside karyawans
-            let obj = this.karyawans.find( ({id}) => id === this.karyawan.id )
-            //get all of the property name of karyawans
-            var loop = Object.getOwnPropertyNames(this.karyawans[this.karyawans.indexOf(obj)])
-            //get rid of the __ob__ property to ensure that the looping is safe and secure
-            loop.splice(loop.indexOf('__ob__'),1)
+            let obj = this.divisis.find( ({id}) => id === this.divisi.id )
             //assign all the value of the property of obj2 in karyawans with karyawan
-            for(let i=0; i<loop.length; i++) {
-                this.karyawans[this.karyawans.indexOf(obj)][loop[i]] = this.karyawan[loop[i]]
-            }
+            this.divisis[this.divisis.indexOf(obj)].nama = this.divisi.nama
+            this.divisis[this.divisis.indexOf(obj)].permissions = this.divisi.permissions
             this.popUpConfirmSave = false
-            this.karyawan = Object.assign({},this.karyawanDefault)
+            this.divisi = Object.assign({},this.divisiDefault)
+        },
+        close() {
+            if(this.popUpDetails) {
+                this.divisi = Object.assign({},this.divisiDefault)
+                this.selectedIndex = -1
+                this.popUpDetails = false
+            } else {
+                if(this.popUpNew) {
+                    this.divisi = Object.assign({},this.divisiDefault)
+                    this.popUpNew = false
+                } else {
+                    if (this.popUpEdit) {
+                        this.popUpEdit = false
+                        this.divisi = Object.assign({},this.divisiDefault)
+                        this.selectedIndex = -1
+                    } else {
+                        if(this.popUpConfirmSave) {
+                            this.popUpConfirmSave = false
+                            this.popUpEdit = true
+                        }
+                    }
+                }
+            }
         }
     },
 
     computed: {
-        karyawanHeaders() {
-            return [
-                {text:'Nama',value:'nama'},
-                {text:'',value:'actions',width:'5%'}
-            ]
-        },
         //view Breakpoint
         popUpBreakPoint() {
             if (this.$vuetify.breakpoint.name == 'xs' || this.$vuetify.breakpoint.name == 'sm') {

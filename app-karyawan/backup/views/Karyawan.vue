@@ -18,15 +18,21 @@
             <!-- *************************************************************************************************************** -->
             <!-- Add Karyawan -->
             <!-- *************************************************************************************************************** -->
-            <v-btn fab dark large color="primary" fixed right bottom @click="popUpNew = !popUpNew">
-                <v-icon dark>mdi-plus</v-icon>
-            </v-btn>
             <v-container class="my-n7">
                 <v-dialog v-model="popUpNew" persistent max-width='1000px'>
+                    <template v-slot:activator="{ on }">
+                        <v-row justify="end">
+                            <v-col cols="5" lg="2">
+                                <v-btn block v-on="on" color="light-blue" class="white--text">
+                                    <v-icon>mdi-plus</v-icon>Tambah
+                                </v-btn>
+                            </v-col>
+                        </v-row>
+                    </template>
                     <v-card>
                         <v-toolbar dense flat>
                             <span class="title font-weight-light">Tambah Karyawan</span>
-                            <v-btn absolute right icon @click="close"><v-icon>mdi-close</v-icon></v-btn>
+                            <v-btn absolute right icon @click="popUpNew = !popUpNew"><v-icon>mdi-close</v-icon></v-btn>
                         </v-toolbar>
                         <v-form ref="form">
                             <v-card-text>
