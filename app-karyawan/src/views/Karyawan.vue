@@ -277,9 +277,7 @@ export default {
             //to find the object inside karyawans
             let obj = this.karyawans.find( ({id}) => id === this.karyawan.id )
             //get all of the property name of karyawans
-            var loop = Object.getOwnPropertyNames(this.karyawans[this.karyawans.indexOf(obj)])
-            //get rid of the __ob__ property to ensure that the looping is safe and secure
-            loop.splice(loop.indexOf('__ob__'),1)
+            var loop = Object.getOwnPropertyNames(this.karyawanDefault)
             //assign all the value of the property of obj2 in karyawans with karyawan
             for(let i=0; i<loop.length; i++) {
                 this.karyawans[this.karyawans.indexOf(obj)][loop[i]] = this.karyawan[loop[i]]
