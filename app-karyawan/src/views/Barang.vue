@@ -67,7 +67,7 @@
             <!-- *************************************************************************************************************** -->
 
             <!-- *************************************************************************************************************** -->
-            <!-- Edit Barang -->
+            <!-- Quick Edit Open Price -->
             <!-- *************************************************************************************************************** -->
             <v-switch value v-model="editToggle" class="pa-0 ma-0" label="Edit Price"></v-switch>
             <v-dialog v-model="popUpQuickEdit" persistent max-width='350px'>
@@ -76,18 +76,18 @@
                         <span class="title font-weight-light"> Edit Open Price</span>
                         <v-btn absolute right icon @click="close"><v-icon>mdi-close</v-icon></v-btn>
                     </v-toolbar>
-                        <v-card-title>{{barangQuickEdit.nama}}</v-card-title>
-                       <v-form ref="form">
+                    <v-card-title>{{barangQuickEdit.nama}}</v-card-title>
+                    <v-form ref="form">
                             <v-card-text><v-text-field color="blue" outlined v-model="barangQuickEdit.openPrice" placeholder="Harga Barang"></v-text-field></v-card-text>
-                       </v-form>
-                        <v-card-actions>
-                            <v-container>
-                                <v-row justify="center">
-                                    <v-btn class="mt-n12" color="red darken-1" text @click="close">Tidak</v-btn>
-                                    <v-btn class="mt-n12" color="blue darken-1" text @click="confirmSave">Ya</v-btn>
-                                </v-row>
-                            </v-container>
-                        </v-card-actions>
+                    </v-form>
+                    <v-card-actions>
+                        <v-container>
+                            <v-row justify="center">
+                                <v-btn class="mt-n12" color="red darken-1" text @click="close">Tidak</v-btn>
+                                <v-btn class="mt-n12" color="blue darken-1" text @click="confirmSave">Ya</v-btn>
+                            </v-row>
+                        </v-container>
+                    </v-card-actions>
                 </v-card>
             </v-dialog>
             <v-dialog persistent v-model="popUpConfirmSaveQuickEdit" width="500px">
@@ -172,9 +172,68 @@
             <!-- *************************************************************************************************************** -->
 
             <!-- *************************************************************************************************************** -->
-            <!-- Kartu Stock -->
+            <!-- Edit Barang -->
+            <!-- *************************************************************************************************************** -->
+            <v-dialog v-model="popUpEdit" persistent max-width='1000px'>
+                <v-card>
+                    <v-toolbar dense flat>
+                        <span class="title font-weight-light">Edit Barang</span>
+                        <v-btn absolute right icon @click="close"><v-icon>mdi-close</v-icon></v-btn>
+                    </v-toolbar>
+                    <v-form ref="form">
+                        <v-card-text>
+                            <v-row>
+                                <v-col cols="12">
+                                    <v-text-field label="ID" v-model="barang.id"/>
+                                </v-col>
+                                <v-col cols="12">
+                                    <v-text-field label="Nama" v-model="barang.nama"/>
+                                </v-col>
+                                <v-col cols="6">
+                                    <v-text-field label="Open Price" v-model="barang.openPrice"/>
+                                </v-col>
+                                <v-col cols="6">
+                                    <v-text-field label="Bottom Price" v-model="barang.bottomPrice"/>
+                                </v-col>
+                                <v-col cols="6">
+                                    <v-text-field label="Stock" v-model="barang.stock"/>
+                                </v-col>
+                                <v-col cols="6">
+                                    <v-text-field label="Satuan" v-model="barang.satuan"/>
+                                </v-col>
+                            </v-row>
+                        </v-card-text>
+                    </v-form>
+                    <v-card-actions>
+                        <v-container>
+                            <v-row justify="center">
+                                <v-btn class="mt-n12" color="red darken-1" text @click="close">Close</v-btn>
+                                <v-btn class="mt-n12" color="blue darken-1" text @click="confirmSave">Save</v-btn>
+                            </v-row>
+                        </v-container>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+            <!-- *************************************************************************************************************** -->
             <!-- *************************************************************************************************************** -->
 
+            <!-- *************************************************************************************************************** -->
+            <!-- Confirm on Edit -->
+            <!-- *************************************************************************************************************** -->
+            <v-dialog persistent v-model="popUpConfirmSaveEdit" width="500px">
+                <v-card>
+                    <v-card-title>Konfirmasi</v-card-title>
+                    <v-card-text>Apakah Anda Yakin ingin mengubah barang <b>{{barang.nama}}</b></v-card-text>
+                    <v-card-actions>
+                        <v-container>
+                            <v-row justify="center">
+                                <v-btn class="mt-n5" color="red darken-1" text @click="close">Tidak</v-btn>
+                                <v-btn class="mt-n5" color="blue darken-1" text @click="save">Ya</v-btn>
+                            </v-row>
+                        </v-container>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
             <!-- *************************************************************************************************************** -->
             <!-- *************************************************************************************************************** -->
         </div>
@@ -220,6 +279,7 @@ export default {
             popupDetails: false,
             popUpEdit: false,
             popUpConfirmSaveQuickEdit: false,
+            popUpConfirmSaveEdit: false,
             selectedIndex: -1,
         }
     },
@@ -243,6 +303,22 @@ export default {
                     if(this.popUpQuickEdit) {
                         this.popUpQuickEdit = false
                         this.barangQuickEdit = Object.assign({},this.barangQuickEditDefault)
+                    } else {
+                        if(this.popUpEdit) {
+                            this.popUpEdit = false
+                            this.barang = Object.assign({},this.barangDefault)
+                            this.selectedIndex = -1
+                        } else {
+                            if(this.popUpConfirmSaveEdit) {
+                                this.popUpConfirmSaveEdit = false
+                                this.popUpEdit = true
+                            } else {
+                                if(this.popUpConfirmSaveQuickEdit) {
+                                    this.popUpConfirmSaveQuickEdit = false
+                                    this.popUpQuickEdit = true
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -256,8 +332,15 @@ export default {
         },
         confirmSave() {
             if(this.$refs.form.validate()) {
-                this.popUpQuickEdit = false
-                this.popUpConfirmSaveQuickEdit = true
+                if(this.popUpQuickEdit) {
+                    this.popUpQuickEdit = false
+                    this.popUpConfirmSaveQuickEdit = true
+                } else {
+                    if(this.popUpEdit) {
+                        this.popUpEdit = false
+                        this.popUpConfirmSaveEdit = true
+                    }
+                }
             }
         },
         //this need promise to ensure that the data in the db and vue in synced !!! IMPORTANT !!!
@@ -266,6 +349,27 @@ export default {
             this.barangs[this.barangs.indexOf(obj)].openPrice = this.barangQuickEdit.openPrice
             this.popUpConfirmSaveQuickEdit = false
             this.barangQuickEdit = Object.assign({},this.barangQuickEditDefault)
+        },
+        editBarang(item) {
+            this.selectedIndex = this.barangs.indexOf(item)
+            this.barang = Object.assign({},item)
+            this.popUpEdit = true
+        },
+        save() {
+            let obj = this.barangs.find( ({id}) => id === this.barang.id )
+            var loop = Object.getOwnPropertyNames(this.barangDefault)
+            for(let i=0; i<loop.length; i++) {
+                this.barangs[this.barangs.indexOf(obj)][loop[i]] = this.barang[loop[i]]
+            }
+            this.popUpConfirmSaveEdit = false
+            this.barang = Object.assign({},this.barangDefault)
+        },
+        saveNewBarang() {
+            if(this.$refs.form.validate()) {
+                this.barangs.push(this.barang)
+                this.barang = Object.assign({},this.barangDefault)
+                this.close()
+            }
         }
     },
     
