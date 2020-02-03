@@ -65,9 +65,7 @@ export default {
     return {
       menus: [
         {name:'Dashboard',route:'/',icon:'mdi-home-variant-outline'},
-        {name:'Karyawan',route:'/karyawan',icon:'mdi-account-group',children:[
-          {name:'List Karyawan',route:'/karyawan',icon:'mdi-account-group'}
-        ]},
+        {name:'List Karyawan',route:'/karyawan',icon:'mdi-account-group'},
         {name:'Daftar Barang',route:'/daftarBarang',icon:'mdi-cube-outline'},
         {name:'Surat Jalan',route:'/suratJalan',icon:'mdi-ballot-recount-outline'},
         {name:'Stock Opname',route:'/stockOpname',icon:'mdi-clipboard-check-outline'},
@@ -79,6 +77,7 @@ export default {
       drawer: null,
       titleBar: 'Dashboard',
       logOutDialog: false,
+      searchBarang:''
     }
   },
 
@@ -104,9 +103,3 @@ export default {
   }
 };
 </script>
-
-<style>
-  html {
-    overflow-y: auto !important
-  }
-</style>
