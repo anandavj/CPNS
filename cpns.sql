@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 03, 2020 at 03:14 AM
+-- Generation Time: Feb 04, 2020 at 03:06 AM
 -- Server version: 10.4.10-MariaDB
 -- PHP Version: 7.3.12
 
@@ -38,8 +38,8 @@ CREATE TABLE `category` (
 --
 
 INSERT INTO `category` (`id`, `name`) VALUES
-(1, 'atap'),
-(2, 'bata');
+(2, 'atap'),
+(3, 'lantai');
 
 -- --------------------------------------------------------
 
@@ -52,6 +52,15 @@ CREATE TABLE `group_task` (
   `user_task_group_id` int(11) NOT NULL,
   `task_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `group_task`
+--
+
+INSERT INTO `group_task` (`id`, `user_task_group_id`, `task_id`) VALUES
+(1, 1, 1),
+(8, 1, 4),
+(9, 1, 5);
 
 -- --------------------------------------------------------
 
@@ -85,7 +94,7 @@ CREATE TABLE `order_status` (
 CREATE TABLE `product` (
   `id` int(11) NOT NULL,
   `name` varchar(50) NOT NULL,
-  `category_id` int(11) NOT NULL,
+  `category_id` int(11) DEFAULT NULL,
   `description` text NOT NULL,
   `stock` int(11) NOT NULL,
   `unit_id` int(11) DEFAULT NULL,
@@ -98,9 +107,8 @@ CREATE TABLE `product` (
 --
 
 INSERT INTO `product` (`id`, `name`, `category_id`, `description`, `stock`, `unit_id`, `open_price`, `bottom_price`) VALUES
-(1, 'genteng 1', 1, 'atap tap tap tap mantap', 10000, 2, 10000, 7000),
-(2, 'genteng 2', 1, 'tap tap tap atap', 200, 3, 20000, 15000),
-(3, 'genteng 3', 2, 'tap tap tap mantaaaaap', 100, 2, 10000, 5000);
+(1, 'atap 1', NULL, 'tap tap tap mantaaaaap', 100, NULL, 10000, 5000),
+(3, 'keramik 1', 2, 'mik mik keramik', 100, NULL, 10000, 5000);
 
 -- --------------------------------------------------------
 
@@ -131,6 +139,15 @@ CREATE TABLE `task` (
   `action` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `task`
+--
+
+INSERT INTO `task` (`id`, `action`) VALUES
+(1, 'add barang'),
+(4, 'kamehameha'),
+(5, 'rasengan');
+
 -- --------------------------------------------------------
 
 --
@@ -149,8 +166,7 @@ CREATE TABLE `unit` (
 --
 
 INSERT INTO `unit` (`id`, `name`, `abbreviation`, `description`) VALUES
-(2, 'gram', 'gr', ''),
-(3, 'meter', 'm', 'ukuran paaanjaaaang');
+(1, 'kilogram', 'kg', '');
 
 -- --------------------------------------------------------
 
@@ -167,6 +183,14 @@ CREATE TABLE `user` (
   `uid` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `user`
+--
+
+INSERT INTO `user` (`id`, `user_task_group_id`, `name`, `telephone`, `address`, `uid`) VALUES
+(1, 4, 'Mahendra Fajar', '085237238232', 'Tirtoagung', 'asdasw32asds=='),
+(2, 1, 'Ananda Vijaya', '085237238232', 'Ngesrep', 'asdaswudw002032asds==');
+
 -- --------------------------------------------------------
 
 --
@@ -179,6 +203,18 @@ CREATE TABLE `user_task` (
   `task_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `user_task`
+--
+
+INSERT INTO `user_task` (`id`, `user_id`, `task_id`) VALUES
+(1, 1, 1),
+(4, 1, 4),
+(5, 2, 1),
+(7, 2, 4),
+(8, 1, 5),
+(9, 2, 5);
+
 -- --------------------------------------------------------
 
 --
@@ -189,6 +225,15 @@ CREATE TABLE `user_task_group` (
   `id` int(11) NOT NULL,
   `name` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `user_task_group`
+--
+
+INSERT INTO `user_task_group` (`id`, `name`) VALUES
+(1, 'Manajer barang'),
+(3, 'shinobi'),
+(4, 'saiyan');
 
 -- --------------------------------------------------------
 
@@ -332,13 +377,13 @@ ALTER TABLE `warehouse_product`
 -- AUTO_INCREMENT for table `category`
 --
 ALTER TABLE `category`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `group_task`
 --
 ALTER TABLE `group_task`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `image`
@@ -368,31 +413,31 @@ ALTER TABLE `stock_record`
 -- AUTO_INCREMENT for table `task`
 --
 ALTER TABLE `task`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `unit`
 --
 ALTER TABLE `unit`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `user_task`
 --
 ALTER TABLE `user_task`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `user_task_group`
 --
 ALTER TABLE `user_task_group`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `warehouse`
@@ -414,8 +459,8 @@ ALTER TABLE `warehouse_product`
 -- Constraints for table `group_task`
 --
 ALTER TABLE `group_task`
-  ADD CONSTRAINT `group_task_ibfk_1` FOREIGN KEY (`user_task_group_id`) REFERENCES `user_task_group` (`id`),
-  ADD CONSTRAINT `group_task_ibfk_2` FOREIGN KEY (`task_id`) REFERENCES `task` (`id`);
+  ADD CONSTRAINT `group_task_ibfk_2` FOREIGN KEY (`task_id`) REFERENCES `task` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `group_task_ibfk_3` FOREIGN KEY (`user_task_group_id`) REFERENCES `user_task_group` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `image`
@@ -427,8 +472,8 @@ ALTER TABLE `image`
 -- Constraints for table `product`
 --
 ALTER TABLE `product`
-  ADD CONSTRAINT `product_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`),
-  ADD CONSTRAINT `product_ibfk_2` FOREIGN KEY (`unit_id`) REFERENCES `unit` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+  ADD CONSTRAINT `product_ibfk_2` FOREIGN KEY (`unit_id`) REFERENCES `unit` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `product_ibfk_3` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
 -- Constraints for table `stock_record`
@@ -442,14 +487,14 @@ ALTER TABLE `stock_record`
 -- Constraints for table `user`
 --
 ALTER TABLE `user`
-  ADD CONSTRAINT `user_ibfk_1` FOREIGN KEY (`user_task_group_id`) REFERENCES `user_task_group` (`id`);
+  ADD CONSTRAINT `user_ibfk_1` FOREIGN KEY (`user_task_group_id`) REFERENCES `user_task_group` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
 -- Constraints for table `user_task`
 --
 ALTER TABLE `user_task`
   ADD CONSTRAINT `user_task_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
-  ADD CONSTRAINT `user_task_ibfk_2` FOREIGN KEY (`task_id`) REFERENCES `task` (`id`);
+  ADD CONSTRAINT `user_task_ibfk_2` FOREIGN KEY (`task_id`) REFERENCES `task` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `warehouse_product`
