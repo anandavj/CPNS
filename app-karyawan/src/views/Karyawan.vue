@@ -73,6 +73,7 @@
             >
                 <template v-slot:item.actions="{ item }">
                     <v-icon class="mr-2" @click.stop="editKaryawan(item)">mdi-pencil</v-icon>
+                    <v-icon @click.stop="deleteKaryawan(item)">mdi-delete</v-icon>
                 </template>
             </v-data-table>
             <!-- *************************************************************************************************************** -->
@@ -291,7 +292,7 @@ export default {
         karyawanHeaders() {
             return [
                 {text:'Nama',value:'nama'},
-                {text:'',value:'actions',width:'5%'}
+                {text:'',value:'actions',width:'7%'}
             ]
         },
         //view Breakpoint

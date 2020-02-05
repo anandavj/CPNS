@@ -126,6 +126,7 @@
             >
                 <template v-slot:item.actions="{ item }">
                     <v-icon class="mr-2" @click.stop="editBarang(item)">mdi-pencil</v-icon>
+                    <v-icon @click.stop="deleteBarang(item)">mdi-delete</v-icon>
                 </template>
                 <template v-slot:item.openPrice="{ item }">
                     <template v-if="editToggle">
@@ -379,7 +380,7 @@ export default {
                 {text:'Nama', value:'nama', width:'70%'},
                 {text:'Open Price', value:'openPrice', align:'center'},
                 {text:'Stock', value:'stock'},
-                {text:'',value:'actions',width:'5%'}
+                {text:'',value:'actions',width:'7%'}
             ]
         },
         //view Breakpoint
