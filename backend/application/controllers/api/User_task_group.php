@@ -96,7 +96,7 @@ class User_task_group extends REST_Controller {
     }
 
     public function index_delete(){
-        $id = $this->delete('id');
+        $id = $this->input->get('id');
 
         if(!isset($id)){
             $this->response(
