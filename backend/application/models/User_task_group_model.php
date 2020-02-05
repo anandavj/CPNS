@@ -17,7 +17,7 @@ class User_task_group_model extends CI_Model{
     }
 
     public function get_user_task_group_where($id){
-        return $this->db->get_where($this::TABLE_NAME, "id='{$id}'");
+        return $this->db->get_where($this::TABLE_NAME, "id='{$id}'")->result_array();
     }
 
     public function is_not_exists($id){

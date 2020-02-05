@@ -99,7 +99,7 @@ class User_task extends REST_Controller {
     }
 
     public function index_delete(){
-        $user_id = $this->delete('userId');
+        $user_id = $this->input->get('userId');
 
         if(!isset($user_id)){
             $this->response(
