@@ -60,7 +60,7 @@
                             </v-data-table>
                         </div>
                         <!-- *************************************************************************************************************** -->
-                        <!-- Add Barang -->
+                        <!-- Add Surat Jalan -->
                         <!-- *************************************************************************************************************** -->
                         <v-btn fab dark large color="primary" fixed right bottom>
                             <v-icon dark>mdi-plus</v-icon>
@@ -69,26 +69,66 @@
                         <!-- *************************************************************************************************************** -->
                     
                         <!-- *************************************************************************************************************** -->
-                        <!-- Details Karyawan -->
+                        <!-- Details Surat Jalan -->
                         <!-- *************************************************************************************************************** -->
-                        <!-- Phone / other xs sm device will display fullscreen dialog -->
-                        <v-dialog v-if="popUpBreakPoint" v-model="popupDetails" fullscreen hide-overlay transition="dialog-bottom-transition">
+                        <v-dialog v-model="popupDetails" fullscreen hide-overlay transition="dialog-bottom-transition">
                             <v-card>
                                 <v-toolbar dense flat>
                                     <span class="title font-weight-light">Surat Jalan</span>
                                     <v-btn absolute right icon @click="close"><v-icon>mdi-close</v-icon></v-btn>
                                 </v-toolbar>
-                                {{surat}}
-                            </v-card>
-                        </v-dialog >
-                        <!-- Laptop/PC or other md lg device will not display fullscreen dialog -->
-                        <v-dialog v-else v-model="popupDetails" width="1000px">
-                            <v-card>
-                                <v-toolbar dense flat>
-                                    <span class="title font-weight-light">Surat Jalan</span>
-                                    <v-btn absolute right icon @click="close"><v-icon>mdi-close</v-icon></v-btn>
-                                </v-toolbar>
-                                {{surat}}
+                                <v-container>
+                                    <v-card outlined>
+                                        <v-container>
+                                            <v-row justify="center">
+                                                <v-card-title text-center class="headline">
+                                                    <b>BUANA PAKSA INDONESIA</b>
+                                                </v-card-title>
+                                            </v-row>
+                                            <v-row justify="center" class="mt-n5">
+                                                <v-card-subtitle class="text-center">
+                                                    Jl. Sriwidodo Utara VII No. 476 Kel. Purwoyoso Kec. Ngaliyan Belakang<br>
+                                                    Kawasan Industri Candi Krapyak - Semarang Jawa Tengah<br>
+                                                    Telp (024) 7626249 / Fax (024) 7610394 / Website: www.buanapaksa.com / Email: info@buanapaksa.com 
+                                                </v-card-subtitle>
+                                            </v-row>
+                                            <v-divider></v-divider>
+                                            <v-row justify="center">
+                                                <v-col cols="6">
+                                                    <table>
+                                                        <tr>
+                                                            <td><b>Kepada</b></td>
+                                                            <td>:</td>
+                                                            <td>ROIS</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><b>Alamat</b></td>
+                                                            <td>:</td>
+                                                            <td>Jogja</td>
+                                                        </tr>
+                                                    </table>
+                                                </v-col>
+                                                <v-col cols="6">
+                                                    <table class="float-right">
+                                                        <tr>
+                                                            <td style="text-align: left"><b>Tgl. Inv</b></td>
+                                                            <td>:</td>
+                                                            <td>29/01/2020</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="text-align: left"><b>No. HP</b></td>
+                                                            <td>:</td>
+                                                            <td>0813-6038-0877</td>
+                                                        </tr>
+                                                    </table>
+                                                </v-col>
+                                            </v-row>
+                                            <v-row justify="center">
+                                                <v-data-table></v-data-table>
+                                            </v-row>
+                                        </v-container>
+                                    </v-card>
+                                </v-container>
                             </v-card>
                         </v-dialog>
                         <!-- *************************************************************************************************************** -->
@@ -125,6 +165,7 @@ export default {
                 tanggal:'',
                 status:''
             },
+            deskripsi: '',
             tab:'',
             searchSuratJalan:'',
             searchDeliveryOrder:'',
