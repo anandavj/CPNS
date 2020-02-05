@@ -18,18 +18,22 @@ class Task extends REST_Controller
     public function index_post()
     {
         $action = $this->post('action');
+        $label =  $this->post('label');
 
-        if (!isset($action)) {
+        if (!isset($action) || !isset($label)) {
+            $required_parameters = [];
+            if(!isset($action)) array_push($required_parameters, 'action');
+            if(!isset($label)) array_push($required_parameters, 'label');
             $this->response(
                 array(
                     'status' => FALSE,
-                    'message' => $this::REQUIRED_PARAMETER_MESSAGE."action",
+                    'message' => $this::REQUIRED_PARAMETER_MESSAGE.implode(', ', $required_parameters)
                 ),REST_Controller::HTTP_BAD_REQUEST
             );
             return;
         }
 
-        if ($this->task_model->insert_task($action)) {
+        if ($this->task_model->insert_task($action, $label)) {
             $this->response(
                 array(
                     'status' => TRUE,
@@ -58,11 +62,13 @@ class Task extends REST_Controller
     {
         $id = $this->put('id');
         $action = $this->put('action');
+        $label = $this->put('label');
 
-        if (!isset($id) || !isset($action)) {
+        if (!isset($id) || !isset($action) || !isset($label)) {
             $required_parameters = [];
             if(!isset($id)) array_push($required_parameters, 'id');
             if(!isset($action)) array_push($required_parameters, 'action');
+            if(!isset($label)) array_push($required_parameters, 'label');
             $this->response(
                 array(
                     'status' => FALSE,
@@ -82,7 +88,7 @@ class Task extends REST_Controller
             return;
         }
 
-        if ($this->task_model->update_task($id, $action)) {
+        if ($this->task_model->update_task($id, $action, $label)) {
             $this->response(
                 array(
                     'status' => TRUE,

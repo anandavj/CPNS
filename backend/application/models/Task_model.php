@@ -4,9 +4,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Task_model extends CI_Model{
 
     private const TABLE_NAME = 'task';
-    public function insert_task($action){
+    public function insert_task($action, $label){
         $this->db->insert($this::TABLE_NAME, array(
-            'action' => $action
+            'action' => $action,
+            'label' => $label
         ));
         
         return $this->db->affected_rows();
@@ -25,18 +26,20 @@ class Task_model extends CI_Model{
         else return false;
     }
 
-    public function update_task($id, $action){
+    public function update_task($id, $action, $label){
         // Check apakah tidak merubah apa-apa?
         // kenapa perlu? karena jika update tidak ada perubahan affected_rows() return 0
         $result = $this->db->get_where($this::TABLE_NAME, array(
             'id' => $id,
-            'action' => $action
+            'action' => $action,
+            'label' => $label
         ));
         if($result->num_rows() > 0) return true;
 
         // Update
         $this->db->update($this::TABLE_NAME, array(
-            'action' => $action
+            'action' => $action,
+            'label' => $label
         ), "id='{$id}'");
         
         return $this->db->affected_rows();
