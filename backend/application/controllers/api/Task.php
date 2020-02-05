@@ -23,7 +23,7 @@ class Task extends REST_Controller
             $this->response(
                 array(
                     'status' => FALSE,
-                    'message' => $this::REQUIRED_PARAMETER_MESSAGE."action"
+                    'message' => $this::REQUIRED_PARAMETER_MESSAGE."action",
                 ),REST_Controller::HTTP_BAD_REQUEST
             );
             return;
@@ -101,7 +101,7 @@ class Task extends REST_Controller
 
     public function index_delete()
     {
-        $id = $this->delete('id');
+        $id = $this->input->get('id');
 
         if (!isset($id)) {
             $this->response(
