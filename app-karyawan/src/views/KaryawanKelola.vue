@@ -21,8 +21,7 @@ export default {
     data() {
         return {
             menus: [
-                {title:'Divisi', subtitle:'Melihat Divisi, menambahkan divisi, mengatur divisi', icon:'mdi-sitemap', bgcolor:'blue', route:'/divisi'},
-                {title:'Roles & Permissions', subtitle:'Menambahkan Roles & Permission Baru', icon:'mdi-account-key', bgcolor:'green', route:''}
+                {title:'Divisi', subtitle:'Melihat Divisi, menambahkan divisi, mengatur divisi', icon:'mdi-sitemap', bgcolor:'blue', route:'/divisi'}
             ]
         }
     },
