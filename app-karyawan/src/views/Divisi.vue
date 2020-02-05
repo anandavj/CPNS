@@ -32,18 +32,24 @@
                             <v-card-text>
                                 <v-row>
                                     <v-col cols="12">
-                                        <v-text-field label="Nama Divisi" v-model="name"/>
+                                        <v-text-field color="accent" label="Nama Divisi" v-model="name"/>
                                     </v-col>
                                     <v-col cols="12">
                                         <div class="title mt-n3">Permission</div>
-                                        <div v-for="(permission,index) in permissions" :key="index">
-                                            <v-checkbox
-                                                v-model="divisi.permissions"
-                                                :label="permission"
-                                                :value="permission"
-                                                class="font-weight-light mb-n2"
-                                            />
-                                        </div>
+                                        <v-expansion-panels accordion class="elevation-0" multiple="true" v-model="panel">
+                                            <v-expansion-panel v-for="(permission,index) in permissions" :key="index">
+                                                <v-expansion-panel-header>{{permission.modul}}</v-expansion-panel-header>
+                                                <v-expansion-panel-content v-for="(permissionList,idx) in permission.action" :key="idx">
+                                                    <v-checkbox
+                                                        v-model="divisi.permissions"
+                                                        :label="permissionList"
+                                                        :value="permissionList"
+                                                        class="font-weight-light my-n3"
+                                                        color="accent"
+                                                    />
+                                                </v-expansion-panel-content>
+                                            </v-expansion-panel>
+                                        </v-expansion-panels>
                                     </v-col>
                                 </v-row>
                             </v-card-text>
@@ -51,11 +57,19 @@
                         <v-card-actions>
                             <v-container>
                                 <v-row justify="center">
-                                    <v-btn class="mt-n5" color="red darken-1" text @click="close">Tidak</v-btn>
-                                    <v-btn class="mt-n5" color="blue darken-1" text @click="saveNewDivisi">Ya</v-btn>
+                                    <v-btn class="my-n5" color="red darken-1" text @click="close">Tidak</v-btn>
+                                    <v-btn class="my-n5" color="blue darken-1" text @click="saveNewDivisi">Ya</v-btn>
                                 </v-row>
                             </v-container>
                         </v-card-actions>
+                        <div v-if="loadingAddNewDivisi">
+                            <v-progress-linear
+                                indeterminate
+                                height="8"
+                                color="yellow darken-2"
+                                >
+                            </v-progress-linear>
+                        </div>
                     </v-card>
                 </v-dialog>
             </v-container>
@@ -68,6 +82,7 @@
             <v-data-table
                 :headers="divisiHeaders"
                 :items="divisis"
+                :search="searchDivisi"
                 @click:row="details"
                 :mobile-breakpoint="1"
                 :disable-sort="true"
@@ -128,14 +143,20 @@
                                 </v-col>
                                 <v-col cols="12">
                                     <div class="title mt-n3">Permission</div>
-                                    <div v-for="(permission,index) in permissions" :key="index">
-                                        <v-checkbox
-                                            v-model="divisi.permissions"
-                                            :label="permission"
-                                            :value="permission"
-                                            class="font-weight-light mb-n2"
-                                        />
-                                    </div>
+                                    <v-expansion-panels accordion class="elevation-0" multiple="true" v-model="panel">
+                                        <v-expansion-panel v-for="(permission,index) in permissions" :key="index">
+                                            <v-expansion-panel-header>{{permission.modul}}</v-expansion-panel-header>
+                                            <v-expansion-panel-content v-for="(permissionList,idx) in permission.action" :key="idx">
+                                                <v-checkbox
+                                                    v-model="divisi.permissions"
+                                                    :label="permissionList"
+                                                    :value="permissionList"
+                                                    class="font-weight-light my-n3"
+                                                    color="accent"
+                                                />
+                                            </v-expansion-panel-content>
+                                        </v-expansion-panel>
+                                    </v-expansion-panels>
                                 </v-col>
                             </v-row>
                         </v-card-text>
@@ -165,14 +186,20 @@
                                 </v-col>
                                 <v-col cols="12">
                                     <div class="title mt-n3">Permission</div>
-                                    <div v-for="(permission,index) in permissions" :key="index">
-                                        <v-checkbox
-                                            v-model="divisi.permissions"
-                                            :label="permission"
-                                            :value="permission"
-                                            class="font-weight-light mb-n2"
-                                        />
-                                    </div>
+                                    <v-expansion-panels accordion class="elevation-0" multiple="true" v-model="panel">
+                                        <v-expansion-panel v-for="(permission,index) in permissions" :key="index">
+                                            <v-expansion-panel-header>{{permission.modul}}</v-expansion-panel-header>
+                                            <v-expansion-panel-content v-for="(permissionList,idx) in permission.action" :key="idx">
+                                                <v-checkbox
+                                                    v-model="divisi.permissions"
+                                                    :label="permissionList"
+                                                    :value="permissionList"
+                                                    class="font-weight-light my-n3"
+                                                    color="accent"
+                                                />
+                                            </v-expansion-panel-content>
+                                        </v-expansion-panel>
+                                    </v-expansion-panels>
                                 </v-col>
                             </v-row>
                         </v-card-text>
@@ -243,7 +270,7 @@
                         mdi-close
                     </v-icon>
                 </v-btn>
-                </v-snackbar>
+            </v-snackbar>
         </div>
     </v-app>
 </template>
@@ -263,15 +290,16 @@ export default {
                 {text:'Nama Divisi', value:'name'},
                 {text:'', value:'actions'}
             ],
-            divisis: [
-                {id:1, nama:'Manager', permissions: [
-                    'Add Barang'
-                ]}
-            ],
+            divisis: [],
             permissions: [
-                'Add Barang',
-                'View Barang',
-                'Update Barang'
+                {modul:'Barang', action: [
+                    'Add Barang',
+                    'Read Barang'
+                ]},
+                {modul:'Karyawan', action: [
+                    'Add Karyawan',
+                    'Read Karyawan'
+                ]}
             ],
             divisi: {
                 id:null,
@@ -283,7 +311,9 @@ export default {
                 nama:'',
                 permissions: []
             },
+            panel: [],
             searchDivisi:'',
+            loadingAddNewDivisi:false,
             popUpDetails: false,
             popUpNew: false,
             popUpEdit: false,
@@ -305,7 +335,9 @@ export default {
             this.popUpDetails = true
         },
         saveNewDivisi() {
+            this.loadingAddNewDivisi = true
             this.$store.dispatch('insertUserTaskGroup').then(response => {
+                this.loadingAddNewDivisi = false
                 console.log(response)
                 this.snackbarColor = 'success'
                 this.snackbarMessage = response
@@ -377,6 +409,7 @@ export default {
                 if(this.popUpNew) {
                     this.$store.commit('setNewUserTaskGroup')
                     this.popUpNew = false
+                    this.panel = []
                 } else {
                     if (this.popUpEdit) {
                         this.popUpEdit = false
@@ -386,6 +419,7 @@ export default {
                         if(this.popUpConfirmSave) {
                             this.popUpConfirmSave = false
                             this.popUpEdit = true
+                            this.panel = []
                         }
                     }
                 }
