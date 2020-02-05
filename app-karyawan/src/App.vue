@@ -41,6 +41,26 @@
           <v-list-item-title>{{menu.name}}</v-list-item-title>
         </v-list-item>
       </v-list>
+      <v-list dense>
+        <v-list-item link @click="logOutDialog = !logOutDialog">
+          <v-list-item-icon><v-icon class="red--text">mdi-power</v-icon></v-list-item-icon>
+          <v-list-item-title class="red--text">Keluar</v-list-item-title>
+        </v-list-item>
+      </v-list>
+      <v-dialog v-model="logOutDialog" max-width="600">
+        <v-card>
+          <v-card-title>Confirmation</v-card-title>
+            <v-card-text>Apakah Anda Yakin Ingin Keluar?</v-card-text>
+            <v-card-actions>
+                <v-container>
+                    <v-row justify="center">
+                        <v-btn class="mt-n5" color="red darken-1" text @click="logOutDialog = false">Tidak</v-btn>
+                        <v-btn class="mt-n5" color="blue darken-1" text @click="logOut">Ya</v-btn>
+                    </v-row>
+                </v-container>
+            </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-navigation-drawer>
     <v-content app class="mx-4 my-4 mx-md-10 my-md-n5">
       <router-view></router-view>
