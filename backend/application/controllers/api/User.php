@@ -14,6 +14,8 @@ class User extends REST_Controller
         parent::__construct();
         $this->load->model('user_model');
         $this->load->model('user_task_group_model');
+        $this->load->model('user_task_model');
+        $this->load->model('group_task_model');
     }
 
     public function index_post()
@@ -52,19 +54,37 @@ class User extends REST_Controller
             return;
         }
 
-        if ($this->user_model->insert_user($user_task_group_id, $name, $phone, $address, $uid)) {
-            $this->response(
-                array(
-                    'status' => TRUE,
-                    'message' => $this::INSERT_SUCCESS_MESSSAGE
-                ),
-                REST_Controller::HTTP_CREATED
-            );
+
+        if ($insert_id = $this->user_model->insert_user($user_task_group_id, $name, $phone, $address, $uid)) {
+            $tasks = $this->group_task_model->get_group_task_where($user_task_group_id);
+            $user_task = [];
+            foreach ($tasks as $task) {
+                array_push($user_task, $task['task_id']);
+            }
+
+            if ($this->user_task_model->insert_user_task($insert_id, $user_task)) {
+                $this->response(
+                    array(
+                        'status' => TRUE,
+                        'message' => $this::INSERT_SUCCESS_MESSSAGE,
+                        'id' => $insert_id
+                    ),
+                    REST_Controller::HTTP_CREATED
+                );
+            } else {
+                $this->user_model->delete_user($insert_id);
+                $this->response(
+                    array(
+                        'status' => FALSE,
+                        'message' => $this::INSERT_FAILED_MESSAGE." Details: create user task failed"
+                    ),REST_Controller::HTTP_BAD_GATEWAY
+                );
+            }
         } else {
             $this->response(
                 array(
                     'status' => FALSE,
-                    'message' => $this::INSERT_FAILED_MESSAGE
+                    'message' => $this::INSERT_FAILED_MESSAGE." Details: create user failed"
                 ),
                 REST_Controller::HTTP_BAD_GATEWAY
             );
@@ -88,24 +108,17 @@ class User extends REST_Controller
         $address = $this->put('address');
         $uid = $this->put('uid');
 
-        if (!isset($id) || !isset($user_task_group_id) || !isset($name) || !isset($phone) || !isset($address) || !isset($uid)) {
-            $required_parameters = [];
-            if (!isset($id)) array_push($required_parameters, 'id');
-            if (!isset($user_task_group_id)) array_push($required_parameters, 'userTaskGroupId');
-            if (!isset($name)) array_push($required_parameters, 'name');
-            if (!isset($phone)) array_push($required_parameters, 'phone');
-            if (!isset($address)) array_push($required_parameters, 'address');
-            if (!isset($uid)) array_push($required_parameters, 'uid');
+
+        if (!isset($id)) {
             $this->response(
                 array(
                     'status' => FALSE,
-                    'message' => $this::REQUIRED_PARAMETER_MESSAGE . implode(', ', $required_parameters)
+                    'message' => $this::REQUIRED_PARAMETER_MESSAGE . "id"
                 ),
                 REST_Controller::HTTP_BAD_REQUEST
             );
             return;
         }
-
         if ($this->user_model->is_not_exists($id)) {
             $this->response(
                 array(
@@ -117,18 +130,34 @@ class User extends REST_Controller
             return;
         }
 
-        if ($this->user_task_group_model->is_not_exists($user_task_group_id)) {
-            $this->response(
-                array(
-                    'status' => FALSE,
-                    'message' => $this::INVALID_ID_MESSAGE . " userTaskGroupId does not exist"
-                ),
-                REST_Controller::HTTP_BAD_REQUEST
-            );
-            return;
+
+
+        $datas = array();
+        if (isset($user_task_group_id)) {
+            if ($this->user_task_group_model->is_not_exists($user_task_group_id)) {
+                $this->response(
+                    array(
+                        'status' => FALSE,
+                        'message' => $this::INVALID_ID_MESSAGE . " userTaskGroupId does not exist"
+                    ),
+                    REST_Controller::HTTP_BAD_REQUEST
+                );
+                return;
+            } else if ($this->db->query("SELECT * FROM user WHERE id ='{$id}' AND user_task_group_id='{$user_task_group_id}'")->num_rows() == 0) {
+                array_push($datas, "'user_task_group_id' => {$user_task_group_id}");
+            }
+        }
+        if (isset($name)) {
+            $datas = array_merge($datas, array('name' => $name));
+        }
+        if (isset($phone)) {
+            $datas = array_merge($datas, array('telephone' => $phone));
+        }
+        if (isset($address)) {
+            $datas = array_merge($datas, array('address' => $address));
         }
 
-        if ($this->user_model->update_user($id, $user_task_group_id, $name, $phone, $address, $uid)) {
+        if ($this->user_model->update_user($id, $datas)) {
             $this->response(
                 array(
                     'status' => TRUE,

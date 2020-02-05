@@ -13,7 +13,7 @@ class User_model extends CI_Model{
             'uid' => $uid
         ));
 
-        return $this->db->affected_rows();
+        return $this->db->insert_id();
     }
 
     public function get_all_user(){
@@ -36,26 +36,14 @@ class User_model extends CI_Model{
         else false;
     }
 
-    public function update_user($id, $user_task_group_id, $name, $telephone, $address, $uid){
+    public function update_user($id, $data){
         // Check apakah tidak merubah apa-apa?
         // kenapa perlu? karena jika update tidak ada perubahan affected_rows() return 0
-        $result = $this->db->get_where($this::TABLE_NAME, array(
-            'user_task_group_id' => $user_task_group_id,
-            'name' => $name,
-            'telephone' => $telephone,
-            'address' => $address,
-            'uid' => $uid
-        ));
+        $result = $this->db->get_where($this::TABLE_NAME, $data);
         if($result->num_rows() > 0) return true;
 
         // Update
-        $this->db->update($this::TABLE_NAME, array(
-            'user_task_group_id' => $user_task_group_id,
-            'name' => $name,
-            'telephone' => $telephone,
-            'address' => $address,
-            'uid' => $uid
-        ), "id='{$id}'");
+        $this->db->update($this::TABLE_NAME, $data, "id='{$id}'");
         
         return $this->db->affected_rows();
     }
