@@ -5,8 +5,10 @@ import router from './router'
 import store from './store'
 import vuetify from './plugins/vuetify';
 import firebase from'firebase';
+import axios from 'axios';
 
 Vue.config.productionTip = false
+axios.defaults.baseURL = 'http://localhost/BuanaPaksa/CPNS/backend/api/'
 
 const config = {
   apiKey: "AIzaSyAGXPPSZkTQC0Qq5zoFmoDe3AdvbPBHYKE",

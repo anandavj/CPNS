@@ -32,7 +32,7 @@
                             <v-card-text>
                                 <v-row>
                                     <v-col cols="12">
-                                        <v-text-field label="Nama Divisi" v-model="divisi.nama"/>
+                                        <v-text-field label="Nama Divisi" v-model="name"/>
                                     </v-col>
                                     <v-col cols="12">
                                         <div class="title mt-n3">Permission</div>
@@ -79,6 +79,7 @@
             >
                 <template v-slot:item.actions="{ item }">
                     <v-icon class="mr-2" @click.stop="editDivisi(item)">mdi-pencil</v-icon>
+                    <v-icon class="mr-2" @click.stop="confirmDeleteDivisi(item)">mdi-delete</v-icon>
                 </template>
             </v-data-table>
             <!-- *************************************************************************************************************** -->
@@ -123,7 +124,7 @@
                         <v-card-text>
                             <v-row>
                                 <v-col cols="12">
-                                    <v-text-field label="Nama Divisi" v-model="divisi.nama"/>
+                                    <v-text-field label="Nama Divisi" v-model="name"/>
                                 </v-col>
                                 <v-col cols="12">
                                     <div class="title mt-n3">Permission</div>
@@ -160,7 +161,7 @@
                         <v-card-text>
                             <v-row>
                                 <v-col cols="12">
-                                    <v-text-field label="Nama Divisi" v-model="divisi.nama"/>
+                                    <v-text-field label="Nama Divisi" v-model="name"/>
                                 </v-col>
                                 <v-col cols="12">
                                     <div class="title mt-n3">Permission</div>
@@ -195,12 +196,12 @@
             <v-dialog persistent v-model="popUpConfirmSave" width="500px">
                 <v-card>
                     <v-card-title>Konfirmasi</v-card-title>
-                    <v-card-text>Apakah Anda Yakin ingin mengubah profil <b>{{divisi.nama}}</b>?</v-card-text>
+                    <v-card-text>Apakah Anda Yakin ingin mengubah divisi <b>{{name}}</b>?</v-card-text>
                     <v-card-actions>
                         <v-container>
                             <v-row justify="center">
                                 <v-btn class="mt-n5" color="red darken-1" text @click="close">Tidak</v-btn>
-                                <v-btn class="mt-n5" color="blue darken-1" text @click="save">Ya</v-btn>
+                                <v-btn class="mt-n5" color="blue darken-1" text @click="updateDivisi">Ya</v-btn>
                             </v-row>
                         </v-container>
                     </v-card-actions>
@@ -208,6 +209,41 @@
             </v-dialog>
             <!-- *************************************************************************************************************** -->
             <!-- *************************************************************************************************************** -->
+            
+            <!-- *************************************************************************************************************** -->
+            <!-- Confirm on Delete -->
+            <!-- *************************************************************************************************************** -->
+            <v-dialog persistent v-model="popUpConfirmDelete" width="500px">
+                <v-card>
+                    <v-card-title>Konfirmasi</v-card-title>
+                    <v-card-text>Apakah Anda Yakin ingin menghapus divisi <b>{{name}}</b>?</v-card-text>
+                    <v-card-actions>
+                        <v-container>
+                            <v-row justify="center">
+                                <v-btn class="mt-n5" color="red darken-1" text @click="close">Tidak</v-btn>
+                                <v-btn class="mt-n5" color="blue darken-1" text @click="deleteDivisi">Ya</v-btn>
+                            </v-row>
+                        </v-container>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+            <!-- *************************************************************************************************************** -->
+            <!-- *************************************************************************************************************** -->
+            <v-snackbar
+                v-model="snackbar"
+                multi-line
+                v-bind:color="snackbarColor"
+            >
+                {{ snackbarMessage }}
+                <v-btn
+                    text
+                    @click="snackbar = false"
+                >
+                    <v-icon>
+                        mdi-close
+                    </v-icon>
+                </v-btn>
+                </v-snackbar>
         </div>
     </v-app>
 </template>
@@ -215,11 +251,16 @@
 <script>
 export default {
     name: 'Divisi',
-
+    mounted() {
+        this.get()
+    },
     data() {
         return {
+            snackbar: false,
+            snackbarColor: null,
+            snackbarMessage: null,
             divisiHeaders: [
-                {text:'Nama Divisi', value:'nama'},
+                {text:'Nama Divisi', value:'name'},
                 {text:'', value:'actions'}
             ],
             divisis: [
@@ -247,24 +288,43 @@ export default {
             popUpNew: false,
             popUpEdit: false,
             popUpConfirmSave: false,
+            popUpConfirmDelete: false,
             selectedIndex: -1
         }
     },
 
     methods: {
+        get(){
+            this.$store.dispatch('getAllUserTaskGroup').then(userTaskGroup => {
+                this.divisis = userTaskGroup
+            })
+        },
         details(item) {
             this.selectedIndex = this.divisis.indexOf(item)
             this.divisi = Object.assign({},item)
             this.popUpDetails = true
         },
         saveNewDivisi() {
-            this.divisis.push(this.divisi)
-            this.close()
+            this.$store.dispatch('insertUserTaskGroup').then(response => {
+                console.log(response)
+                this.snackbarColor = 'success'
+                this.snackbarMessage = response
+            }).catch(error => {
+                this.snackbarColor = 'error'
+                this.snackbarMessage = error
+            }).finally(() => {
+                this.snackbar = true
+                this.get()
+                this.close()
+            });
         },
         editDivisi(item) {
-            this.selectedIndex = this.divisis.indexOf(item)
-            this.divisi = Object.assign({},item)
+            this.$store.commit('setUserTaskGroup', item)
             this.popUpEdit = true
+        },
+        confirmDeleteDivisi(item){
+            this.$store.commit('setUserTaskGroup', item)
+            this.popUpConfirmDelete = true
         },
         confirmSave() {
             if(this.$refs.form.validate()) {
@@ -273,28 +333,54 @@ export default {
             }
         },
         //this need promise to ensure that the data in the db and vue in synced !!! IMPORTANT !!!
-        save() {
-            //to find the object inside karyawans
-            let obj = this.divisis.find( ({id}) => id === this.divisi.id )
-            //assign all the value of the property of obj2 in karyawans with karyawan
-            this.divisis[this.divisis.indexOf(obj)].nama = this.divisi.nama
-            this.divisis[this.divisis.indexOf(obj)].permissions = this.divisi.permissions
-            this.popUpConfirmSave = false
-            this.divisi = Object.assign({},this.divisiDefault)
+        updateDivisi() {
+            // //to find the object inside karyawans
+            // let obj = this.divisis.find( ({id}) => id === this.divisi.id )
+            // //assign all the value of the property of obj2 in karyawans with karyawan
+            // this.divisis[this.divisis.indexOf(obj)].nama = this.divisi.name
+            // this.divisis[this.divisis.indexOf(obj)].permissions = this.divisi.permissions
+            // this.popUpConfirmSave = false
+            // this.divisi = Object.assign({},this.divisiDefault)
+            this.$store.dispatch('updateUserTaskGroup').then(response => {
+                console.log(response)
+                this.snackbarColor = 'success'
+                this.snackbarMessage = response
+            }).catch(error => {
+                this.snackbarColor = 'error'
+                this.snackbarMessage = error
+            }).finally(() => {
+                this.snackbar = true
+                this.get()
+                this.close()
+            });
+        },
+        deleteDivisi() {
+            this.$store.dispatch('deleteUserTaskGroup').then(response => {
+                console.log(response)
+                this.snackbarColor = 'success'
+                this.snackbarMessage = response
+            }).catch(error => {
+                this.snackbarColor = 'error'
+                this.snackbarMessage = error
+            }).finally(() => {
+                this.snackbar = true
+                this.get()
+                this.close()
+            });
         },
         close() {
             if(this.popUpDetails) {
-                this.divisi = Object.assign({},this.divisiDefault)
+                this.$store.commit('setNewUserTaskGroup')
                 this.selectedIndex = -1
                 this.popUpDetails = false
             } else {
                 if(this.popUpNew) {
-                    this.divisi = Object.assign({},this.divisiDefault)
+                    this.$store.commit('setNewUserTaskGroup')
                     this.popUpNew = false
                 } else {
                     if (this.popUpEdit) {
                         this.popUpEdit = false
-                        this.divisi = Object.assign({},this.divisiDefault)
+                        this.$store.commit('setNewUserTaskGroup')
                         this.selectedIndex = -1
                     } else {
                         if(this.popUpConfirmSave) {
@@ -304,10 +390,20 @@ export default {
                     }
                 }
             }
+            if(this.popUpConfirmDelete) {
+                this.$store.commit('setNewUserTaskGroup')
+                this.popUpConfirmDelete = false
+            }
         }
     },
 
     computed: {
+        //vuex
+        name: {
+            get(){ return this.$store.state.userTaskGroup.name },
+            set(value){ this.$store.commit('setUserTaskGroupName', value)}
+        },
+
         //view Breakpoint
         popUpBreakPoint() {
             if (this.$vuetify.breakpoint.name == 'xs' || this.$vuetify.breakpoint.name == 'sm') {
