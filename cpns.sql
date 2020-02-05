@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 04, 2020 at 03:06 AM
+-- Generation Time: Feb 05, 2020 at 07:57 AM
 -- Server version: 10.4.10-MariaDB
 -- PHP Version: 7.3.12
 
@@ -58,9 +58,10 @@ CREATE TABLE `group_task` (
 --
 
 INSERT INTO `group_task` (`id`, `user_task_group_id`, `task_id`) VALUES
-(1, 1, 1),
-(8, 1, 4),
-(9, 1, 5);
+(10, 3, 4),
+(12, 3, 1),
+(16, 4, 1),
+(18, 4, 5);
 
 -- --------------------------------------------------------
 
@@ -136,17 +137,18 @@ CREATE TABLE `stock_record` (
 
 CREATE TABLE `task` (
   `id` int(11) NOT NULL,
-  `action` varchar(50) NOT NULL
+  `action` varchar(50) NOT NULL,
+  `label` varchar(30) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `task`
 --
 
-INSERT INTO `task` (`id`, `action`) VALUES
-(1, 'add barang'),
-(4, 'kamehameha'),
-(5, 'rasengan');
+INSERT INTO `task` (`id`, `action`, `label`) VALUES
+(1, 'add barang', ''),
+(4, 'kamehameha', ''),
+(5, 'rasengan', '');
 
 -- --------------------------------------------------------
 
@@ -188,8 +190,9 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `user_task_group_id`, `name`, `telephone`, `address`, `uid`) VALUES
-(1, 4, 'Mahendra Fajar', '085237238232', 'Tirtoagung', 'asdasw32asds=='),
-(2, 1, 'Ananda Vijaya', '085237238232', 'Ngesrep', 'asdaswudw002032asds==');
+(1, 4, 'Mahendra Fakyu', '088423728248', 'Tirtoagung', 'asdasw32asds=='),
+(2, NULL, 'Ananda Vijaya', '085237238232', 'Ngesrep', 'asdaswudw002032asds=='),
+(3, 4, 'Satria Kemal', '089937473471', 'Banjarsari', 'awasiiaseao201e==');
 
 -- --------------------------------------------------------
 
@@ -209,11 +212,11 @@ CREATE TABLE `user_task` (
 
 INSERT INTO `user_task` (`id`, `user_id`, `task_id`) VALUES
 (1, 1, 1),
-(4, 1, 4),
 (5, 2, 1),
-(7, 2, 4),
 (8, 1, 5),
-(9, 2, 5);
+(14, 3, 1),
+(16, 3, 5),
+(17, 2, 4);
 
 -- --------------------------------------------------------
 
@@ -231,7 +234,6 @@ CREATE TABLE `user_task_group` (
 --
 
 INSERT INTO `user_task_group` (`id`, `name`) VALUES
-(1, 'Manajer barang'),
 (3, 'shinobi'),
 (4, 'saiyan');
 
@@ -383,7 +385,7 @@ ALTER TABLE `category`
 -- AUTO_INCREMENT for table `group_task`
 --
 ALTER TABLE `group_task`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `image`
@@ -425,13 +427,13 @@ ALTER TABLE `unit`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `user_task`
 --
 ALTER TABLE `user_task`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `user_task_group`
@@ -493,8 +495,8 @@ ALTER TABLE `user`
 -- Constraints for table `user_task`
 --
 ALTER TABLE `user_task`
-  ADD CONSTRAINT `user_task_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
-  ADD CONSTRAINT `user_task_ibfk_2` FOREIGN KEY (`task_id`) REFERENCES `task` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `user_task_ibfk_2` FOREIGN KEY (`task_id`) REFERENCES `task` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `user_task_ibfk_3` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `warehouse_product`
