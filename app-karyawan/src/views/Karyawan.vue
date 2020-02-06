@@ -31,12 +31,76 @@
                         <v-form ref="form">
                             <v-card-text>
                                 <v-row>
-                                    <v-col cols="12">
+                                    <v-col cols="2">
                                         <v-text-field label="ID" v-model="karyawan.id"/>
                                     </v-col>
-                                    <v-col cols="12">
+                                    <v-col cols="10">
                                         <v-text-field label="Nama" v-model="karyawan.nama" :rules="nameRules"/>
                                     </v-col>
+                                    <v-col cols="6">
+                                        <v-text-field label="Tempat Lahir" v-model="karyawan.tempatLahir"></v-text-field>
+                                    </v-col>
+                                    <v-col cols="6">
+                                        <v-menu
+                                            ref="datePickerMenu"
+                                            v-model="datePickerMenu"
+                                            :close-on-content-click="false"
+                                            :return-value.sync="karyawan.tanggalLahir"
+                                            transition="scale-transition"
+                                            offset-y
+                                            min-width="290px"
+                                            >
+                                            <template v-slot:activator="{ on }">
+                                                <v-text-field
+                                                v-model="karyawan.tanggalLahir"
+                                                label="Tanggal Lahir"
+                                                prepend-icon="mdi-calendar"
+                                                readonly
+                                                v-on="on"
+                                                ></v-text-field>
+                                            </template>
+                                            <v-date-picker v-model="karyawan.tanggalLahir" no-title scrollable>
+                                                <v-spacer></v-spacer>
+                                                <v-btn text color="primary" @click="datePickerMenu = false">Cancel</v-btn>
+                                                <v-btn text color="primary" @click="$refs.datePickerMenu.save(karyawan.tanggalLahir)">OK</v-btn>
+                                            </v-date-picker>
+                                            </v-menu>
+                                    </v-col>
+                                    <v-col cols="6">
+                                        <v-text-field label="Agama" v-model="karyawan.agama"></v-text-field>
+                                    </v-col>
+                                    <v-col cols="6">
+                                        <v-text-field label="status" v-model="karyawan.status"></v-text-field>
+                                    </v-col>
+                                    <v-col cols="12">
+                                        <v-text-field label="Alamat" v-model="karyawan.alamat"></v-text-field>
+                                    </v-col>
+                                    <v-col cols="6">
+                                        <v-text-field label="Nomor HP" v-model="karyawan.noTelp"></v-text-field>
+                                    </v-col>
+                                    <v-col cols="6">
+                                        <v-select
+                                        :items="listDivisi"
+                                        label="Divisi"
+                                        ></v-select>
+                                    </v-col>
+                                    <v-col cols="12">
+                                    <div class="title mt-n1">Permission</div>
+                                    <v-expansion-panels accordion class="elevation-0" multiple="true" v-model="panel">
+                                        <v-expansion-panel v-for="(permission,index) in permissions" :key="index">
+                                            <v-expansion-panel-header>{{permission.modul}}</v-expansion-panel-header>
+                                            <v-expansion-panel-content v-for="(permissionList,idx) in permission.action" :key="idx">
+                                                <v-checkbox
+                                                    v-model="karyawan.permissions"
+                                                    :label="permissionList.actionName"
+                                                    :value="permissionList.id"
+                                                    class="font-weight-light my-n3"
+                                                    color="accent"
+                                                />
+                                            </v-expansion-panel-content>
+                                        </v-expansion-panel>
+                                    </v-expansion-panels>
+                                </v-col>
                                 </v-row>
                             </v-card-text>
                         </v-form>
@@ -193,21 +257,49 @@ export default {
     data() {
         return {
             karyawans: [
-                {id:1, nama:'Mahendra Fajar'},
-                {id:2, nama:'Ananda Vijaya'},
-                {id:3, nama:'Satria Kemal'},
+                {id:1, nama:'Mahendra Fajar', divisi:'Gudang', tempatLahir:'Denpasar', tanggalLahir:'27 April 1999', agama:'Islam', status:'Belum Menikah', Alamat:'Jalan', noTelp:'08180', permissions: []},
+                {id:2, nama:'Ananda Vijaya', divisi:'Gudang', tempatLahir:'Denpasar', tanggalLahir:'27 April 1999', agama:'Islam', status:'Belum Menikah', Alamat:'Jalan', noTelp:'08180', permissions: []},
+                {id:3, nama:'Satria Kemal', divisi:'Gudang', tempatLahir:'Denpasar', tanggalLahir:'27 April 1999', agama:'Islam', status:'Belum Menikah', Alamat:'Jalan', noTelp:'08180', permissions: []},
             ],
             karyawan: {
                 id:null,
-                nama:''
+                nama:'',
+                divisi:'', 
+                tempatLahir:'',
+                tanggalLahir:new Date().toISOString().substr(0, 10),
+                agama:'',
+                status:'', 
+                Alamat:'',
+                noTelp:'',
+                permissions: []
             },
             karyawanDefault: {
                 id:null,
-                nama:''
+                nama:'',
+                divisi:'', 
+                tempatLahir:'',
+                tanggalLahir:'',
+                agama:'',
+                status:'', 
+                Alamat:'',
+                noTelp:'',
+                permissions: []
             },
+            permissions: [
+                {modul:'Barang', action: [
+                    {id:0,actionName:'Add Barang'},
+                    {id:1,actionName:'Read Barang'}
+                ]},
+                {modul:'Karyawan', action: [
+                    {id:2,actionName:'Add Karyawan'},
+                    {id:3,actionName:'Read Karyawan'}
+                ]}
+            ],
+            listDivisi:[],
             tempNamaKaryawan:'',
             searchKaryawan:'',
             popUpNew: false,
+            datePickerMenu: false,
             popupDetails: false,
             popUpEdit: false,
             popUpConfirmSave: false,
