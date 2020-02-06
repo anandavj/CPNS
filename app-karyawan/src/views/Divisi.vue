@@ -294,8 +294,8 @@ export default {
             divisis: [],
             permissions: [
                 {modul:'Barang', action: [
-                    {id: 1, label: 'Add Barang'},
-                    {id: 2, action: 'Read Barang'},
+                    {id:2,actionName:'Add Barang'},
+                    {id:3,actionName:'Read Barang'}
                 ]},
                 {modul:'Karyawan', action: [
                     {id:2,actionName:'Add Karyawan'},
