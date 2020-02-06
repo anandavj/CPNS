@@ -15,18 +15,22 @@ class Task_model extends CI_Model{
     }
 
     public function get_all_task(){
-        $result = $this->db->get($this::TABLE_NAME);
-        $currentModul = null;
         $array = array();
-        foreach($result->result_array() as $row){
-            if($row['modul'] != $currentModul){
-                array_push($array, $row['modul']);
-                array_push($array['modul'], $row['action']);
+        $count_modul = $this->db->query('SELECT modul, count(action) from task GROUP BY modul');
+        foreach($count_modul->result_array() as $row){
+            $actions = array();
+            $result = $this->db->get_where('task', "modul='{$row['modul']}'");
+            foreach($result->result_array() as $action){
+                array_push($actions, $action['action']);
             }
+            array_push($array, array(
+                'modul' => $row['modul'],
+                'action' => $actions
+            ));
         }
         return $array;
     }
-
+    
     public function get_task_where($id){
         return $this->db->get_where($this::TABLE_NAME, "id='{$id}'")->result_array();
     }
