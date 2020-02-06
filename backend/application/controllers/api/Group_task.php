@@ -182,7 +182,7 @@ class Group_task extends REST_Controller
     // DELETE - menghapus seluruh record sesuai dengan id grup user task
     public function index_delete()
     {
-        $user_task_group_id = $this->delete('userTaskGroupId');
+        $user_task_group_id = $this->input->get('userTaskGroupId');
 
         if (!isset($user_task_group_id)) {
             $this->response(

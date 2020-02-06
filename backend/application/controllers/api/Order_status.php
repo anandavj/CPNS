@@ -96,7 +96,7 @@ class Order_status extends REST_Controller {
     }
 
     public function index_delete(){
-        $id = $this->delete('id');
+        $id = $this->input->delete('id');
 
         if(!isset($id)){
             $this->response(
