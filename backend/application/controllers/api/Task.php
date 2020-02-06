@@ -19,11 +19,13 @@ class Task extends REST_Controller
     {
         $action = $this->post('action');
         $label =  $this->post('label');
+        $modul = $this->post('modul');
 
-        if (!isset($action) || !isset($label)) {
+        if (!isset($action) || !isset($label) || !isset($modul)) {
             $required_parameters = [];
             if(!isset($action)) array_push($required_parameters, 'action');
             if(!isset($label)) array_push($required_parameters, 'label');
+            if(!isset($modul)) array_push($required_parameters, 'modul');
             $this->response(
                 array(
                     'status' => FALSE,
@@ -33,7 +35,7 @@ class Task extends REST_Controller
             return;
         }
 
-        if ($this->task_model->insert_task($action, $label)) {
+        if ($this->task_model->insert_task($action, $label, $modul)) {
             $this->response(
                 array(
                     'status' => TRUE,
@@ -63,12 +65,14 @@ class Task extends REST_Controller
         $id = $this->put('id');
         $action = $this->put('action');
         $label = $this->put('label');
+        $modul = $this->put('modul');
 
-        if (!isset($id) || !isset($action) || !isset($label)) {
+        if (!isset($id) || !isset($action) || !isset($label) || !isset($modul)) {
             $required_parameters = [];
             if(!isset($id)) array_push($required_parameters, 'id');
             if(!isset($action)) array_push($required_parameters, 'action');
             if(!isset($label)) array_push($required_parameters, 'label');
+            if(!isset($modul)) array_push($required_parameters, 'modul');
             $this->response(
                 array(
                     'status' => FALSE,
@@ -88,7 +92,7 @@ class Task extends REST_Controller
             return;
         }
 
-        if ($this->task_model->update_task($id, $action, $label)) {
+        if ($this->task_model->update_task($id, $action, $label, $modul)) {
             $this->response(
                 array(
                     'status' => TRUE,
