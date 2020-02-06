@@ -136,18 +136,32 @@ class Group_task extends REST_Controller
                 return;
             }
         }
-
         $new_task = $this->group_task_model->update_group_task($user_task_group_id, $task_id);
+        
         if ($new_task) {
-            $users = $this->db->get_where('user', "user_task_group_id ='{$user_task_group_id}'")->result_array();
+            $result = $this->db->get_where('user', "user_task_group_id ='{$user_task_group_id}'");
+            $users = $result->result_array();
+            $count = $result->num_rows();
+          
             // $users = $this->db->query("SELECT * FROM user WHERE user_task_group_id = 1")->result_array();
-            
-            foreach ($users as $user) {
-                $this->user_task_model->update_user_task($user['id'], $new_task);
-                $this->response(
+            if ($count) {
+                foreach ($users as $user) {
+                    $this->user_task_model->update_user_task($user['id'], $new_task);
+                    $this->response(
+                        array(
+                            'status' => TRUE,
+                            'message' => $this::UPDATE_SUCCESS_MESSSAGE,
+                        ),
+                        REST_Controller::HTTP_OK
+
+                    );
+                }
+            } else {
+                $this->response(    
                     array(
                         'status' => TRUE,
-                        'message' => $this::UPDATE_SUCCESS_MESSSAGE,
+                        'message' => $this::UPDATE_SUCCESS_MESSSAGE . " Details: no user task row affected" 
+
                     ),
                     REST_Controller::HTTP_OK
 

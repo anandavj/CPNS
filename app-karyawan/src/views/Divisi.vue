@@ -293,8 +293,8 @@ export default {
             divisis: [],
             permissions: [
                 {modul:'Barang', action: [
-                    'Add Barang',
-                    'Read Barang'
+                    {id: 1, label: 'Add Barang'},
+                    {id: 2, action: 'Read Barang'},
                 ]},
                 {modul:'Karyawan', action: [
                     'Add Karyawan',

@@ -31,6 +31,10 @@ class User_model extends CI_Model{
         return $this->db->get()->result_array();
     }
 
+    public function get_by_user_task_group_id($user_task_group_id){
+        return $this->db->get_where($this::TABLE_NAME, "user_task_group_id='{$user_task_group_id}'")->result_array();
+    }
+
     public function is_not_exists($id){
         if($this->db->get_where($this::TABLE_NAME, "id='{$id}'")->num_rows() == 0) return true;
         else false;

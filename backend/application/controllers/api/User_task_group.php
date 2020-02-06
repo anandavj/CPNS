@@ -6,11 +6,14 @@ require APPPATH . '/libraries/REST_Controller.php';
 
 use Restserver\Libraries\REST_Controller;
 
+
 class User_task_group extends REST_Controller {
 
     public function __construct(){
         parent::__construct();
         $this->load->model('user_task_group_model');
+        $this->load->model('user_model');
+        $this->load->model('user_task_model');
     }
 
     public function index_post(){
@@ -118,7 +121,20 @@ class User_task_group extends REST_Controller {
             return;
         }
 
+        $user_task_group_id = $this->user_task_group_model->get_user_task_group_where($id)[0]['id'];
+        $result = $this->user_model->get_by_user_task_group_id($user_task_group_id);
         if($this->user_task_group_model->delete_user_task_group($id)){
+            foreach ($result as $user){
+                if(!$this->user_task_model->delete_user_task($user['id'])){
+                    $this->response(
+                        array(
+                            'status' => TRUE,
+                            'message' => $this::DELETE_FAILED_MESSAGE." Details: delete user_task_group succeed but failed on delete user_task"
+                        ),REST_Controller::HTTP_BAD_GATEWAY
+                    );
+                    return;
+                }
+            }
             $this->response(
                 array(
                     'status' => TRUE,
