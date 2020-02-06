@@ -118,7 +118,7 @@ class Product extends REST_Controller
             );
             return;
         }
-        if($this->product_model->is_not_exist($id)){
+        if($this->product_model->is_not_exists($id)){
             $this->response(
                 array(
                     'status' => FALSE,
@@ -131,7 +131,7 @@ class Product extends REST_Controller
 
         $datas = array();
         if(isset($category_id)){
-            if($this->category_model->is_not_exist($category_id)){
+            if($this->category_model->is_not_exists($category_id)){
                 $this->response(
                     array(
                         'status' => FALSE,
@@ -139,8 +139,8 @@ class Product extends REST_Controller
                     ),REST_Controller::HTTP_BAD_REQUEST
                 );
                 return;
-            } else if($this->db->query("SELECT * FROM category WHERE id={$id} AND category_id={$category_id}")->num_rows() == 0){
-                array_merge($datas, array('category_id' => $category_id));
+            } else if($this->db->query("SELECT * FROM product WHERE id={$id} AND category_id={$category_id}")->num_rows() == 0){
+                $datas = array_merge($datas, array('category_id' => $category_id));
             }
         }
 
@@ -171,7 +171,10 @@ class Product extends REST_Controller
             $datas = array_merge($datas, array('bottom_price' => $bottom_price));
         }
 
-   
+        // $this->response($datas);
+        // return;
+
+        
         // if (
         //     !isset($id) || !isset($name) || !isset($category_id) || !isset($description) || !isset($stock) ||
         //     !isset($unit_id) || !isset($open_price) || !isset($bottom_price)
@@ -253,6 +256,7 @@ class Product extends REST_Controller
                 array(
                     'status' => FALSE,
                     'message' => $this::DELETE_FAILED_MESSAGE
+
                 ),
                 REST_Controller::HTTP_BAD_GATEWAY
             );
