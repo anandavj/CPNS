@@ -21,7 +21,7 @@ class Task_model extends CI_Model{
             $actions = array();
             $result = $this->db->get_where('task', "modul='{$row['modul']}'");
             foreach($result->result_array() as $action){
-                array_push($actions, $action['action']);
+                array_push($actions, $action);
             }
             array_push($array, array(
                 'modul' => $row['modul'],
