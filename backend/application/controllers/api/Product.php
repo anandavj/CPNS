@@ -108,62 +108,94 @@ class Product extends REST_Controller
         $open_price = $this->put('openPrice');
         $bottom_price = $this->put('bottomPrice');
 
-        if (
-            !isset($id) || !isset($name) || !isset($category_id) || !isset($description) || !isset($stock) ||
-            !isset($unit_id) || !isset($open_price) || !isset($bottom_price)
-        ) {
-            $error_parameters = [];
-            if (!isset($name)) array_push($error_parameters, 'name');
-            if (!isset($category_id)) array_push($error_parameters, 'categoryId');
-            if (!isset($description)) array_push($error_parameters, 'description');
-            if (!isset($stock)) array_push($error_parameters, 'stock');
-            if (!isset($unit_id)) array_push($error_parameters, 'unitId');
-            if (!isset($open_price)) array_push($error_parameters, 'openPrice');
-            if (!isset($bottom_price)) array_push($error_parameters, 'bottomPrice');
+        if(!isset($id)){
             $this->response(
                 array(
                     'status' => FALSE,
-                    'message' => $this::REQUIRED_PARAMETER_MESSAGE . implode(', ', $error_parameters)
+                    'message' => $this::REQUIRED_PARAMETER_MESSAGE." id"
+                ),
+                REST_Controller::HTTP_BAD_REQUEST
+            );
+            return;
+        }
+        if($this->product_model->is_not_exist($id)){
+            $this->response(
+                array(
+                    'status' => FALSE,
+                    'message' => $this::INVALID_ID_MESSAGE. " id does not exist"
                 ),
                 REST_Controller::HTTP_BAD_REQUEST
             );
             return;
         }
 
-        if ($this->category_model->is_not_exists($category_id)) {
-            $this->response(
-                array(
-                    'status' => FALSE,
-                    'message' => $this::INVALID_ID_MESSAGE . " categoryId does not exist"
-                ),
-                REST_Controller::HTTP_BAD_REQUEST
-            );
-            return;
-        
-        }
-        if ($this->unit_model->is_not_exists($unit_id)) {
-            $this->response(
-                array(
-                    'status' => FALSE,
-                    'message' => $this::INVALID_ID_MESSAGE . " unitId does not exist"
-                ),
-                REST_Controller::HTTP_BAD_REQUEST
-            );
-            return;
+        $datas = array();
+        if(isset($category_id)){
+            if($this->category_model->is_not_exist($category_id)){
+                $this->response(
+                    array(
+                        'status' => FALSE,
+                        'message' => $this::INVALID_ID_MESSAGE." categoryId does not exist"
+                    ),REST_Controller::HTTP_BAD_REQUEST
+                );
+                return;
+            } else if($this->db->query("SELECT * FROM category WHERE id={$id} AND category_id={$category_id}")->num_rows() == 0){
+                array_merge($datas, array('category_id' => $category_id));
+            }
         }
 
-        if ($this->product_model->is_not_exists($id)) {
-            $this->response(
-                array(
-                    'status' => FALSE,
-                    'message' => $this::INVALID_ID_MESSAGE . " id does not exist"
-                ),
-                REST_Controller::HTTP_BAD_REQUEST
-            );
-            return;
+        if(isset($unit_id)){
+            if($this->unit_model->is_not_exist($unit_id)){
+                $this->response(
+                    array(
+                        'status' => FALSE,
+                        'message' => $this::INVALID_ID_MESSAGE." unitId does not exist"
+                    ),REST_Controller::HTTP_BAD_REQUEST
+                );
+                return;
+            } else if($this->db->query("SELECT * FROM unit WHERE id={$id} AND unit_id={$unit_id}")->num_rows() == 0){
+                $datas = array_merge($datas, array('unit_id' => $unit_id));
+            }
         }
 
-        if ($this->product_model->update_product($id, $name, $category_id, $description, $stock, $unit_id, $open_price, $bottom_price)) {
+        if(isset($description)){
+            $datas = array_merge($datas, array('description' => $description));
+        }
+        if(isset($stock)){
+            $datas = array_merge($datas, array('stock' => $stock));
+        }
+        if(isset($open_price)){
+            $datas = array_merge($datas, array('open_price' => $open_price));
+        }
+        if(isset($bottom_price)){
+            $datas = array_merge($datas, array('bottom_price' => $bottom_price));
+        }
+
+   
+        // if (
+        //     !isset($id) || !isset($name) || !isset($category_id) || !isset($description) || !isset($stock) ||
+        //     !isset($unit_id) || !isset($open_price) || !isset($bottom_price)
+        // ) {
+        //     $error_parameters = [];
+        //     if (!isset($name)) array_push($error_parameters, 'name');
+        //     if (!isset($category_id)) array_push($error_parameters, 'categoryId');
+        //     if (!isset($description)) array_push($error_parameters, 'description');
+        //     if (!isset($stock)) array_push($error_parameters, 'stock');
+        //     if (!isset($unit_id)) array_push($error_parameters, 'unitId');
+        //     if (!isset($open_price)) array_push($error_parameters, 'openPrice');
+        //     if (!isset($bottom_price)) array_push($error_parameters, 'bottomPrice');
+        //     $this->response(
+        //         array(
+        //             'status' => FALSE,
+        //             'message' => $this::REQUIRED_PARAMETER_MESSAGE . implode(', ', $error_parameters)
+        //         ),
+        //         REST_Controller::HTTP_BAD_REQUEST
+        //     );
+        //     return;
+        // }
+
+
+        if ($this->product_model->update_product($id, $datas)) {
             $this->response(
                 array(
                     'status' => TRUE,

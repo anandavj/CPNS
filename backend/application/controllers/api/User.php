@@ -76,15 +76,16 @@ class User extends REST_Controller
                 $this->response(
                     array(
                         'status' => FALSE,
-                        'message' => $this::INSERT_FAILED_MESSAGE." Details: create user task failed"
-                    ),REST_Controller::HTTP_BAD_GATEWAY
+                        'message' => $this::INSERT_FAILED_MESSAGE . " Details: create user task failed"
+                    ),
+                    REST_Controller::HTTP_BAD_GATEWAY
                 );
             }
         } else {
             $this->response(
                 array(
                     'status' => FALSE,
-                    'message' => $this::INSERT_FAILED_MESSAGE." Details: create user failed"
+                    'message' => $this::INSERT_FAILED_MESSAGE . " Details: create user failed"
                 ),
                 REST_Controller::HTTP_BAD_GATEWAY
             );
@@ -106,7 +107,6 @@ class User extends REST_Controller
         $name = $this->put('name');
         $phone = $this->put('phone');
         $address = $this->put('address');
-        $uid = $this->put('uid');
 
 
         if (!isset($id)) {
@@ -146,7 +146,7 @@ class User extends REST_Controller
                 return;
             } else if ($this->db->query("SELECT * FROM user WHERE id ='{$id}' AND user_task_group_id='{$user_task_group_id}'")->num_rows() == 0) {
                 $datas = array_merge($datas, array('user_task_group_id' => $user_task_group_id));
-                $update_user_task = 1;           
+                $update_user_task = 1;
             }
         }
         if (isset($name)) {
@@ -160,20 +160,20 @@ class User extends REST_Controller
         }
 
         if ($this->user_model->update_user($id, $datas)) {
-            if($update_user_task){
+            if ($update_user_task) {
                 $result = $this->group_task_model->get_group_task_where($user_task_group_id);
                 $tasks = [];
-                foreach($result as $row){
+                foreach ($result as $row) {
                     array_push($tasks, $row['task_id']);
                 }
                 // $this->response($tasks);
                 // return;
-                
-                if(!$this->user_task_model->update_user_task($id, $tasks)){
+
+                if (!$this->user_task_model->update_user_task($id, $tasks)) {
                     $this->response(
                         array(
                             'status' => FALSE,
-                            'message' =>$this::UPDATE_FAILED_MESSAGE." Details: user_task_group_id updated but failed on update user_task"
+                            'message' => $this::UPDATE_FAILED_MESSAGE . " Details: user_task_group_id updated but failed on update user_task"
                         ),
                         REST_Controller::HTTP_BAD_GATEWAY
                     );
