@@ -124,7 +124,18 @@
                                                 </v-col>
                                             </v-row>
                                             <v-row justify="center">
-                                                <v-data-table></v-data-table>
+                                                <v-col cols="12">
+                                                    <v-data-table
+                                                    :headers="suratJalanDetailHeaders"
+                                                    :items="suratJalanDetail"
+                                                    :disable-filtering="true"
+                                                    :disable-sort="true"
+                                                    :hide-default-footer="true"
+                                                    no-data-text="Tidak ada Barang yang Terdaftar"
+                                                    class="font-regular font-weight-light"
+                                                >
+                                                </v-data-table>
+                                                </v-col>
                                             </v-row>
                                         </v-container>
                                     </v-card>
@@ -154,6 +165,12 @@ export default {
     name: 'SuratJalan',
     data() {
         return {
+            suratJalanDetailHeaders: [
+                {text:'Nama Barang', value:'namaBarang'},
+                {text:'Qty', value:'quantity'},
+                {text:'Satuan', value:'satuan'},
+                {text:'Keterangan', value:'keterangan'}
+            ],
             suratJalans: [
                 {nomor:'XxxxX',tanggal:'20 Januari 2020',status:'Pengiriman'}
             ],
@@ -161,6 +178,11 @@ export default {
                 {nomor:'XxxxX',tanggal:'20 Januari 2020',status:'Selesai'}
             ],
             surat: {
+                nomor:'',
+                tanggal:'',
+                status:''
+            },
+            suratDefault: {
                 nomor:'',
                 tanggal:'',
                 status:''
@@ -184,6 +206,13 @@ export default {
             }
             this.surat = Object.assign({},item)
             this.popupDetails = true
+        },
+        close() {
+            if(this.popupDetails) {
+                this.selectedIndex = null
+                this.surat = Object.assign({},this.suratDefault)
+                this.popupDetails = false
+            }
         }
     },
 
