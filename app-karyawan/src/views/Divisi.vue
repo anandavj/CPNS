@@ -42,8 +42,8 @@
                                                 <v-expansion-panel-content v-for="(permissionList,idx) in permission.action" :key="idx">
                                                     <v-checkbox
                                                         v-model="divisi.permissions"
-                                                        :label="permissionList"
-                                                        :value="permissionList"
+                                                        :label="permissionList.actionName"
+                                                        :value="permissionList.id"
                                                         class="font-weight-light my-n3"
                                                         color="accent"
                                                     />
@@ -87,6 +87,7 @@
                 :mobile-breakpoint="1"
                 :disable-sort="true"
                 :hide-default-footer="true"
+                :loading="loadingListDivisi"
                 no-data-text="Belum ada Divisi yang terdaftar"
                 no-results-text="Divisi tidak ditemukan"
                 class="font-regular font-weight-light"
@@ -149,8 +150,8 @@
                                             <v-expansion-panel-content v-for="(permissionList,idx) in permission.action" :key="idx">
                                                 <v-checkbox
                                                     v-model="divisi.permissions"
-                                                    :label="permissionList"
-                                                    :value="permissionList"
+                                                    :label="permissionList.actionName"
+                                                    :value="permissionList.id"
                                                     class="font-weight-light my-n3"
                                                     color="accent"
                                                 />
@@ -192,8 +193,8 @@
                                             <v-expansion-panel-content v-for="(permissionList,idx) in permission.action" :key="idx">
                                                 <v-checkbox
                                                     v-model="divisi.permissions"
-                                                    :label="permissionList"
-                                                    :value="permissionList"
+                                                    :label="permissionList.actionName"
+                                                    :value="permissionList.id"
                                                     class="font-weight-light my-n3"
                                                     color="accent"
                                                 />
@@ -293,12 +294,12 @@ export default {
             divisis: [],
             permissions: [
                 {modul:'Barang', action: [
-                    'Add Barang',
-                    'Read Barang'
+                    {id:0,actionName:'Add Barang'},
+                    {id:1,actionName:'Read Barang'}
                 ]},
                 {modul:'Karyawan', action: [
-                    'Add Karyawan',
-                    'Read Karyawan'
+                    {id:2,actionName:'Add Karyawan'},
+                    {id:3,actionName:'Read Karyawan'}
                 ]}
             ],
             divisi: {
@@ -314,6 +315,7 @@ export default {
             panel: [],
             searchDivisi:'',
             loadingAddNewDivisi:false,
+            loadingListDivisi:true,
             popUpDetails: false,
             popUpNew: false,
             popUpEdit: false,
@@ -327,6 +329,7 @@ export default {
         get(){
             this.$store.dispatch('getAllUserTaskGroup').then(userTaskGroup => {
                 this.divisis = userTaskGroup
+                this.loadingListDivisi = false
             })
         },
         details(item) {
