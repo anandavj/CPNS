@@ -1,11 +1,12 @@
 import axios from 'axios';
 
-const table_name = "user_task_group";
+const tableName = "user_task_group"
 
 const userTaskGroup = {
     state:{
         id: null,
-        name: null
+        name: null,
+        permissions: []
     },
     mutations:{
         setNewUserTaskGroup(state){
@@ -21,12 +22,15 @@ const userTaskGroup = {
         },
         setUserTaskGroupName(state, value){
             state.name = value
+        },
+        setPermissions(state, value){
+            state.permissions.push(value)
         }
     },
     actions: {
         insertUserTaskGroup(){
             return new Promise((resolve, reject) => {
-                axios.post(table_name, this.state.userTaskGroup)
+                axios.post(tableName, this.state.userTaskGroup)
                 .then(() => {
                     resolve(this.state.insertSuccessMessage);
                 })
@@ -37,7 +41,7 @@ const userTaskGroup = {
         },
         getAllUserTaskGroup(){
             return new Promise((resolve, reject) => {
-                axios.get(table_name)
+                axios.get(tableName)
                 .then(response => {
                     resolve(response.data);
                 })
@@ -48,7 +52,7 @@ const userTaskGroup = {
         },
         updateUserTaskGroup(){
             return new Promise((resolve, reject) => {
-                axios.put(table_name, this.state.userTaskGroup)
+                axios.put(tableName, this.state.userTaskGroup)
                 .then(() => {
                     resolve(this.state.insertSuccessMessage);
                 })
@@ -59,7 +63,7 @@ const userTaskGroup = {
         },
         deleteUserTaskGroup(){
             return new Promise((resolve, reject) => {
-                axios.delete(table_name, {params: {id: this.state.userTaskGroup.id}})
+                axios.delete(tableName, {params: {id: this.state.userTaskGroup.id}})
                 .then(() => {
                     resolve(this.state.insertSuccessMessage);
                 })

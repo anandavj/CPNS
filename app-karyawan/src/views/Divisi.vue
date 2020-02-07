@@ -42,7 +42,7 @@
                                                 <v-expansion-panel-content v-for="(permissionList,idx) in permission.action" :key="idx">
                                                     <v-checkbox
                                                         v-model="divisi.permissions"
-                                                        :label="permissionList.actionName"
+                                                        :label="permissionList.label"
                                                         :value="permissionList.id"
                                                         class="font-weight-light my-n3"
                                                         color="accent"
@@ -150,7 +150,7 @@
                                             <v-expansion-panel-content v-for="(permissionList,idx) in permission.action" :key="idx">
                                                 <v-checkbox
                                                     v-model="divisi.permissions"
-                                                    :label="permissionList.actionName"
+                                                    :label="permissionList.label"
                                                     :value="permissionList.id"
                                                     class="font-weight-light my-n3"
                                                     color="accent"
@@ -193,7 +193,7 @@
                                             <v-expansion-panel-content v-for="(permissionList,idx) in permission.action" :key="idx">
                                                 <v-checkbox
                                                     v-model="divisi.permissions"
-                                                    :label="permissionList.actionName"
+                                                    :label="permissionList.label"
                                                     :value="permissionList.id"
                                                     class="font-weight-light my-n3"
                                                     color="accent"
@@ -293,14 +293,20 @@ export default {
             ],
             divisis: [],
             permissions: [
-                {modul:'Barang', action: [
-                    {id:2,actionName:'Add Barang'},
-                    {id:3,actionName:'Read Barang'}
-                ]},
-                {modul:'Karyawan', action: [
-                    {id:2,actionName:'Add Karyawan'},
-                    {id:3,actionName:'Read Karyawan'}
-                ]}
+                {
+                    modul:'Barang', 
+                    action: [
+                        {id:2,label:'Add Barang'},
+                        {id:3,label:'Read Barang'}
+                    ]
+                },
+                {
+                    modul:'Karyawan', 
+                    action: [
+                        {id:2,label:'Add Karyawan'},
+                        {id:3,label:'Read Karyawan'}
+                    ]
+                }
             ],
             divisi: {
                 id:null,
@@ -328,8 +334,20 @@ export default {
     methods: {
         get(){
             this.$store.dispatch('getAllUserTaskGroup').then(userTaskGroup => {
+                userTaskGroup.forEach(userTaskGroupElement => {
+                    userTaskGroupElement.permissions = []
+                    this.$store.commit('setUserTaskGroupId', userTaskGroupElement.id)
+                    this.$store.dispatch('getGroupTaskByUserTaskGroupId').then(task => {
+                        task.forEach(taskElement => {
+                            userTaskGroupElement.permissions.push(taskElement.id)
+                        });
+                    })
+                })
                 this.divisis = userTaskGroup
                 this.loadingListDivisi = false
+            })
+            this.$store.dispatch('getAllTask').then(task => {
+                this.permissions = task
             })
         },
         details(item) {
@@ -355,6 +373,7 @@ export default {
         },
         editDivisi(item) {
             this.$store.commit('setUserTaskGroup', item)
+            this.$store.commit('setTaskId', item.permissions)
             this.popUpEdit = true
         },
         confirmDeleteDivisi(item){
