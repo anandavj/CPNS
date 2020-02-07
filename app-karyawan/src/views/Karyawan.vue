@@ -31,19 +31,32 @@
                         <v-form ref="form">
                             <v-card-text>
                                 <v-row>
+                                    <v-col cols="12">
+                                        <v-text-field color="accent" label="Nama" v-model="karyawan.nama" :rules="nameRules"/>
+                                    </v-col>
                                     <v-col cols="6">
                                         <v-text-field color="accent" label="Email" v-model="karyawan.email" :rules="emailRules"/>
                                     </v-col>
                                     <v-col cols="6">
-                                        <v-text-field color="accent" label="Nama" v-model="karyawan.nama" :rules="nameRules"/>
+                                        <v-text-field 
+                                            color="accent"
+                                            :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                                            :rules="passwordRules"
+                                            :type="showPassword ? 'text' : 'password'"
+                                            v-model="karyawan.password"
+                                            label="Password"
+                                            hint="Minimal 8 Karakter"
+                                            class="input-group--focused"
+                                            @click:append="showPassword = !showPassword"
+                                        />
                                     </v-col>
                                     <v-col cols="6">
                                         <v-text-field color="accent" label="Tempat Lahir" v-model="karyawan.tempatLahir" :rules="tempatLahirRules"/>
                                     </v-col>
                                     <v-col cols="6">
                                         <v-menu
-                                            ref="datePickerMenu"
-                                            v-model="datePickerMenu"
+                                            ref="datePickerMenuAdd"
+                                            v-model="datePickerMenuAdd"
                                             :close-on-content-click="false"
                                             :return-value.sync="karyawan.tanggalLahir"
                                             transition="scale-transition"
@@ -62,8 +75,8 @@
                                             </template>
                                             <v-date-picker v-model="karyawan.tanggalLahir" no-title scrollable>
                                                 <v-spacer></v-spacer>
-                                                <v-btn text color="primary" @click="datePickerMenu = false">Cancel</v-btn>
-                                                <v-btn text color="primary" @click="$refs.datePickerMenu.save(karyawan.tanggalLahir)">OK</v-btn>
+                                                <v-btn text color="primary" @click="datePickerMenuAdd = false">Cancel</v-btn>
+                                                <v-btn text color="primary" @click="$refs.datePickerMenuAdd.save(karyawan.tanggalLahir)">OK</v-btn>
                                             </v-date-picker>
                                             </v-menu>
                                     </v-col>
@@ -216,7 +229,7 @@
                                         >
                                         <template v-slot:activator="{ on }">
                                             <v-text-field
-                                                color="accent"
+                                            color="accent"
                                             v-model="karyawan.tanggalLahir"
                                             label="Tanggal Lahir"
                                             prepend-icon="mdi-calendar"
@@ -430,15 +443,16 @@ export default {
     data() {
         return {
             karyawans: [
-                {id:1, email:'ananda@gmail.com', nama:'Mahendra Fajar', divisi:'Gudang', tempatLahir:'Denpasar', tanggalLahir:'27 April 1999', agama:'Islam', status:'Belum Menikah', Alamat:'Jalan', noTelp:'08180', permissions: []},
-                {id:2, email:'ananda@gmail.com', nama:'Ananda Vijaya', divisi:'Gudang', tempatLahir:'Denpasar', tanggalLahir:'27 April 1999', agama:'Islam', status:'Belum Menikah', Alamat:'Jalan', noTelp:'08180', permissions: []},
-                {id:3, email:'ananda@gmail.com', nama:'Satria Kemal', divisi:'Gudang', tempatLahir:'Denpasar', tanggalLahir:'27 April 1999', agama:'Islam', status:'Belum Menikah', Alamat:'Jalan', noTelp:'08180', permissions: []},
+                {id:1, email:'ananda@gmail.com', password:'coreofthecore', nama:'Mahendra Fajar', divisi:'Gudang', tempatLahir:'Denpasar', tanggalLahir:'1999-04-27', agama:'Islam', status:'Belum Menikah', Alamat:'Jalan', noTelp:'08180', permissions: []},
+                {id:2, email:'ananda@gmail.com', password:'coreofthecore', nama:'Ananda Vijaya', divisi:'Gudang', tempatLahir:'Denpasar', tanggalLahir:'1999-04-27', agama:'Islam', status:'Belum Menikah', Alamat:'Jalan', noTelp:'08180', permissions: []},
+                {id:3, email:'ananda@gmail.com', password:'coreofthecore', nama:'Satria Kemal', divisi:'Gudang', tempatLahir:'Denpasar', tanggalLahir:'1999-04-27', agama:'Islam', status:'Belum Menikah', Alamat:'Jalan', noTelp:'08180', permissions: []},
             ],
             agamas: ['Islam','Kristen Protestan','Katolik','Hindu','Buddha','Lainnya..'],
             status: ['Belum Menikah','Menikah','Lainnya..'],
             karyawan: {
                 id:null,
                 email:'',
+                password: '',
                 nama:'',
                 divisi:'', 
                 tempatLahir:'',
@@ -452,6 +466,7 @@ export default {
             karyawanDefault: {
                 id:null,
                 email:'',
+                password: '',
                 nama:'',
                 divisi:'', 
                 tempatLahir:'',
@@ -475,7 +490,9 @@ export default {
             listDivisi:[],
             tempNamaKaryawan:'',
             searchKaryawan:'',
+            showPassword: false,
             popUpNew: false,
+            datePickerMenuAdd: false,
             datePickerMenu: false,
             popupDetails: false,
             popUpEdit: false,
@@ -494,6 +511,10 @@ export default {
             noTelpRules: [
                 v => !!v || 'Nomor HP Harus Diisi',
                 v => (v && v.length >= 8) || 'Nomor HP Tidak Valid',
+            ],
+            passwordRules: [
+                v => !!v || 'Password Harus Diisi',
+                v => v.length >= 8 || 'Minimal 8 Karakter',
             ],
             // -----
             editedIndex: null       
@@ -516,14 +537,17 @@ export default {
                     this.popUpEdit = false
                     this.karyawan = Object.assign({},this.karyawanDefault)
                     this.selectedIndex = -1
+                    this.$refs.form.reset()
                 } else {
                     if(this.popUpConfirmSave) {
                         this.popUpConfirmSave = false
                         this.popUpEdit = true
+                        this.$refs.form.reset()
                     } else {
                         if(this.popUpNew) {
                             this.popUpNew = false
                             this.karyawan = Object.assign({},this.karyawanDefault)
+                            this.$refs.form.reset()
                         }
                     }
                 }
