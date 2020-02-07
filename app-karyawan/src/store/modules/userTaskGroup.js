@@ -6,16 +6,18 @@ const userTaskGroup = {
     state:{
         id: null,
         name: null,
-        permissions: []
+        taskId: []
     },
     mutations:{
         setNewUserTaskGroup(state){
             state.id = null
             state.name = null
+            state.taskId = []
         },
         setUserTaskGroup(state, value){
             state.id = value.id
             state.name = value.name
+            state.taskId = value.taskId
         },
         setUserTaskGroupId(state, value){
             state.id = value
@@ -23,16 +25,17 @@ const userTaskGroup = {
         setUserTaskGroupName(state, value){
             state.name = value
         },
-        setPermissions(state, value){
-            state.permissions.push(value)
+        setTaskId(state, value){
+            state.taskId = value
         }
     },
     actions: {
         insertUserTaskGroup(){
             return new Promise((resolve, reject) => {
                 axios.post(tableName, this.state.userTaskGroup)
-                .then(() => {
-                    resolve(this.state.insertSuccessMessage);
+                .then(response => {
+                    this.state.userTaskGroup.id = response.data.id
+                    resolve(this.state.insertSuccessMessage)
                 })
                 .catch(error => {
                     if(error.response.status == 500) reject(this.state.serverErrorMessage)
@@ -54,7 +57,7 @@ const userTaskGroup = {
             return new Promise((resolve, reject) => {
                 axios.put(tableName, this.state.userTaskGroup)
                 .then(() => {
-                    resolve(this.state.insertSuccessMessage);
+                    resolve(this.state.updateSuccessMessage);
                 })
                 .catch(error => {
                     if(error.response.status == 500) reject(this.state.serverErrorMessage)
@@ -65,7 +68,7 @@ const userTaskGroup = {
             return new Promise((resolve, reject) => {
                 axios.delete(tableName, {params: {id: this.state.userTaskGroup.id}})
                 .then(() => {
-                    resolve(this.state.insertSuccessMessage);
+                    resolve(this.state.deleteSuccessMessage);
                 })
                 .catch(error => {
                     if(error.response.status == 500) reject(this.state.serverErrorMessage)

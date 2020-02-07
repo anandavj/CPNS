@@ -37,11 +37,11 @@
                                     <v-col cols="12">
                                         <div class="title mt-n3">Permission</div>
                                         <v-expansion-panels accordion class="elevation-0" multiple="true" v-model="panel">
-                                            <v-expansion-panel v-for="(permission,index) in permissions" :key="index">
+                                            <v-expansion-panel v-for="(permission,index) in task" :key="index">
                                                 <v-expansion-panel-header>{{permission.modul}}</v-expansion-panel-header>
                                                 <v-expansion-panel-content v-for="(permissionList,idx) in permission.action" :key="idx">
                                                     <v-checkbox
-                                                        v-model="divisi.permissions"
+                                                        v-model="taskId"
                                                         :label="permissionList.label"
                                                         :value="permissionList.id"
                                                         class="font-weight-light my-n3"
@@ -145,11 +145,11 @@
                                 <v-col cols="12">
                                     <div class="title mt-n3">Permission</div>
                                     <v-expansion-panels accordion class="elevation-0" multiple="true" v-model="panel">
-                                        <v-expansion-panel v-for="(permission,index) in permissions" :key="index">
+                                        <v-expansion-panel v-for="(permission,index) in task" :key="index">
                                             <v-expansion-panel-header>{{permission.modul}}</v-expansion-panel-header>
                                             <v-expansion-panel-content v-for="(permissionList,idx) in permission.action" :key="idx">
                                                 <v-checkbox
-                                                    v-model="divisi.permissions"
+                                                    v-model="taskId"
                                                     :label="permissionList.label"
                                                     :value="permissionList.id"
                                                     class="font-weight-light my-n3"
@@ -188,11 +188,11 @@
                                 <v-col cols="12">
                                     <div class="title mt-n3">Permission</div>
                                     <v-expansion-panels accordion class="elevation-0" multiple="true" v-model="panel">
-                                        <v-expansion-panel v-for="(permission,index) in permissions" :key="index">
+                                        <v-expansion-panel v-for="(permission,index) in task" :key="index">
                                             <v-expansion-panel-header>{{permission.modul}}</v-expansion-panel-header>
                                             <v-expansion-panel-content v-for="(permissionList,idx) in permission.action" :key="idx">
                                                 <v-checkbox
-                                                    v-model="divisi.permissions"
+                                                    v-model="taskId"
                                                     :label="permissionList.label"
                                                     :value="permissionList.id"
                                                     class="font-weight-light my-n3"
@@ -292,7 +292,7 @@ export default {
                 {text:'', value:'actions'}
             ],
             divisis: [],
-            permissions: [
+            task: [
                 {
                     modul:'Barang', 
                     action: [
@@ -311,12 +311,12 @@ export default {
             divisi: {
                 id:null,
                 nama:'',
-                permissions: []
+                taskId: []
             },
             divisiDefault: {
                 id:null,
                 nama:'',
-                permissions: []
+                taskId: []
             },
             panel: [],
             searchDivisi:'',
@@ -335,11 +335,11 @@ export default {
         get(){
             this.$store.dispatch('getAllUserTaskGroup').then(userTaskGroup => {
                 userTaskGroup.forEach(userTaskGroupElement => {
-                    userTaskGroupElement.permissions = []
+                    userTaskGroupElement.taskId = []
                     this.$store.commit('setUserTaskGroupId', userTaskGroupElement.id)
-                    this.$store.dispatch('getGroupTaskByUserTaskGroupId').then(task => {
-                        task.forEach(taskElement => {
-                            userTaskGroupElement.permissions.push(taskElement.id)
+                    this.$store.dispatch('getGroupTaskByUserTaskGroupId').then(groupTask => {
+                        groupTask.task.forEach(taskElement => {
+                            userTaskGroupElement.taskId.push(taskElement.taskId)
                         });
                     })
                 })
@@ -347,7 +347,7 @@ export default {
                 this.loadingListDivisi = false
             })
             this.$store.dispatch('getAllTask').then(task => {
-                this.permissions = task
+                this.task = task
             })
         },
         details(item) {
@@ -357,23 +357,26 @@ export default {
         },
         saveNewDivisi() {
             this.loadingAddNewDivisi = true
-            this.$store.dispatch('insertUserTaskGroup').then(response => {
-                this.loadingAddNewDivisi = false
-                console.log(response)
-                this.snackbarColor = 'success'
-                this.snackbarMessage = response
+            this.$store.dispatch('insertUserTaskGroup').then(() => {
+                this.$store.dispatch('insertGroupTask').then(response => {
+                    this.loadingAddNewDivisi = false
+                    this.snackbarColor = 'success'
+                    this.snackbarMessage = response
+                }).catch(error => {
+                    this.snackbarColor = 'error'
+                    this.snackbarMessage = error
+                }).finally(() => {
+                    this.snackbar = true
+                    this.get()
+                    this.close()
+                })
             }).catch(error => {
                 this.snackbarColor = 'error'
                 this.snackbarMessage = error
-            }).finally(() => {
-                this.snackbar = true
-                this.get()
-                this.close()
-            });
+            })
         },
         editDivisi(item) {
             this.$store.commit('setUserTaskGroup', item)
-            this.$store.commit('setTaskId', item.permissions)
             this.popUpEdit = true
         },
         confirmDeleteDivisi(item){
@@ -392,11 +395,10 @@ export default {
             // let obj = this.divisis.find( ({id}) => id === this.divisi.id )
             // //assign all the value of the property of obj2 in karyawans with karyawan
             // this.divisis[this.divisis.indexOf(obj)].nama = this.divisi.name
-            // this.divisis[this.divisis.indexOf(obj)].permissions = this.divisi.permissions
+            // this.divisis[this.divisis.indexOf(obj)].task = this.divisi.task
             // this.popUpConfirmSave = false
             // this.divisi = Object.assign({},this.divisiDefault)
             this.$store.dispatch('updateUserTaskGroup').then(response => {
-                console.log(response)
                 this.snackbarColor = 'success'
                 this.snackbarMessage = response
             }).catch(error => {
@@ -410,7 +412,6 @@ export default {
         },
         deleteDivisi() {
             this.$store.dispatch('deleteUserTaskGroup').then(response => {
-                console.log(response)
                 this.snackbarColor = 'success'
                 this.snackbarMessage = response
             }).catch(error => {
@@ -458,6 +459,11 @@ export default {
         name: {
             get(){ return this.$store.state.userTaskGroup.name },
             set(value){ this.$store.commit('setUserTaskGroupName', value)}
+        },
+
+        taskId: {
+            get(){ return this.$store.state.userTaskGroup.taskId},
+            set(value) { this.$store.commit('setTaskId', value)}
         },
 
         //view Breakpoint
