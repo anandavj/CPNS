@@ -1,6 +1,6 @@
 <template>
   <v-layout column pa-md-3 pa-xs-0>
-    <!-- Search bar -->
+    <!-- Search bar
     <v-toolbar flat dense relative height="60">
       <v-layout row class="justify-start mt-5">
         <v-flex xs12 md4 class="mt-5">
@@ -17,7 +17,7 @@
           </div>
         </v-flex>
       </v-layout>
-    </v-toolbar>
+    </v-toolbar> -->
 
     <!-- carousel -->
     <v-layout row wrap justify-center class="ma-2">
@@ -143,7 +143,7 @@
 
     <!-- Product Card Contents -->
     <v-layout row wrap justify-space-around class="ma-3">
-      <v-flex xs12 md3 lg-3 v-for="i in 12" :key="i" class="product-card pa-2">
+      <v-flex xs12 md4 v-for="i in 12" :key="i" class="product-card pa-2">
         <!-- @click="showProduct = !showProduct"
           @mouseover="show = !show"
         @mouseleave="show = !show"-->
@@ -248,7 +248,7 @@ div.scrollmenu {
 .selected-product {
   position: -webkit-sticky;
   position: sticky;
-  top: 0;
+  top: 8%;
   z-index: 1;
   
 }

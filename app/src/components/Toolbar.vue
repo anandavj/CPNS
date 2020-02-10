@@ -1,6 +1,24 @@
 <template>
-  <v-app id="inspire" v-if="!this.$route.meta.drawer">
-    <v-navigation-drawer show-sm-and-up color="primary" dark
+ 
+
+  <v-card elevation="12" width="256" height="80vh" class="toolbar ma-12" flat>
+    <v-navigation-drawer floating permanent color="primary" dark>
+      <v-list dense rounded>
+        <v-list-item v-for="n in 13" :key="n" link>
+          <v-list-item-icon>
+            <v-icon>mdi-view-grid</v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-content>
+            <v-list-item-title>Kategori {{ n }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
+  </v-card>
+
+
+  <!-- <v-navigation-drawer show-sm-and-up color="primary" dark
       v-model="drawer"
       app
       clipped
@@ -18,7 +36,8 @@
         </v-list-item>
 
       </v-list>
-    </v-navigation-drawer>
+  </v-navigation-drawer>-->
+
   <!-- <div>
 
     <v-app-bar
@@ -33,27 +52,31 @@
       
       <v-toolbar-title>Buana Paksa Indonesia</v-toolbar-title>
     </v-app-bar>
-  </div> -->
-   
+  </div>-->
 
-   
-    <!-- <v-footer app color="primary" dark>
+  <!-- <v-footer app color="primary" dark>
       <span>&copy; {{ new Date().getFullYear() }}</span>
-    </v-footer> -->
-  </v-app>
+  </v-footer>-->
 </template>
 
 <script>
-  export default {
-    props: {
-      source: String,
-    },
-    data: () => ({
-        drawer: null,
-        
-    }),
-    created () {
-      this.$vuetify.theme.dark = false
-    },
+export default {
+  data() {
+    return {
+      items: [
+        { title: "Home", icon: "mdi-account" },
+        { title: "About", icon: "mdi-item" }
+      ]
+    };
   }
+};
 </script>
+
+<style scoped>
+.toolbar {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 15%;
+  z-index: 1;
+}
+</style>

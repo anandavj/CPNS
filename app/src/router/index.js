@@ -4,6 +4,10 @@ import Login from '../views/Login.vue'
 import Try from '../views/Try.vue'
 import Catalogue from '../views/Catalogue'
 import Home from '@/views/Home'
+import Admin from '@/views/Admin'
+import Barang from '@/views/Barang'
+import Kategori from '@/views/Kategori'
+import Unit from '@/views/Unit'
 
 Vue.use(VueRouter)
 
@@ -29,6 +33,37 @@ const routes = [
   {
     path: '/katalog',
     component: Catalogue,
+    meta:{
+      drawer: false
+    }
+  },
+  {
+    path: '/admin',
+    component: Admin,
+    meta:{
+      drawer: true
+    }
+  },
+  {
+    path: '/barang',
+    component: Barang,
+    meta:{
+      drawer: true
+    }
+  },
+  {
+    path: '/kategori',
+    component: Kategori,
+    meta:{
+      drawer: true
+    }
+  },
+  {
+    path: '/satuan',
+    component: Unit,
+    meta:{
+      drawer: true
+    }
   },
 
 ]

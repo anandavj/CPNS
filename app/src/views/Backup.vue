@@ -156,3 +156,49 @@ div.scrollmenu {
   overflow-y:auto;
 }
 </style>
+
+
+
+
+ <!-- <v-layout column>
+      <Searchbar class="bar"/>
+      <v-col>
+      <v-layout row wrap v-if="!this.$route.meta.drawer">
+        <v-flex md3 class="justify-center">
+          <Toolbar />
+        </v-flex>
+        <v-flex md9>
+          
+        <router-view></router-view>
+        </v-flex>
+      </v-layout>
+      <v-content v-if="this.$route.meta.drawer">
+        <v-container grid-list-xs>
+    -->
+
+    <!--
+        </v-container>
+      </v-content>  
+      </v-col>
+    </v-layout>-->
+
+    <!-- <Searchbar class="bar" v-if="!this.$route.meta.drawer" />
+    <v-content>
+      <v-layout row wrap v-if="!this.$route.meta.drawer">
+        <v-flex md3 class="justify-center">
+          <Toolbar />
+        </v-flex>
+        <v-flex md9>
+          
+        <router-view></router-view>
+        </v-flex>
+      </v-layout>
+      <v-content v-if="this.$route.meta.drawer">
+        <v-container grid-list-xs>
+          
+        <router-view></router-view>
+        </v-container>
+      </v-content>
+    </v-content>-->
+
+    <!-- </v-layout> -->
