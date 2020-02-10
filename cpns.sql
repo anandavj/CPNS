@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 06 Feb 2020 pada 04.38
+-- Waktu pembuatan: 10 Feb 2020 pada 02.59
 -- Versi server: 10.1.38-MariaDB
 -- Versi PHP: 7.3.3
 
@@ -60,8 +60,9 @@ CREATE TABLE `group_task` (
 INSERT INTO `group_task` (`id`, `user_task_group_id`, `task_id`) VALUES
 (10, 3, 4),
 (12, 3, 1),
-(16, 4, 1),
-(18, 4, 5);
+(29, 19, 5),
+(30, 20, 5),
+(31, 20, 4);
 
 -- --------------------------------------------------------
 
@@ -147,9 +148,9 @@ CREATE TABLE `task` (
 --
 
 INSERT INTO `task` (`id`, `modul`, `action`, `label`) VALUES
-(1, '0', 'add barang', ''),
-(4, '0', 'kamehameha', ''),
-(5, '0', 'rasengan', '');
+(1, 'Barang', 'add_barang', 'Add Barang'),
+(4, 'Jurus', 'kamehameha', 'Kamehameha'),
+(5, 'Jurus', 'rasengan', 'Rasengan');
 
 -- --------------------------------------------------------
 
@@ -191,9 +192,9 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `user_task_group_id`, `name`, `telephone`, `address`, `uid`) VALUES
-(1, 4, 'Mahendra Fakyu', '088423728248', 'Tirtoagung', 'asdasw32asds=='),
+(1, NULL, 'Mahendra Fakyu', '088423728248', 'Tirtoagung', 'asdasw32asds=='),
 (2, NULL, 'Ananda Vijaya', '085237238232', 'Ngesrep', 'asdaswudw002032asds=='),
-(3, 4, 'Satria Kemal', '089937473471', 'Banjarsari', 'awasiiaseao201e==');
+(3, NULL, 'Satria Kemal', '089937473471', 'Banjarsari', 'awasiiaseao201e==');
 
 -- --------------------------------------------------------
 
@@ -212,11 +213,7 @@ CREATE TABLE `user_task` (
 --
 
 INSERT INTO `user_task` (`id`, `user_id`, `task_id`) VALUES
-(1, 1, 1),
 (5, 2, 1),
-(8, 1, 5),
-(14, 3, 1),
-(16, 3, 5),
 (17, 2, 4);
 
 -- --------------------------------------------------------
@@ -236,7 +233,8 @@ CREATE TABLE `user_task_group` (
 
 INSERT INTO `user_task_group` (`id`, `name`) VALUES
 (3, 'shinobi'),
-(4, 'saiyan');
+(19, 'bikini bottoms'),
+(20, 'tembalang');
 
 -- --------------------------------------------------------
 
@@ -386,7 +384,7 @@ ALTER TABLE `category`
 -- AUTO_INCREMENT untuk tabel `group_task`
 --
 ALTER TABLE `group_task`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT untuk tabel `image`
@@ -440,7 +438,7 @@ ALTER TABLE `user_task`
 -- AUTO_INCREMENT untuk tabel `user_task_group`
 --
 ALTER TABLE `user_task_group`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT untuk tabel `warehouse`

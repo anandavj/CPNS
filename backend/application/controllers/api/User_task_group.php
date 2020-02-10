@@ -33,6 +33,7 @@ class User_task_group extends REST_Controller {
             $this->response(
                 array(
                     'status' => TRUE,
+                    'id' => $this->db->insert_id(),
                     'message' => $this::INSERT_SUCCESS_MESSSAGE
                 ),REST_Controller::HTTP_CREATED
             );

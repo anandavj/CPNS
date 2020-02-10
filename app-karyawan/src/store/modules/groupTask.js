@@ -31,6 +31,20 @@ const groupTask = {
                     if(error.response.status == 500) reject(this.state.serverErrorMessage)
                 })
             })
+        },
+        updateGroupTask(){
+            return new Promise((resolve, reject) => {
+                let data = {
+                    userTaskGroupId: this.state.userTaskGroup.id,
+                    taskId: this.state.userTaskGroup.taskId
+                }
+
+                axios.put(tableName, data).then(() => {
+                    resolve(this.state.insertSuccessMessage)
+                }).catch(error => {
+                    if(error.response.status == 500) reject(this.state.serverErrorMessage)
+                })
+            })
         }
     }
 }

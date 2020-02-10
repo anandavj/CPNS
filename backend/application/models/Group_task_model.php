@@ -7,7 +7,6 @@ class Group_task_model extends CI_Model
 
     public function insert_group_task($user_task_group_id, $task_id)
     {
-
         foreach ($task_id as $item) {
             $result = $this->db->get_where($this::TABLE_NAME, "task_id='{$item}' 
                 AND user_task_group_id='{$user_task_group_id}'")->num_rows();
@@ -32,22 +31,27 @@ class Group_task_model extends CI_Model
 
     public function get_group_task_where($user_task_group_id)
     {
-        return $this->db->get_where($this::TABLE_NAME, 'user_task_group_id =' .$user_task_group_id)->result_array();
-        // $this->db->select('group_task.user_task_group_id as ' . Schema::USER_TASK_GROUP_ID .
-        //     ', user_task_group.name, task.action');
-        // $this->db->from($this::TABLE_NAME);
-        // $this->db->join('user_task_group', 'group_task.user_task_group_id=user_task_group.id');
-        // $this->db->join('task', 'group_task.task_id=task.id');
-        // $this->db->where($this::TABLE_NAME . ".user_task_group_id='{$user_task_group_id}'");
+        $this->db->select('group_task.user_task_group_id as ' . Schema::USER_TASK_GROUP_ID .
+            ', user_task_group.name, task.*');
+        $this->db->from($this::TABLE_NAME);
+        $this->db->join('user_task_group', 'group_task.user_task_group_id=user_task_group.id');
+        $this->db->join('task', 'group_task.task_id=task.id');
+        $this->db->where($this::TABLE_NAME . ".user_task_group_id='{$user_task_group_id}'");
 
-        // $result = array();
-        // $action = array();
-        // foreach ($this->db->get()->result_array() as $row) {
-        //     $result[Schema::USER_TASK_GROUP_ID] = $row[Schema::USER_TASK_GROUP_ID];
-        //     array_push($action, $row['action']);
-        // }
-        // $result['action'] = $action;
-        // return $result;
+        $result = array();
+        $tasks = array();
+        foreach ($this->db->get()->result_array() as $row) {
+            $result[Schema::USER_TASK_GROUP_ID] = $row[Schema::USER_TASK_GROUP_ID];
+            $action = array(
+                'taskId' => $row['id'],
+                'modul' => $row['modul'],
+                'action' => $row['action'],
+                'label' => $row['label'],
+            );
+            array_push($tasks, $action);
+        }
+        $result['task'] = $tasks;
+        return $result;
     }
 
     public function is_not_exists($id)

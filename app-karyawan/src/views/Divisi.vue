@@ -398,9 +398,19 @@ export default {
             // this.divisis[this.divisis.indexOf(obj)].task = this.divisi.task
             // this.popUpConfirmSave = false
             // this.divisi = Object.assign({},this.divisiDefault)
-            this.$store.dispatch('updateUserTaskGroup').then(response => {
-                this.snackbarColor = 'success'
-                this.snackbarMessage = response
+            this.$store.dispatch('updateUserTaskGroup').then(() => {
+                this.$store.dispatch('insertGroupTask').then(response => {
+                    this.loadingAddNewDivisi = false
+                    this.snackbarColor = 'success'
+                    this.snackbarMessage = response
+                }).catch(error => {
+                    this.snackbarColor = 'error'
+                    this.snackbarMessage = error
+                }).finally(() => {
+                    this.snackbar = true
+                    this.get()
+                    this.close()
+                })
             }).catch(error => {
                 this.snackbarColor = 'error'
                 this.snackbarMessage = error
