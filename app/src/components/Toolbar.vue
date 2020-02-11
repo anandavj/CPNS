@@ -1,10 +1,10 @@
 <template>
  
 
-  <v-card elevation="12" width="256" height="80vh" class="toolbar ma-12" flat>
+  <v-card elevation="12" width="256" max-height="80vh" class="toolbar ma-12" flat>
     <v-navigation-drawer floating permanent color="primary" dark>
       <v-list dense rounded>
-        <v-list-item v-for="n in 13" :key="n" link>
+        <v-list-item v-for="n in 20" :key="n" link>
           <v-list-item-icon>
             <v-icon>mdi-view-grid</v-icon>
           </v-list-item-icon>
@@ -78,5 +78,10 @@ export default {
   position: sticky;
   top: 15%;
   z-index: 1;
+  overflow-y:auto;
+}
+
+.toolbar::-webkit-scrollbar{
+  display: none;
 }
 </style>

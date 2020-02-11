@@ -8,6 +8,7 @@ import Admin from '@/views/Admin'
 import Barang from '@/views/Barang'
 import Kategori from '@/views/Kategori'
 import Unit from '@/views/Unit'
+import Image from '@/views/Image'
 
 Vue.use(VueRouter)
 
@@ -61,6 +62,13 @@ const routes = [
   {
     path: '/satuan',
     component: Unit,
+    meta:{
+      drawer: true
+    }
+  },
+  {
+    path: '/gambar',
+    component: Image,
     meta:{
       drawer: true
     }
