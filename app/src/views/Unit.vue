@@ -13,11 +13,7 @@
           <v-spacer></v-spacer>
           <v-dialog v-model="dialog" max-width="500px">
             <v-card>
-              <v-card-title>
-                <span class="headline">{{ formTitle }}</span>
-              </v-card-title>
-
-              <v-card-text>
+                <v-card-text>
                 <v-container>
                   <v-row>
                     <v-col cols="12" sm="6" md="4">

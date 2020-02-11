@@ -37,21 +37,28 @@ export default {
           title: "Barang",
           subtitle: "Lihat list barang, dan pengaturan barang",
           icon: " mdi-cube-outline",
-          bgcolor: "blue",
+          bgcolor: "indigo darken-1",
           route: "/barang"
+        },
+        {
+          title: "Gambar",
+          subtitle: "Menambahkan gambar ke database",
+          icon: " mdi-file-image",
+          bgcolor: "indigo darken-2",
+          route: "/gambar"
         },
         {
           title: "Kategori",
           subtitle: "Lihat list kategori, dan pengaturan kategori",
           icon: "mdi-group",
-          bgcolor: "green",
+          bgcolor: "indigo darken-3",
           route: "/kategori"
         },
         {
           title: "Satuan",
           subtitle: "Lihat list satuan, dan pengaturan satuan",
           icon: "mdi-omega",
-          bgcolor: "indigo",
+          bgcolor: "indigo darken-4",
           route: "/satuan"
         }
       ]
