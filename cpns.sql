@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.5
+-- version 5.0.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 10 Feb 2020 pada 02.59
--- Versi server: 10.1.38-MariaDB
--- Versi PHP: 7.3.3
+-- Generation Time: Feb 11, 2020 at 04:48 AM
+-- Server version: 10.4.11-MariaDB
+-- PHP Version: 7.4.1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -25,7 +25,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `category`
+-- Table structure for table `category`
 --
 
 CREATE TABLE `category` (
@@ -34,7 +34,7 @@ CREATE TABLE `category` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data untuk tabel `category`
+-- Dumping data for table `category`
 --
 
 INSERT INTO `category` (`id`, `name`) VALUES
@@ -44,7 +44,7 @@ INSERT INTO `category` (`id`, `name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `group_task`
+-- Table structure for table `group_task`
 --
 
 CREATE TABLE `group_task` (
@@ -54,7 +54,7 @@ CREATE TABLE `group_task` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data untuk tabel `group_task`
+-- Dumping data for table `group_task`
 --
 
 INSERT INTO `group_task` (`id`, `user_task_group_id`, `task_id`) VALUES
@@ -67,7 +67,7 @@ INSERT INTO `group_task` (`id`, `user_task_group_id`, `task_id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `image`
+-- Table structure for table `image`
 --
 
 CREATE TABLE `image` (
@@ -79,7 +79,7 @@ CREATE TABLE `image` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `order_status`
+-- Table structure for table `order_status`
 --
 
 CREATE TABLE `order_status` (
@@ -90,7 +90,7 @@ CREATE TABLE `order_status` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `product`
+-- Table structure for table `product`
 --
 
 CREATE TABLE `product` (
@@ -105,7 +105,7 @@ CREATE TABLE `product` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data untuk tabel `product`
+-- Dumping data for table `product`
 --
 
 INSERT INTO `product` (`id`, `name`, `category_id`, `description`, `stock`, `unit_id`, `open_price`, `bottom_price`) VALUES
@@ -115,7 +115,7 @@ INSERT INTO `product` (`id`, `name`, `category_id`, `description`, `stock`, `uni
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `stock_record`
+-- Table structure for table `stock_record`
 --
 
 CREATE TABLE `stock_record` (
@@ -133,7 +133,7 @@ CREATE TABLE `stock_record` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `task`
+-- Table structure for table `task`
 --
 
 CREATE TABLE `task` (
@@ -144,7 +144,7 @@ CREATE TABLE `task` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data untuk tabel `task`
+-- Dumping data for table `task`
 --
 
 INSERT INTO `task` (`id`, `modul`, `action`, `label`) VALUES
@@ -155,7 +155,7 @@ INSERT INTO `task` (`id`, `modul`, `action`, `label`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `unit`
+-- Table structure for table `unit`
 --
 
 CREATE TABLE `unit` (
@@ -166,7 +166,7 @@ CREATE TABLE `unit` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data untuk tabel `unit`
+-- Dumping data for table `unit`
 --
 
 INSERT INTO `unit` (`id`, `name`, `abbreviation`, `description`) VALUES
@@ -175,7 +175,7 @@ INSERT INTO `unit` (`id`, `name`, `abbreviation`, `description`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `user`
+-- Table structure for table `user`
 --
 
 CREATE TABLE `user` (
@@ -184,22 +184,26 @@ CREATE TABLE `user` (
   `name` varchar(50) NOT NULL,
   `telephone` varchar(13) NOT NULL,
   `address` text NOT NULL,
-  `uid` varchar(50) NOT NULL
+  `uid` varchar(50) NOT NULL,
+  `birthPlace` varchar(40) NOT NULL,
+  `birthDate` date NOT NULL,
+  `religion` varchar(15) NOT NULL,
+  `status` varchar(15) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data untuk tabel `user`
+-- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`id`, `user_task_group_id`, `name`, `telephone`, `address`, `uid`) VALUES
-(1, NULL, 'Mahendra Fakyu', '088423728248', 'Tirtoagung', 'asdasw32asds=='),
-(2, NULL, 'Ananda Vijaya', '085237238232', 'Ngesrep', 'asdaswudw002032asds=='),
-(3, NULL, 'Satria Kemal', '089937473471', 'Banjarsari', 'awasiiaseao201e==');
+INSERT INTO `user` (`id`, `user_task_group_id`, `name`, `telephone`, `address`, `uid`, `birthPlace`, `birthDate`, `religion`, `status`) VALUES
+(1, NULL, 'Mahendra Fakyu', '088423728248', 'Tirtoagung', 'asdasw32asds==', '', '0000-00-00', '', ''),
+(2, NULL, 'Ananda Vijaya', '085237238232', 'Ngesrep', 'asdaswudw002032asds==', '', '0000-00-00', '', ''),
+(3, NULL, 'Satria Kemal', '089937473471', 'Banjarsari', 'awasiiaseao201e==', '', '0000-00-00', '', '');
 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `user_task`
+-- Table structure for table `user_task`
 --
 
 CREATE TABLE `user_task` (
@@ -209,7 +213,7 @@ CREATE TABLE `user_task` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data untuk tabel `user_task`
+-- Dumping data for table `user_task`
 --
 
 INSERT INTO `user_task` (`id`, `user_id`, `task_id`) VALUES
@@ -219,7 +223,7 @@ INSERT INTO `user_task` (`id`, `user_id`, `task_id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `user_task_group`
+-- Table structure for table `user_task_group`
 --
 
 CREATE TABLE `user_task_group` (
@@ -228,7 +232,7 @@ CREATE TABLE `user_task_group` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data untuk tabel `user_task_group`
+-- Dumping data for table `user_task_group`
 --
 
 INSERT INTO `user_task_group` (`id`, `name`) VALUES
@@ -239,7 +243,7 @@ INSERT INTO `user_task_group` (`id`, `name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `warehouse`
+-- Table structure for table `warehouse`
 --
 
 CREATE TABLE `warehouse` (
@@ -249,7 +253,7 @@ CREATE TABLE `warehouse` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data untuk tabel `warehouse`
+-- Dumping data for table `warehouse`
 --
 
 INSERT INTO `warehouse` (`id`, `name`, `address`) VALUES
@@ -259,7 +263,7 @@ INSERT INTO `warehouse` (`id`, `name`, `address`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `warehouse_product`
+-- Table structure for table `warehouse_product`
 --
 
 CREATE TABLE `warehouse_product` (
@@ -269,7 +273,7 @@ CREATE TABLE `warehouse_product` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data untuk tabel `warehouse_product`
+-- Dumping data for table `warehouse_product`
 --
 
 INSERT INTO `warehouse_product` (`id`, `warehouse_id`, `product_id`) VALUES
@@ -280,13 +284,13 @@ INSERT INTO `warehouse_product` (`id`, `warehouse_id`, `product_id`) VALUES
 --
 
 --
--- Indeks untuk tabel `category`
+-- Indexes for table `category`
 --
 ALTER TABLE `category`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `group_task`
+-- Indexes for table `group_task`
 --
 ALTER TABLE `group_task`
   ADD PRIMARY KEY (`id`),
@@ -294,20 +298,20 @@ ALTER TABLE `group_task`
   ADD KEY `id_task` (`task_id`);
 
 --
--- Indeks untuk tabel `image`
+-- Indexes for table `image`
 --
 ALTER TABLE `image`
   ADD PRIMARY KEY (`id`),
   ADD KEY `product_Id` (`product_Id`);
 
 --
--- Indeks untuk tabel `order_status`
+-- Indexes for table `order_status`
 --
 ALTER TABLE `order_status`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `product`
+-- Indexes for table `product`
 --
 ALTER TABLE `product`
   ADD PRIMARY KEY (`id`),
@@ -315,7 +319,7 @@ ALTER TABLE `product`
   ADD KEY `unit` (`unit_id`);
 
 --
--- Indeks untuk tabel `stock_record`
+-- Indexes for table `stock_record`
 --
 ALTER TABLE `stock_record`
   ADD PRIMARY KEY (`id`),
@@ -324,26 +328,26 @@ ALTER TABLE `stock_record`
   ADD KEY `order_status` (`order_status`);
 
 --
--- Indeks untuk tabel `task`
+-- Indexes for table `task`
 --
 ALTER TABLE `task`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `unit`
+-- Indexes for table `unit`
 --
 ALTER TABLE `unit`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `user`
+-- Indexes for table `user`
 --
 ALTER TABLE `user`
   ADD PRIMARY KEY (`id`),
   ADD KEY `id_user_task_group` (`user_task_group_id`);
 
 --
--- Indeks untuk tabel `user_task`
+-- Indexes for table `user_task`
 --
 ALTER TABLE `user_task`
   ADD PRIMARY KEY (`id`),
@@ -351,19 +355,19 @@ ALTER TABLE `user_task`
   ADD KEY `id_task` (`task_id`);
 
 --
--- Indeks untuk tabel `user_task_group`
+-- Indexes for table `user_task_group`
 --
 ALTER TABLE `user_task_group`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `warehouse`
+-- Indexes for table `warehouse`
 --
 ALTER TABLE `warehouse`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `warehouse_product`
+-- Indexes for table `warehouse_product`
 --
 ALTER TABLE `warehouse_product`
   ADD PRIMARY KEY (`id`),
@@ -371,113 +375,113 @@ ALTER TABLE `warehouse_product`
   ADD KEY `product_id` (`product_id`);
 
 --
--- AUTO_INCREMENT untuk tabel yang dibuang
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT untuk tabel `category`
+-- AUTO_INCREMENT for table `category`
 --
 ALTER TABLE `category`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT untuk tabel `group_task`
+-- AUTO_INCREMENT for table `group_task`
 --
 ALTER TABLE `group_task`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
--- AUTO_INCREMENT untuk tabel `image`
+-- AUTO_INCREMENT for table `image`
 --
 ALTER TABLE `image`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `order_status`
+-- AUTO_INCREMENT for table `order_status`
 --
 ALTER TABLE `order_status`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `product`
+-- AUTO_INCREMENT for table `product`
 --
 ALTER TABLE `product`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT untuk tabel `stock_record`
+-- AUTO_INCREMENT for table `stock_record`
 --
 ALTER TABLE `stock_record`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `task`
+-- AUTO_INCREMENT for table `task`
 --
 ALTER TABLE `task`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT untuk tabel `unit`
+-- AUTO_INCREMENT for table `unit`
 --
 ALTER TABLE `unit`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT untuk tabel `user`
+-- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT untuk tabel `user_task`
+-- AUTO_INCREMENT for table `user_task`
 --
 ALTER TABLE `user_task`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
--- AUTO_INCREMENT untuk tabel `user_task_group`
+-- AUTO_INCREMENT for table `user_task_group`
 --
 ALTER TABLE `user_task_group`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
--- AUTO_INCREMENT untuk tabel `warehouse`
+-- AUTO_INCREMENT for table `warehouse`
 --
 ALTER TABLE `warehouse`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT untuk tabel `warehouse_product`
+-- AUTO_INCREMENT for table `warehouse_product`
 --
 ALTER TABLE `warehouse_product`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
+-- Constraints for dumped tables
 --
 
 --
--- Ketidakleluasaan untuk tabel `group_task`
+-- Constraints for table `group_task`
 --
 ALTER TABLE `group_task`
   ADD CONSTRAINT `group_task_ibfk_2` FOREIGN KEY (`task_id`) REFERENCES `task` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `group_task_ibfk_3` FOREIGN KEY (`user_task_group_id`) REFERENCES `user_task_group` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `image`
+-- Constraints for table `image`
 --
 ALTER TABLE `image`
   ADD CONSTRAINT `image_ibfk_1` FOREIGN KEY (`product_Id`) REFERENCES `product` (`id`);
 
 --
--- Ketidakleluasaan untuk tabel `product`
+-- Constraints for table `product`
 --
 ALTER TABLE `product`
   ADD CONSTRAINT `product_ibfk_2` FOREIGN KEY (`unit_id`) REFERENCES `unit` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `product_ibfk_3` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `stock_record`
+-- Constraints for table `stock_record`
 --
 ALTER TABLE `stock_record`
   ADD CONSTRAINT `stock_record_ibfk_1` FOREIGN KEY (`broker`) REFERENCES `user` (`id`),
@@ -485,20 +489,20 @@ ALTER TABLE `stock_record`
   ADD CONSTRAINT `stock_record_ibfk_3` FOREIGN KEY (`order_status`) REFERENCES `order_status` (`id`);
 
 --
--- Ketidakleluasaan untuk tabel `user`
+-- Constraints for table `user`
 --
 ALTER TABLE `user`
   ADD CONSTRAINT `user_ibfk_1` FOREIGN KEY (`user_task_group_id`) REFERENCES `user_task_group` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `user_task`
+-- Constraints for table `user_task`
 --
 ALTER TABLE `user_task`
   ADD CONSTRAINT `user_task_ibfk_2` FOREIGN KEY (`task_id`) REFERENCES `task` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `user_task_ibfk_3` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `warehouse_product`
+-- Constraints for table `warehouse_product`
 --
 ALTER TABLE `warehouse_product`
   ADD CONSTRAINT `warehouse_product_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,

@@ -51,7 +51,6 @@
                                 :headers="suratJalanHeaders"
                                 :items="suratJalans"
                                 :search="searchSuratJalan"
-                                :disable-sort='true'
                                 :hide-default-footer="true"
                                 @click:row="details"
                                 class="font-regular font-weight-light"
@@ -85,12 +84,27 @@
                                                     <b>BUANA PAKSA INDONESIA</b>
                                                 </v-card-title>
                                             </v-row>
-                                            <v-row justify="center" class="mt-n5">
+                                            <v-row justify="center" class="mt-n5 mb-n2">
                                                 <v-card-subtitle class="text-center">
                                                     Jl. Sriwidodo Utara VII No. 476 Kel. Purwoyoso Kec. Ngaliyan Belakang<br>
                                                     Kawasan Industri Candi Krapyak - Semarang Jawa Tengah<br>
                                                     Telp (024) 7626249 / Fax (024) 7610394 / Website: www.buanapaksa.com / Email: info@buanapaksa.com 
                                                 </v-card-subtitle>
+                                            </v-row>
+                                            <!-- Proses Button -->
+                                            <v-row justify="end" v-if="!this.popUpBreakPoint">
+                                                <v-col cols="5" lg="2">
+                                                    <v-btn block v-on="on" color="light-green" class="white--text" @click="prosesBarangDialog">
+                                                        <v-icon>mdi-refresh</v-icon>Proses
+                                                    </v-btn>
+                                                </v-col>
+                                            </v-row>
+                                            <v-row justify="center" v-else>
+                                                <v-col cols="5" lg="2">
+                                                    <v-btn block v-on="on" color="light-green" class="white--text" @click="prosesBarangDialog">
+                                                        <v-icon>mdi-refresh</v-icon>Proses
+                                                    </v-btn>
+                                                </v-col>
                                             </v-row>
                                             <v-divider></v-divider>
                                             <v-row justify="center">
@@ -144,6 +158,44 @@
                         </v-dialog>
                         <!-- *************************************************************************************************************** -->
                         <!-- *************************************************************************************************************** -->
+
+                        <!-- *************************************************************************************************************** -->
+                        <!-- Proses Dialog -->
+                        <!-- *************************************************************************************************************** -->
+                        <v-dialog v-model="popUpProses" fullscreen hide-overlay transition="dialog-bottom-transition">
+                            <v-card>
+                                <v-toolbar dense flat>
+                                    <span class="title font-weight-light">Proses Surat Jalan</span>
+                                    <v-btn absolute right icon @click="close"><v-icon>mdi-close</v-icon></v-btn>
+                                </v-toolbar>
+                                <v-card-text>
+                                    <v-data-table
+                                        :headers="barangProsesHeaders"
+                                        :items="suratJalanDetail"
+                                        v-model="barangsSelected"
+                                        :show-select="true"
+                                        :disable-sort="true"
+                                        :disable-filtering="true"
+                                        :mobile-breakpoint="1"
+                                        :hide-default-footer="true"
+                                        :items-per-page=9999
+                                    >
+                                    </v-data-table>
+                                </v-card-text>
+                                <v-card-actions>
+                                    <v-container>
+                                        <v-row justify="center">
+                                            <v-btn color="red darken-1" text @click="close">Close</v-btn>
+                                            <v-btn color="blue darken-1" text @click="close">Save</v-btn>
+                                        </v-row>
+                                    </v-container>
+                                </v-card-actions>
+                            </v-card>
+                        </v-dialog>
+                        <!-- *************************************************************************************************************** -->
+                        <!-- *************************************************************************************************************** -->
+
+
                     </v-tab-item>
                     <!-- *************************************************************************************************************** -->
                     <!-- *************************************************************************************************************** -->
@@ -177,6 +229,7 @@ export default {
             deliveryOrders: [
                 {nomor:'XxxxX',tanggal:'20 Januari 2020',status:'Selesai'}
             ],
+            barangsSelected: [],
             surat: {
                 nomor:'',
                 tanggal:'',
@@ -193,6 +246,7 @@ export default {
             searchDeliveryOrder:'',
             popUpNew: false,
             popupDetails: false,
+            popUpProses: false,
             selectedIndex: null
         }
     },
@@ -212,11 +266,28 @@ export default {
                 this.selectedIndex = null
                 this.surat = Object.assign({},this.suratDefault)
                 this.popupDetails = false
+            } else {
+                if(this.popUpProses) {
+                    this.selectedIndex = null
+                    this.surat = Object.assign({},this.suratDefault)
+                    this.popUpProses = false
+                }
             }
+        },
+        prosesBarangDialog() {
+            this.popupDetails = false
+            this.popUpProses = true
         }
     },
 
     computed: {
+        barangProsesHeaders() {
+            return [
+                {text:'ID', value:'id'},
+                {text:'Nama Barang', value:'namaBarang'},
+                {text:'Jumlah', value:'jumlah'}
+            ]
+        },
         suratJalanHeaders() {
             return [
                 {text:'Surat Jalan', value:'nomor'},
