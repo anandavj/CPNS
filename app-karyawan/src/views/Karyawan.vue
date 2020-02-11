@@ -183,13 +183,78 @@
                 </v-card>
             </v-dialog >
             <!-- Laptop/PC or other md lg device will not display fullscreen dialog -->
-            <v-dialog v-else v-model="popupDetails" width="1000px">
+            <v-dialog v-else v-model="popupDetails" width="650px">
                 <v-card>
                     <v-toolbar dense flat>
                         <span class="title font-weight-light">Detail Profil</span>
                         <v-btn absolute right icon @click="close"><v-icon>mdi-close</v-icon></v-btn>
                     </v-toolbar>
-                    {{karyawan}}
+                    <v-card-text>
+                        <v-container>
+                            <v-row>
+                                <v-col cols="4" class="text-center">
+                                    <v-avatar class="profile" size="164">
+                                        <v-img src="../assets/avatar.png"/>
+                                    </v-avatar>
+                                    <v-list-item>
+                                        <v-list-item-content>
+                                        <v-list-item-title class="title">{{karyawan.nama}}</v-list-item-title>
+                                        <v-list-item-subtitle>{{karyawan.divisi}}</v-list-item-subtitle>
+                                        </v-list-item-content>
+                                    </v-list-item>
+                                </v-col>
+                                <v-col cols="8">
+                                    <table class="subtitle-1 detailsKaryawan">
+                                        <tr>
+                                            <td>E-Mail</td>
+                                            <td>:</td>
+                                            <td>{{karyawan.email}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>TTL</td>
+                                            <td>:</td>
+                                            <td>{{karyawan.tempatLahir}}, {{karyawan.tanggalLahir}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Agama</td>
+                                            <td>:</td>
+                                            <td>{{karyawan.agama}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Status</td>
+                                            <td>:</td>
+                                            <td>{{karyawan.status}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Alamat</td>
+                                            <td>:</td>
+                                            <td>{{karyawan.alamat}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>No. HP</td>
+                                            <td>:</td>
+                                            <td>{{karyawan.noTelp}}</td>
+                                        </tr>
+                                    </table>
+                                    <div class="title">Permission</div>
+                                    <v-expansion-panels accordion class="elevation-0" multiple="true" v-model="panel">
+                                        <v-expansion-panel v-for="(permission,index) in permissions" :key="index">
+                                            <v-expansion-panel-header>{{permission.modul}}</v-expansion-panel-header>
+                                            <v-expansion-panel-content v-for="(permissionList,idx) in permission.action" :key="idx">
+                                                <v-checkbox
+                                                    v-model="karyawan.permissions"
+                                                    :label="permissionList.actionName"
+                                                    :value="permissionList.id"
+                                                    class="font-weight-light my-n3"
+                                                    color="accent"
+                                                />
+                                            </v-expansion-panel-content>
+                                        </v-expansion-panel>
+                                    </v-expansion-panels>
+                                </v-col>
+                            </v-row>
+                        </v-container>
+                    </v-card-text>
                 </v-card>
             </v-dialog>
             <!-- *************************************************************************************************************** -->
@@ -443,9 +508,9 @@ export default {
     data() {
         return {
             karyawans: [
-                {id:1, email:'ananda@gmail.com', password:'coreofthecore', nama:'Mahendra Fajar', divisi:'Gudang', tempatLahir:'Denpasar', tanggalLahir:'1999-04-27', agama:'Islam', status:'Belum Menikah', Alamat:'Jalan', noTelp:'08180', permissions: []},
-                {id:2, email:'ananda@gmail.com', password:'coreofthecore', nama:'Ananda Vijaya', divisi:'Gudang', tempatLahir:'Denpasar', tanggalLahir:'1999-04-27', agama:'Islam', status:'Belum Menikah', Alamat:'Jalan', noTelp:'08180', permissions: []},
-                {id:3, email:'ananda@gmail.com', password:'coreofthecore', nama:'Satria Kemal', divisi:'Gudang', tempatLahir:'Denpasar', tanggalLahir:'1999-04-27', agama:'Islam', status:'Belum Menikah', Alamat:'Jalan', noTelp:'08180', permissions: []},
+                {id:1, email:'ananda@gmail.com', password:'coreofthecore', nama:'Mahendra Fajar', divisi:'Gudang', tempatLahir:'Denpasar', tanggalLahir:'1999-04-27', agama:'Islam', status:'Belum Menikah', alamat:'Jalan', noTelp:'08180', permissions: []},
+                {id:2, email:'ananda@gmail.com', password:'coreofthecore', nama:'Ananda Vijaya', divisi:'Gudang', tempatLahir:'Denpasar', tanggalLahir:'1999-04-27', agama:'Islam', status:'Belum Menikah', alamat:'Jalan', noTelp:'08180', permissions: []},
+                {id:3, email:'ananda@gmail.com', password:'coreofthecore', nama:'Satria Kemal', divisi:'Gudang', tempatLahir:'Denpasar', tanggalLahir:'1999-04-27', agama:'Islam', status:'Belum Menikah', alamat:'Jalan', noTelp:'08180', permissions: []},
             ],
             agamas: ['Islam','Kristen Protestan','Katolik','Hindu','Buddha','Lainnya..'],
             status: ['Belum Menikah','Menikah','Lainnya..'],
@@ -456,10 +521,10 @@ export default {
                 nama:'',
                 divisi:'', 
                 tempatLahir:'',
-                tanggalLahir:new Date().toISOString().substr(0, 10),
+                tanggalLahir:'',
                 agama:'',
                 status:'', 
-                Alamat:'',
+                alamat:'',
                 noTelp:'',
                 permissions: []
             },
@@ -473,7 +538,7 @@ export default {
                 tanggalLahir:'',
                 agama:'',
                 status:'', 
-                Alamat:'',
+                alamat:'',
                 noTelp:'',
                 permissions: []
             },
@@ -607,3 +672,12 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+
+.detailsKaryawan tr td:nth-child(2) {
+    width: 20%;
+    text-align: center
+}
+
+</style>
