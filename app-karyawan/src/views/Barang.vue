@@ -49,6 +49,72 @@
                                     <v-col cols="6">
                                         <v-text-field label="Satuan" v-model="barang.satuan"/>
                                     </v-col>
+                                    <v-col cols="12">
+                                        <v-combobox
+                                            v-model="barang.tag"
+                                            :filter="filter"
+                                            :hide-no-data="!search"
+                                            :items="tagList"
+                                            :search-input.sync="search"
+                                            hide-selected
+                                            label="Tag"
+                                            multiple
+                                            small-chips
+                                            solo
+                                        >
+                                            <template v-slot:no-data>
+                                            <v-list-item>
+                                                <span class="subheading">Create</span>
+                                                <v-chip
+                                                :color=colors
+                                                label
+                                                small
+                                                >
+                                                {{ search }}
+                                                </v-chip>
+                                            </v-list-item>
+                                            </template>
+                                            <template v-slot:selection="{ attrs, item, parent, selected }">
+                                            <v-chip
+                                                v-if="item === Object(item)"
+                                                v-bind="attrs"
+                                                :color="`${item.color} lighten-3`"
+                                                :input-value="selected"
+                                                label
+                                                small
+                                            >
+                                                <span class="pr-2">
+                                                {{ item.text }}
+                                                </span>
+                                                <v-icon
+                                                small
+                                                @click="parent.selectItem(item)"
+                                                >mdi-close</v-icon>
+                                            </v-chip>
+                                            </template>
+                                            <template v-slot:item="{ index, item }">
+                                            <v-text-field
+                                                v-if="editing === item"
+                                                v-model="editing.text"
+                                                autofocus
+                                                flat
+                                                background-color="transparent"
+                                                hide-details
+                                                solo
+                                                @keyup.enter="edit(index, item)"
+                                            ></v-text-field>
+                                            <v-chip
+                                                v-else
+                                                :color="`${item.color} lighten-3`"
+                                                dark
+                                                label
+                                                small
+                                            >
+                                                {{ item.text }}
+                                            </v-chip>
+                                            </template>
+                                        </v-combobox>
+                                    </v-col>
                                 </v-row>
                             </v-card-text>
                         </v-form>
@@ -255,13 +321,15 @@ export default {
                 id:null,
                 nama:'',
                 openPrice:null,
-                stock:null
+                stock:null,
+                tag:[]
             },
             barangDefault: {
                 id:null,
                 nama:'',
                 openPrice:null,
-                stock:null
+                stock:null,
+                tag:[]
             },
             barangQuickEdit: {
                 id:null,
@@ -282,6 +350,22 @@ export default {
             popUpConfirmSaveQuickEdit: false,
             popUpConfirmSaveEdit: false,
             selectedIndex: -1,
+            // Combobox
+            activator: null,
+            attach: null,
+            colors: 'blue lighten-3',
+            editing: null,
+            index: -1,
+            tagList: [
+                { header: 'Select an option or create one' },
+                {
+                    text: 'Foo',
+                    color: 'blue',
+                }
+            ],
+            nonce: 1,
+            menu: false,
+            search: null,
         }
     },
 
@@ -371,7 +455,19 @@ export default {
                 this.barang = Object.assign({},this.barangDefault)
                 this.close()
             }
-        }
+        },
+        filter (item, queryText, itemText) {
+            if (item.header) return false
+
+            const hasValue = val => val != null ? val : ''
+
+            const text = hasValue(itemText)
+            const query = hasValue(queryText)
+
+            return text.toString()
+                .toLowerCase()
+                .indexOf(query.toString().toLowerCase()) > -1
+        },
     },
     
     computed: {
@@ -391,7 +487,28 @@ export default {
                 return false
             }
         }
-    }
+    },
+
+    watch: {
+        "barang.tag" (val, prev) {
+        if (val.length === prev.length) return
+
+        this.barang.tag = val.map(v => {
+            if (typeof v === 'string') {
+            v = {
+                text: v,
+                color: 'blue'
+            }
+
+            this.tagList.push(v)
+
+            this.nonce++
+            }
+
+            return v
+        })
+        },
+    },
     
 }
 </script>
