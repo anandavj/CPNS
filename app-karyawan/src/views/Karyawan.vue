@@ -242,6 +242,7 @@
                                             <v-expansion-panel-header>{{permission.modul}}</v-expansion-panel-header>
                                             <v-expansion-panel-content v-for="(permissionList,idx) in permission.action" :key="idx">
                                                 <v-checkbox
+                                                    disabled
                                                     v-model="karyawan.permissions"
                                                     :label="permissionList.actionName"
                                                     :value="permissionList.id"
@@ -401,11 +402,11 @@
                                         <template v-slot:activator="{ on }">
                                             <v-text-field
                                                 color="accent"
-                                            v-model="karyawan.tanggalLahir"
-                                            label="Tanggal Lahir"
-                                            prepend-icon="mdi-calendar"
-                                            readonly
-                                            v-on="on"
+                                                v-model="karyawan.tanggalLahir"
+                                                label="Tanggal Lahir"
+                                                prepend-icon="mdi-calendar"
+                                                readonly
+                                                v-on="on"
                                             ></v-text-field>
                                         </template>
                                         <v-date-picker v-model="karyawan.tanggalLahir" no-title scrollable>
@@ -597,6 +598,7 @@ export default {
                 this.popupDetails = false
                 this.karyawan = Object.assign({},this.karyawanDefault)
                 this.selectedIndex = -1
+                this.$refs.form.reset()
             } else {
                 if(this.popUpEdit) {
                     this.popUpEdit = false
@@ -669,7 +671,16 @@ export default {
                 return false
             }
         }
+    },
+
+    watch: {
+        popupDetails() {
+            if(!this.popupDetails) {
+                this.karyawan = false
+            }
+        }
     }
+
 }
 </script>
 
