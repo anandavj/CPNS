@@ -50,6 +50,18 @@ const user = {
     },
 
     actions: {
-
+        insertUser(karyawan){
+            return new Promise((resolve, reject) => {
+                axios.post(tableName, karyawan)                
+                .then(() => {
+                    resolve(this.state.insertSuccessMessage)
+                })
+                .catch(error => {
+                    if(error.response.status == 500) reject(this.state.serverErrorMessage)
+                })
+            })
+        }
     }
 }
+
+export default user

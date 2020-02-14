@@ -104,15 +104,17 @@
                                     </v-col>
                                     <v-col cols="6">
                                         <v-select
+                                        item-text="name"
+                                        item-value="id"
                                         :items="listDivisi"
                                         label="Divisi"
                                         color="accent"
                                         v-model="karyawan.divisi"
-                                        ></v-select>
+                                        v-on:change="selectDivisi"></v-select>
                                     </v-col>
                                     <v-col cols="12">
                                         <div class="title mt-n1">Permission</div>
-                                        <v-expansion-panels accordion class="elevation-0" multiple="true" v-model="panel">
+                                        <v-expansion-panels accordion class="elevation-0" :multiple="true" v-model="panel">
                                             <v-expansion-panel v-for="(permission,index) in tasks" :key="index">
                                                 <v-expansion-panel-header>{{permission.modul}}</v-expansion-panel-header>
                                                 <v-expansion-panel-content v-for="(permissionList,idx) in permission.action" :key="idx">
@@ -237,7 +239,7 @@
                                         </tr>
                                     </table>
                                     <div class="title">Permission</div>
-                                    <v-expansion-panels accordion class="elevation-0" multiple="true" v-model="panel">
+                                    <v-expansion-panels accordion class="elevation-0" :multiple="true" v-model="panel">
                                         <v-expansion-panel v-for="(permission,index) in tasks" :key="index">
                                             <v-expansion-panel-header>{{permission.modul}}</v-expansion-panel-header>
                                             <v-expansion-panel-content v-for="(permissionList,idx) in permission.action" :key="idx">
@@ -334,6 +336,8 @@
                                 </v-col>
                                 <v-col cols="6">
                                     <v-select
+                                    item-text="name"
+                                    item-value="id"
                                     :items="listDivisi"
                                     label="Divisi"
                                     color="accent"
@@ -342,7 +346,7 @@
                                 </v-col>
                                 <v-col cols="12">
                                     <div class="title mt-n1">Permission</div>
-                                    <v-expansion-panels accordion class="elevation-0" multiple="true" v-model="panel">
+                                    <v-expansion-panels accordion class="elevation-0" :multiple="true" v-model="panel">
                                         <v-expansion-panel v-for="(permission,index) in tasks" :key="index">
                                             <v-expansion-panel-header>{{permission.modul}}</v-expansion-panel-header>
                                             <v-expansion-panel-content v-for="(permissionList,idx) in permission.action" :key="idx">
@@ -440,6 +444,8 @@
                                 </v-col>
                                 <v-col cols="6">
                                     <v-select
+                                    item-text="name"
+                                    item-value="id"
                                     :items="listDivisi"
                                     label="Divisi"
                                     color="accent"
@@ -448,7 +454,7 @@
                                 </v-col>
                                 <v-col cols="12">
                                     <div class="title mt-n1">Permission</div>
-                                    <v-expansion-panels accordion class="elevation-0" multiple="true" v-model="panel">
+                                    <v-expansion-panels accordion class="elevation-0" :multiple="true" v-model="panel">
                                         <v-expansion-panel v-for="(permission,index) in tasks" :key="index">
                                             <v-expansion-panel-header>{{permission.modul}}</v-expansion-panel-header>
                                             <v-expansion-panel-content v-for="(permissionList,idx) in permission.action" :key="idx">
@@ -599,6 +605,15 @@ export default {
                 this.tasks = tasks
             })
         },
+        selectDivisi(value){
+            this.$store.commit('setUserTaskGroupId', value)
+            this.$store.dispatch('getGroupTaskByUserTaskGroupId').then(groupTasks => {
+                this.karyawan.tasks = []
+                groupTasks.task.forEach(element => {
+                    this.karyawan.tasks.push(element.taskId)
+                });
+            })
+        },
         details(item) {
             this.selectedIndex = this.karyawans.indexOf(item)
             this.karyawan = Object.assign({},item)
@@ -633,8 +648,13 @@ export default {
         },
         saveNewKaryawan() {
             if(this.$refs.form.validate()) {
-                this.karyawans.push(this.karyawan)
-                this.karyawan = Object.assign({},this.karyawanDefault)
+                // this.karyawans.push(this.karyawan)
+                // this.karyawan = Object.assign({},this.karyawanDefault)
+                this.$store.dispatch('insertUser', this.karyawan).then(response => {
+                    console.log(response)
+                }).catch(error => {
+                    console.log(error)
+                })
                 this.close()
             }
         },
