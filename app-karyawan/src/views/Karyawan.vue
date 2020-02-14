@@ -112,7 +112,7 @@
                                     </v-col>
                                     <v-col cols="12">
                                         <div class="title mt-n1">Permission</div>
-                                        <v-expansion-panels accordion class="elevation-0" multiple="true" v-model="panel">
+                                        <v-expansion-panels accordion class="elevation-0" :multiple="true" v-model="panel">
                                             <v-expansion-panel v-for="(permission,index) in permissions" :key="index">
                                                 <v-expansion-panel-header>{{permission.modul}}</v-expansion-panel-header>
                                                 <v-expansion-panel-content v-for="(permissionList,idx) in permission.action" :key="idx">
@@ -237,7 +237,7 @@
                                         </tr>
                                     </table>
                                     <div class="title">Permission</div>
-                                    <v-expansion-panels accordion class="elevation-0" multiple="true" v-model="panel">
+                                    <v-expansion-panels accordion class="elevation-0" :multiple="true" v-model="panel">
                                         <v-expansion-panel v-for="(permission,index) in permissions" :key="index">
                                             <v-expansion-panel-header>{{permission.modul}}</v-expansion-panel-header>
                                             <v-expansion-panel-content v-for="(permissionList,idx) in permission.action" :key="idx">
@@ -342,7 +342,7 @@
                                 </v-col>
                                 <v-col cols="12">
                                     <div class="title mt-n1">Permission</div>
-                                    <v-expansion-panels accordion class="elevation-0" multiple="true" v-model="panel">
+                                    <v-expansion-panels accordion class="elevation-0" :multiple="true" v-model="panel">
                                         <v-expansion-panel v-for="(permission,index) in permissions" :key="index">
                                             <v-expansion-panel-header>{{permission.modul}}</v-expansion-panel-header>
                                             <v-expansion-panel-content v-for="(permissionList,idx) in permission.action" :key="idx">
@@ -448,7 +448,7 @@
                                 </v-col>
                                 <v-col cols="12">
                                     <div class="title mt-n1">Permission</div>
-                                    <v-expansion-panels accordion class="elevation-0" multiple="true" v-model="panel">
+                                    <v-expansion-panels accordion class="elevation-0" :multiple="true" v-model="panel">
                                         <v-expansion-panel v-for="(permission,index) in permissions" :key="index">
                                             <v-expansion-panel-header>{{permission.modul}}</v-expansion-panel-header>
                                             <v-expansion-panel-content v-for="(permissionList,idx) in permission.action" :key="idx">
