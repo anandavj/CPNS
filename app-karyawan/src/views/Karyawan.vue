@@ -563,6 +563,7 @@ export default {
             popupDetails: false,
             popUpEdit: false,
             popUpConfirmSave: false,
+            panel: false,
             selectedIndex: -1,
             // -----
             // Rules
