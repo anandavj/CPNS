@@ -47,7 +47,7 @@
                                     <v-col cols="9">
                                         <v-text-field label="Nama" v-model="barang.nama"/>
                                     </v-col>
-                                    <v-col cols="6">
+                                    <v-col cols="6" class="mt-n4">
                                         <v-row no-gutters class="align-center">
                                             <v-col cols="11">
                                                 <v-select
@@ -93,7 +93,7 @@
                                             <!--  -->
                                         </v-row>
                                     </v-col>
-                                    <v-col cols="6">
+                                    <v-col cols="6" class="mt-n4">
                                         <v-row no-gutters class="align-center">
                                             <v-col cols="11">
                                                 <v-select
@@ -153,71 +153,61 @@
                                     <v-col cols="12">
                                         <v-textarea label="Deskripsi" v-model="barang.deskripsi" outlined/>
                                     </v-col>
-                                    <v-col cols="12">
-                                        <v-combobox
-                                            v-model="barang.tag"
-                                            :filter="filter"
-                                            :hide-no-data="!search"
-                                            :items="tagList"
-                                            :search-input.sync="search"
-                                            hide-selected
-                                            label="Tag"
-                                            multiple
-                                            small-chips
-                                            solo
-                                        >
-                                            <template v-slot:no-data>
-                                            <v-list-item>
-                                                <span class="subheading">Create</span>
-                                                <v-chip
-                                                :color=colors
-                                                label
-                                                small
+                                    <v-col cols="12" class="mt-n7">
+                                        <v-row no-gutters class="align-center">
+                                            <v-col cols="11">
+                                                <v-autocomplete
+                                                    v-model="barang.tag"
+                                                    :items="tags"
+                                                    label="Tag"
+                                                    multiple
+                                                    chips
+                                                    deletable-chips= "true"
+                                                    hint="Bisa memilih lebih dari 1 Tag"
+                                                    persistent-hint
+                                                    color="accent"
+                                                    item-color="accent"
+                                                    :search-input.sync="searchInput"
+                                                    @change="searchInput=''"
                                                 >
-                                                {{ search }}
-                                                </v-chip>
-                                            </v-list-item>
-                                            </template>
-                                            <template v-slot:selection="{ attrs, item, parent, selected }">
-                                            <v-chip
-                                                v-if="item === Object(item)"
-                                                v-bind="attrs"
-                                                :color="`${item.color} lighten-3`"
-                                                :input-value="selected"
-                                                label
-                                                small
-                                            >
-                                                <span class="pr-2">
-                                                {{ item.text }}
-                                                </span>
-                                                <v-icon
-                                                small
-                                                @click="parent.selectItem(item)"
-                                                >mdi-close</v-icon>
-                                            </v-chip>
-                                            </template>
-                                            <template v-slot:item="{ index, item }">
-                                            <v-text-field
-                                                v-if="editing === item"
-                                                v-model="editing.text"
-                                                autofocus
-                                                flat
-                                                background-color="transparent"
-                                                hide-details
-                                                solo
-                                                @keyup.enter="edit(index, item)"
-                                            ></v-text-field>
-                                            <v-chip
-                                                v-else
-                                                :color="`${item.color} lighten-3`"
-                                                dark
-                                                label
-                                                small
-                                            >
-                                                {{ item.text }}
-                                            </v-chip>
-                                            </template>
-                                        </v-combobox>
+                                                </v-autocomplete>
+                                            </v-col>
+                                            <v-col cols="1">
+                                                <v-tooltip bottom color="accent">
+                                                    <template v-slot:activator="{ on }">
+                                                        <v-btn
+                                                            text
+                                                            icon
+                                                            color="accent"
+                                                            v-on="on"
+                                                            @click="popUpNewTag = !popUpNewTag"
+                                                        >
+                                                            <v-icon>mdi-plus</v-icon>
+                                                        </v-btn>
+                                                    </template>
+                                                    <span>Tambah Tag Baru</span>
+                                                </v-tooltip>
+                                            </v-col>
+                                            <!-- Dialog New Kategori -->
+                                            <v-dialog v-model="popUpNewTag" persistent max-width="350px" style="z-index:10">
+                                                <v-card>
+                                                    <v-form ref="form">
+                                                        <v-card-text>
+                                                            <v-text-field color="accent" v-model="formNewTagModel" label="Nama Tag"/>
+                                                        </v-card-text>
+                                                    </v-form>
+                                                    <v-card-actions>
+                                                        <v-container>
+                                                            <v-row justify="center">
+                                                                <v-btn class="my-n9" color="red darken-1" text @click="close">Batal</v-btn>
+                                                                <v-btn class="my-n9" color="blue darken-1" text @click="saveNewTag">Save</v-btn>
+                                                            </v-row>
+                                                        </v-container>
+                                                    </v-card-actions>
+                                                </v-card>
+                                            </v-dialog>
+                                            <!--  -->
+                                        </v-row>
                                     </v-col>
                                 </v-row>
                             </v-card-text>
@@ -453,6 +443,7 @@ export default {
             },
             categories: [],
             satuans: [],
+            tags: ['berani','kuat'],
             formNewKategoriModel:'',
             formNewSatuanModel: {
                 name:'',
@@ -464,6 +455,8 @@ export default {
                 singkatan:'',
                 jenis:''
             },
+            searchInput:'',
+            formNewTagModel: '',
             searchBarang:'',
             editToggle:false,
             popUpQuickEdit: false,
@@ -474,23 +467,8 @@ export default {
             popUpConfirmSaveEdit: false,
             popUpNewCategory: false,
             popUpNewSatuan: false,
+            popUpNewTag: false,
             selectedIndex: -1,
-            // Combobox
-            activator: null,
-            attach: null,
-            colors: 'blue lighten-3',
-            editing: null,
-            index: -1,
-            tagList: [
-                { header: 'Select an option or create one' },
-                {
-                    text: 'Foo',
-                    color: 'blue',
-                }
-            ],
-            nonce: 1,
-            menu: false,
-            search: null,
         }
     },
 
@@ -515,8 +493,13 @@ export default {
                             this.popUpNewSatuan = false
                             this.formNewSatuanModel = Object.assign({},this.formNewSatuanModelDefault)
                         } else {
-                            this.popUpNew = false
-                            this.barang = Object.assign({},this.barangDefault)
+                            if(this.popUpNewTag) {
+                                this.popUpNewTag = false
+                                this.formNewTagModel = ''
+                            } else {
+                                this.popUpNew = false
+                                this.barang = Object.assign({},this.barangDefault)
+                            }
                         }
                     }
                 } else {
@@ -591,15 +574,6 @@ export default {
                 this.close()
             }
         },
-        filter (item, queryText, itemText) {
-            if (item.header) return false
-            const hasValue = val => val != null ? val : ''
-            const text = hasValue(itemText)
-            const query = hasValue(queryText)
-            return text.toString()
-                .toLowerCase()
-                .indexOf(query.toString().toLowerCase()) > -1
-        },
     },
     
     computed: {
@@ -622,20 +596,7 @@ export default {
     },
 
     watch: {
-        "barang.tag" (val, prev) {
-        if (val.length === prev.length) return
-        this.barang.tag = val.map(v => {
-            if (typeof v === 'string') {
-            v = {
-                text: v,
-                color: 'blue'
-            }
-            this.tagList.push(v)
-            this.nonce++
-            }
-            return v
-        })
-        },
+        
     },
     
 }
