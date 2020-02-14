@@ -65,7 +65,7 @@
                                             >
                                             <template v-slot:activator="{ on }">
                                                 <v-text-field
-                                                 color="accent"
+                                                color="accent"
                                                 v-model="karyawan.tanggalLahir"
                                                 label="Tanggal Lahir"
                                                 prepend-icon="mdi-calendar"
@@ -113,12 +113,12 @@
                                     <v-col cols="12">
                                         <div class="title mt-n1">Permission</div>
                                         <v-expansion-panels accordion class="elevation-0" multiple="true" v-model="panel">
-                                            <v-expansion-panel v-for="(permission,index) in permissions" :key="index">
+                                            <v-expansion-panel v-for="(permission,index) in tasks" :key="index">
                                                 <v-expansion-panel-header>{{permission.modul}}</v-expansion-panel-header>
                                                 <v-expansion-panel-content v-for="(permissionList,idx) in permission.action" :key="idx">
                                                     <v-checkbox
-                                                        v-model="karyawan.permissions"
-                                                        :label="permissionList.actionName"
+                                                        v-model="karyawan.tasks"
+                                                        :label="permissionList.label"
                                                         :value="permissionList.id"
                                                         class="font-weight-light my-n3"
                                                         color="accent"
@@ -238,13 +238,13 @@
                                     </table>
                                     <div class="title">Permission</div>
                                     <v-expansion-panels accordion class="elevation-0" multiple="true" v-model="panel">
-                                        <v-expansion-panel v-for="(permission,index) in permissions" :key="index">
+                                        <v-expansion-panel v-for="(permission,index) in tasks" :key="index">
                                             <v-expansion-panel-header>{{permission.modul}}</v-expansion-panel-header>
                                             <v-expansion-panel-content v-for="(permissionList,idx) in permission.action" :key="idx">
                                                 <v-checkbox
                                                     disabled
-                                                    v-model="karyawan.permissions"
-                                                    :label="permissionList.actionName"
+                                                    v-model="karyawan.tasks"
+                                                    :label="permissionList.label"
                                                     :value="permissionList.id"
                                                     class="font-weight-light my-n3"
                                                     color="accent"
@@ -343,12 +343,12 @@
                                 <v-col cols="12">
                                     <div class="title mt-n1">Permission</div>
                                     <v-expansion-panels accordion class="elevation-0" multiple="true" v-model="panel">
-                                        <v-expansion-panel v-for="(permission,index) in permissions" :key="index">
+                                        <v-expansion-panel v-for="(permission,index) in tasks" :key="index">
                                             <v-expansion-panel-header>{{permission.modul}}</v-expansion-panel-header>
                                             <v-expansion-panel-content v-for="(permissionList,idx) in permission.action" :key="idx">
                                                 <v-checkbox
-                                                    v-model="karyawan.permissions"
-                                                    :label="permissionList.actionName"
+                                                    v-model="karyawan.tasks"
+                                                    :label="permissionList.label"
                                                     :value="permissionList.id"
                                                     class="font-weight-light my-n3"
                                                     color="accent"
@@ -449,12 +449,12 @@
                                 <v-col cols="12">
                                     <div class="title mt-n1">Permission</div>
                                     <v-expansion-panels accordion class="elevation-0" multiple="true" v-model="panel">
-                                        <v-expansion-panel v-for="(permission,index) in permissions" :key="index">
+                                        <v-expansion-panel v-for="(permission,index) in tasks" :key="index">
                                             <v-expansion-panel-header>{{permission.modul}}</v-expansion-panel-header>
                                             <v-expansion-panel-content v-for="(permissionList,idx) in permission.action" :key="idx">
                                                 <v-checkbox
-                                                    v-model="karyawan.permissions"
-                                                    :label="permissionList.actionName"
+                                                    v-model="karyawan.tasks"
+                                                    :label="permissionList.label"
                                                     :value="permissionList.id"
                                                     class="font-weight-light my-n3"
                                                     color="accent"
@@ -505,13 +505,15 @@
 <script>
 export default {
     name: 'Karyawan',
-
+    mounted() {
+        this.get()
+    },
     data() {
         return {
             karyawans: [
-                {id:1, email:'ananda@gmail.com', password:'coreofthecore', nama:'Mahendra Fajar', divisi:'Gudang', tempatLahir:'Denpasar', tanggalLahir:'1999-04-27', agama:'Islam', status:'Belum Menikah', alamat:'Jalan', noTelp:'08180', permissions: []},
-                {id:2, email:'ananda@gmail.com', password:'coreofthecore', nama:'Ananda Vijaya', divisi:'Gudang', tempatLahir:'Denpasar', tanggalLahir:'1999-04-27', agama:'Islam', status:'Belum Menikah', alamat:'Jalan', noTelp:'08180', permissions: []},
-                {id:3, email:'ananda@gmail.com', password:'coreofthecore', nama:'Satria Kemal', divisi:'Gudang', tempatLahir:'Denpasar', tanggalLahir:'1999-04-27', agama:'Islam', status:'Belum Menikah', alamat:'Jalan', noTelp:'08180', permissions: []},
+                {id:1, email:'ananda@gmail.com', password:'coreofthecore', nama:'Mahendra Fajar', divisi:'Gudang', tempatLahir:'Denpasar', tanggalLahir:'1999-04-27', agama:'Islam', status:'Belum Menikah', alamat:'Jalan', noTelp:'08180', tasks: []},
+                {id:2, email:'ananda@gmail.com', password:'coreofthecore', nama:'Ananda Vijaya', divisi:'Gudang', tempatLahir:'Denpasar', tanggalLahir:'1999-04-27', agama:'Islam', status:'Belum Menikah', alamat:'Jalan', noTelp:'08180', tasks: []},
+                {id:3, email:'ananda@gmail.com', password:'coreofthecore', nama:'Satria Kemal', divisi:'Gudang', tempatLahir:'Denpasar', tanggalLahir:'1999-04-27', agama:'Islam', status:'Belum Menikah', alamat:'Jalan', noTelp:'08180', tasks: []},
             ],
             agamas: ['Islam','Kristen Protestan','Katolik','Hindu','Buddha','Lainnya..'],
             status: ['Belum Menikah','Menikah','Lainnya..'],
@@ -527,7 +529,7 @@ export default {
                 status:'', 
                 alamat:'',
                 noTelp:'',
-                permissions: []
+                tasks: []
             },
             karyawanDefault: {
                 id:null,
@@ -541,16 +543,16 @@ export default {
                 status:'', 
                 alamat:'',
                 noTelp:'',
-                permissions: []
+                tasks: []
             },
-            permissions: [
+            tasks: [
                 {modul:'Barang', action: [
-                    {id:0,actionName:'Add Barang'},
-                    {id:1,actionName:'Read Barang'}
+                    {id:0,label:'Add Barang'},
+                    {id:1,label:'Read Barang'}
                 ]},
                 {modul:'Karyawan', action: [
-                    {id:2,actionName:'Add Karyawan'},
-                    {id:3,actionName:'Read Karyawan'}
+                    {id:2,label:'Add Karyawan'},
+                    {id:3,label:'Read Karyawan'}
                 ]}
             ],
             listDivisi:[],
@@ -589,6 +591,14 @@ export default {
     },
     
     methods: {
+        get(){
+            this.$store.dispatch('getAllUserTaskGroup').then(userTaskGroups => {
+                this.listDivisi = userTaskGroups
+            })
+            this.$store.dispatch('getAllTask').then(tasks => {
+                this.tasks = tasks
+            })
+        },
         details(item) {
             this.selectedIndex = this.karyawans.indexOf(item)
             this.karyawan = Object.assign({},item)
