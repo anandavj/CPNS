@@ -107,6 +107,7 @@ class Product extends REST_Controller
         $unit_id = $this->put('unit_id');
         $open_price = $this->put('openPrice');
         $bottom_price = $this->put('bottomPrice');
+        $variant = $this->put('variant');
 
         if(!isset($id)){
             $this->response(
@@ -170,35 +171,17 @@ class Product extends REST_Controller
         if(isset($bottom_price)){
             $datas = array_merge($datas, array('bottom_price' => $bottom_price));
         }
+        if(isset($name)){
+            $datas = array_merge($datas, array('name' => $name));
+        }
 
-        // $this->response($datas);
-        // return;
-
-        
-        // if (
-        //     !isset($id) || !isset($name) || !isset($category_id) || !isset($description) || !isset($stock) ||
-        //     !isset($unit_id) || !isset($open_price) || !isset($bottom_price)
-        // ) {
-        //     $error_parameters = [];
-        //     if (!isset($name)) array_push($error_parameters, 'name');
-        //     if (!isset($category_id)) array_push($error_parameters, 'categoryId');
-        //     if (!isset($description)) array_push($error_parameters, 'description');
-        //     if (!isset($stock)) array_push($error_parameters, 'stock');
-        //     if (!isset($unit_id)) array_push($error_parameters, 'unitId');
-        //     if (!isset($open_price)) array_push($error_parameters, 'openPrice');
-        //     if (!isset($bottom_price)) array_push($error_parameters, 'bottomPrice');
-        //     $this->response(
-        //         array(
-        //             'status' => FALSE,
-        //             'message' => $this::REQUIRED_PARAMETER_MESSAGE . implode(', ', $error_parameters)
-        //         ),
-        //         REST_Controller::HTTP_BAD_REQUEST
-        //     );
-        //     return;
-        // }
-
-
+    
         if ($this->product_model->update_product($id, $datas)) {
+            
+            if(isset($variant)){
+                
+            }
+            
             $this->response(
                 array(
                     'status' => TRUE,
