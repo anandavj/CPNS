@@ -362,6 +362,46 @@
                                             {{tag}}
                                         </v-chip>
                                     </v-col>
+                                    <v-col cols="12">
+                                        <table class="descTable">
+                                            <tr>
+                                                <td>ID Barang</td>
+                                                <td width="25%" align="end">:</td>
+                                                <td>{{barang.id}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Kategori</td>
+                                                <td width="25%" align="end">:</td>
+                                                <td>{{barang.kategori}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Satuan</td>
+                                                <td width="25%" align="end">:</td>
+                                                <td>{{barang.satuan}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Open Price</td>
+                                                <td width="25%" align="end">:</td>
+                                                <td>{{barang.openPrice}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Bottom Price</td>
+                                                <td width="25%" align="end">:</td>
+                                                <td>{{barang.bottomPrice}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Stock</td>
+                                                <td width="25%" align="end">:</td>
+                                                <td>{{barang.stock}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Deskripsi</td>
+                                                <td width="25%" align="end">:</td>
+                                                <td>{{barang.deskripsi}}</td>
+                                            </tr>
+
+                                        </table>
+                                    </v-col>
                                 </v-row>
                             </v-col>
                         </v-row>
@@ -616,6 +656,12 @@ export default {
                     'https://picsum.photos/id/14/200',
                     'https://picsum.photos/id/123/200',
                     'https://picsum.photos/id/222/200',
+                ],
+                tag:[
+                    'Berani',
+                    'Kuat',
+                    'Merah',
+                    'Pantang Menyerah'
                 ]},
                 {id:2, nama:'Kayu', openPrice:12000, bottomPrice:3000, stock:400, satuan:'biji'},
                 {id:3, nama:'Atap', openPrice:100000, bottomPrice:3000, stock:1100, satuan:'biji'}
@@ -652,7 +698,7 @@ export default {
             },
             categories: [],
             satuans: [],
-            tags: ['berani','kuat','Pantang Menyerah','Merah'],
+            tags: ['Berani','Kuat','Pantang Menyerah','Merah'],
             formNewKategoriModel:'',
             formNewSatuanModel: {
                 name:'',
@@ -720,9 +766,24 @@ export default {
                         this.barangQuickEdit = Object.assign({},this.barangQuickEditDefault)
                     } else {
                         if(this.popUpEdit) {
-                            this.popUpEdit = false
-                            this.barang = Object.assign({},this.barangDefault)
-                            this.selectedIndex = -1
+                            if(this.popUpNewCategory) {
+                                this.popUpNewCategory = false
+                                this.formNewKategoriModel = ''
+                            } else {
+                                if(this.popUpNewSatuan) {
+                                    this.popUpNewSatuan = false
+                                    this.formNewSatuanModel = Object.assign({},this.formNewSatuanModelDefault)
+                                } else {
+                                    if(this.popUpNewTag) {
+                                        this.popUpNewTag = false
+                                        this.formNewTagModel = ''
+                                    } else {
+                                        this.popUpEdit = false
+                                        this.barang = Object.assign({},this.barangDefault)
+                                        this.selectedIndex = -1
+                                    }
+                                }
+                            }
                         } else {
                             if(this.popUpConfirmSaveEdit) {
                                 this.popUpConfirmSaveEdit = false
@@ -821,3 +882,11 @@ export default {
     
 }
 </script>
+
+<style scoped>
+
+    .descTable tr td {
+        height: 35px
+    }
+
+</style>
