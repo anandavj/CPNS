@@ -6,6 +6,9 @@
                     <v-card-title>{{menu.title}}</v-card-title>
                     <v-card-subtitle>{{menu.subtitle}}</v-card-subtitle>
                 </div>
+                <div>
+                    <v-card-text><v-icon size="50">{{menu.icon}}</v-icon></v-card-text>
+                </div>
             </div>
         </v-card>
     </v-app>
@@ -18,7 +21,8 @@ export default {
     data() {
         return {
             menus: [
-                {title:'Kategori', subtitle:'Melihat Kategori, menambah kategori, mengatur Kategori', icon:'mdi-group', bgcolor:'blue', route:'/kategori'}
+                {title:'Kategori', subtitle:'Melihat Kategori, Menambah kategori, Mengatur Kategori', icon:'mdi-group', bgcolor:'blue', route:'/kategori'},
+                {title:'Satuan', subtitle:'Melihat Satuan, Menambah Satuan, Mengatur Satuan', icon:'mdi-omega', bgcolor:'blue', route:'/satuan'}
             ]
         }
     },
