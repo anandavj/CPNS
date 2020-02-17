@@ -61,9 +61,70 @@
                         <!-- *************************************************************************************************************** -->
                         <!-- Add Surat Jalan -->
                         <!-- *************************************************************************************************************** -->
-                        <v-btn fab dark large color="primary" fixed right bottom>
+                        <v-btn fab dark large color="primary" fixed right bottom @click="popUpNewSuratJalan = !popUpNewSuratJalan">
                             <v-icon dark>mdi-plus</v-icon>
                         </v-btn>
+                        <v-container class="my-n3">
+                            <v-dialog v-model="popUpNewSuratJalan" persistent fullscreen hide-overlay transition="dialog-bottom-transition">
+                                <v-card>
+                                    <v-toolbar dense flat>
+                                        <span class="title font-weight-light">Tambah Surat Jalan</span>
+                                        <v-btn absolute right icon @click="close"><v-icon>mdi-close</v-icon></v-btn>
+                                    </v-toolbar>
+                                    <v-form ref="form" class="px-2">
+                                        <v-card-text>
+                                            <v-row>
+                                                <v-col cols="12" class="my-n8">
+                                                    <v-row justify="end">
+                                                        <v-col cols="3">
+                                                            <v-text-field v-model="surat.tanggal" dense color="accent" outlined filled disabled label="Tanggal"/>
+                                                        </v-col>
+                                                    </v-row>
+                                                </v-col>
+                                                <v-col cols="6" class="my-n5">
+                                                    <v-text-field v-model="surat.nomor" dense color="accent" outlined label="Nomor Surat Jalan"></v-text-field>
+                                                </v-col>
+                                                <v-col cols="6" class="my-n5">
+                                                    <v-text-field v-model="surat.nama" dense color="accent" outlined label="Nama Surat Jalan"></v-text-field>
+                                                </v-col>
+                                                <v-col cols="12">
+                                                    <v-row justify="center" class="headline">
+                                                        Daftar Barang
+                                                    </v-row>
+                                                </v-col>
+                                                <v-col cols="12" class="my-n4">
+                                                    <v-data-table
+                                                        :headers="suratJalanNewHeaders"
+                                                        :items="suratJalanNewItems"
+                                                        :hide-default-footer="true"
+                                                        :disable-filtering="true"
+                                                        :disable-pagination="true"
+                                                        :disable-sort="true"
+                                                        no-data-text=" "
+                                                    ></v-data-table>
+                                                    <v-container fluid class="my-n4 px-n4">
+                                                        <v-row justify="center">
+                                                            <v-col cols="3">
+                                                                <v-text-field id="focusGain" v-on:keyup.enter="addSuratJalanNewItem" outlined v-model="suratJalanNewItem.id" color="accent" dense label="ID Barang"/>
+                                                            </v-col>
+                                                            <v-col cols="6">
+                                                                <v-text-field v-on:keyup.enter="addSuratJalanNewItem" outlined v-model="suratJalanNewItem.nama" color="accent" dense label="Nama Barang"/>
+                                                            </v-col>
+                                                            <v-col cols="2">
+                                                                <v-text-field v-on:keyup.enter="addSuratJalanNewItem" outlined v-model="suratJalanNewItem.jumlah" color="accent" dense label="Jumlah"/>
+                                                            </v-col>
+                                                            <v-col cols="1">
+                                                                <v-btn color="green" dark @click="addSuratJalanNewItem"><v-icon>mdi-plus</v-icon></v-btn>
+                                                            </v-col>
+                                                        </v-row>
+                                                    </v-container>
+                                                </v-col>
+                                            </v-row>
+                                        </v-card-text>
+                                    </v-form>
+                                </v-card>
+                            </v-dialog>
+                        </v-container>
                         <!-- *************************************************************************************************************** -->
                         <!-- *************************************************************************************************************** -->
                     
@@ -226,25 +287,48 @@ export default {
             suratJalans: [
                 {nomor:'XxxxX',tanggal:'20 Januari 2020',status:'Pengiriman'}
             ],
+            suratJalanNewHeaders: [
+                {text:'ID barang', value:'id'},
+                {text:'Nama Barang', value:'nama'},
+                {text:'Jumlah', value:'jumlah'},
+                {text:'', value:'actions'}
+            ],
+            suratJalanNewItems: [],
+            suratJalanNewItem: {
+                id:'',
+                nama:'',
+                jumlah:''
+            },
+            suratJalanNewItemDefault: {
+                id:'',
+                nama:'',
+                jumlah:''
+            },
             deliveryOrders: [
                 {nomor:'XxxxX',tanggal:'20 Januari 2020',status:'Selesai'}
             ],
             barangsSelected: [],
             surat: {
                 nomor:'',
+                nama:'',
                 tanggal:'',
-                status:''
+                barang:'',
+                status:'',
+                keterangan:''
             },
             suratDefault: {
                 nomor:'',
+                nama:'',
                 tanggal:'',
-                status:''
+                barang:'',
+                status:'',
+                keterangan:''
             },
             deskripsi: '',
             tab:'',
             searchSuratJalan:'',
             searchDeliveryOrder:'',
-            popUpNew: false,
+            popUpNewSuratJalan: false,
             popupDetails: false,
             popUpProses: false,
             selectedIndex: null
@@ -271,12 +355,22 @@ export default {
                     this.selectedIndex = null
                     this.surat = Object.assign({},this.suratDefault)
                     this.popUpProses = false
+                } else {
+                    if(this.popUpNewSuratJalan) {
+                        this.popUpNewSuratJalan = false
+                        this.surat = Object.assign({},this.suratDefault)
+                    }
                 }
             }
         },
         prosesBarangDialog() {
             this.popupDetails = false
             this.popUpProses = true
+        },
+        addSuratJalanNewItem() {
+            this.suratJalanNewItems.push(this.suratJalanNewItem)
+            this.suratJalanNewItem = Object.assign({},this.suratJalanNewItemDefault)
+            document.getElementById('focusGain').focus()
         }
     },
 
