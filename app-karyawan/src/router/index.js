@@ -83,6 +83,14 @@ const routes = [
     meta: {
       drawer: true
     }
+  },
+  {
+    path: '/satuan',
+    name: 'Satuan',
+    component: () => import('../views/Satuan.vue'),
+    meta: {
+      drawer: true
+    }
   }
 ]
 
