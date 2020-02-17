@@ -22,7 +22,8 @@ export default {
         return {
             menus: [
                 {title:'Kategori', subtitle:'Melihat Kategori, Menambah kategori, Mengatur Kategori', icon:'mdi-group', bgcolor:'blue', route:'/kategori'},
-                {title:'Satuan', subtitle:'Melihat Satuan, Menambah Satuan, Mengatur Satuan', icon:'mdi-omega', bgcolor:'blue', route:'/satuan'}
+                {title:'Satuan', subtitle:'Melihat Satuan, Menambah Satuan, Mengatur Satuan', icon:'mdi-omega', bgcolor:'blue', route:'/satuan'},
+                {title:'Import Data Barang', subtitle:'Import Data Barang dari Excel', icon:'mdi-file-excel-outline', bgcolor:'green', route:'/importExcel'}
             ]
         }
     },
