@@ -4,16 +4,21 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class User_model extends CI_Model{
     const TABLE_NAME = "user";
 
-    public function insert_user($user_task_group_id, $name, $telephone, $address, $uid){
+    public function insert_user($user_task_group_id, $name, $place_of_birth, $date_of_birth, $religion, $status,
+    $telephone, $address, $uid){
         $this->db->insert($this::TABLE_NAME, array(
             'user_task_group_id' => $user_task_group_id,
             'name' => $name,
+            'place_of_birth' => $place_of_birth,
+            'date_of_birth' => $date_of_birth,
+            'religion' => $religion,
+            'status' => $status,
             'telephone' => $telephone,
             'address' => $address,
             'uid' => $uid
         ));
 
-        return $this->db->insert_id();
+        return $this->db->affected_rows();
     }
 
     public function get_all_user(){
