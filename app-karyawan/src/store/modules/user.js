@@ -45,11 +45,36 @@ const user = {
     },
 
     actions: {
-        insertUser(karyawan){
+        insertUser(commit, karyawan){
+            // let data = {
+            //     name: karyawan.nama,
+            //     email: karyawan.email,
+            //     password: karyawan.password,
+            //     placeOfBirth: karyawan.tempatLahir,
+            //     dateOfBirth: karyawan.tanggalLahir,
+            //     religion: karyawan.agama,
+            //     status: karyawan.status,
+            //     address: karyawan.alamat,
+            //     telephone: karyawan.noTelp,
+            //     tasks: karyawan.tasks,
+            //     userTaskGroupId: karyawan.userTaskGroupId,
+            //     uid: ''
+            // }
             return new Promise((resolve, reject) => {
                 axios.post(tableName, karyawan)                
                 .then(() => {
                     resolve(this.state.insertSuccessMessage)
+                })
+                .catch(error => {
+                    if(error.response.status == 500) reject(this.state.serverErrorMessage)
+                })
+            })
+        },
+
+        getAllUser(){
+            return new Promise((resolve, reject) => {
+                axios.get(tableName).then(response => {
+                    resolve(response.data)
                 })
                 .catch(error => {
                     if(error.response.status == 500) reject(this.state.serverErrorMessage)

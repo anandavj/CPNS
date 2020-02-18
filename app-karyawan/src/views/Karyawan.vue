@@ -32,7 +32,7 @@
                             <v-card-text>
                                 <v-row>
                                     <v-col cols="12">
-                                        <v-text-field color="accent" label="Nama" v-model="karyawan.nama" :rules="nameRules"/>
+                                        <v-text-field color="accent" label="name" v-model="karyawan.name" :rules="nameRules"/>
                                     </v-col>
                                     <v-col cols="6">
                                         <v-text-field color="accent" label="Email" v-model="karyawan.email" :rules="emailRules"/>
@@ -51,14 +51,14 @@
                                         />
                                     </v-col>
                                     <v-col cols="6">
-                                        <v-text-field color="accent" label="Tempat Lahir" v-model="karyawan.tempatLahir" :rules="tempatLahirRules"/>
+                                        <v-text-field color="accent" label="Tempat Lahir" v-model="karyawan.placeOfBirth" :rules="placeOfBirthRules"/>
                                     </v-col>
                                     <v-col cols="6">
                                         <v-menu
                                             ref="datePickerMenuAdd"
                                             v-model="datePickerMenuAdd"
                                             :close-on-content-click="false"
-                                            :return-value.sync="karyawan.tanggalLahir"
+                                            :return-value.sync="karyawan.dateOfBirth"
                                             transition="scale-transition"
                                             offset-y
                                             min-width="290px"
@@ -66,26 +66,26 @@
                                             <template v-slot:activator="{ on }">
                                                 <v-text-field
                                                 color="accent"
-                                                v-model="karyawan.tanggalLahir"
+                                                v-model="karyawan.dateOfBirth"
                                                 label="Tanggal Lahir"
                                                 prepend-icon="mdi-calendar"
                                                 readonly
                                                 v-on="on"
                                                 ></v-text-field>
                                             </template>
-                                            <v-date-picker v-model="karyawan.tanggalLahir" no-title scrollable>
+                                            <v-date-picker v-model="karyawan.dateOfBirth" no-title scrollable>
                                                 <v-spacer></v-spacer>
                                                 <v-btn text color="primary" @click="datePickerMenuAdd = false">Cancel</v-btn>
-                                                <v-btn text color="primary" @click="$refs.datePickerMenuAdd.save(karyawan.tanggalLahir)">OK</v-btn>
+                                                <v-btn text color="primary" @click="$refs.datePickerMenuAdd.save(karyawan.dateOfBirth)">OK</v-btn>
                                             </v-date-picker>
                                             </v-menu>
                                     </v-col>
                                     <v-col cols="6">
                                         <v-select
-                                        :items="agamas"
-                                        label="Agama"
+                                        :items="religions"
+                                        label="religion"
                                         color="accent"
-                                        v-model="karyawan.agama"
+                                        v-model="karyawan.religion"
                                         ></v-select>
                                     </v-col>
                                     <v-col cols="6">
@@ -97,20 +97,20 @@
                                         ></v-select>
                                     </v-col>
                                     <v-col cols="12">
-                                        <v-text-field color="accent" label="Alamat" v-model="karyawan.alamat" :rules="alamatRules"/>
+                                        <v-text-field color="accent" label="address" v-model="karyawan.address" :rules="addressRules"/>
                                     </v-col>
                                     <v-col cols="6">
-                                        <v-text-field color="accent" label="Nomor HP" v-model="karyawan.noTelp" type="number" :rules="noTelpRules"/>
+                                        <v-text-field color="accent" label="Nomor HP" v-model="karyawan.telephone" type="number" :rules="telephoneRules"/>
                                     </v-col>
                                     <v-col cols="6">
                                         <v-select
                                         item-text="name"
                                         item-value="id"
-                                        :items="listDivisi"
-                                        label="Divisi"
+                                        :items="listuserTaskGroupId"
+                                        label="userTaskGroupId"
                                         color="accent"
-                                        v-model="karyawan.divisi"
-                                        v-on:change="selectDivisi"></v-select>
+                                        v-model="karyawan.userTaskGroupId"
+                                        v-on:change="selectuserTaskGroupId"></v-select>
                                     </v-col>
                                     <v-col cols="12">
                                         <div class="title mt-n1">Permission</div>
@@ -157,7 +157,7 @@
                 :disable-sort="true"
                 :hide-default-footer="true"
                 :mobile-breakpoint="1"
-                item-key="nama"
+                item-key="id"
                 no-data-text="Data Karyawan Kosong"
                 no-results-text="Data Karyawan Tidak Ditemukan"
                 class="font-regular font-weight-light"
@@ -200,8 +200,8 @@
                                     </v-avatar>
                                     <v-list-item>
                                         <v-list-item-content>
-                                        <v-list-item-title class="title">{{karyawan.nama}}</v-list-item-title>
-                                        <v-list-item-subtitle>{{karyawan.divisi}}</v-list-item-subtitle>
+                                        <v-list-item-title class="title">{{karyawan.name}}</v-list-item-title>
+                                        <v-list-item-subtitle>{{karyawan.userTaskGroupId}}</v-list-item-subtitle>
                                         </v-list-item-content>
                                     </v-list-item>
                                 </v-col>
@@ -215,12 +215,12 @@
                                         <tr>
                                             <td>TTL</td>
                                             <td>:</td>
-                                            <td>{{karyawan.tempatLahir}}, {{karyawan.tanggalLahir}}</td>
+                                            <td>{{karyawan.placeOfBirth}}, {{karyawan.dateOfBirth}}</td>
                                         </tr>
                                         <tr>
-                                            <td>Agama</td>
+                                            <td>religion</td>
                                             <td>:</td>
-                                            <td>{{karyawan.agama}}</td>
+                                            <td>{{karyawan.religion}}</td>
                                         </tr>
                                         <tr>
                                             <td>Status</td>
@@ -228,14 +228,14 @@
                                             <td>{{karyawan.status}}</td>
                                         </tr>
                                         <tr>
-                                            <td>Alamat</td>
+                                            <td>address</td>
                                             <td>:</td>
-                                            <td>{{karyawan.alamat}}</td>
+                                            <td>{{karyawan.address}}</td>
                                         </tr>
                                         <tr>
                                             <td>No. HP</td>
                                             <td>:</td>
-                                            <td>{{karyawan.noTelp}}</td>
+                                            <td>{{karyawan.telephone}}</td>
                                         </tr>
                                     </table>
                                     <div class="title">Permission</div>
@@ -280,17 +280,17 @@
                                     <v-text-field color="accent" label="Email" v-model="karyawan.email" :rules="emailRules"/>
                                 </v-col>
                                 <v-col cols="6">
-                                    <v-text-field color="accent" label="Nama" v-model="karyawan.nama" :rules="nameRules"/>
+                                    <v-text-field color="accent" label="name" v-model="karyawan.name" :rules="nameRules"/>
                                 </v-col>
                                 <v-col cols="6">
-                                    <v-text-field color="accent" label="Tempat Lahir" v-model="karyawan.tempatLahir" :rules="tempatLahirRules"/>
+                                    <v-text-field color="accent" label="Tempat Lahir" v-model="karyawan.placeOfBirth" :rules="placeOfBirthRules"/>
                                 </v-col>
                                 <v-col cols="6">
                                     <v-menu
                                         ref="datePickerMenu"
                                         v-model="datePickerMenu"
                                         :close-on-content-click="false"
-                                        :return-value.sync="karyawan.tanggalLahir"
+                                        :return-value.sync="karyawan.dateOfBirth"
                                         transition="scale-transition"
                                         offset-y
                                         min-width="290px"
@@ -298,26 +298,26 @@
                                         <template v-slot:activator="{ on }">
                                             <v-text-field
                                             color="accent"
-                                            v-model="karyawan.tanggalLahir"
+                                            v-model="karyawan.dateOfBirth"
                                             label="Tanggal Lahir"
                                             prepend-icon="mdi-calendar"
                                             readonly
                                             v-on="on"
                                             ></v-text-field>
                                         </template>
-                                        <v-date-picker v-model="karyawan.tanggalLahir" no-title scrollable>
+                                        <v-date-picker v-model="karyawan.dateOfBirth" no-title scrollable>
                                             <v-spacer></v-spacer>
                                             <v-btn text color="primary" @click="datePickerMenu = false">Cancel</v-btn>
-                                            <v-btn text color="primary" @click="$refs.datePickerMenu.save(karyawan.tanggalLahir)">OK</v-btn>
+                                            <v-btn text color="primary" @click="$refs.datePickerMenu.save(karyawan.dateOfBirth)">OK</v-btn>
                                         </v-date-picker>
                                         </v-menu>
                                 </v-col>
                                 <v-col cols="6">
                                     <v-select
-                                    :items="agamas"
-                                    label="Agama"
+                                    :items="religions"
+                                    label="religion"
                                     color="accent"
-                                    v-model="karyawan.agama"
+                                    v-model="karyawan.religion"
                                     ></v-select>
                                 </v-col>
                                 <v-col cols="6">
@@ -329,19 +329,19 @@
                                     ></v-select>
                                 </v-col>
                                 <v-col cols="12">
-                                    <v-text-field color="accent" label="Alamat" v-model="karyawan.alamat" :rules="alamatRules"/>
+                                    <v-text-field color="accent" label="address" v-model="karyawan.address" :rules="addressRules"/>
                                 </v-col>
                                 <v-col cols="6">
-                                    <v-text-field color="accent" label="Nomor HP" v-model="karyawan.noTelp" type="number" :rules="noTelpRules"/>
+                                    <v-text-field color="accent" label="Nomor HP" v-model="karyawan.telephone" type="number" :rules="telephoneRules"/>
                                 </v-col>
                                 <v-col cols="6">
                                     <v-select
                                     item-text="name"
                                     item-value="id"
-                                    :items="listDivisi"
-                                    label="Divisi"
+                                    :items="listuserTaskGroupId"
+                                    label="userTaskGroupId"
                                     color="accent"
-                                    v-model="karyawan.divisi"
+                                    v-model="karyawan.userTaskGroupId"
                                     ></v-select>
                                 </v-col>
                                 <v-col cols="12">
@@ -388,17 +388,17 @@
                                     <v-text-field color="accent" label="Email" v-model="karyawan.email" :rules="emailRules"/>
                                 </v-col>
                                 <v-col cols="6">
-                                    <v-text-field color="accent" label="Nama" v-model="karyawan.nama" :rules="nameRules"/>
+                                    <v-text-field color="accent" label="name" v-model="karyawan.name" :rules="nameRules"/>
                                 </v-col>
                                 <v-col cols="6">
-                                    <v-text-field color="accent" label="Tempat Lahir" v-model="karyawan.tempatLahir" :rules="tempatLahirRules"/>
+                                    <v-text-field color="accent" label="Tempat Lahir" v-model="karyawan.placeOfBirth" :rules="placeOfBirthRules"/>
                                 </v-col>
                                 <v-col cols="6">
                                     <v-menu
                                         ref="datePickerMenu"
                                         v-model="datePickerMenu"
                                         :close-on-content-click="false"
-                                        :return-value.sync="karyawan.tanggalLahir"
+                                        :return-value.sync="karyawan.dateOfBirth"
                                         transition="scale-transition"
                                         offset-y
                                         min-width="290px"
@@ -406,26 +406,26 @@
                                         <template v-slot:activator="{ on }">
                                             <v-text-field
                                                 color="accent"
-                                                v-model="karyawan.tanggalLahir"
+                                                v-model="karyawan.dateOfBirth"
                                                 label="Tanggal Lahir"
                                                 prepend-icon="mdi-calendar"
                                                 readonly
                                                 v-on="on"
                                             ></v-text-field>
                                         </template>
-                                        <v-date-picker v-model="karyawan.tanggalLahir" no-title scrollable>
+                                        <v-date-picker v-model="karyawan.dateOfBirth" no-title scrollable>
                                             <v-spacer></v-spacer>
                                             <v-btn text color="primary" @click="datePickerMenu = false">Cancel</v-btn>
-                                            <v-btn text color="primary" @click="$refs.datePickerMenu.save(karyawan.tanggalLahir)">OK</v-btn>
+                                            <v-btn text color="primary" @click="$refs.datePickerMenu.save(karyawan.dateOfBirth)">OK</v-btn>
                                         </v-date-picker>
                                         </v-menu>
                                 </v-col>
                                 <v-col cols="6">
                                     <v-select
-                                    :items="agamas"
-                                    label="Agama"
+                                    :items="religions"
+                                    label="religion"
                                     color="accent"
-                                    v-model="karyawan.agama"
+                                    v-model="karyawan.religion"
                                     ></v-select>
                                 </v-col>
                                 <v-col cols="6">
@@ -437,19 +437,19 @@
                                     ></v-select>
                                 </v-col>
                                 <v-col cols="12">
-                                    <v-text-field color="accent" label="Alamat" v-model="karyawan.alamat" :rules="alamatRules"/>
+                                    <v-text-field color="accent" label="address" v-model="karyawan.address" :rules="addressRules"/>
                                 </v-col>
                                 <v-col cols="6">
-                                    <v-text-field color="accent" label="Nomor HP" v-model="karyawan.noTelp" type="number" :rules="noTelpRules"/>
+                                    <v-text-field color="accent" label="Nomor HP" v-model="karyawan.telephone" type="number" :rules="telephoneRules"/>
                                 </v-col>
                                 <v-col cols="6">
                                     <v-select
                                     item-text="name"
                                     item-value="id"
-                                    :items="listDivisi"
-                                    label="Divisi"
+                                    :items="listuserTaskGroupId"
+                                    label="userTaskGroupId"
                                     color="accent"
-                                    v-model="karyawan.divisi"
+                                    v-model="karyawan.userTaskGroupId"
                                     ></v-select>
                                 </v-col>
                                 <v-col cols="12">
@@ -491,7 +491,7 @@
             <v-dialog persistent v-model="popUpConfirmSave" width="500px">
                 <v-card>
                     <v-card-title>Konfirmasi</v-card-title>
-                    <v-card-text>Apakah Anda Yakin ingin mengubah profil <b>{{tempNamaKaryawan}}</b>?</v-card-text>
+                    <v-card-text>Apakah Anda Yakin ingin mengubah profil <b>{{tempnameKaryawan}}</b>?</v-card-text>
                     <v-card-actions>
                         <v-container>
                             <v-row justify="center">
@@ -517,39 +517,41 @@ export default {
     data() {
         return {
             karyawans: [
-                {id:1, email:'ananda@gmail.com', password:'coreofthecore', nama:'Mahendra Fajar', divisi:'Gudang', tempatLahir:'Denpasar', tanggalLahir:'1999-04-27', agama:'Islam', status:'Belum Menikah', alamat:'Jalan', noTelp:'08180', tasks: []},
-                {id:2, email:'ananda@gmail.com', password:'coreofthecore', nama:'Ananda Vijaya', divisi:'Gudang', tempatLahir:'Denpasar', tanggalLahir:'1999-04-27', agama:'Islam', status:'Belum Menikah', alamat:'Jalan', noTelp:'08180', tasks: []},
-                {id:3, email:'ananda@gmail.com', password:'coreofthecore', nama:'Satria Kemal', divisi:'Gudang', tempatLahir:'Denpasar', tanggalLahir:'1999-04-27', agama:'Islam', status:'Belum Menikah', alamat:'Jalan', noTelp:'08180', tasks: []},
+                // {id:1, email:'ananda@gmail.com', password:'coreofthecore', name:'Mahendra Fajar', userTaskGroupId:'Gudang', placeOfBirth:'Denpasar', dateOfBirth:'1999-04-27', religion:'Islam', status:'Belum Menikah', address:'Jalan', telephone:'08180', tasks: []},
+                // {id:2, email:'ananda@gmail.com', password:'coreofthecore', name:'Ananda Vijaya', userTaskGroupId:'Gudang', placeOfBirth:'Denpasar', dateOfBirth:'1999-04-27', religion:'Islam', status:'Belum Menikah', address:'Jalan', telephone:'08180', tasks: []},
+                // {id:3, email:'ananda@gmail.com', password:'coreofthecore', name:'Satria Kemal', userTaskGroupId:'Gudang', placeOfBirth:'Denpasar', dateOfBirth:'1999-04-27', religion:'Islam', status:'Belum Menikah', address:'Jalan', telephone:'08180', tasks: []},
             ],
-            agamas: ['Islam','Kristen Protestan','Katolik','Hindu','Buddha','Lainnya..'],
+            religions: ['Islam','Kristen Protestan','Katolik','Hindu','Buddha','Lainnya..'],
             status: ['Belum Menikah','Menikah','Lainnya..'],
             karyawan: {
                 id:null,
                 email:'',
                 password: '',
-                nama:'',
-                divisi:'', 
-                tempatLahir:'',
-                tanggalLahir:'',
-                agama:'',
+                name:'',
+                userTaskGroupId:'', 
+                placeOfBirth:'',
+                dateOfBirth:'',
+                religion:'',
                 status:'', 
-                alamat:'',
-                noTelp:'',
-                tasks: []
+                address:'',
+                telephone:'',
+                tasks: [],
+                uid: ''
             },
             karyawanDefault: {
                 id:null,
                 email:'',
                 password: '',
-                nama:'',
-                divisi:'', 
-                tempatLahir:'',
-                tanggalLahir:'',
-                agama:'',
+                name:'',
+                userTaskGroupId:'', 
+                placeOfBirth:'',
+                dateOfBirth:'',
+                religion:'',
                 status:'', 
-                alamat:'',
-                noTelp:'',
-                tasks: []
+                address:'',
+                telephone:'',
+                tasks: [],
+                uid: ''
             },
             tasks: [
                 {modul:'Barang', action: [
@@ -561,8 +563,8 @@ export default {
                     {id:3,label:'Read Karyawan'}
                 ]}
             ],
-            listDivisi:[],
-            tempNamaKaryawan:'',
+            listuserTaskGroupId:[],
+            tempnameKaryawan:'',
             searchKaryawan:'',
             showPassword: false,
             popUpNew: false,
@@ -581,9 +583,9 @@ export default {
                 v => /.+@.+\..+/.test(v) || 'E-mail Tidak Valid',
             ],
             nameRules: [v => !!v || 'Name Harus Diisi'],
-            tempatLahirRules: [v => !!v || 'Tempat Lahir Harus Diisi'],
-            alamatRules: [v => !!v || 'Alamat Harus Diisi'],
-            noTelpRules: [
+            placeOfBirthRules: [v => !!v || 'Tempat Lahir Harus Diisi'],
+            addressRules: [v => !!v || 'address Harus Diisi'],
+            telephoneRules: [
                 v => !!v || 'Nomor HP Harus Diisi',
                 v => (v && v.length >= 8) || 'Nomor HP Tidak Valid',
             ],
@@ -598,15 +600,28 @@ export default {
     
     methods: {
         get(){
+            this.$store.dispatch('getAllUser').then(karyawans => {
+                this.karyawans = karyawans
+                karyawans.forEach(karyawan => {
+                    this.$store.dispatch('getUserTaskById', karyawan.id).then(tasks => {
+                        let userTasks = []
+                        tasks.forEach(task => {
+                            userTasks.push(task.taskId)
+                        });
+                        karyawan.tasks = userTasks
+                    })
+                });
+            })
             this.$store.dispatch('getAllUserTaskGroup').then(userTaskGroups => {
-                this.listDivisi = userTaskGroups
+                this.listuserTaskGroupId = userTaskGroups
             })
             this.$store.dispatch('getAllTask').then(tasks => {
                 this.tasks = tasks
             })
         },
-        selectDivisi(value){
+        selectuserTaskGroupId(value){
             this.$store.commit('setUserTaskGroupId', value)
+            this.karyawan.userTaskGroupId = value
             this.$store.dispatch('getGroupTaskByUserTaskGroupId').then(groupTasks => {
                 this.karyawan.tasks = []
                 groupTasks.task.forEach(element => {
@@ -651,18 +666,17 @@ export default {
                 // this.karyawans.push(this.karyawan)
                 // this.karyawan = Object.assign({},this.karyawanDefault)
 
-                console.log(this.karyawan)
-                // this.$store.dispatch('insertUser', this.karyawan).then(response => {
-                //     console.log(response)
-                // }).catch(error => {
-                //     console.log(error)
-                // })
+                this.$store.dispatch('insertUser', this.karyawan).then(response => {
+                    console.log(response)
+                }).catch(error => {
+                    console.log(error)
+                })
                 this.close()
             }
         },
         editKaryawan(item) {
             this.selectedIndex = this.karyawans.indexOf(item)
-            this.tempNamaKaryawan = item.nama
+            this.tempnameKaryawan = item.name
             this.karyawan = Object.assign({},item)
             this.popUpEdit = true
         },
@@ -676,23 +690,23 @@ export default {
 
         //this need promise to ensure that the data in the db and vue in synced !!! IMPORTANT !!!
         save() {
-            //to find the object inside karyawans
-            let obj = this.karyawans.find( ({id}) => id === this.karyawan.id )
-            //get all of the property name of karyawans
-            var loop = Object.getOwnPropertyNames(this.karyawanDefault)
-            //assign all the value of the property of obj2 in karyawans with karyawan
-            for(let i=0; i<loop.length; i++) {
-                this.karyawans[this.karyawans.indexOf(obj)][loop[i]] = this.karyawan[loop[i]]
-            }
-            this.popUpConfirmSave = false
-            this.karyawan = Object.assign({},this.karyawanDefault)
+            // //to find the object inside karyawans
+            // let obj = this.karyawans.find( ({id}) => id === this.karyawan.id )
+            // //get all of the property name of karyawans
+            // var loop = Object.getOwnPropertyNames(this.karyawanDefault)
+            // //assign all the value of the property of obj2 in karyawans with karyawan
+            // for(let i=0; i<loop.length; i++) {
+            //     this.karyawans[this.karyawans.indexOf(obj)][loop[i]] = this.karyawan[loop[i]]
+            // }
+            // this.popUpConfirmSave = false
+            // this.karyawan = Object.assign({},this.karyawanDefault)
         }
     },
 
     computed: {
         karyawanHeaders() {
             return [
-                {text:'Nama',value:'nama'},
+                {text:'name',value:'name'},
                 {text:'',value:'actions',width:'7%'}
             ]
         },

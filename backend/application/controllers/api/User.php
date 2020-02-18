@@ -66,23 +66,24 @@ class User extends REST_Controller
 
         if ($this->user_model->insert_user($user_task_group_id, $name, $place_of_birth, $date_of_birth, 
         $religion, $status, $telephone, $address, $uid)) {
+            $insert_id = $this->db->insert_id();
             $tasks = $this->group_task_model->get_group_task_where($user_task_group_id);
             $user_task = [];
             foreach ($tasks['task'] as $task) {
                 array_push($user_task, $task['taskId']);
             }
 
-            if ($this->user_task_model->insert_user_task($this->db->insert_id(), $user_task)) {
+            if ($this->user_task_model->insert_user_task($insert_id, $user_task)) {
                 $this->response(
                     array(
                         'status' => TRUE,
                         'message' => $this::INSERT_SUCCESS_MESSSAGE,
-                        'id' => $this->db->insert_id()
+                        'id' => $insert_id
                     ),
                     REST_Controller::HTTP_CREATED
                 );
             } else {
-                $this->user_model->delete_user($this->db->insert_id());
+                $this->user_model->delete_user($insert_id);
                 $this->response(
                     array(
                         'status' => FALSE,
