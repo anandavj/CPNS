@@ -18,7 +18,7 @@ class User_model extends CI_Model{
             'uid' => $uid
         ));
 
-        return $this->db->insert_id();
+        return $this->db->affected_rows();
     }
 
     public function get_all_user(){

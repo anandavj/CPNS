@@ -26,20 +26,20 @@ class User extends REST_Controller
         $date_of_birth = $this->post('dateOfBirth');
         $religion = $this->post('religion');
         $status = $this->post('status');
-        $phone = $this->post('phone');
+        $telephone = $this->post('telephone');
         $address = $this->post('address');
         $uid = $this->post('uid');
 
-        if (!isset($user_task_group_id) || !isset($name) || !isset($phone) || !isset($address) || !isset($uid) || 
+        if (!isset($user_task_group_id) || !isset($name) || !isset($telephone) || !isset($address) || !isset($uid) || 
         !isset($place_of_birth) || !isset($date_of_birth) || !isset($religion) || !isset($status)) {
             $required_parameters = [];
             if (!isset($user_task_group_id)) array_push($required_parameters, 'userTaskGroupId');
             if (!isset($name)) array_push($required_parameters, 'name');
-            if (!isset($uid)) array_push($required_parameters, 'placeOfBirth');
-            if (!isset($uid)) array_push($required_parameters, 'dateOfBirth');
-            if (!isset($uid)) array_push($required_parameters, 'religion');
-            if (!isset($uid)) array_push($required_parameters, 'status');
-            if (!isset($phone)) array_push($required_parameters, 'phone');
+            if (!isset($place_of_birth)) array_push($required_parameters, 'placeOfBirth');
+            if (!isset($date_of_birth)) array_push($required_parameters, 'dateOfBirth');
+            if (!isset($religion)) array_push($required_parameters, 'religion');
+            if (!isset($status)) array_push($required_parameters, 'status');
+            if (!isset($telephone)) array_push($required_parameters, 'telephone');
             if (!isset($address)) array_push($required_parameters, 'address');
             if (!isset($uid)) array_push($required_parameters, 'uid');
             $this->response(
@@ -64,24 +64,25 @@ class User extends REST_Controller
         }
 
 
-        if ($insert_id = $this->user_model->insert_user($user_task_group_id, $name, $phone, $address, $uid)) {
+        if ($this->user_model->insert_user($user_task_group_id, $name, $place_of_birth, $date_of_birth, 
+        $religion, $status, $telephone, $address, $uid)) {
             $tasks = $this->group_task_model->get_group_task_where($user_task_group_id);
             $user_task = [];
-            foreach ($tasks as $task) {
-                array_push($user_task, $task['task_id']);
+            foreach ($tasks['task'] as $task) {
+                array_push($user_task, $task['taskId']);
             }
 
-            if ($this->user_task_model->insert_user_task($insert_id, $user_task)) {
+            if ($this->user_task_model->insert_user_task($this->db->insert_id(), $user_task)) {
                 $this->response(
                     array(
                         'status' => TRUE,
                         'message' => $this::INSERT_SUCCESS_MESSSAGE,
-                        'id' => $insert_id
+                        'id' => $this->db->insert_id()
                     ),
                     REST_Controller::HTTP_CREATED
                 );
             } else {
-                $this->user_model->delete_user($insert_id);
+                $this->user_model->delete_user($this->db->insert_id());
                 $this->response(
                     array(
                         'status' => FALSE,
