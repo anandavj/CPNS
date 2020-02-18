@@ -4,9 +4,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Image_model extends CI_Model{
 
     private const TABLE_NAME = 'image';
-    public function insert_image($product_id, $image){
+    public function insert_image($category_id, $image){
         $this->db->insert($this::TABLE_NAME, array(
-            'product_id' => $product_id,
+            'category_id' => $category_id,
             'image' => $image
         ));
         
@@ -26,18 +26,18 @@ class Image_model extends CI_Model{
         else return false;
     }
 
-    public function update_image($id, $product_id, $image){
+    public function update_image($id, $category_id, $image){
         // Check apakah tidak merubah apa-apa?
         // kenapa perlu? karena jika update tidak ada perubahan affected_rows() return 0
         $result = $this->db->get_where($this::TABLE_NAME, array(
-            'product_id' => $product_id,
+            'category_id' => $category_id,
             'image' => $image
         ));
         if($result->num_rows() > 0) return true;
 
         // Update
         $this->db->update($this::TABLE_NAME, array(
-            'product_id' => $product_id,
+            'category_id' => $category_id,
             'image' => $image
         ), "id='{$id}'");
         

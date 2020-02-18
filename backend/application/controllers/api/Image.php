@@ -10,17 +10,17 @@ class Image extends REST_Controller {
 
     public function __construct(){
         parent::__construct();
-        $this->load->model("image_model");
-        $this->load->model('product_model');
+        $this->load->model('image_model');
+        $this->load->model('category_model');
     }
 
     public function index_post(){
-        $product_id = $this->post('productId');
+        $catergory_id = $this->post('categoryId');
         $image = $this->post('image');
 
-        if(!isset($product_id) || !isset($image)){
+        if(!isset($catergory_id) || !isset($image)){
             $required_parameters = [];
-            if(!isset($product_id)) array_push($required_parameters, 'productId');
+            if(!isset($catergory_id)) array_push($required_parameters, 'categoryId');
             if(!isset($image)) array_push($required_parameters, 'image');
             $this->response(
                 array(
@@ -31,17 +31,17 @@ class Image extends REST_Controller {
             return;
         }
 
-        if($this->product_model->is_not_exists($product_id)){
+        if($this->category_model->is_not_exists($catergory_id)){
             $this->response(
                 array(
                     'status' => FALSE,
-                    'message' => $this::INVALID_ID_MESSAGE." productId does not exist"
+                    'message' => $this::INVALID_ID_MESSAGE." categoryId does not exist"
                 ),REST_Controller::HTTP_BAD_REQUEST
             );
             return;
         };
 
-        if($this->image_model->insert_image($product_id, $image)){
+        if($this->image_model->insert_image($catergory_id, $image)){
             $this->response(
                 array(
                     'status' => TRUE,
@@ -67,13 +67,13 @@ class Image extends REST_Controller {
 
     public function index_put(){
         $id = $this->put('id');
-        $product_id = $this->put('productId');
+        $catergory_id = $this->put('categoryId');
         $image = $this->put('image');
 
-        if(!isset($id) || !isset($product_id) || !isset($image)){
+        if(!isset($id) || !isset($catergory_id) || !isset($image)){
             $required_parameters = [];
             if(!isset($id)) array_push($required_parameters, 'id');
-            if(!isset($product_id)) array_push($required_parameters, 'productId');
+            if(!isset($catergory_id)) array_push($required_parameters, 'categoryId');
             if(!isset($image)) array_push($required_parameters, 'image');
             $this->response(
                 array(
@@ -84,17 +84,17 @@ class Image extends REST_Controller {
             return;
         }
 
-        if($this->product_model->is_not_exists($product_id)){
+        if($this->category_model->is_not_exists($catergory_id)){
             $this->response(
                 array(
                     'status' => FALSE,
-                    'message' => $this::INVALID_ID_MESSAGE." productId does not exist"
+                    'message' => $this::INVALID_ID_MESSAGE." categoryId does not exist"
                 ),REST_Controller::HTTP_BAD_REQUEST
             );
             return;
         };
         
-        if($this->image_model->update_image($id, $product_id, $image)){
+        if($this->image_model->update_image($id, $catergory_id, $image)){
             $this->response(
                 array(
                     'status' => TRUE,
