@@ -90,6 +90,7 @@ class User extends REST_Controller
                     REST_Controller::HTTP_BAD_GATEWAY
                 );
             }
+
         } else {
             $this->response(
                 array(
@@ -99,6 +100,7 @@ class User extends REST_Controller
                 REST_Controller::HTTP_BAD_GATEWAY
             );
         }
+        return;
     }
 
     public function index_get()

@@ -26,6 +26,7 @@
           append-icon="mdi-magnify"
           class="font-regular font-weight-light mt-3 mb-n4 px-2"
           v-model="searchBarang"
+          id="focusGain"
       />
       <v-divider></v-divider>
       <v-list dense v-for="(menu,index) in menus" :key="index" class="mb-n4">
@@ -104,6 +105,7 @@ export default {
   methods: {
     searchBarangSideBar() {
       this.drawer = true
+      document.getElementById('focusGain').focus()
     },
     goTo(route, title = route) {
       this.$router.push(route)
