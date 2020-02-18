@@ -22,14 +22,23 @@ class User extends REST_Controller
     {
         $user_task_group_id = $this->post(Schema::USER_TASK_GROUP_ID);
         $name = $this->post('name');
+        $place_of_birth = $this->post('placeOfBirth');
+        $date_of_birth = $this->post('dateOfBirth');
+        $religion = $this->post('religion');
+        $status = $this->post('status');
         $phone = $this->post('phone');
         $address = $this->post('address');
         $uid = $this->post('uid');
 
-        if (!isset($user_task_group_id) || !isset($name) || !isset($phone) || !isset($address) || !isset($uid)) {
+        if (!isset($user_task_group_id) || !isset($name) || !isset($phone) || !isset($address) || !isset($uid) || 
+        !isset($place_of_birth) || !isset($date_of_birth) || !isset($religion) || !isset($status)) {
             $required_parameters = [];
             if (!isset($user_task_group_id)) array_push($required_parameters, 'userTaskGroupId');
             if (!isset($name)) array_push($required_parameters, 'name');
+            if (!isset($uid)) array_push($required_parameters, 'placeOfBirth');
+            if (!isset($uid)) array_push($required_parameters, 'dateOfBirth');
+            if (!isset($uid)) array_push($required_parameters, 'religion');
+            if (!isset($uid)) array_push($required_parameters, 'status');
             if (!isset($phone)) array_push($required_parameters, 'phone');
             if (!isset($address)) array_push($required_parameters, 'address');
             if (!isset($uid)) array_push($required_parameters, 'uid');

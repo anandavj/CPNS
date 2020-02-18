@@ -4,49 +4,44 @@ const tableName = "user"
 
 const user = {
     state: {
-        id:null,
-        email:'',
-        password: '',
-        name:'',
-        userTaskGroup:'', 
-        birthPlace:'',
-        birthDate: '',
-        religion:'',
-        status:'', 
-        address:'',
-        telephone:'',
+        id: null,
+        email: null,
+        password: null,
+        name: null,
+        userTaskGroup: null, 
+        birthPlace: null,
+        birthDate: null,
+        religion: null,
+        status: null, 
+        address: null,
+        telephone: null,
         user_task: []
     },
 
     mutations: {
         setNewUser(state) {
-            state.id = null
-            state.email = ''
-            state.password = ''
-            state.name = ''
-            state.userTaskGroup = ''
-            state.birthPlace = ''
-            state.birthDate = ''
-            state.religion = ''
-            state.status = ''
-            state.address = ''
-            state.telephone = ''
+            state.id =null
+            state.email = null
+            state.password = null
+            state.name = null
+            state.userTaskGroup = null
+            state.birthPlace = null
+            state.birthDate = null
+            state.religion = null
+            state.status = null 
+            state.address = null
+            state.telephone = null
             state.user_task = []
         },
-        setUser(state, value) {
-            state.id = value.id
-            state.email = value.email
-            state.password = value.password
-            state.name = value.name
-            state.userTaskGroup = value.userTaskGroup
-            state.birthPlace = value.birthPlace
-            state.birthDate = ''
-            state.religion = ''
-            state.status = ''
-            state.address = ''
-            state.telephone = ''
-            state.user_task = []
-        }
+        setUserId(state, value){
+            state.id = value
+        },
+        setEmail(state, value){
+            state.id = value
+        },
+        setPassword(state, value){
+            state.id = value
+        },
     },
 
     actions: {

@@ -650,11 +650,13 @@ export default {
             if(this.$refs.form.validate()) {
                 // this.karyawans.push(this.karyawan)
                 // this.karyawan = Object.assign({},this.karyawanDefault)
-                this.$store.dispatch('insertUser', this.karyawan).then(response => {
-                    console.log(response)
-                }).catch(error => {
-                    console.log(error)
-                })
+
+                console.log(this.karyawan)
+                // this.$store.dispatch('insertUser', this.karyawan).then(response => {
+                //     console.log(response)
+                // }).catch(error => {
+                //     console.log(error)
+                // })
                 this.close()
             }
         },
