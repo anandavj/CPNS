@@ -47,7 +47,35 @@
                                 class="font-regular font-weight-light"
                                 style="cursor:pointer"
                             >
+                                <template v-slot:item.actions="{ item }">
+                                    <v-btn dense color="white--text green" :disabled="item.status != 'Belum Diproses'" @click.stop="prosesSuratJalan(item)">Muat</v-btn>
+                                </template>
                             </v-data-table>
+                            <!-- Pop Up Proses Surat Jalan -->
+                                <!-- Mobile Phone -->
+                                <!--  -->
+                                <!-- PC/Laptop -->
+                            <v-dialog v-model="popUpProsesSuratJalan" fullscreen hide-overlay transition="dialog-bottom-transition">
+                                <v-card>
+                                    <v-toolbar dense flat>
+                                        <span class="title font-weight-light">Proses Surat Jalan</span>
+                                        <v-btn absolute right icon @click="close"><v-icon>mdi-close</v-icon></v-btn>
+                                    </v-toolbar>
+                                    <v-card-text>
+                                        <v-data-table
+                                            :headers="suratJalanProsesHeader"
+                                            :items="surat.barangs"
+                                            :show-select="true"
+                                            :disable-sort="true"
+                                            :disable-filtering="true"
+                                            :mobile-breakpoint="1"
+                                            :hide-default-footer="true"
+                                            v-model="selectedItemsForSuratJalan"
+                                        />
+                                    </v-card-text>
+                                </v-card>
+                            </v-dialog>
+                                <!--  -->
                         </div>
                         <!--  -->
                         <!-- Pop Up Detail Surat -->
@@ -58,32 +86,35 @@
                             <v-card>
                                 <v-toolbar dense flat>
                                     <span class="title font-weight-light">Detail Surat Jalan</span>
-                                    <v-btn absolute right icon @click="close"><v-icon>mdi-close</v-icon></v-btn>
+                                    <v-btn absolute right icon @click="close" :disabled="suratJalanEditToggle"><v-icon>mdi-close</v-icon></v-btn>
                                 </v-toolbar>
                                 <v-form ref="form" class="px-2">
                                     <v-card-text>
                                         <v-row>
                                             <v-col cols="12" class="my-n8">
-                                                <v-row justify="end">
+                                                <v-row justify="space-between">
+                                                    <v-col>
+                                                        <v-switch value v-model="suratJalanEditToggle" class="pa-0 ma-0" label="Edit Surat Jalan"></v-switch>
+                                                    </v-col>
                                                     <v-col cols="3">
                                                         <v-text-field v-model="surat.tanggal" dense color="accent" outlined filled disabled label="Tanggal"/>
                                                     </v-col>
                                                 </v-row>
                                             </v-col>
                                             <v-col cols="6" class="my-n5">
-                                                <v-text-field v-model="surat.namaPenerima" dense color="accent" outlined filled disabled label="Nama Penerima"/>
+                                                <v-text-field v-model="surat.namaPenerima" dense color="accent" outlined :filled="!suratJalanEditToggle" :disabled="!suratJalanEditToggle" label="Nama Penerima"/>
                                             </v-col>
                                             <v-col cols="6" class="my-n5">
-                                                <v-text-field v-model="surat.nomor" dense color="accent" outlined filled disabled label="Nomor Surat"/>
+                                                <v-text-field v-model="surat.nomor" dense color="accent" outlined :filled="!suratJalanEditToggle" :disabled="!suratJalanEditToggle" label="Nomor Surat"/>
                                             </v-col>
                                             <v-col cols="6" class="my-n5">
-                                                <v-text-field v-model="surat.alamat" dense color="accent" outlined filled disabled label="Alamat"/>
+                                                <v-text-field v-model="surat.alamat" dense color="accent" outlined :filled="!suratJalanEditToggle" :disabled="!suratJalanEditToggle" label="Alamat"/>
                                             </v-col>
                                             <v-col cols="6" class="my-n5">
-                                                <v-text-field v-model="surat.nama" dense color="accent" outlined filled disabled label="Nama Surat"/>
+                                                <v-text-field v-model="surat.nama" dense color="accent" outlined :filled="!suratJalanEditToggle" :disabled="!suratJalanEditToggle" label="Nama Surat"/>
                                             </v-col>
                                             <v-col cols="12" class="my-n5">
-                                                <v-textarea v-model="surat.keterangan" outlined filled disabled auto-grow="true" no-resize="true" label="Keterangan"/>
+                                                <v-textarea v-model="surat.keterangan" dense color="accent" outlined :filled="!suratJalanEditToggle" :disabled="!suratJalanEditToggle" auto-grow="true" no-resize="true" label="Keterangan"/>
                                             </v-col>
                                             <v-col cols="12" class="mb-n5 mt-n3">
                                                 <v-divider></v-divider>
@@ -107,6 +138,14 @@
                                         </v-row>
                                     </v-card-text>
                                 </v-form>
+                                <v-card-actions v-if="suratJalanEditToggle">
+                                    <v-container>
+                                        <v-row justify="center">
+                                            <v-btn class="mt-n12" color="red darken-1" text @click="close">Cancel</v-btn>
+                                            <v-btn class="mt-n12" color="blue white--text" @click="saveNewBarang">Save</v-btn>
+                                        </v-row>
+                                    </v-container>
+                                </v-card-actions>
                             </v-card>
                         </v-dialog>
                         <!--  -->
@@ -144,7 +183,7 @@
                                                     <v-text-field v-model="surat.nama" dense color="accent" outlined label="Nama Surat"/>
                                                 </v-col>
                                                 <v-col cols="12" class="my-n5">
-                                                    <v-textarea v-model="surat.keterangan" auto-grow="true" outlined label="Keterangan"/>
+                                                    <v-textarea v-model="surat.keterangan" dense color="accent" auto-grow="true" outlined label="Keterangan"/>
                                                 </v-col>
                                                 <v-col cols="12" class="mb-n5 mt-n3">
                                                     <v-divider></v-divider>
@@ -189,6 +228,14 @@
                                             </v-row>
                                         </v-card-text>
                                     </v-form>
+                                    <v-card-actions>
+                                        <v-container>
+                                            <v-row justify="center">
+                                                <v-btn class="mt-n12" color="red darken-1" text @click="close">Batal</v-btn>
+                                                <v-btn class="mt-n12" color="blue white--text" @click="saveNewSuratJalan">Buat Surat Jalan</v-btn>
+                                            </v-row>
+                                        </v-container>
+                                    </v-card-actions>
                                 </v-card>
                             </v-dialog>
                         </v-container>
@@ -224,6 +271,17 @@ export default {
                     barangs:[],
                     status:'Dikirim',
                     keterangan:''
+                },
+                {
+                    id:2,
+                    nomor:'yxx',
+                    nama:'Pemesanana dari y untuk x',
+                    tanggal:'20 Januari 2020',
+                    namaPenerima:'Yoga',
+                    alamat:'Yogya',
+                    barangs:[],
+                    status:'Belum Diproses',
+                    keterangan:''
                 }
             ],
             surat: {
@@ -248,9 +306,10 @@ export default {
                 status:'',
                 keterangan:''
             },
+            suratJalanEditToggle: false,
             suratJalanNewHeader: [
                 {text:'ID Barang', value:'id'},
-                {text:'Nama Barang', value:'namaBarang'},
+                {text:'Nama Barang', value:'nama'},
                 {text:'Jumlah', value:'jumlah'},
                 {value:'actions'}
             ],
@@ -265,11 +324,20 @@ export default {
                 nama:'',
                 jumlah:null
             },
-            selectedItemsForSuratJalan:'',
+            // Proses Surat Jalan
+            suratJalanProsesHeader: [
+                {text:'ID Barang', value:'id'},
+                {text:'Nama Barang', value:'nama'},
+                {text:'Jumlah', value:'jumlah'},
+            ],
+            // Proses Muat ditampung disini
+            selectedItemsForSuratJalan:[],
+            // --
             selectedIndexSuratJalan:-1,
             // PopUp Var
             popUpNewSuratJalan: false,
             popUpDetailSuratJalan: false,
+            popUpProsesSuratJalan: false,
             /* --------------------             -------------------- */
             /* -------------------- DO -------------------- */
             /* --------------------    -------------------- */
@@ -277,6 +345,15 @@ export default {
     },
     methods: {
         /* -------------------- SURAT JALAN -------------------- */
+        // Save New Surat Jalan
+        saveNewSuratJalan() {
+            this.listSuratJalans.push(this.surat)
+            this.surat.status = 'Belum Diproses'
+            this.surat = Object.assign({},this.suratDefault)
+            this.selectedIndexSuratJalan = -1
+            this.popUpNewSuratJalan = false
+        },
+        // Detail Surat Jalan
         detailSuratJalan(item) {
             this.selectedIndexSuratJalan = this.listSuratJalans.indexOf(item)
             this.surat = Object.assign({},item)
@@ -292,6 +369,13 @@ export default {
                 if(this.popUpDetailSuratJalan) {
                     this.popUpDetailSuratJalan = false
                     this.surat = Object.assign({},this.suratDefault)
+                    this.selectedIndexSuratJalan = -1
+                } else {
+                    if(this.popUpProsesSuratJalan) {
+                        this.popUpProsesSuratJalan = false
+                        this.surat = Object.assign({},this.suratDefault)
+                        this.selectedIndexSuratJalan = -1
+                    }
                 }
             }
         },
@@ -300,7 +384,12 @@ export default {
             this.suratJalanNewItem = Object.assign({},this.suratJalanNewItemDefault)
             document.getElementById("focusGained").focus()
         },
-        // Detail Surat Jalan
+        // Proses Surat jalan
+        prosesSuratJalan(item) {
+            this.selectedIndexSuratJalan = this.listSuratJalans.indexOf(item)
+            this.barang = Object.assign({},item)
+            this.popUpProsesSuratJalan = true
+        }
         /* --------------------             -------------------- */
         /* -------------------- DO -------------------- */
         /* --------------------    -------------------- */
