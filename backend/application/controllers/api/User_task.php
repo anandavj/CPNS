@@ -43,7 +43,7 @@ class User_task extends REST_Controller {
                 array(
                     'status' => FALSE,
                     'message' => $this::INVALID_ID_MESSAGE
-                ),REST_Controller::HTTP_BAD_GATEWAY
+                ),REST_Controller::HTTP_INTERNAL_SERVER_ERROR
             );
         }
 
@@ -93,7 +93,7 @@ class User_task extends REST_Controller {
                 array(
                     'status' => FALSE,
                     'message' => $this::UPDATE_FAILED_MESSAGE
-                ),REST_Controller::HTTP_BAD_GATEWAY
+                ),REST_Controller::HTTP_INTERNAL_SERVER_ERROR
             );
         }
     }
@@ -133,7 +133,7 @@ class User_task extends REST_Controller {
                 array(
                     'status' => FALSE,
                     'message' => $this::DELETE_FAILED_MESSAGE
-                ),REST_Controller::HTTP_BAD_GATEWAY
+                ),REST_Controller::HTTP_INTERNAL_SERVER_ERROR
             );
         }
     }
