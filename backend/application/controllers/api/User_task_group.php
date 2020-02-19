@@ -42,7 +42,7 @@ class User_task_group extends REST_Controller {
                 array(
                     'status' => FALSE,
                     'message' => $this::INVALID_ID_MESSAGE
-                ),REST_Controller::HTTP_BAD_GATEWAY
+                ),REST_Controller::HTTP_INTERNAL_SERVER_ERROR
             );
         }
     }
@@ -94,7 +94,7 @@ class User_task_group extends REST_Controller {
                 array(
                     'status' => FALSE,
                     'message' => $this::UPDATE_FAILED_MESSAGE
-                ),REST_Controller::HTTP_BAD_GATEWAY
+                ),REST_Controller::HTTP_INTERNAL_SERVER_ERROR
             );
         }
     }
@@ -131,7 +131,7 @@ class User_task_group extends REST_Controller {
                         array(
                             'status' => TRUE,
                             'message' => $this::DELETE_FAILED_MESSAGE." Details: delete user_task_group succeed but failed on delete user_task"
-                        ),REST_Controller::HTTP_BAD_GATEWAY
+                        ),REST_Controller::HTTP_INTERNAL_SERVER_ERROR
                     );
                     return;
                 }
@@ -147,7 +147,7 @@ class User_task_group extends REST_Controller {
                 array(
                     'status' => FALSE,
                     'message' => $this::DELETE_FAILED_MESSAGE
-                ),REST_Controller::HTTP_BAD_GATEWAY
+                ),REST_Controller::HTTP_INTERNAL_SERVER_ERROR
             );
         }
     }

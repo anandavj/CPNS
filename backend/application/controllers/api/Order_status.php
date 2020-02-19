@@ -38,7 +38,7 @@ class Order_status extends REST_Controller {
                 array(
                     'status' => FALSE,
                     'message' => $this::INSERT_FAILED_MESSAGE
-                ),REST_Controller::HTTP_BAD_GATEWAY
+                ),REST_Controller::HTTP_INTERNAL_SERVER_ERROR
             );
         }
     }
@@ -90,7 +90,7 @@ class Order_status extends REST_Controller {
                 array(
                     'status' => FALSE,
                     'message' => $this::UPDATE_FAILED_MESSAGE
-                ),REST_Controller::HTTP_BAD_GATEWAY
+                ),REST_Controller::HTTP_INTERNAL_SERVER_ERROR
             );
         }
     }
@@ -130,7 +130,7 @@ class Order_status extends REST_Controller {
                 array(
                     'status' => FALSE,
                     'message' => $this::DELETE_FAILED_MESSAGE
-                ),REST_Controller::HTTP_BAD_GATEWAY
+                ),REST_Controller::HTTP_INTERNAL_SERVER_ERROR
             );
         }
     }
