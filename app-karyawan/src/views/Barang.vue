@@ -658,10 +658,7 @@ export default {
                     'https://picsum.photos/id/222/200',
                 ],
                 tag:[
-                    'Berani',
-                    'Kuat',
-                    'Merah',
-                    'Pantang Menyerah'
+                    'tag 1','tag 2','tag 3','tag 4'
                 ]},
                 {id:2, nama:'Kayu', openPrice:12000, bottomPrice:3000, stock:400, satuan:'biji'},
                 {id:3, nama:'Atap', openPrice:100000, bottomPrice:3000, stock:1100, satuan:'biji'}
@@ -698,7 +695,7 @@ export default {
             },
             categories: [],
             satuans: [],
-            tags: ['Berani','Kuat','Pantang Menyerah','Merah'],
+            tags: ['tag 1','tag 2','tag 3','tag 4'],
             formNewKategoriModel:'',
             formNewSatuanModel: {
                 name:'',
