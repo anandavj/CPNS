@@ -101,6 +101,13 @@
                                                     </v-col>
                                                 </v-row>
                                             </v-col>
+                                            <v-col cols="12" class="mt-n5">
+                                                <v-row justify="end">
+                                                    <v-col cols="4">
+                                                        <v-divider></v-divider>
+                                                    </v-col>
+                                                </v-row>
+                                            </v-col>
                                             <v-col cols="6" class="my-n5">
                                                 <v-text-field v-model="surat.namaPenerima" dense color="accent" outlined :filled="!suratJalanEditToggle" :disabled="!suratJalanEditToggle" label="Nama Penerima"/>
                                             </v-col>
@@ -167,6 +174,13 @@
                                                     <v-row justify="end">
                                                         <v-col cols="3">
                                                             <v-text-field v-model="surat.tanggal" dense color="accent" outlined filled disabled label="Tanggal"/>
+                                                        </v-col>
+                                                    </v-row>
+                                                </v-col>
+                                                <v-col cols="12" class="mt-n5">
+                                                    <v-row justify="end">
+                                                        <v-col cols="4">
+                                                            <v-divider></v-divider>
                                                         </v-col>
                                                     </v-row>
                                                 </v-col>
