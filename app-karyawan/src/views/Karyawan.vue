@@ -78,7 +78,7 @@
                                                 <v-btn text color="primary" @click="datePickerMenuAdd = false">Cancel</v-btn>
                                                 <v-btn text color="primary" @click="$refs.datePickerMenuAdd.save(karyawan.dateOfBirth)">OK</v-btn>
                                             </v-date-picker>
-                                            </v-menu>
+                                        </v-menu>
                                     </v-col>
                                     <v-col cols="6">
                                         <v-select
