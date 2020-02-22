@@ -23,13 +23,83 @@
                     <!-- *************************************************************************************************************** -->
                     <v-tab-item value="SuratJalan" class="mx-4 my-4 mx-md-10">
                         <!-- Search Surat Jalan -->
-                        <v-text-field
-                            placeholder="Cari Nomor Surat Jalan"
-                            :solo="true"
-                            :clearable="true"
-                            append-icon="mdi-magnify"
-                            v-model="searchSuratJalan"
-                        />
+                        <v-row justify="end" no-gutters>
+                            <v-col cols="12">
+                                <v-text-field
+                                    placeholder="Cari Nomor Surat Jalan"
+                                    :solo="true"
+                                    :clearable="true"
+                                    append-icon="mdi-magnify"
+                                    v-model="advanceSearch.nomor"
+                                    class="mb-n4"
+                                />
+                            </v-col>
+                            <v-expand-transition>
+                                <v-col cols="12" class="mb-n4" v-if="showAdvanceSearchOption">
+                                    <v-row no-gutters>
+                                        <v-col cols="4">
+                                            <v-menu
+                                                ref="showAdvancedatePickerMenuAdd"
+                                                v-model="showAdvancedatePickerMenuAdd"
+                                                :close-on-content-click="false"
+                                                :return-value.sync="advanceSearch.tanggal"
+                                                transition="scale-transition"
+                                                offset-y
+                                                min-width="290px"
+                                            >
+                                                <template v-slot:activator="{ on }">
+                                                    <v-text-field
+                                                    color="accent"
+                                                    v-model="advanceSearch.tanggal"
+                                                    label="Tanggal"
+                                                    append-icon="mdi-calendar"
+                                                    readonly
+                                                    v-on="on"
+                                                    :solo="true"
+                                                    :clearable="true"
+                                                    dense
+                                                    class="mr-3"
+                                                    ></v-text-field>
+                                                </template>
+                                                <v-date-picker v-model="advanceSearch.tanggal" no-title scrollable>
+                                                    <v-spacer></v-spacer>
+                                                    <v-btn text color="primary" @click="showAdvancedatePickerMenuAdd = false">Cancel</v-btn>
+                                                    <v-btn text color="primary" @click="$refs.showAdvancedatePickerMenuAdd.save(advanceSearch.tanggal)">OK</v-btn>
+                                                </v-date-picker>
+                                            </v-menu>
+                                        </v-col>
+                                        <v-col cols="4">
+                                            <v-text-field
+                                                placeholder="Nama"
+                                                :solo="true"
+                                                :clearable="true"
+                                                dense
+                                                class="mr-3"
+                                                color="accent"
+                                                v-model="advanceSearch.nama"
+                                            >
+                                            </v-text-field>
+                                        </v-col>
+                                        <v-col cols="4">
+                                            <v-select
+                                                placeholder="Status"
+                                                :solo="true"
+                                                :clearable="true"
+                                                dense
+                                                color="accent"
+                                                :items="status"
+                                                v-model="advanceSearch.status"
+                                                item-text="name"
+                                            >
+                                            </v-select>
+                                        </v-col>
+                                    </v-row>
+                                </v-col>
+                            </v-expand-transition>
+                            <v-col>
+                                <v-btn dense color="blue white--text" outlined @click="showAdvanceSearch">Advance Search</v-btn>
+                            </v-col>
+                        </v-row>
                         <!-- List Surat Jalan -->
                             <!-- mobile phone -->
                         <div v-if="popUpBreakPoint">
@@ -41,7 +111,7 @@
                             <v-data-table
                                 :headers="listSuratJalanHeader"
                                 :items="listSuratJalans"
-                                :search="searchSuratJalan"
+                                item-key="nomor"
                                 :hide-default-footer="true"
                                 @click:row="detailSuratJalan"
                                 class="font-regular font-weight-light"
@@ -139,8 +209,16 @@
                                                     :disable-filtering="true"
                                                     :disable-pagination="true"
                                                     :disable-sort="true"
-                                                    no-data-text=" "
-                                                />
+                                                    no-data-text="Belum ada Barang yang ditambah"
+                                                >
+                                                    <template v-slot:body.append v-if="suratJalanEditToggle">
+                                                        <tr>
+                                                            <td><v-text-field color="accent" id="focusGained" v-on:keyup.enter="addSuratJalanNewItem" outlined dense v-model="suratJalanNewItem.id"/></td>
+                                                            <td><v-text-field color="accent" v-on:keyup.enter="addSuratJalanNewItem" outlined dense v-model="suratJalanNewItem.nama"/></td>
+                                                            <td><v-text-field color="accent" v-on:keyup.enter="addSuratJalanNewItem" outlined dense v-model="suratJalanNewItem.jumlah"/></td>
+                                                        </tr>
+                                                    </template>
+                                                </v-data-table>
                                             </v-col>
                                         </v-row>
                                     </v-card-text>
@@ -207,7 +285,7 @@
                                                         Daftar Barang
                                                     </v-row>
                                                 </v-col>
-                                                <v-col cols="12" class="my-n4">
+                                                <v-col cols="12" class="mt-n4">
                                                     <v-data-table
                                                         :headers="suratJalanNewHeader"
                                                         :items="surat.barangs"
@@ -215,29 +293,20 @@
                                                         :disable-filtering="true"
                                                         :disable-pagination="true"
                                                         :disable-sort="true"
-                                                        no-data-text=" "
+                                                        no-data-text="Belum ada Barang yang ditambah"
                                                     >
+                                                        <template v-slot:body.append>
+                                                            <tr>
+                                                                <td><v-text-field color="accent" id="focusGained" v-on:keyup.enter="addSuratJalanNewItem" outlined dense v-model="suratJalanNewItem.id"/></td>
+                                                                <td><v-text-field color="accent" v-on:keyup.enter="addSuratJalanNewItem" outlined dense v-model="suratJalanNewItem.nama"/></td>
+                                                                <td><v-text-field color="accent" v-on:keyup.enter="addSuratJalanNewItem" outlined dense v-model="suratJalanNewItem.jumlah"/></td>
+                                                            </tr>
+                                                        </template>
                                                         <template v-slot:item.actions="{ item }">
                                                             <v-icon class="mr-2" @click.stop="editSuratJalanNew(item)">mdi-pencil</v-icon>
                                                             <v-icon @click.stop="deleteSuratJalanNew(item)">mdi-delete</v-icon>
                                                         </template>
                                                     </v-data-table>
-                                                    <v-container fluid class="my-n4 px-n4">
-                                                        <v-row justify="center">
-                                                            <v-col cols="3">
-                                                                <v-text-field color="accent" id="focusGained" v-on:keyup.enter="addSuratJalanNewItem" outlined dense v-model="suratJalanNewItem.id" label="ID Barang"/>
-                                                            </v-col>
-                                                            <v-col cols="6">
-                                                                <v-text-field color="accent" v-on:keyup.enter="addSuratJalanNewItem" outlined dense v-model="suratJalanNewItem.nama" label="Nama Barang"/>
-                                                            </v-col>
-                                                            <v-col cols="2">
-                                                                <v-text-field color="accent" v-on:keyup.enter="addSuratJalanNewItem" outlined dense v-model="suratJalanNewItem.jumlah" label="Jumlah"/>
-                                                            </v-col>
-                                                            <v-col cols="1">
-                                                                <v-btn color="green" dark @click="addSuratJalanNewItem"><v-icon>mdi-plus</v-icon></v-btn>
-                                                            </v-col>
-                                                        </v-row>
-                                                    </v-container>
                                                 </v-col>
                                             </v-row>
                                         </v-card-text>
@@ -274,6 +343,13 @@ export default {
             // List & Details
             // listSuratJalanHeader on computed
             searchSuratJalan:'',
+            advanceSearch: {
+                nomor:'',
+                tanggal:'',
+                nama:'',
+                status:''
+
+            },
             listSuratJalans:[
                 {
                     id:1,
@@ -320,6 +396,11 @@ export default {
                 status:'',
                 keterangan:''
             },
+            status: [
+                {id:1, name:'Belum Diproses'},
+                {id:2, name:'Dikirim'},
+                {id:3, name:'Selesai'},
+            ],
             suratJalanEditToggle: false,
             suratJalanNewHeader: [
                 {text:'ID Barang', value:'id'},
@@ -352,6 +433,8 @@ export default {
             popUpNewSuratJalan: false,
             popUpDetailSuratJalan: false,
             popUpProsesSuratJalan: false,
+            showAdvanceSearchOption: false,
+            showAdvancedatePickerMenuAdd: false,
             /* --------------------             -------------------- */
             /* -------------------- DO -------------------- */
             /* --------------------    -------------------- */
@@ -359,6 +442,38 @@ export default {
     },
     methods: {
         /* -------------------- SURAT JALAN -------------------- */
+        // Advance Search
+        showAdvanceSearch() {
+            if(!this.showAdvanceSearchOption) {
+                this.showAdvanceSearchOption = true
+            } else {
+                if(this.showAdvanceSearchOption) {
+                    this.showAdvanceSearchOption = false
+                    this.advanceSearch.nomor = ''
+                    this.advanceSearch.nama = ''
+                    this.advanceSearch.tanggal = ''
+                    this.advanceSearch.status = ''
+                }
+            }
+        },
+        advanceSearchNomor(value) {
+            if(!this.advanceSearch.nomor) {
+                return true
+            }
+            return value.toLowerCase().includes(this.advanceSearch.nomor.toLowerCase())
+        },
+        advanceSearchNama(value) {
+            if(!this.advanceSearch.nama) {
+                return true
+            }
+            return value.toLowerCase().includes(this.advanceSearch.nama.toLowerCase())
+        },
+        advanceSearchStatus(value) {
+            if(!this.advanceSearch.status) {
+                return true
+            }
+            return value === this.advanceSearch.status;
+        },
         // Save New Surat Jalan
         saveNewSuratJalan() {
             this.listSuratJalans.push(this.surat)
@@ -412,12 +527,12 @@ export default {
     computed: {
         listSuratJalanHeader() {
             return [
-                {text:'Delivery Order', value:'nomor'},
-                {text:'Tanggal', value:'tanggal',filter: () => true},
-                {text:'Nama', value:'nama'},
-                {text:'Keterangan', value:'keterangan',filter: () => true},
-                {text:'Status', value:'status',filter: () => true},
-                {text:'', value:'actions',width:'10%',filter: () => true}
+                {text:'Nomor Surat Jalan', value:'nomor',filter: this.advanceSearchNomor},
+                {text:'Tanggal', value:'tanggal',filter: this.advanceSearchTanggal},
+                {text:'Nama', value:'nama',filter: this.advanceSearchNama},
+                {text:'Keterangan', value:'keterangan'},
+                {text:'Status', value:'status',filter: this.advanceSearchStatus},
+                {text:'', value:'actions',width:'10%'}
             ]
         },
         //view Breakpoint
