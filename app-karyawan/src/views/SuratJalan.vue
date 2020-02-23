@@ -57,6 +57,7 @@
                                                     v-on="on"
                                                     :solo="true"
                                                     :clearable="true"
+                                                    @click:clear="advanceSearch.tanggal = null"
                                                     dense
                                                     class="mr-3"
                                                     ></v-text-field>
@@ -95,7 +96,7 @@
                             </v-expand-transition>
                             <v-col>
                                 <v-btn class="body-2" text dense color="blue white--text"  @click="showAdvanceSearch"><span class="mr-1"><v-icon v-if="!showAdvanceSearchOption">mdi-filter-menu-outline</v-icon><v-icon v-else>mdi-filter-minus-outline</v-icon></span>Filter</v-btn>
-                                <v-btn text :disabled="advanceSearch.nama == '' && advanceSearch.tanggal == '' && advanceSearch.status == ''" v-if="showAdvanceSearchOption" dense @click="clearAllAdvanceSearch" class="caption showAdvanceSearchOptionText"><v-icon>mdi-filter-variant-remove</v-icon> Clear Filter</v-btn>
+                                <v-btn text :disabled="advanceSearch.nama == '' && (advanceSearch.tanggal == '' || advanceSearch.tanggal == null) && advanceSearch.status == ''" v-if="showAdvanceSearchOption" dense @click="clearAllAdvanceSearch" class="caption showAdvanceSearchOptionText"><v-icon>mdi-filter-variant-remove</v-icon> Clear Filter</v-btn>
                             </v-col>
                         </v-row>
                         <!-- List Surat Jalan -->
