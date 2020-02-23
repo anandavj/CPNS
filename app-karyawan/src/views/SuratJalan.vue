@@ -35,14 +35,13 @@
                                 />
                             </v-col>
                             <v-expand-transition>
-                                <v-col cols="12" class="mb-n4" v-if="showAdvanceSearchOption">
+                                <v-col cols="12" class="mb-n5" v-if="showAdvanceSearchOption">
                                     <v-row no-gutters>
                                         <v-col cols="4">
                                             <v-menu
                                                 ref="showAdvancedatePickerMenuAdd"
                                                 v-model="showAdvancedatePickerMenuAdd"
                                                 :close-on-content-click="false"
-                                                :return-value.sync="advanceSearch.tanggal"
                                                 transition="scale-transition"
                                                 offset-y
                                                 min-width="290px"
@@ -50,9 +49,10 @@
                                                 <template v-slot:activator="{ on }">
                                                     <v-text-field
                                                     color="accent"
-                                                    v-model="advanceSearch.tanggal"
+                                                    
                                                     label="Tanggal"
                                                     append-icon="mdi-calendar"
+                                                    :value="formatDate"
                                                     readonly
                                                     v-on="on"
                                                     :solo="true"
@@ -61,10 +61,7 @@
                                                     class="mr-3"
                                                     ></v-text-field>
                                                 </template>
-                                                <v-date-picker v-model="advanceSearch.tanggal" no-title scrollable>
-                                                    <v-spacer></v-spacer>
-                                                    <v-btn text color="primary" @click="showAdvancedatePickerMenuAdd = false">Cancel</v-btn>
-                                                    <v-btn text color="primary" @click="$refs.showAdvancedatePickerMenuAdd.save(advanceSearch.tanggal)">OK</v-btn>
+                                                <v-date-picker v-model="advanceSearch.tanggal" show-current="false" no-title scrollable :weekday-format="dayFormat" @change="showAdvancedatePickerMenuAdd = false">
                                                 </v-date-picker>
                                             </v-menu>
                                         </v-col>
@@ -97,7 +94,8 @@
                                 </v-col>
                             </v-expand-transition>
                             <v-col>
-                                <v-btn dense color="blue white--text" outlined @click="showAdvanceSearch">Advance Search</v-btn>
+                                <v-btn class="body-2" text dense color="blue white--text"  @click="showAdvanceSearch"><span class="mr-1"><v-icon v-if="!showAdvanceSearchOption">mdi-filter-menu-outline</v-icon><v-icon v-else>mdi-filter-minus-outline</v-icon></span>Filter</v-btn>
+                                <v-btn text :disabled="advanceSearch.nama == '' && advanceSearch.tanggal == '' && advanceSearch.status == ''" v-if="showAdvanceSearchOption" dense @click="clearAllAdvanceSearch" class="caption showAdvanceSearchOptionText"><v-icon>mdi-filter-variant-remove</v-icon> Clear Filter</v-btn>
                             </v-col>
                         </v-row>
                         <!-- List Surat Jalan -->
@@ -117,6 +115,9 @@
                                 class="font-regular font-weight-light"
                                 style="cursor:pointer"
                             >
+                                <template v-slot:item.tanggal="{ item }">
+                                    <span>{{ formatDateList(item.tanggal) }}</span>
+                                </template>
                                 <template v-slot:item.actions="{ item }">
                                     <v-btn dense color="white--text green" :disabled="item.status != 'Belum Diproses'" @click.stop="prosesSuratJalan(item)">Muat</v-btn>
                                 </template>
@@ -333,6 +334,9 @@
 </template>
 
 <script>
+
+import moment from 'moment'
+
 export default {
     name: 'SuratJalan',
 
@@ -345,17 +349,16 @@ export default {
             searchSuratJalan:'',
             advanceSearch: {
                 nomor:'',
-                tanggal:'',
+                tanggal: '',
                 nama:'',
                 status:''
-
             },
             listSuratJalans:[
                 {
                     id:1,
                     nomor:'xxx',
                     nama:'Pemesanana dari x untuk y',
-                    tanggal:'20 Januari 2020',
+                    tanggal: '2020-04-02',
                     namaPenerima:'Yoga',
                     alamat:'Yogya',
                     barangs:[],
@@ -366,7 +369,7 @@ export default {
                     id:2,
                     nomor:'yxx',
                     nama:'Pemesanana dari y untuk x',
-                    tanggal:'20 Januari 2020',
+                    tanggal:'2020-04-02',
                     namaPenerima:'Yoga',
                     alamat:'Yogya',
                     barangs:[],
@@ -449,18 +452,28 @@ export default {
             } else {
                 if(this.showAdvanceSearchOption) {
                     this.showAdvanceSearchOption = false
-                    this.advanceSearch.nomor = ''
-                    this.advanceSearch.nama = ''
-                    this.advanceSearch.tanggal = ''
-                    this.advanceSearch.status = ''
+                    // this.advanceSearch.nama = ''
+                    // this.advanceSearch.tanggal = ''
+                    // this.advanceSearch.status = ''
                 }
             }
+        },
+        clearAllAdvanceSearch() {
+            this.advanceSearch.nama = ''
+            this.advanceSearch.tanggal = ''
+            this.advanceSearch.status = ''
         },
         advanceSearchNomor(value) {
             if(!this.advanceSearch.nomor) {
                 return true
             }
             return value.toLowerCase().includes(this.advanceSearch.nomor.toLowerCase())
+        },
+        advanceSearchTanggal(value) {
+            if(!this.advanceSearch.tanggal) {
+                return true
+            }
+            return value === this.advanceSearch.tanggal
         },
         advanceSearchNama(value) {
             if(!this.advanceSearch.nama) {
@@ -473,6 +486,14 @@ export default {
                 return true
             }
             return value === this.advanceSearch.status;
+        },
+        dayFormat(date) {
+            let i = new Date(date).getDay(date)
+            var dayOftheWeek = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su']
+            return dayOftheWeek[i]
+        },
+        formatDateList(val) {
+            return val ? moment(val).format('DD MMMM YYYY') : ''
         },
         // Save New Surat Jalan
         saveNewSuratJalan() {
@@ -525,6 +546,9 @@ export default {
     },
 
     computed: {
+        formatDate() {
+            return this.advanceSearch.tanggal ? moment(this.advanceSearch.tanggal).format('DD MMMM YYYY') : ''
+        },
         listSuratJalanHeader() {
             return [
                 {text:'Nomor Surat Jalan', value:'nomor',filter: this.advanceSearchNomor},
@@ -546,3 +570,18 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+
+.showAdvanceSearchOptionText {
+    color: red;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+}
+
+</style>
