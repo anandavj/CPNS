@@ -34,7 +34,8 @@
                                     class="mb-n4"
                                 />
                             </v-col>
-                            <v-expand-transition>
+                            <!-- PC / Laptop view -->
+                            <v-expand-transition v-if="!popUpBreakPoint">
                                 <v-col cols="12" class="mb-n5" v-if="showAdvanceSearchOption">
                                     <v-row no-gutters>
                                         <v-col cols="4">
@@ -94,6 +95,67 @@
                                     </v-row>
                                 </v-col>
                             </v-expand-transition>
+                            <!-- Mobile Phone view -->
+                            <v-expand-transition v-else>
+                                <v-col cols="12" class="mb-n5" v-if="showAdvanceSearchOption">
+                                    <v-row no-gutters>
+                                        <v-col cols="12">
+                                            <v-text-field
+                                                placeholder="Nama"
+                                                :solo="true"
+                                                :clearable="true"
+                                                dense
+                                                color="accent"
+                                                class="mb-n4"
+                                                v-model="advanceSearch.nama"
+                                            >
+                                            </v-text-field>
+                                        </v-col>
+                                        <v-col cols="6">
+                                            <v-menu
+                                                ref="showAdvancedatePickerMenuAdd"
+                                                v-model="showAdvancedatePickerMenuAdd"
+                                                :close-on-content-click="false"
+                                                transition="scale-transition"
+                                                offset-y
+                                                min-width="290px"
+                                            >
+                                                <template v-slot:activator="{ on }">
+                                                    <v-text-field
+                                                    color="accent"
+                                                    class="mb-n4 mr-1"
+                                                    label="Tanggal"
+                                                    append-icon="mdi-calendar"
+                                                    :value="formatDate"
+                                                    readonly
+                                                    v-on="on"
+                                                    :solo="true"
+                                                    :clearable="true"
+                                                    @click:clear="advanceSearch.tanggal = null"
+                                                    dense
+                                                    ></v-text-field>
+                                                </template>
+                                                <v-date-picker v-model="advanceSearch.tanggal" show-current="false" no-title scrollable :weekday-format="dayFormat" @change="showAdvancedatePickerMenuAdd = false">
+                                                </v-date-picker>
+                                            </v-menu>
+                                        </v-col>
+                                        <v-col cols="6">
+                                            <v-select
+                                                placeholder="Status"
+                                                :solo="true"
+                                                :clearable="true"
+                                                dense
+                                                color="accent"
+                                                :items="status"
+                                                v-model="advanceSearch.status"
+                                                item-text="name"
+                                                class="ml-1"
+                                            >
+                                            </v-select>
+                                        </v-col>
+                                    </v-row>
+                                </v-col>
+                            </v-expand-transition>
                             <v-col>
                                 <v-btn class="body-2" text dense color="blue white--text"  @click="showAdvanceSearch"><span class="mr-1"><v-icon v-if="!showAdvanceSearchOption">mdi-filter-menu-outline</v-icon><v-icon v-else>mdi-filter-minus-outline</v-icon></span>Filter</v-btn>
                                 <v-btn text :disabled="advanceSearch.nama == '' && (advanceSearch.tanggal == '' || advanceSearch.tanggal == null) && advanceSearch.status == ''" v-if="showAdvanceSearchOption" dense @click="clearAllAdvanceSearch" class="caption showAdvanceSearchOptionText"><v-icon>mdi-filter-variant-remove</v-icon> Clear Filter</v-btn>
@@ -102,7 +164,26 @@
                         <!-- List Surat Jalan -->
                             <!-- mobile phone -->
                         <div v-if="popUpBreakPoint">
-
+                            <v-data-table
+                                :headers="listSuratJalanHeader"
+                                :items="listSuratJalans"
+                                item-key="nomor"
+                                :hide-default-footer="true"
+                                @click:row="detailSuratJalan"
+                                class="font-regular font-weight-light"
+                                style="cursor:pointer"
+                            >
+                                <template v-slot:item="{ item }">
+                                    <v-card @click="detailSuratJalan(item)" class="mt-1 mb-3 mx-2" color="grey lighten-2" outlined>
+                                        <v-card-title class="body-2">{{ item.nama }}</v-card-title>
+                                        <v-card-subtitle>{{ item.nomor }}</v-card-subtitle>
+                                        <div class="d-flex flex-no-wrap justify-space-between mt-n4">
+                                            <v-card-subtitle>{{ item.status }}</v-card-subtitle>
+                                            <v-card-subtitle>{{ formatDateList(item.tanggal) }}</v-card-subtitle>
+                                        </div>
+                                    </v-card>
+                                </template>
+                            </v-data-table>
                         </div>
                             <!--  -->
                             <!-- PC / laptop -->
@@ -151,9 +232,6 @@
                         </div>
                         <!--  -->
                         <!-- Pop Up Detail Surat -->
-                            <!-- mobile phone -->
-                            <!--  -->
-                            <!-- PC / Laptop -->
                         <v-dialog v-model="popUpDetailSuratJalan" fullscreen hide-overlay transition="dialog-bottom-transition">
                             <v-card>
                                 <v-toolbar dense flat>
@@ -166,11 +244,16 @@
                                             <v-col cols="12" class="my-n8">
                                                 <v-row justify="space-between">
                                                     <v-col>
-                                                        <v-switch value v-model="suratJalanEditToggle" class="pa-0 ma-0" label="Edit Surat Jalan"></v-switch>
+                                                        <v-switch :disabled="suratJalanEditToggle" value v-model="suratJalanEditToggle" class="pa-0 ma-0" label="Edit Surat Jalan"></v-switch>
                                                     </v-col>
-                                                    <v-col cols="3">
+                                                    <!-- Tanggal -->
+                                                    <v-col cols="5" v-if="popUpBreakPoint">
                                                         <v-text-field v-model="surat.tanggal" dense color="accent" outlined filled disabled label="Tanggal"/>
                                                     </v-col>
+                                                    <v-col cols="3" v-else>
+                                                        <v-text-field v-model="surat.tanggal" dense color="accent" outlined filled disabled label="Tanggal"/>
+                                                    </v-col>
+                                                    <!--  -->
                                                 </v-row>
                                             </v-col>
                                             <v-col cols="12" class="mt-n5">
@@ -180,30 +263,51 @@
                                                     </v-col>
                                                 </v-row>
                                             </v-col>
-                                            <v-col cols="6" class="my-n5">
+                                            <!-- Nama Penerima -->
+                                            <v-col cols="12" class="my-n5" v-if="popUpBreakPoint">
                                                 <v-text-field v-model="surat.namaPenerima" dense color="accent" outlined :filled="!suratJalanEditToggle" :disabled="!suratJalanEditToggle" label="Nama Penerima"/>
                                             </v-col>
-                                            <v-col cols="6" class="my-n5">
+                                            <v-col cols="6" class="my-n5" v-else>
+                                                <v-text-field v-model="surat.namaPenerima" dense color="accent" outlined :filled="!suratJalanEditToggle" :disabled="!suratJalanEditToggle" label="Nama Penerima"/>
+                                            </v-col>
+                                            <!--  -->
+                                            <!-- Nomor Surat -->
+                                            <v-col cols="12" class="my-n5" v-if="popUpBreakPoint">
                                                 <v-text-field v-model="surat.nomor" dense color="accent" outlined :filled="!suratJalanEditToggle" :disabled="!suratJalanEditToggle" label="Nomor Surat"/>
                                             </v-col>
-                                            <v-col cols="6" class="my-n5">
+                                            <v-col cols="6" class="my-n5" v-else>
+                                                <v-text-field v-model="surat.nomor" dense color="accent" outlined :filled="!suratJalanEditToggle" :disabled="!suratJalanEditToggle" label="Nomor Surat"/>
+                                            </v-col>
+                                            <!--  -->
+                                            <!-- Alamat -->
+                                            <v-col cols="12" class="my-n5" v-if="popUpBreakPoint">
                                                 <v-text-field v-model="surat.alamat" dense color="accent" outlined :filled="!suratJalanEditToggle" :disabled="!suratJalanEditToggle" label="Alamat"/>
                                             </v-col>
-                                            <v-col cols="6" class="my-n5">
+                                            <v-col cols="6" class="my-n5" v-else>
+                                                <v-text-field v-model="surat.alamat" dense color="accent" outlined :filled="!suratJalanEditToggle" :disabled="!suratJalanEditToggle" label="Alamat"/>
+                                            </v-col>
+                                            <!--  -->
+                                            <!-- Nama Surat -->
+                                            <v-col cols="12" class="my-n5" v-if="popUpBreakPoint">
                                                 <v-text-field v-model="surat.nama" dense color="accent" outlined :filled="!suratJalanEditToggle" :disabled="!suratJalanEditToggle" label="Nama Surat"/>
                                             </v-col>
+                                            <v-col cols="6" class="my-n5" v-else>
+                                                <v-text-field v-model="surat.nama" dense color="accent" outlined :filled="!suratJalanEditToggle" :disabled="!suratJalanEditToggle" label="Nama Surat"/>
+                                            </v-col>
+                                            <!--  -->
                                             <v-col cols="12" class="my-n5">
-                                                <v-textarea v-model="surat.keterangan" dense color="accent" outlined :filled="!suratJalanEditToggle" :disabled="!suratJalanEditToggle" auto-grow="true" no-resize="true" label="Keterangan"/>
+                                                <v-textarea v-model="surat.keterangan" dense color="accent" outlined :filled="!suratJalanEditToggle" :disabled="!suratJalanEditToggle" :auto-grow="true" :no-resize="true" label="Keterangan"/>
                                             </v-col>
                                             <v-col cols="12" class="mb-n5 mt-n3">
                                                 <v-divider></v-divider>
                                             </v-col>
-                                            <v-col cols="12">
+                                            <v-col cols="12" v-if="!popUpBreakPoint">
                                                 <v-row justify="center" class="headline">
                                                     Daftar Barang
                                                 </v-row>
                                             </v-col>
-                                            <v-col cols="12" class="my-n4">
+                                            <!-- PC / Laptop View -->
+                                            <v-col cols="12" class="my-n4" v-if="!popUpBreakPoint">
                                                 <v-data-table
                                                     :headers="suratJalanNewHeader"
                                                     :items="surat.barangs"
@@ -219,6 +323,62 @@
                                                             <td><v-text-field color="accent" v-on:keyup.enter="addSuratJalanNewItem" outlined dense v-model="suratJalanNewItem.nama"/></td>
                                                             <td><v-text-field color="accent" v-on:keyup.enter="addSuratJalanNewItem" outlined dense v-model="suratJalanNewItem.jumlah"/></td>
                                                         </tr>
+                                                    </template>
+                                                </v-data-table>
+                                            </v-col>
+                                            <!-- Mobile view -->
+                                            <v-col cols="12" class="mb-4 mt-n10" v-else>
+                                                <v-data-table
+                                                    :headers="suratJalanNewHeader"
+                                                    :items="surat.barangs"
+                                                    :hide-default-footer="true"
+                                                    :disable-filtering="true"
+                                                    :disable-pagination="true"
+                                                    :disable-sort="true"
+                                                    no-data-text="Belum ada Barang yang ditambah"
+                                                >
+                                                    <template v-slot:body.prepend="{ headers }">
+                                                        <tr>
+                                                            <td :colspan="headers.length" class="text-center">
+                                                                Daftar Barang
+                                                            </td>
+                                                        </tr>
+                                                    </template>
+                                                    <template v-slot:body.append="{ headers }" v-if="suratJalanEditToggle">
+                                                        <tr>
+                                                            <td :colspan="headers.length" class="text-center">
+                                                                <v-row>
+                                                                    <v-col cols="12">
+                                                                        Tambah Barang
+                                                                    </v-col>
+                                                                    <v-col cols="12">
+                                                                        <v-text-field class="mb-n4" color="accent" label="ID Barang" outlined dense v-model="suratJalanNewItem.id"/>
+                                                                    </v-col>
+                                                                    <v-col cols="12" class="mt-n4">
+                                                                        <v-text-field class="mb-n4" color="accent" label="Nama Barang" outlined dense v-model="suratJalanNewItem.nama"/>
+                                                                    </v-col>
+                                                                    <v-col cols="9" class="mt-n4 mr-n3">
+                                                                        <v-text-field class="mb-n4" color="accent" label="Jumlah" outlined dense v-model="suratJalanNewItem.jumlah"/>
+                                                                    </v-col>
+                                                                    <v-col cols="3" class="mt-n4">
+                                                                        <v-btn color="green" dark @click="addSuratJalanNewItem"><v-icon>mdi-plus</v-icon></v-btn>
+                                                                    </v-col>
+                                                                </v-row>
+                                                            </td>
+                                                        </tr>
+                                                    </template>
+                                                    <template v-slot:item="{ item }">
+                                                        <v-card color="grey lighten-2">
+                                                            <div class="d-flex flex-no-wrap justify-space-between align-center">
+                                                                <div>
+                                                                    <v-card-title class="body-2">{{item.nama}}</v-card-title>
+                                                                    <v-card-subtitle>{{item.id}}</v-card-subtitle>
+                                                                </div>
+                                                                <div>
+                                                                    <v-card-subtitle>{{item.jumlah}}</v-card-subtitle>
+                                                                </div>
+                                                            </div>
+                                                        </v-card>
                                                     </template>
                                                 </v-data-table>
                                             </v-col>
@@ -252,7 +412,11 @@
                                             <v-row>
                                                 <v-col cols="12" class="my-n8">
                                                     <v-row justify="end">
-                                                        <v-col cols="3">
+                                                        <!-- Tanggal -->
+                                                        <v-col cols="5" v-if="popUpBreakPoint">
+                                                            <v-text-field v-model="surat.tanggal" dense color="accent" outlined filled disabled label="Tanggal"/>
+                                                        </v-col>
+                                                        <v-col cols="3" v-else>
                                                             <v-text-field v-model="surat.tanggal" dense color="accent" outlined filled disabled label="Tanggal"/>
                                                         </v-col>
                                                     </v-row>
@@ -264,30 +428,51 @@
                                                         </v-col>
                                                     </v-row>
                                                 </v-col>
-                                                <v-col cols="6" class="my-n5">
+                                                <!-- Nama Penerima -->
+                                                <v-col cols="12" class="my-n5" v-if="popUpBreakPoint">
                                                     <v-text-field v-model="surat.namaPenerima" dense color="accent" outlined label="Nama Penerima"/>
                                                 </v-col>
-                                                <v-col cols="6" class="my-n5">
+                                                <v-col cols="6" class="my-n5" v-else>
+                                                    <v-text-field v-model="surat.namaPenerima" dense color="accent" outlined label="Nama Penerima"/>
+                                                </v-col>
+                                                <!--  -->
+                                                <!-- Nomor Surat -->
+                                                <v-col cols="12" class="my-n5" v-if="popUpBreakPoint">
                                                     <v-text-field v-model="surat.nomor" dense color="accent" outlined label="Nomor Surat"/>
                                                 </v-col>
-                                                <v-col cols="6" class="my-n5">
+                                                <v-col cols="6" class="my-n5" v-else>
+                                                    <v-text-field v-model="surat.nomor" dense color="accent" outlined label="Nomor Surat"/>
+                                                </v-col>
+                                                <!--  -->
+                                                <!-- Alamat -->
+                                                <v-col cols="12" class="my-n5" v-if="popUpBreakPoint">
                                                     <v-text-field v-model="surat.alamat" dense color="accent" outlined label="Alamat"/>
                                                 </v-col>
-                                                <v-col cols="6" class="my-n5">
+                                                <v-col cols="6" class="my-n5" v-else>
+                                                    <v-text-field v-model="surat.alamat" dense color="accent" outlined label="Alamat"/>
+                                                </v-col>
+                                                <!--  -->
+                                                <!-- Nama Surat -->
+                                                <v-col cols="12" class="my-n5" v-if="popUpBreakPoint">
                                                     <v-text-field v-model="surat.nama" dense color="accent" outlined label="Nama Surat"/>
                                                 </v-col>
-                                                <v-col cols="12" class="my-n5">
-                                                    <v-textarea v-model="surat.keterangan" dense color="accent" auto-grow="true" outlined label="Keterangan"/>
+                                                <v-col cols="6" class="my-n5" v-else>
+                                                    <v-text-field v-model="surat.nama" dense color="accent" outlined label="Nama Surat"/>
                                                 </v-col>
-                                                <v-col cols="12" class="mb-n5 mt-n3">
-                                                    <v-divider></v-divider>
+                                                <!--  -->
+                                                <v-col cols="12" class="my-n5">
+                                                    <v-textarea v-model="surat.keterangan" dense color="accent" :auto-grow="true" outlined label="Keterangan"/>
+                                                </v-col>
+                                                <v-col cols="12" class="mb-n5 mt-n3" v-if="!popUpBreakPoint">
+                                                    <v-divider v-if="!popUpBreakPoint"></v-divider>
                                                 </v-col>
                                                 <v-col cols="12">
-                                                    <v-row justify="center" class="headline">
+                                                    <v-row justify="center" class="headline" v-if="!popUpBreakPoint">
                                                         Daftar Barang
                                                     </v-row>
                                                 </v-col>
-                                                <v-col cols="12" class="mt-n4">
+                                                <!-- PC / Laptop View -->
+                                                <v-col cols="12" class="mt-n4" v-if="!popUpBreakPoint">
                                                     <v-data-table
                                                         :headers="suratJalanNewHeader"
                                                         :items="surat.barangs"
@@ -307,6 +492,62 @@
                                                         <template v-slot:item.actions="{ item }">
                                                             <v-icon class="mr-2" @click.stop="editSuratJalanNew(item)">mdi-pencil</v-icon>
                                                             <v-icon @click.stop="deleteSuratJalanNew(item)">mdi-delete</v-icon>
+                                                        </template>
+                                                    </v-data-table>
+                                                </v-col>
+                                                <!-- Mobile view -->
+                                                <v-col cols="12" class="mb-4 mt-n10" v-else>
+                                                    <v-data-table
+                                                        :headers="suratJalanNewHeader"
+                                                        :items="surat.barangs"
+                                                        :hide-default-footer="true"
+                                                        :disable-filtering="true"
+                                                        :disable-pagination="true"
+                                                        :disable-sort="true"
+                                                        no-data-text="Belum ada Barang yang ditambah"
+                                                    >
+                                                        <template v-slot:body.prepend="{ headers }">
+                                                            <tr>
+                                                                <td :colspan="headers.length" class="text-center">
+                                                                    Daftar Barang
+                                                                </td>
+                                                            </tr>
+                                                        </template>
+                                                        <template v-slot:body.append="{ headers }">
+                                                            <tr>
+                                                                <td :colspan="headers.length" class="text-center">
+                                                                    <v-row>
+                                                                        <v-col cols="12">
+                                                                            Tambah Barang
+                                                                        </v-col>
+                                                                        <v-col cols="12">
+                                                                            <v-text-field class="mb-n4" color="accent" label="ID Barang" outlined dense v-model="suratJalanNewItem.id"/>
+                                                                        </v-col>
+                                                                        <v-col cols="12" class="mt-n4">
+                                                                            <v-text-field class="mb-n4" color="accent" label="Nama Barang" outlined dense v-model="suratJalanNewItem.nama"/>
+                                                                        </v-col>
+                                                                        <v-col cols="9" class="mt-n4 mr-n3">
+                                                                            <v-text-field class="mb-n4" color="accent" label="Jumlah" outlined dense v-model="suratJalanNewItem.jumlah"/>
+                                                                        </v-col>
+                                                                        <v-col cols="3" class="mt-n4">
+                                                                            <v-btn color="green" dark @click="addSuratJalanNewItem"><v-icon>mdi-plus</v-icon></v-btn>
+                                                                        </v-col>
+                                                                    </v-row>
+                                                                </td>
+                                                            </tr>
+                                                        </template>
+                                                        <template v-slot:item="{ item }">
+                                                            <v-card color="grey lighten-2" class="mt-1 mb-3 mx-2">
+                                                                <div class="d-flex flex-no-wrap justify-space-between align-center">
+                                                                    <div>
+                                                                        <v-card-title class="body-2">{{item.nama}}</v-card-title>
+                                                                        <v-card-subtitle>{{item.id}}</v-card-subtitle>
+                                                                    </div>
+                                                                    <div>
+                                                                        <v-card-subtitle>{{item.jumlah}}</v-card-subtitle>
+                                                                    </div>
+                                                                </div>
+                                                            </v-card>
                                                         </template>
                                                     </v-data-table>
                                                 </v-col>
@@ -362,7 +603,9 @@ export default {
                     tanggal: '2020-04-02',
                     namaPenerima:'Yoga',
                     alamat:'Yogya',
-                    barangs:[],
+                    barangs:[
+                        {id:1, nama:'Paku', jumlah:100}
+                    ],
                     status:'Dikirim',
                     keterangan:''
                 },
@@ -400,10 +643,12 @@ export default {
                 status:'',
                 keterangan:''
             },
+            counter:0,
             status: [
-                {id:1, name:'Belum Diproses'},
-                {id:2, name:'Dikirim'},
-                {id:3, name:'Selesai'},
+                {id:1, name:'Belum Diproses', color:'yellow'},
+                {id:2, name:'Dikirim', color:'blue'},
+                {id:3, name:'Selesai', color:'green'},
+                {id:4, name:'Batal', color:'red'}
             ],
             suratJalanEditToggle: false,
             suratJalanNewHeader: [
@@ -518,6 +763,14 @@ export default {
                 this.surat = Object.assign({},this.suratDefault)
             } else {
                 if(this.popUpDetailSuratJalan) {
+                    if(this.suratJalanEditToggle) {
+                        this.suratJalanEditToggle = false
+                        for(let i=0; i<this.counter; i++) {
+                            this.surat.barangs.pop()
+                        }
+                        this.counter = 0
+                        this.suratJalanNewItem = Object.assign({},this.suratJalanNewItemDefault)
+                    }
                     this.popUpDetailSuratJalan = false
                     this.surat = Object.assign({},this.suratDefault)
                     this.selectedIndexSuratJalan = -1
@@ -531,6 +784,7 @@ export default {
             }
         },
         addSuratJalanNewItem() {
+            this.counter++
             this.surat.barangs.push(this.suratJalanNewItem)
             this.suratJalanNewItem = Object.assign({},this.suratJalanNewItemDefault)
             document.getElementById("focusGained").focus()
@@ -576,7 +830,7 @@ export default {
 
 .showAdvanceSearchOptionText {
     color: red;
-    -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
      -khtml-user-select: none; /* Konqueror HTML */
        -moz-user-select: none; /* Firefox */
