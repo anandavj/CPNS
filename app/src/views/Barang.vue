@@ -1,6 +1,6 @@
 <template>
-  <v-app>
-    <div>
+  <v-app style="overflow:hidden;">
+    <v-card class=pa-4 height=80vh style="overflow:auto;">
       <!-- *************************************************************************************************************** -->
       <!-- Search Barang in Barangs Array -->
       <!-- *************************************************************************************************************** -->
@@ -18,120 +18,297 @@
       <!-- *************************************************************************************************************** -->
       <!-- Add Barang -->
       <!-- *************************************************************************************************************** -->
-      <v-btn fab dark large color="primary" fixed right bottom @click="popUpNew = !popUpNew">
-        <v-icon dark>mdi-plus</v-icon>
-      </v-btn>
+
+      <!-- <v-btn fab dark large color="primary" fixed right bottom @click="popUpNew = !popUpNew">
+                <v-icon dark>mdi-plus</v-icon>
+      </v-btn>-->
+      <v-speed-dial
+        v-model="fab"
+        fixed
+        bottom
+        right
+        direction="top"
+        open-on-hover
+        transition="slide-x-transition"
+      >
+        <template v-slot:activator>
+          <v-btn v-model="fab" color="primary" dark fab large>
+            <v-icon v-if="fab">mdi-close</v-icon>
+            <v-icon v-else>mdi-plus</v-icon>
+          </v-btn>
+        </template>
+        <v-tooltip left color="green">
+          <template v-slot:activator="{ on }">
+            <v-btn fab dark small color="green" v-on="on">
+              <v-icon>mdi-file-document</v-icon>
+            </v-btn>
+          </template>
+          <span>Import dari spreadsheet</span>
+        </v-tooltip>
+
+        <v-tooltip left color="indigo">
+          <template v-slot:activator="{ on }">
+            <v-btn fab dark small color="indigo" v-on="on" @click="popUpNew = true">
+              <v-icon>mdi-plus</v-icon>
+            </v-btn>
+          </template>
+          <span>Tambah barang baru</span>
+        </v-tooltip>
+      </v-speed-dial>
+
       <v-container class="my-n3">
-        <v-dialog v-model="popUpNew" persistent width="40%" max-width="500px">
+        <v-dialog v-model="popUpNew" persistent max-width="600px">
           <v-card>
             <v-toolbar dense flat>
-              <span class="title font-weight-light">Tambah Barang</span>
+              <span class="title font-weight-light">Tambah Produk</span>
               <v-btn absolute right icon @click="close">
                 <v-icon>mdi-close</v-icon>
               </v-btn>
             </v-toolbar>
-            <v-form ref="form">
+            <v-form ref="form" class="px-2">
               <v-card-text>
-                <v-col>
+                <v-row>
+                  <v-col cols="12" class="my-n4">
+                    <div class="title">Gambar Produk</div>
+                  </v-col>
                   <v-row class="align-center">
-                    <v-col cols="4">
-                      <v-text-field label="ID" v-model="barang.id" />
+                    <v-col cols="6">
+                      <v-file-input
+                        v-model="barang.gambar"
+                        color="accent"
+                        prepend-icon="mdi-camera"
+                        chips
+                        multiple
+                        accept="image/*"
+                        label="Upload Produk"
+                      ></v-file-input>
                     </v-col>
-                    <v-col cols="8">
-                      <v-row no-gutters class="align-center">
-                        <v-col cols="10">
-                          <v-select
-                            v-model="barang.kategori"
-                            :items="categories"
-                            label="Kategori"
-                            Outlined
-                          ></v-select>
-                        </v-col>
-                        <v-col cols="2">
-                          <v-tooltip bottom color="primary">
-                            <template v-slot:activator="{ on }">
-                              <v-btn
-                                text
-                                icon
-                                color="primary"
-                                v-on="on"
-                                @click="popUpNewCategory = !popUpNewCategory"
-                              >
-                                <v-icon>mdi-plus</v-icon>
-                              </v-btn>
-                              <!-- <v-btn color="primary" dark v-on="on">Button</v-btn> -->
-                            </template>
-                            <span>Tambah kategori baru</span>
-                          </v-tooltip>
-                        </v-col>
-                      </v-row>
+                    <v-col cols="6">
+                      <v-btn color="primary" dark>Pilih dari database</v-btn>
                     </v-col>
                   </v-row>
-                  <v-col cols="12">
+                  <!--  -->
+                  <v-col cols="12" class="my-n4">
+                    <div class="title">Informasi Produk</div>
+                  </v-col>
+                  <v-col cols="3">
+                    <v-text-field label="ID" v-model="barang.id" />
+                  </v-col>
+                  <v-col cols="9">
                     <v-text-field label="Nama" v-model="barang.nama" />
                   </v-col>
-                  <v-row>
-                    <v-col cols="6">
-                      <v-text-field label="Open Price" v-model="barang.openPrice" />
-                    </v-col>
-                    <v-col cols="6">
-                      <v-text-field label="Bottom Price" v-model="barang.bottomPrice" />
-                    </v-col>
-                  </v-row>
-                  <v-row class="align-center">
-                    <v-col cols="6">
-                      <v-text-field label="Stock" v-model="barang.stock" />
-                    </v-col>
-
-                    <v-col cols="6">
-                      <v-row no-gutters class="align-center">
-                        <v-col cols="10">
-                          <v-select v-model="barang.satuan" :items="units" label="Satuan" Outlined></v-select>
-                        </v-col>
-                        <v-col cols="2">
-                          <v-tooltip bottom color="primary">
-                            <template v-slot:activator="{ on }">
-                              <v-btn
-                                text
-                                icon
-                                color="primary"
-                                v-on="on"
-                                @click="popUpNewUnit = !popUpNewUnit"
-                              >
-                                <v-icon>mdi-plus</v-icon>
-                              </v-btn>
-                              <!-- <v-btn color="primary" dark v-on="on">Button</v-btn> -->
-                            </template>
-                            <span>Tambah satuan baru</span>
-                          </v-tooltip>
-                        </v-col>
-                      </v-row>
-                    </v-col>
-                  </v-row>
-                  <v-col cols="12">
-                    <v-textarea label="Deskripsi" v-model="barang.deskripsi"></v-textarea>
-                  </v-col>
-                  <v-col cols="12">
-                    <v-file-input chips multiple accept="image/*" label="File input"></v-file-input>
-                    <v-row class="align-center">
-                      pilih dari database gambar: 
-                      <v-btn
-                        color="grey darken-2"
-                        dark
-                        medium
-                        @click="popUpBrowseImage = !popUpBrowseImage"
-                        class="ml-3"
-                      >pilih</v-btn>
+                  <v-col cols="6" class="mt-n4">
+                    <v-row no-gutters class="align-center">
+                      <v-col cols="11">
+                        <v-select v-model="barang.kategori" :items="categories" label="Kategori" />
+                      </v-col>
+                      <v-col cols="1">
+                        <v-tooltip bottom color="accent">
+                          <template v-slot:activator="{ on }">
+                            <v-btn
+                              text
+                              icon
+                              color="accent"
+                              v-on="on"
+                              @click="popUpNewCategory = !popUpNewCategory"
+                            >
+                              <v-icon>mdi-plus</v-icon>
+                            </v-btn>
+                          </template>
+                          <span>Tambah Kategori Baru</span>
+                        </v-tooltip>
+                      </v-col>
+                      <!-- Dialog New Kategori -->
+                      <v-dialog
+                        v-model="popUpNewCategory"
+                        persistent
+                        max-width="350px"
+                        style="z-index:10"
+                      >
+                        <v-card>
+                          <v-form ref="form">
+                            <v-card-text>
+                              <v-text-field
+                                color="accent"
+                                outlined
+                                v-model="formNewKategoriModel"
+                                label="Nama Kategori"
+                              />
+                            </v-card-text>
+                          </v-form>
+                          <v-card-actions>
+                            <v-container>
+                              <v-row justify="center">
+                                <v-btn class="my-n11" color="red darken-1" text @click="close">Batal</v-btn>
+                                <v-btn
+                                  class="my-n11"
+                                  color="blue darken-1"
+                                  text
+                                  @click="saveNewKategori"
+                                >Save</v-btn>
+                              </v-row>
+                            </v-container>
+                          </v-card-actions>
+                        </v-card>
+                      </v-dialog>
+                      <!--  -->
                     </v-row>
                   </v-col>
-                </v-col>
+                  <v-col cols="6" class="mt-n4">
+                    <v-row no-gutters class="align-center">
+                      <v-col cols="11">
+                        <v-select v-model="barang.satuan" :items="satuans" label="Satuan" />
+                      </v-col>
+                      <v-col cols="1">
+                        <v-tooltip bottom color="accent">
+                          <template v-slot:activator="{ on }">
+                            <v-btn
+                              text
+                              icon
+                              color="accent"
+                              v-on="on"
+                              @click="popUpNewSatuan = !popUpNewSatuan"
+                            >
+                              <v-icon>mdi-plus</v-icon>
+                            </v-btn>
+                          </template>
+                          <span>Tambah Satuan Baru</span>
+                        </v-tooltip>
+                      </v-col>
+                      <!-- Dialog New Kategori -->
+                      <v-dialog
+                        v-model="popUpNewSatuan"
+                        persistent
+                        max-width="350px"
+                        style="z-index:10"
+                      >
+                        <v-card>
+                          <v-form ref="form">
+                            <v-card-text>
+                              <v-text-field
+                                color="accent"
+                                v-model="formNewSatuanModel.name"
+                                label="Nama Unit"
+                              />
+                              <v-text-field
+                                color="accent"
+                                v-model="formNewSatuanModel.singkatan"
+                                label="Singkatan"
+                              />
+                              <v-text-field
+                                color="accent"
+                                v-model="formNewSatuanModel.jenis"
+                                label="Jenis Satuan"
+                              />
+                            </v-card-text>
+                          </v-form>
+                          <v-card-actions>
+                            <v-container>
+                              <v-row justify="center">
+                                <v-btn class="my-n9" color="red darken-1" text @click="close">Batal</v-btn>
+                                <v-btn
+                                  class="my-n9"
+                                  color="blue darken-1"
+                                  text
+                                  @click="saveNewSatuan"
+                                >Save</v-btn>
+                              </v-row>
+                            </v-container>
+                          </v-card-actions>
+                        </v-card>
+                      </v-dialog>
+                      <!--  -->
+                    </v-row>
+                  </v-col>
+                  <v-col cols="4">
+                    <v-text-field label="Open Price" v-model="barang.openPrice" />
+                  </v-col>
+                  <v-col cols="4">
+                    <v-text-field label="Bottom Price" v-model="barang.bottomPrice" />
+                  </v-col>
+                  <v-col cols="4">
+                    <v-text-field label="Stock" v-model="barang.stock" />
+                  </v-col>
+                  <v-col cols="12">
+                    <v-textarea label="Deskripsi" v-model="barang.deskripsi" outlined />
+                  </v-col>
+                  <v-col cols="12" class="mt-n7">
+                    <v-row no-gutters class="align-center">
+                      <v-col cols="11">
+                        <v-autocomplete
+                          v-model="barang.tag"
+                          :items="tags"
+                          label="Tag"
+                          multiple
+                          chips
+                          deletable-chips="true"
+                          hint="Bisa memilih lebih dari 1 Tag"
+                          persistent-hint
+                          color="accent"
+                          item-color="accent"
+                          :search-input.sync="searchInput"
+                          @change="searchInput=''"
+                        ></v-autocomplete>
+                      </v-col>
+                      <v-col cols="1">
+                        <v-tooltip bottom color="accent">
+                          <template v-slot:activator="{ on }">
+                            <v-btn
+                              text
+                              icon
+                              color="accent"
+                              v-on="on"
+                              @click="popUpNewTag = !popUpNewTag"
+                            >
+                              <v-icon>mdi-plus</v-icon>
+                            </v-btn>
+                          </template>
+                          <span>Tambah Tag Baru</span>
+                        </v-tooltip>
+                      </v-col>
+                      <!-- Dialog New Kategori -->
+                      <v-dialog
+                        v-model="popUpNewTag"
+                        persistent
+                        max-width="350px"
+                        style="z-index:10"
+                      >
+                        <v-card>
+                          <v-form ref="form">
+                            <v-card-text>
+                              <v-text-field
+                                color="accent"
+                                v-model="formNewTagModel"
+                                label="Nama Tag"
+                              />
+                            </v-card-text>
+                          </v-form>
+                          <v-card-actions>
+                            <v-container>
+                              <v-row justify="center">
+                                <v-btn class="my-n9" color="red darken-1" text @click="close">Batal</v-btn>
+                                <v-btn
+                                  class="my-n9"
+                                  color="blue darken-1"
+                                  text
+                                  @click="saveNewTag"
+                                >Save</v-btn>
+                              </v-row>
+                            </v-container>
+                          </v-card-actions>
+                        </v-card>
+                      </v-dialog>
+                      <!--  -->
+                    </v-row>
+                  </v-col>
+                </v-row>
               </v-card-text>
             </v-form>
             <v-card-actions>
               <v-container>
                 <v-row justify="center">
-                  <v-btn class="mt-n5" color="red darken-1" text @click="close">Cancel</v-btn>
-                  <v-btn class="mt-n5" color="blue darken-1" text @click="saveNewBarang">Save</v-btn>
+                  <v-btn class="mt-n12" color="red darken-1" text @click="close">Cancel</v-btn>
+                  <v-btn class="mt-n12" color="blue darken-1" text @click="saveNewBarang">Save</v-btn>
                 </v-row>
               </v-container>
             </v-card-actions>
@@ -261,7 +438,88 @@
               <v-icon>mdi-close</v-icon>
             </v-btn>
           </v-toolbar>
-          {{barang}}
+          <v-container>
+            <v-row no-gutters>
+              <v-col cols="5">
+                <v-row>
+                  <v-col cols="12">
+                    <v-card max-width="400px" color="grey">
+                      <v-img :src="gambarBarangSelected"></v-img>
+                    </v-card>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col cols="3" v-for="(img,index) in barang.gambar" :key="index">
+                    <v-card width="300px" @click="changePic(img)">
+                      <v-img
+                        :src="img"
+                        v-if="gambarBarangSelected == img"
+                        gradient="to top right, rgba(0,0,0,.73), rgba(0,0,0,.73)"
+                      ></v-img>
+                      <v-img :src="img" v-else></v-img>
+                    </v-card>
+                  </v-col>
+                </v-row>
+              </v-col>
+              <v-col cols="7" class="px-6">
+                <v-row>
+                  <v-col cols="12">
+                    <span class="display-1">{{barang.nama}}</span>
+                  </v-col>
+                  <v-col class="my-n4" cols="12">
+                    <v-chip
+                      color="accent"
+                      class="mr-1"
+                      label
+                      text-color="white"
+                      v-for="(tag,idx) in barang.tag"
+                      :key="idx"
+                      small
+                    >{{tag}}</v-chip>
+                  </v-col>
+                  <v-col cols="12">
+                    <table class="descTable">
+                      <tr>
+                        <td>ID Barang</td>
+                        <td width="25%" align="end">:</td>
+                        <td>{{barang.id}}</td>
+                      </tr>
+                      <tr>
+                        <td>Kategori</td>
+                        <td width="25%" align="end">:</td>
+                        <td>{{barang.kategori}}</td>
+                      </tr>
+                      <tr>
+                        <td>Satuan</td>
+                        <td width="25%" align="end">:</td>
+                        <td>{{barang.satuan}}</td>
+                      </tr>
+                      <tr>
+                        <td>Open Price</td>
+                        <td width="25%" align="end">:</td>
+                        <td>{{barang.openPrice}}</td>
+                      </tr>
+                      <tr>
+                        <td>Bottom Price</td>
+                        <td width="25%" align="end">:</td>
+                        <td>{{barang.bottomPrice}}</td>
+                      </tr>
+                      <tr>
+                        <td>Stock</td>
+                        <td width="25%" align="end">:</td>
+                        <td>{{barang.stock}}</td>
+                      </tr>
+                      <tr>
+                        <td>Deskripsi</td>
+                        <td width="25%" align="end">:</td>
+                        <td>{{barang.deskripsi}}</td>
+                      </tr>
+                    </table>
+                  </v-col>
+                </v-row>
+              </v-col>
+            </v-row>
+          </v-container>
         </v-card>
       </v-dialog>
       <!-- *************************************************************************************************************** -->
@@ -270,7 +528,7 @@
       <!-- *************************************************************************************************************** -->
       <!-- Edit Barang -->
       <!-- *************************************************************************************************************** -->
-      <v-dialog v-model="popUpEdit" persistent width="40%" max-width="500px">
+      <v-dialog v-model="popUpEdit" persistent max-width="1000px">
         <v-card>
           <v-toolbar dense flat>
             <span class="title font-weight-light">Edit Barang</span>
@@ -280,46 +538,231 @@
           </v-toolbar>
           <v-form ref="form">
             <v-card-text>
-              <v-col>
-                <v-row>
-                  <v-col cols="4">
-                    <v-text-field label="ID" v-model="barang.id" />
-                  </v-col>
-                  <v-col cols="8">
-                    <v-select
-                      v-model="barang.kategori"
-                      :items="categories"
-                      label="Kategori"
-                      Outlined
-                    ></v-select>
-                  </v-col>
-                </v-row>
+              <v-row>
+                <v-col cols="12" class="my-n4">
+                  <div class="title">Gambar Produk</div>
+                </v-col>
                 <v-col cols="12">
+                  <v-file-input
+                    v-model="barang.gambar"
+                    color="accent"
+                    prepend-icon="mdi-camera"
+                    chips
+                    multiple
+                    accept="image/*"
+                    label="Upload Produk"
+                  ></v-file-input>
+                </v-col>
+                <!--  -->
+                <v-col cols="12" class="my-n4">
+                  <div class="title">Informasi Produk</div>
+                </v-col>
+                <v-col cols="3">
+                  <v-text-field label="ID" v-model="barang.id" />
+                </v-col>
+                <v-col cols="9">
                   <v-text-field label="Nama" v-model="barang.nama" />
                 </v-col>
-                <v-row>
-                  <v-col cols="6">
-                    <v-text-field label="Open Price" v-model="barang.openPrice" />
-                  </v-col>
-                  <v-col cols="6">
-                    <v-text-field label="Bottom Price" v-model="barang.bottomPrice" />
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-col cols="6">
-                    <v-text-field label="Stock" v-model="barang.stock" />
-                  </v-col>
-                  <v-col cols="6">
-                    <v-select v-model="barang.satuan" :items="units" label="Satuan" Outlined></v-select>
-                  </v-col>
-                </v-row>
-                <v-col cols="12">
-                  <v-textarea label="Deskripsi" v-model="barang.deskripsi"></v-textarea>
+                <v-col cols="6" class="mt-n4">
+                  <v-row no-gutters class="align-center">
+                    <v-col cols="11">
+                      <v-select v-model="barang.kategori" :items="categories" label="Kategori" />
+                    </v-col>
+                    <v-col cols="1">
+                      <v-tooltip bottom color="accent">
+                        <template v-slot:activator="{ on }">
+                          <v-btn
+                            text
+                            icon
+                            color="accent"
+                            v-on="on"
+                            @click="popUpNewCategory = !popUpNewCategory"
+                          >
+                            <v-icon>mdi-plus</v-icon>
+                          </v-btn>
+                        </template>
+                        <span>Tambah Kategori Baru</span>
+                      </v-tooltip>
+                    </v-col>
+                    <!-- Dialog New Kategori -->
+                    <v-dialog
+                      v-model="popUpNewCategory"
+                      persistent
+                      max-width="350px"
+                      style="z-index:10"
+                    >
+                      <v-card>
+                        <v-form ref="form">
+                          <v-card-text>
+                            <v-text-field
+                              color="accent"
+                              outlined
+                              v-model="formNewKategoriModel"
+                              label="Nama Kategori"
+                            />
+                          </v-card-text>
+                        </v-form>
+                        <v-card-actions>
+                          <v-container>
+                            <v-row justify="center">
+                              <v-btn class="my-n11" color="red darken-1" text @click="close">Batal</v-btn>
+                              <v-btn
+                                class="my-n11"
+                                color="blue darken-1"
+                                text
+                                @click="saveNewKategori"
+                              >Save</v-btn>
+                            </v-row>
+                          </v-container>
+                        </v-card-actions>
+                      </v-card>
+                    </v-dialog>
+                    <!--  -->
+                  </v-row>
+                </v-col>
+                <v-col cols="6" class="mt-n4">
+                  <v-row no-gutters class="align-center">
+                    <v-col cols="11">
+                      <v-select v-model="barang.satuan" :items="satuans" label="Satuan" />
+                    </v-col>
+                    <v-col cols="1">
+                      <v-tooltip bottom color="accent">
+                        <template v-slot:activator="{ on }">
+                          <v-btn
+                            text
+                            icon
+                            color="accent"
+                            v-on="on"
+                            @click="popUpNewSatuan = !popUpNewSatuan"
+                          >
+                            <v-icon>mdi-plus</v-icon>
+                          </v-btn>
+                        </template>
+                        <span>Tambah Satuan Baru</span>
+                      </v-tooltip>
+                    </v-col>
+                    <!-- Dialog New Kategori -->
+                    <v-dialog
+                      v-model="popUpNewSatuan"
+                      persistent
+                      max-width="350px"
+                      style="z-index:10"
+                    >
+                      <v-card>
+                        <v-form ref="form">
+                          <v-card-text>
+                            <v-text-field
+                              color="accent"
+                              v-model="formNewSatuanModel.name"
+                              label="Nama Unit"
+                            />
+                            <v-text-field
+                              color="accent"
+                              v-model="formNewSatuanModel.singkatan"
+                              label="Singkatan"
+                            />
+                            <v-text-field
+                              color="accent"
+                              v-model="formNewSatuanModel.jenis"
+                              label="Jenis Satuan"
+                            />
+                          </v-card-text>
+                        </v-form>
+                        <v-card-actions>
+                          <v-container>
+                            <v-row justify="center">
+                              <v-btn class="my-n9" color="red darken-1" text @click="close">Batal</v-btn>
+                              <v-btn
+                                class="my-n9"
+                                color="blue darken-1"
+                                text
+                                @click="saveNewSatuan"
+                              >Save</v-btn>
+                            </v-row>
+                          </v-container>
+                        </v-card-actions>
+                      </v-card>
+                    </v-dialog>
+                    <!--  -->
+                  </v-row>
+                </v-col>
+                <v-col cols="4">
+                  <v-text-field label="Open Price" v-model="barang.openPrice" />
+                </v-col>
+                <v-col cols="4">
+                  <v-text-field label="Bottom Price" v-model="barang.bottomPrice" />
+                </v-col>
+                <v-col cols="4">
+                  <v-text-field label="Stock" v-model="barang.stock" />
                 </v-col>
                 <v-col cols="12">
-                  <v-file-input chips multiple accept="image/*" label="File input"></v-file-input>
+                  <v-textarea label="Deskripsi" v-model="barang.deskripsi" outlined />
                 </v-col>
-              </v-col>
+                <v-col cols="12" class="mt-n7">
+                  <v-row no-gutters class="align-center">
+                    <v-col cols="11">
+                      <v-autocomplete
+                        v-model="barang.tag"
+                        :items="tags"
+                        label="Tag"
+                        multiple
+                        chips
+                        deletable-chips="true"
+                        hint="Bisa memilih lebih dari 1 Tag"
+                        persistent-hint
+                        color="accent"
+                        item-color="accent"
+                        :search-input.sync="searchInput"
+                        @change="searchInput=''"
+                      ></v-autocomplete>
+                    </v-col>
+                    <v-col cols="1">
+                      <v-tooltip bottom color="accent">
+                        <template v-slot:activator="{ on }">
+                          <v-btn
+                            text
+                            icon
+                            color="accent"
+                            v-on="on"
+                            @click="popUpNewTag = !popUpNewTag"
+                          >
+                            <v-icon>mdi-plus</v-icon>
+                          </v-btn>
+                        </template>
+                        <span>Tambah Tag Baru</span>
+                      </v-tooltip>
+                    </v-col>
+                    <!-- Dialog New Kategori -->
+                    <v-dialog v-model="popUpNewTag" persistent max-width="350px" style="z-index:10">
+                      <v-card>
+                        <v-form ref="form">
+                          <v-card-text>
+                            <v-text-field
+                              color="accent"
+                              v-model="formNewTagModel"
+                              label="Nama Tag"
+                            />
+                          </v-card-text>
+                        </v-form>
+                        <v-card-actions>
+                          <v-container>
+                            <v-row justify="center">
+                              <v-btn class="my-n9" color="red darken-1" text @click="close">Batal</v-btn>
+                              <v-btn
+                                class="my-n9"
+                                color="blue darken-1"
+                                text
+                                @click="saveNewTag"
+                              >Save</v-btn>
+                            </v-row>
+                          </v-container>
+                        </v-card-actions>
+                      </v-card>
+                    </v-dialog>
+                    <!--  -->
+                  </v-row>
+                </v-col>
+              </v-row>
             </v-card-text>
           </v-form>
           <v-card-actions>
@@ -357,95 +800,7 @@
       </v-dialog>
       <!-- *************************************************************************************************************** -->
       <!-- *************************************************************************************************************** -->
-      <!-- Dialog New Kategori -->
-      <v-dialog v-model="popUpNewCategory" persistent max-width="350px" syle="z-index:10;">
-        <v-card>
-          <v-toolbar dense flat>
-            <span class="title font-weight-light">Tambah Kategori Baru</span>
-            <v-btn absolute right icon @click="close">
-              <v-icon>mdi-close</v-icon>
-            </v-btn>
-          </v-toolbar>
-          <!-- <v-card-title>{{popUpNewCategory.name}}</v-card-title> -->
-          <v-form ref="form">
-            <v-card-text>
-              <v-text-field color="blue" outlined placeholder="Nama Kategori"></v-text-field>
-            </v-card-text>
-          </v-form>
-          <v-card-actions>
-            <v-container>
-              <v-row justify="center">
-                <v-btn class="mt-n12" color="red darken-1" text @click="close">batal</v-btn>
-                <v-btn class="mt-n12" color="blue darken-1" text @click="confirmSave">tambah</v-btn>
-              </v-row>
-            </v-container>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-
-      <!-- Dialog new unit -->
-      <v-dialog v-model="popUpNewUnit" persistent max-width="300px" syle="z-index:10;">
-        <v-card>
-          <v-toolbar dense flat>
-            <span class="title font-weight-light">Tambah Satuan Baru</span>
-            <v-btn absolute right icon @click="close">
-              <v-icon>mdi-close</v-icon>
-            </v-btn>
-          </v-toolbar>
-          <v-form ref="form">
-            <v-card-text>
-              <v-text-field color="blue" placeholder="Nama Unit"></v-text-field>
-              <v-text-field color="blue" placeholder="Singkatan"></v-text-field>
-              <v-text-field color="blue" placeholder="Jenis Satuan"></v-text-field>
-            </v-card-text>
-          </v-form>
-          <v-card-actions>
-            <v-container>
-              <v-row justify="center">
-                <v-btn class="mt-n12" color="red darken-1" text @click="close">batal</v-btn>
-                <v-btn class="mt-n12" color="blue darken-1" text @click="confirmSave">tambah</v-btn>
-              </v-row>
-            </v-container>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-
-      <!-- Dialog browse image -->
-      <v-dialog v-model="popUpBrowseImage" persistent width="40%" transition="dialog-transition">
-        <v-card>
-          <v-toolbar dense flat>
-            <span class="title font-weight-light">Tambah Gambar</span>
-            <v-btn absolute right icon @click="close">
-              <v-icon>mdi-close</v-icon>
-            </v-btn>
-          </v-toolbar>
-          <v-form ref="form">
-            <v-card-text>
-              <v-flex xs4>
-                <v-select v-model="barang.kategori" :items="categories" label="Kategori" Outlined></v-select>
-              </v-flex>
-              <v-row wrap class="justify-center">
-                <v-flex xs4 v-for="i in 9" :key="i">
-                  <v-img
-                    class="ma-2"
-                    :aspect-ratio="1/1"
-                    src="https://cdn.vuetifyjs.com/images/carousel/bird.jpg"
-                  ></v-img>
-                </v-flex>
-              </v-row>
-            </v-card-text>
-          </v-form>
-          <v-card-actions>
-            <v-container>
-              <v-row justify="center">
-                <v-btn class="mt-n12" color="red darken-1" text @click="close">batal</v-btn>
-                <v-btn class="mt-n12" color="blue darken-1" text @click="confirmSave">tambah</v-btn>
-              </v-row>
-            </v-container>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    </div>
+    </v-card>
   </v-app>
 </template>
 
@@ -461,7 +816,18 @@ export default {
           openPrice: 5000,
           bottomPrice: 3000,
           stock: 100,
-          satuan: "biji"
+          satuan: "biji",
+          gambar: [
+            "https://picsum.photos/id/231/200",
+            "https://picsum.photos/id/22/200",
+            "https://picsum.photos/id/221/200",
+            "https://picsum.photos/id/13/200",
+            "https://picsum.photos/id/1/200",
+            "https://picsum.photos/id/14/200",
+            "https://picsum.photos/id/123/200",
+            "https://picsum.photos/id/222/200"
+          ],
+          tag: ["Berani", "Kuat", "Merah", "Pantang Menyerah"]
         },
         {
           id: 2,
@@ -484,13 +850,21 @@ export default {
         id: null,
         nama: "",
         openPrice: null,
-        stock: null
+        stock: null,
+        kategori: "",
+        satuan: {},
+        tag: [],
+        gambar: []
       },
       barangDefault: {
         id: null,
         nama: "",
         openPrice: null,
-        stock: null
+        stock: null,
+        kategori: "",
+        satuan: {},
+        tag: [],
+        gambar: []
       },
       barangQuickEdit: {
         id: null,
@@ -502,8 +876,23 @@ export default {
         nama: "",
         openPrice: null
       },
-      units: ["kilogram", "gram", "meter", "centimeter", "pieces"],
-      categories: ["atap", "keramik", "baja ringan"],
+      categories: [],
+      satuans: [],
+      tags: ["Berani", "Kuat", "Pantang Menyerah", "Merah"],
+      formNewKategoriModel: "",
+      formNewSatuanModel: {
+        name: "",
+        singkatan: "",
+        jenis: ""
+      },
+      formNewSatuanModelDefault: {
+        name: "",
+        singkatan: "",
+        jenis: ""
+      },
+      gambarBarangSelected: "",
+      searchInput: "",
+      formNewTagModel: "",
       searchBarang: "",
       editToggle: false,
       popUpQuickEdit: false,
@@ -513,8 +902,8 @@ export default {
       popUpConfirmSaveQuickEdit: false,
       popUpConfirmSaveEdit: false,
       popUpNewCategory: false,
-      popUpNewUnit: false,
-      popUpBrowseImage: false,
+      popUpNewSatuan: false,
+      popUpNewTag: false,
       selectedIndex: -1
     };
   },
@@ -524,46 +913,74 @@ export default {
       this.selectedIndex = this.barangs.indexOf(item);
       this.barang = Object.assign({}, item);
       this.popupDetails = true;
+      this.gambarBarangSelected = this.barang.gambar[0];
     },
     close() {
       if (this.popupDetails) {
         this.popupDetails = false;
         this.barang = Object.assign({}, this.barangDefault);
         this.selectedIndex = -1;
+        this.gambarBarangSelected = "";
       } else {
-        if (
-          this.popUpNewCategory ||
-          this.popUpNewUnit ||
-          this.popUpBrowseImage
-        ) {
-          this.popUpNewCategory = false;
-          this.popUpNewUnit = false;
-          this.popUpBrowseImage = false;
-        } else {
-          if (this.popUpNew) {
-            this.popUpNew = false;
-            this.barang = Object.assign({}, this.barangDefault);
+        if (this.popUpNew) {
+          if (this.popUpNewCategory) {
+            this.popUpNewCategory = false;
+            this.formNewKategoriModel = "";
           } else {
-            if (this.popUpQuickEdit) {
-              this.popUpQuickEdit = false;
-              this.barangQuickEdit = Object.assign(
+            if (this.popUpNewSatuan) {
+              this.popUpNewSatuan = false;
+              this.formNewSatuanModel = Object.assign(
                 {},
-                this.barangQuickEditDefault
+                this.formNewSatuanModelDefault
               );
             } else {
-              if (this.popUpEdit) {
-                this.popUpEdit = false;
-                this.barang = Object.assign({}, this.barangDefault);
-                this.selectedIndex = -1;
+              if (this.popUpNewTag) {
+                this.popUpNewTag = false;
+                this.formNewTagModel = "";
               } else {
-                if (this.popUpConfirmSaveEdit) {
-                  this.popUpConfirmSaveEdit = false;
-                  this.popUpEdit = true;
+                this.popUpNew = false;
+                this.barang = Object.assign({}, this.barangDefault);
+              }
+            }
+          }
+        } else {
+          if (this.popUpQuickEdit) {
+            this.popUpQuickEdit = false;
+            this.barangQuickEdit = Object.assign(
+              {},
+              this.barangQuickEditDefault
+            );
+          } else {
+            if (this.popUpEdit) {
+              if (this.popUpNewCategory) {
+                this.popUpNewCategory = false;
+                this.formNewKategoriModel = "";
+              } else {
+                if (this.popUpNewSatuan) {
+                  this.popUpNewSatuan = false;
+                  this.formNewSatuanModel = Object.assign(
+                    {},
+                    this.formNewSatuanModelDefault
+                  );
                 } else {
-                  if (this.popUpConfirmSaveQuickEdit) {
-                    this.popUpConfirmSaveQuickEdit = false;
-                    this.popUpQuickEdit = true;
+                  if (this.popUpNewTag) {
+                    this.popUpNewTag = false;
+                    this.formNewTagModel = "";
+                  } else {
+                    this.popUpEdit = false;
+                    this.barang = Object.assign({}, this.barangDefault);
+                    this.selectedIndex = -1;
                   }
+                }
+              }
+            } else {
+              if (this.popUpConfirmSaveEdit) {
+                this.popUpConfirmSaveEdit = false;
+                this.popUpEdit = true;
+              } else {
+                if (this.popUpConfirmSaveQuickEdit) {
+                  this.popUpConfirmSaveQuickEdit = false;
+                  this.popUpQuickEdit = true;
                 }
               }
             }
@@ -620,6 +1037,9 @@ export default {
         this.barang = Object.assign({}, this.barangDefault);
         this.close();
       }
+    },
+    changePic(val) {
+      this.gambarBarangSelected = val;
     }
   },
 
@@ -643,6 +1063,21 @@ export default {
         return false;
       }
     }
+  },
+
+  watch: {
+    popupDetails() {
+      if (this.popupDetails == false) {
+        this.gambarBarangSelected = "";
+        this.barang = Object.assign({}, this.barangDefault);
+      }
+    }
   }
 };
 </script>
+
+<style scoped>
+.descTable tr td {
+  height: 35px;
+}
+</style>
