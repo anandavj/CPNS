@@ -16,6 +16,7 @@ class Product_image_model extends CI_Model
                     'image_id' => $item
                 ));
             }
+            
         }
         return $this->db->affected_rows();
     }

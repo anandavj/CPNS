@@ -20,8 +20,8 @@ class Product_image extends REST_Controller
     // POST - input data baru
     public function index_post()
     {
-        $image_id = $this->post('imageId');
         $product_id = $this->post('productId');
+        $image_id = $this->post('imageId');
 
         if (!isset($image_id) || !isset($product_id)) {
             $required_parameters = [];
@@ -65,7 +65,8 @@ class Product_image extends REST_Controller
             $this->response(
                 array(
                     'status' => TRUE,
-                    'message' => $this::INSERT_SUCCESS_MESSSAGE
+                    'message' => $this::INSERT_SUCCESS_MESSSAGE,
+                    
                 ),
                 REST_Controller::HTTP_CREATED
             );
