@@ -21,6 +21,7 @@ class Product extends REST_Controller
     {
         $name = $this->post('name');
         $category_id = $this->post('categoryId');
+        $specification = $this->post('specification');
         $description = $this->post('description');
         $stock = $this->post('stock');
         $unit_id = $this->post('unitId');
@@ -28,14 +29,12 @@ class Product extends REST_Controller
         $bottom_price = $this->post('bottomPrice');
 
         if (
-            !isset($name) || !isset($category_id) || !isset($description) || !isset($stock) ||
-            !isset($unit_id) || !isset($open_price) || !isset($bottom_price)
+            !isset($name) || !isset($category_id) || !isset($specification) || !isset($unit_id) || !isset($open_price) || !isset($bottom_price)
         ) {
             $required_parameters = [];
             if (!isset($name)) array_push($required_parameters, 'name');
             if (!isset($category_id)) array_push($required_parameters, 'categoryId');
-            if (!isset($description)) array_push($required_parameters, 'description');
-            if (!isset($stock)) array_push($required_parameters, 'stock');
+            if (!isset($specification)) array_push($required_parameters, 'specification');
             if (!isset($unit_id)) array_push($required_parameters, 'unitId');
             if (!isset($open_price)) array_push($required_parameters, 'openPrice');
             if (!isset($bottom_price)) array_push($required_parameters, 'bottomPrice');
@@ -71,7 +70,7 @@ class Product extends REST_Controller
             return;
         }
 
-        if ($this->product_model->insert_product($name, $category_id, $description, $stock, $unit_id, $open_price, $bottom_price)) {
+        if ($this->product_model->insert_product($name, $category_id, $specification, $description, $stock, $unit_id, $open_price, $bottom_price)) {
             $this->response(
                 array(
                     'status' => TRUE,
@@ -103,12 +102,13 @@ class Product extends REST_Controller
         $name = $this->put('name');
         $category_id = $this->put('categoryId');
         $description = $this->put('description');
+        $specification = $this->put('specification');
         $stock = $this->put('stock');
-        $unit_id = $this->put('unit_id');
+        $unit_id = $this->put('unitId');
         $open_price = $this->put('openPrice');
         $bottom_price = $this->put('bottomPrice');
-        $variant = $this->put('variant');
-
+        $datas = array();
+        
         if(!isset($id)){
             $this->response(
                 array(
@@ -129,8 +129,9 @@ class Product extends REST_Controller
             );
             return;
         }
+        
+        $datas = array_merge($datas, array('id' => $id));
 
-        $datas = array();
         if(isset($category_id)){
             if($this->category_model->is_not_exists($category_id)){
                 $this->response(
@@ -146,7 +147,7 @@ class Product extends REST_Controller
         }
 
         if(isset($unit_id)){
-            if($this->unit_model->is_not_exist($unit_id)){
+            if($this->unit_model->is_not_exists($unit_id)){
                 $this->response(
                     array(
                         'status' => FALSE,
@@ -154,14 +155,20 @@ class Product extends REST_Controller
                     ),REST_Controller::HTTP_BAD_REQUEST
                 );
                 return;
-            } else if($this->db->query("SELECT * FROM unit WHERE id={$id} AND unit_id={$unit_id}")->num_rows() == 0){
+            } else if($this->db->query("SELECT * FROM product WHERE id={$id} AND unit_id={$unit_id}")->num_rows() == 0){
                 $datas = array_merge($datas, array('unit_id' => $unit_id));
             }
         }
 
-        if(isset($description)){
-            $datas = array_merge($datas, array('description' => $description));
+        if(!isset($description)){
+            $description = "";
         }
+        $datas = array_merge($datas, array('description' => $description));
+
+        if(isset($specification)){
+            $datas = array_merge($datas, array('specification' => $specification));
+        }
+
         if(isset($stock)){
             $datas = array_merge($datas, array('stock' => $stock));
         }
@@ -178,14 +185,11 @@ class Product extends REST_Controller
     
         if ($this->product_model->update_product($id, $datas)) {
             
-            if(isset($variant)){
-                
-            }
-            
             $this->response(
                 array(
                     'status' => TRUE,
                     'message' => $this::UPDATE_SUCCESS_MESSSAGE
+
                 ),
                 REST_Controller::HTTP_OK
             );
