@@ -173,10 +173,19 @@
                                 class="font-regular font-weight-light"
                                 style="cursor:pointer"
                             >
-                                <template v-slot:item="{ item }">
-                                    <v-card @click="detailSuratJalan(item)" class="mt-1 mb-3 mx-2" color="grey lighten-2" outlined>
-                                        <v-card-title class="body-2">{{ item.nama }}</v-card-title>
-                                        <v-card-subtitle>{{ item.nomor }}</v-card-subtitle>
+                                <template v-slot:item="{ item }"> 
+                                    <v-card @click.stop="detailSuratJalan(item)" class="mt-1 mb-3 mx-2 pa-2" color="grey lighten-2" outlined>
+                                        <div class="d-flex flex-no-wrap justify-space-between mt-n4">
+                                            <div>
+                                                <v-card-title class="body-2">{{ item.nama }}</v-card-title>
+                                                <v-card-subtitle>{{ item.nomor }}</v-card-subtitle>
+                                            </div>
+                                            <div>
+                                                <v-btn @click.stop="prosesSuratJalan(item)" :disabled="item.status != 'Belum Diproses'" dense color="white--text green" small :dark="item.status == 'Belum Diproses'" fab class="my-5 mx-1">
+                                                    <v-icon>mdi-truck-fast</v-icon>
+                                                </v-btn>
+                                            </div>
+                                        </div>
                                         <div class="d-flex flex-no-wrap justify-space-between mt-n4">
                                             <v-card-subtitle>{{ item.status }}</v-card-subtitle>
                                             <v-card-subtitle>{{ formatDateList(item.tanggal) }}</v-card-subtitle>
@@ -184,6 +193,26 @@
                                     </v-card>
                                 </template>
                             </v-data-table>
+                            <v-dialog v-model="popUpProsesSuratJalan" fullscreen hide-overlay transition="dialog-bottom-transition">
+                                <v-card>
+                                    <v-toolbar dense flat>
+                                        <span class="title font-weight-light">Proses Surat Jalan</span>
+                                        <v-btn absolute right icon @click="close"><v-icon>mdi-close</v-icon></v-btn>
+                                    </v-toolbar>
+                                    <v-card-text>
+                                        <v-data-table
+                                            :headers="suratJalanProsesHeader"
+                                            :items="surat.barangs"
+                                            :show-select="true"
+                                            :disable-sort="true"
+                                            :disable-filtering="true"
+                                            :mobile-breakpoint="1"
+                                            :hide-default-footer="true"
+                                            v-model="selectedItemsForSuratJalan"
+                                        />
+                                    </v-card-text>
+                                </v-card>
+                            </v-dialog>
                         </div>
                             <!--  -->
                             <!-- PC / laptop -->
@@ -625,7 +654,7 @@ export default {
                 id:null,
                 nomor:'',
                 nama:'',
-                tanggal:'',
+                tanggal: new Date().toISOString().substr(0, 10),
                 namaPenerima:'',
                 alamat:'',
                 barangs:[],
@@ -636,7 +665,7 @@ export default {
                 id:null,
                 nomor:'',
                 nama:'',
-                tanggal:'',
+                tanggal: new Date().toISOString().substr(0, 10),
                 namaPenerima:'',
                 alamat:'',
                 barangs:[],
@@ -792,7 +821,7 @@ export default {
         // Proses Surat jalan
         prosesSuratJalan(item) {
             this.selectedIndexSuratJalan = this.listSuratJalans.indexOf(item)
-            this.barang = Object.assign({},item)
+            this.surat = Object.assign({},item)
             this.popUpProsesSuratJalan = true
         }
         /* --------------------             -------------------- */
@@ -816,7 +845,7 @@ export default {
         },
         //view Breakpoint
         popUpBreakPoint() {
-            if (this.$vuetify.breakpoint.name == 'xs' || this.$vuetify.breakpoint.name == 'sm') {
+            if (this.$vuetify.breakpoint.name == 'xs') {
                 return true
             } else {
                 return false
