@@ -4,14 +4,60 @@
             <!-- *************************************************************************************************************** -->
             <!-- Search Barang in Barangs Array -->
             <!-- *************************************************************************************************************** -->
-            <v-text-field
-                placeholder="Cari Barang"
-                :solo='true'
-                :clearable='true'
-                append-icon="mdi-magnify"
-                class="font-regular font-weight-light"
-                v-model="searchBarang"
-            />
+            <v-row justify="end" no-gutters>
+                <v-col cols="12">
+                    <v-text-field
+                        placeholder="Cari Barang"
+                        :solo='true'
+                        :clearable='true'
+                        append-icon="mdi-magnify"
+                        class="font-regular font-weight-light mb-n4"
+                        v-model="advanceSearch.nama"
+                    />
+                </v-col>
+                <v-expand-transition v-if="!popUpBreakPoint">
+                    <v-col cols="12" class="mb-n5">
+                        <v-row no-gutters>
+                            <v-col cols="12">
+                                <v-text-field
+                                    placeholder="Kategori"
+                                    :solo="true"
+                                    :clearable="true"
+                                    v-model="advanceSearch.kategori"
+                                    class="mb-n4 mr-3"
+                                />  
+                            </v-col>
+                            <v-col cols="3">
+                                <v-text-field
+                                    placeholder="Stock"
+                                    :solo="true"
+                                    :clearable="true"
+                                    v-model="advanceSearch.stock"
+                                    class="mb-n4 mr-3"
+                                />
+                            </v-col>
+                            <v-col cols="3">
+                                <v-text-field
+                                    placeholder="Bottom Price"
+                                    :solo="true"
+                                    :clearable="true"
+                                    v-model="advanceSearch.bottomPrice"
+                                    class="mb-n4 mr-3"
+                                />
+                            </v-col>
+                            <v-col cols="3">
+                                <v-text-field
+                                    placeholder="Open Price"
+                                    :solo="true"
+                                    :clearable="true"
+                                    v-model="advanceSearch.openPrice"
+                                    class="mb-n4"
+                                />
+                            </v-col>
+                        </v-row>
+                    </v-col>
+                </v-expand-transition>
+            </v-row>
             <!-- *************************************************************************************************************** -->
             <!-- *************************************************************************************************************** -->
 
@@ -229,7 +275,7 @@
             <!-- *************************************************************************************************************** -->
             <!-- Quick Edit Open Price -->
             <!-- *************************************************************************************************************** -->
-            <v-switch value v-model="editToggle" class="pa-0 ma-0" label="Edit Price"></v-switch>
+            <v-switch value v-model="editToggle" class="pa-0 mb-0 mt-5" label="Edit Price"></v-switch>
             <v-dialog v-model="popUpQuickEdit" persistent max-width='350px'>
                 <v-card>
                     <v-toolbar dense flat>
@@ -273,7 +319,6 @@
             <v-data-table
                 :headers="barangHeaders"
                 :items="barangs"
-                :search="searchBarang"
                 @click:row="details"
                 :disable-sort="true"
                 :hide-default-footer="true"
@@ -646,6 +691,13 @@ export default {
     name: 'Barang',
     data() {
         return {
+            advanceSearch: {
+                nama:'',
+                stock:null,
+                openPrice:null,
+                bottomPrice:null,
+                kategori:''
+            },
             barangs: [
                 {id:1, nama:'Paku', openPrice:5000, bottomPrice:3000, stock:100, satuan:'biji', gambar:[
                     'https://picsum.photos/id/231/200',
@@ -667,6 +719,7 @@ export default {
                 id:null,
                 nama:'',
                 openPrice:null,
+                bottomPrice:null,
                 stock:null,
                 kategori:'',
                 satuan:{},
@@ -677,6 +730,7 @@ export default {
                 id:null,
                 nama:'',
                 openPrice:null,
+                bottomPrice:null,
                 stock:null,
                 kategori:'',
                 satuan:{},
@@ -726,6 +780,37 @@ export default {
     },
 
     methods: {
+        // Advance Search
+        advanceSearchNama(val) {
+            if(!this.advanceSearch.nama) {
+                return true
+            }
+            return val.toLowerCase().includes(this.advanceSearch.nama.toLowerCase())
+        },
+        advanceSearchOpenPrice(val) {
+            if(!this.advanceSearch.openPrice) {
+                return true
+            }
+            return val >= +this.advanceSearch.openPrice
+        },
+        advanceSearchStock(val) {
+            if(!this.advanceSearch.stock) {
+                return true
+            }
+            return val >= +this.advanceSearch.stock
+        },
+        advanceSearchbottomPrice(val) {
+            if(!this.advanceSearch.bottomPrice) {
+                return true
+            }
+            return val >= +this.advanceSearch.bottomPrice
+        },
+        advanceSearchKategori(val) {
+            if(!this.advanceSearch.kategori) {
+                return true
+            }
+            return val === this.advanceSearch.kategori
+        },
         details(item) {
             this.selectedIndex = this.barangs.indexOf(item)
             this.barang = Object.assign({},item)
@@ -852,10 +937,13 @@ export default {
     computed: {
         barangHeaders() {
             return [
-                {text:'Nama', value:'nama', width:'70%'},
-                {text:'Open Price', value:'openPrice', align:'center'},
-                {text:'Stock', value:'stock'},
-                {text:'',value:'actions',width:'7%'}
+                {text:'Nama', value:'nama', width:'70%', filter:this.advanceSearchNama},
+                {text:'Open Price', value:'openPrice', align:'center', filter:this.advanceSearchOpenPrice},
+                {text:'Stock', value:'stock', filter:this.advanceSearchStock},
+                {value:'actions',width:'7%'},
+                {value:'kategori', align: ' d-none', filter:this.advanceSearchKategori},
+                {value:'bottomPrice', align: ' d-none', filter:this.advanceSearchbottomPrice},
+
             ]
         },
         //view Breakpoint
