@@ -49,8 +49,12 @@
             </v-card>
           </v-container>
         </v-flex>
-        <v-row v-if="this.$route.meta.drawer" class="ma-5 justify-center">
-          <v-flex xs8>
+        <v-row v-if="this.$route.meta.drawer" class="ma-5">
+          <v-flex xs2>
+            <AdminToolbar />
+          </v-flex>
+          <v-spacer></v-spacer>
+          <v-flex xs10 class="pl-3">
             <v-container>
               <v-card flat>
                 <router-view></router-view>
@@ -65,14 +69,17 @@
 
 <script>
 import Toolbar from "@/components/Toolbar";
+import AdminToolbar from "@/components/Admin-Toolbar";
 // import Searchbar from "@/components/Searchbar";
 import "@/store/index.js";
+
 
 export default {
   name: "App",
 
   components: {
-    Toolbar
+    Toolbar,
+    AdminToolbar
     // Searchbar
   },
 
