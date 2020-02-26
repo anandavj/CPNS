@@ -112,7 +112,7 @@ class warehouse extends REST_Controller
 
     public function index_delete()
     {
-        $id = $this->input->delete('id');
+        $id = $this->input->get('id');
 
         if (!isset($id)) {
             $this->response(
@@ -128,7 +128,7 @@ class warehouse extends REST_Controller
             $this->response(
                 array(
                     'status' => FALSE,
-                    'message' => $this::INVALID_ID_MESSAGE."id"
+                    'message' => $this::INVALID_ID_MESSAGE." id does not exist"
                 ),REST_Controller::HTTP_BAD_REQUEST
             );
             return;
