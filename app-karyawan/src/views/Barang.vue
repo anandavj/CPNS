@@ -16,47 +16,139 @@
                     />
                 </v-col>
                 <v-expand-transition v-if="!popUpBreakPoint">
-                    <v-col cols="12" class="mb-n5">
+                    <v-col cols="12" v-if="showAdvanceSearchOption">
                         <v-row no-gutters>
                             <v-col cols="12">
                                 <v-text-field
-                                    placeholder="Kategori"
-                                    :solo="true"
+                                    label="Kategori"
+                                    outlined
+                                    dense
                                     :clearable="true"
                                     v-model="advanceSearch.kategori"
-                                    class="mb-n4 mr-3"
+                                    class="mb-n4"
+                                    color="accent"
                                 />  
                             </v-col>
                             <v-col cols="3">
                                 <v-text-field
-                                    placeholder="Stock"
-                                    :solo="true"
+                                    label="Min Stock"
+                                    outlined
+                                    dense
                                     :clearable="true"
-                                    v-model="advanceSearch.stock"
+                                    v-model="advanceSearch.stockDown"
                                     class="mb-n4 mr-3"
+                                    color="accent"
                                 />
                             </v-col>
                             <v-col cols="3">
                                 <v-text-field
-                                    placeholder="Bottom Price"
-                                    :solo="true"
+                                    label="Max Stock"
+                                    outlined
+                                    dense
                                     :clearable="true"
-                                    v-model="advanceSearch.bottomPrice"
+                                    v-model="advanceSearch.stockUp"
                                     class="mb-n4 mr-3"
+                                    color="accent"
                                 />
                             </v-col>
                             <v-col cols="3">
                                 <v-text-field
-                                    placeholder="Open Price"
-                                    :solo="true"
+                                    label="Min Open Price"
+                                    outlined
+                                    dense
                                     :clearable="true"
-                                    v-model="advanceSearch.openPrice"
+                                    v-model="advanceSearch.openPriceDown"
+                                    @click:clear="advanceSearch.openPriceDown = null"
+                                    class="mb-n4 mr-3"
+                                    type="number"
+                                    color="accent"
+                                />
+                            </v-col>
+                            <v-col cols="3">
+                                <v-text-field
+                                    label="Max Open Price"
+                                    outlined
+                                    dense
+                                    :clearable="true"
+                                    v-model="advanceSearch.openPriceUp"
+                                    @click:clear="advanceSearch.openPriceUp = null"
                                     class="mb-n4"
+                                    type="number"
+                                    color="accent"
                                 />
                             </v-col>
                         </v-row>
                     </v-col>
                 </v-expand-transition>
+                <v-expand-transition v-else>
+                    <v-col cols="12" v-if="showAdvanceSearchOption">
+                        <v-row no-gutters>
+                            <v-col cols="12">
+                                <v-text-field
+                                    label="Kategori"
+                                    outlined
+                                    dense
+                                    :clearable="true"
+                                    v-model="advanceSearch.kategori"
+                                    class="mb-n4"
+                                    color="accent"
+                                />  
+                            </v-col>
+                            <v-col cols="6">
+                                <v-text-field
+                                    label="Min Stock"
+                                    outlined
+                                    dense
+                                    :clearable="true"
+                                    v-model="advanceSearch.stockDown"
+                                    class="mb-n4 mr-3"
+                                    color="accent"
+                                />
+                            </v-col>
+                            <v-col cols="6">
+                                <v-text-field
+                                    label="Max Stock"
+                                    outlined
+                                    dense
+                                    :clearable="true"
+                                    v-model="advanceSearch.stockUp"
+                                    class="mb-n4"
+                                    color="accent"
+                                />
+                            </v-col>
+                            <v-col cols="6">
+                                <v-text-field
+                                    label="Min Open Price"
+                                    outlined
+                                    dense
+                                    :clearable="true"
+                                    v-model="advanceSearch.openPriceDown"
+                                    @click:clear="advanceSearch.openPriceDown = null"
+                                    class="mb-n4 mr-3"
+                                    type="number"
+                                    color="accent"
+                                />
+                            </v-col>
+                            <v-col cols="6">
+                                <v-text-field
+                                    label="Max Open Price"
+                                    outlined
+                                    dense
+                                    :clearable="true"
+                                    v-model="advanceSearch.openPriceUp"
+                                    @click:clear="advanceSearch.openPriceUp = null"
+                                    class="mb-n4"
+                                    type="number"
+                                    color="accent"
+                                />
+                            </v-col>
+                        </v-row>
+                    </v-col>
+                </v-expand-transition>
+                <v-col>
+                    <v-btn class="body-2" text dense color="blue white--text"  @click="showAdvanceSearch"><span class="mr-1"><v-icon v-if="!showAdvanceSearchOption">mdi-filter-menu-outline</v-icon><v-icon v-else>mdi-filter-minus-outline</v-icon></span>Filter</v-btn>
+                    <v-btn text :disabled="advanceSearch.nama == '' && (advanceSearch.openPriceDown == '' || advanceSearch.openPriceDown == null) && (advanceSearch.openPriceUp == '' || advanceSearch.openPriceUp == null) && (advanceSearch.stockDown == '' || advanceSearch.stockDown == null) && (advanceSearch.stockUp == '' || advanceSearch.stockUp == null) && advanceSearch.kategori == ''" v-if="showAdvanceSearchOption" dense @click="clearAllAdvanceSearch" class="caption showAdvanceSearchOptionText"><v-icon>mdi-filter-variant-remove</v-icon> Clear Filter</v-btn>
+                </v-col>
             </v-row>
             <!-- *************************************************************************************************************** -->
             <!-- *************************************************************************************************************** -->
@@ -93,7 +185,8 @@
                                     <v-col cols="9">
                                         <v-text-field label="Nama" v-model="barang.nama"/>
                                     </v-col>
-                                    <v-col cols="6" class="mt-n4">
+                                    <!-- PC / LAPTOP -->
+                                    <v-col cols="6" class="mt-n4" v-if="!popUpBreakPoint">
                                         <v-row no-gutters class="align-center">
                                             <v-col cols="11">
                                                 <v-select
@@ -118,28 +211,57 @@
                                                     <span>Tambah Kategori Baru</span>
                                                 </v-tooltip>
                                             </v-col>
-                                            <!-- Dialog New Kategori -->
-                                            <v-dialog v-model="popUpNewCategory" persistent max-width="350px" style="z-index:10">
-                                                <v-card>
-                                                    <v-form ref="form">
-                                                        <v-card-text>
-                                                            <v-text-field color="accent" outlined v-model="formNewKategoriModel" label="Nama Kategori"/>
-                                                        </v-card-text>
-                                                    </v-form>
-                                                    <v-card-actions>
-                                                        <v-container>
-                                                            <v-row justify="center">
-                                                                <v-btn class="my-n11" color="red darken-1" text @click="close">Batal</v-btn>
-                                                                <v-btn class="my-n11" color="blue darken-1" text @click="saveNewKategori">Save</v-btn>
-                                                            </v-row>
-                                                        </v-container>
-                                                    </v-card-actions>
-                                                </v-card>
-                                            </v-dialog>
-                                            <!--  -->
                                         </v-row>
                                     </v-col>
-                                    <v-col cols="6" class="mt-n4">
+                                    <!-- Mobile Phone -->
+                                    <v-col cols="12" class="mt-n4" v-else>
+                                        <v-row no-gutters class="align-center">
+                                            <v-col cols="11">
+                                                <v-select
+                                                    v-model="barang.kategori"
+                                                    :items="categories"
+                                                    label="Kategori"
+                                                />
+                                            </v-col>
+                                            <v-col cols="1">
+                                                <v-tooltip bottom color="accent">
+                                                    <template v-slot:activator="{ on }">
+                                                        <v-btn
+                                                            text
+                                                            icon
+                                                            color="accent"
+                                                            v-on="on"
+                                                            @click="popUpNewCategory = !popUpNewCategory"
+                                                        >
+                                                            <v-icon>mdi-plus</v-icon>
+                                                        </v-btn>
+                                                    </template>
+                                                    <span>Tambah Kategori Baru</span>
+                                                </v-tooltip>
+                                            </v-col>
+                                        </v-row>
+                                    </v-col>
+                                    <!-- Dialog New Kategori -->
+                                    <v-dialog v-model="popUpNewCategory" persistent max-width="350px" style="z-index:10">
+                                        <v-card>
+                                            <v-form ref="form">
+                                                <v-card-text>
+                                                    <v-text-field color="accent" outlined v-model="formNewKategoriModel" label="Nama Kategori"/>
+                                                </v-card-text>
+                                            </v-form>
+                                            <v-card-actions>
+                                                <v-container>
+                                                    <v-row justify="center">
+                                                        <v-btn class="my-n11" color="red darken-1" text @click="close">Batal</v-btn>
+                                                        <v-btn class="my-n11" color="blue darken-1" text @click="saveNewKategori">Save</v-btn>
+                                                    </v-row>
+                                                </v-container>
+                                            </v-card-actions>
+                                        </v-card>
+                                    </v-dialog>
+                                    <!--  -->
+                                    <!-- PC / Laptop -->
+                                    <v-col cols="6" class="mt-n4" v-if="!popUpBreakPoint">
                                         <v-row no-gutters class="align-center">
                                             <v-col cols="11">
                                                 <v-select
@@ -164,36 +286,73 @@
                                                     <span>Tambah Satuan Baru</span>
                                                 </v-tooltip>
                                             </v-col>
-                                            <!-- Dialog New Kategori -->
-                                            <v-dialog v-model="popUpNewSatuan" persistent max-width="350px" style="z-index:10">
-                                                <v-card>
-                                                    <v-form ref="form">
-                                                        <v-card-text>
-                                                            <v-text-field color="accent" v-model="formNewSatuanModel.name" label="Nama Unit"/>
-                                                            <v-text-field color="accent" v-model="formNewSatuanModel.singkatan" label="Singkatan"/>
-                                                            <v-text-field color="accent" v-model="formNewSatuanModel.jenis" label="Jenis Satuan"/>
-                                                        </v-card-text>
-                                                    </v-form>
-                                                    <v-card-actions>
-                                                        <v-container>
-                                                            <v-row justify="center">
-                                                                <v-btn class="my-n9" color="red darken-1" text @click="close">Batal</v-btn>
-                                                                <v-btn class="my-n9" color="blue darken-1" text @click="saveNewSatuan">Save</v-btn>
-                                                            </v-row>
-                                                        </v-container>
-                                                    </v-card-actions>
-                                                </v-card>
-                                            </v-dialog>
-                                            <!--  -->
                                         </v-row>
                                     </v-col>
-                                    <v-col cols="4">
+                                    <!-- Mobile Phone -->
+                                    <v-col cols="12" class="mt-n4" v-else>
+                                        <v-row no-gutters class="align-center">
+                                            <v-col cols="11">
+                                                <v-select
+                                                    v-model="barang.satuan"
+                                                    :items="satuans"
+                                                    label="Satuan"
+                                                />
+                                            </v-col>
+                                            <v-col cols="1">
+                                                <v-tooltip bottom color="accent">
+                                                    <template v-slot:activator="{ on }">
+                                                        <v-btn
+                                                            text
+                                                            icon
+                                                            color="accent"
+                                                            v-on="on"
+                                                            @click="popUpNewSatuan = !popUpNewSatuan"
+                                                        >
+                                                            <v-icon>mdi-plus</v-icon>
+                                                        </v-btn>
+                                                    </template>
+                                                    <span>Tambah Satuan Baru</span>
+                                                </v-tooltip>
+                                            </v-col>
+                                        </v-row>
+                                    </v-col>
+                                    <!-- Dialog New Kategori -->
+                                    <v-dialog v-model="popUpNewSatuan" persistent max-width="350px" style="z-index:10">
+                                        <v-card>
+                                            <v-form ref="form">
+                                                <v-card-text>
+                                                    <v-text-field color="accent" v-model="formNewSatuanModel.name" label="Nama Unit"/>
+                                                    <v-text-field color="accent" v-model="formNewSatuanModel.singkatan" label="Singkatan"/>
+                                                    <v-text-field color="accent" v-model="formNewSatuanModel.jenis" label="Jenis Satuan"/>
+                                                </v-card-text>
+                                            </v-form>
+                                            <v-card-actions>
+                                                <v-container>
+                                                    <v-row justify="center">
+                                                        <v-btn class="my-n9" color="red darken-1" text @click="close">Batal</v-btn>
+                                                        <v-btn class="my-n9" color="blue darken-1" text @click="saveNewSatuan">Save</v-btn>
+                                                    </v-row>
+                                                </v-container>
+                                            </v-card-actions>
+                                        </v-card>
+                                    </v-dialog>
+                                    <!--  -->
+                                    <v-col cols="6" v-if="popUpBreakPoint" class="my-n4">
                                         <v-text-field label="Open Price" v-model="barang.openPrice"/>
                                     </v-col>
-                                    <v-col cols="4">
+                                    <v-col cols="4" v-else>
+                                        <v-text-field label="Open Price" v-model="barang.openPrice"/>
+                                    </v-col>
+                                    <v-col cols="6" v-if="popUpBreakPoint" class="my-n4">
                                         <v-text-field label="Bottom Price" v-model="barang.bottomPrice"/>
                                     </v-col>
-                                    <v-col cols="4">
+                                    <v-col cols="4" v-else>
+                                        <v-text-field label="Bottom Price" v-model="barang.bottomPrice"/>
+                                    </v-col>
+                                    <v-col cols="12" v-if="popUpBreakPoint" class="my-n4">
+                                        <v-text-field label="Stock" v-model="barang.stock"/>
+                                    </v-col>
+                                    <v-col cols="4" v-else>
                                         <v-text-field label="Stock" v-model="barang.stock"/>
                                     </v-col>
                                     <v-col cols="12">
@@ -361,7 +520,76 @@
                         <span class="title font-weight-light">Detail Barang</span>
                         <v-btn absolute right icon @click="close"><v-icon>mdi-close</v-icon></v-btn>
                     </v-toolbar>
-                    {{barang}}
+                    <v-container>
+                        <v-col cols="12">
+                            <v-card max-width="100%" color="grey">
+                                <v-img :src="gambarBarangSelected"></v-img>
+                            </v-card>
+                        </v-col>
+                        <v-row>
+                            <v-col cols="3" v-for="(img,index) in barang.gambar" :key="index">
+                                <v-card width="100%" @click="changePic(img)">
+                                    <v-img :src="img" v-if="gambarBarangSelected == img" gradient="to top right, rgba(0,0,0,.73), rgba(0,0,0,.73)"></v-img>
+                                    <v-img :src="img" v-else></v-img>
+                                </v-card>
+                            </v-col>
+                        </v-row>
+                        <v-col cols="12">
+                            <span class="display-1">{{barang.nama}}</span>
+                        </v-col>
+                        <v-col class="my-n4" cols="12">
+                            <v-chip
+                                color="accent"
+                                class="mr-1"
+                                label
+                                text-color="white"
+                                v-for="(tag,idx) in barang.tag" :key="idx"
+                                small
+                            >
+                                {{tag}}
+                            </v-chip>
+                        </v-col>
+                        <v-col cols="12">
+                            <table class="descTable">
+                                <tr>
+                                    <td>ID Barang</td>
+                                    <td width="25%" align="end">:</td>
+                                    <td>{{barang.id}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Kategori</td>
+                                    <td width="25%" align="end">:</td>
+                                    <td>{{barang.kategori}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Satuan</td>
+                                    <td width="25%" align="end">:</td>
+                                    <td>{{barang.satuan}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Open Price</td>
+                                    <td width="25%" align="end">:</td>
+                                    <td>{{barang.openPrice}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Bottom Price</td>
+                                    <td width="25%" align="end">:</td>
+                                    <td>{{barang.bottomPrice}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Stock</td>
+                                    <td width="25%" align="end">:</td>
+                                    <td>{{barang.stock}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Deskripsi</td>
+                                    <td width="25%" align="end">:</td>
+                                    <td>{{barang.deskripsi}}</td>
+                                </tr>
+
+                            </table>
+                        </v-col>
+                    </v-container>
                 </v-card>
             </v-dialog >
             <!-- Laptop/PC or other md lg device will not display fullscreen dialog -->
@@ -693,9 +921,10 @@ export default {
         return {
             advanceSearch: {
                 nama:'',
-                stock:null,
-                openPrice:null,
-                bottomPrice:null,
+                stockDown:null,
+                stockUp:null,
+                openPriceDown:null,
+                openPriceUp:null,
                 kategori:''
             },
             barangs: [
@@ -775,12 +1004,31 @@ export default {
             popUpNewCategory: false,
             popUpNewSatuan: false,
             popUpNewTag: false,
+            showAdvanceSearchOption: false,
             selectedIndex: -1,
         }
     },
 
     methods: {
         // Advance Search
+        showAdvanceSearch() {
+            if(!this.showAdvanceSearchOption) {
+                this.showAdvanceSearchOption = true
+            } else {
+                if(this.showAdvanceSearchOption) {
+                    this.showAdvanceSearchOption = false
+                }
+            }
+        },
+        clearAllAdvanceSearch() {
+            this.advanceSearch.nama = ''
+            this.advanceSearch.stockDown = null
+            this.advanceSearch.stockUp = null
+            this.advanceSearch.kategori = ''
+            this.advanceSearch.openPriceDown = null
+            this.advanceSearch.openPriceUp = null
+
+        },
         advanceSearchNama(val) {
             if(!this.advanceSearch.nama) {
                 return true
@@ -788,22 +1036,36 @@ export default {
             return val.toLowerCase().includes(this.advanceSearch.nama.toLowerCase())
         },
         advanceSearchOpenPrice(val) {
-            if(!this.advanceSearch.openPrice) {
+            if(!this.advanceSearch.openPriceDown && !this.advanceSearch.openPriceUp) {
                 return true
             }
-            return val >= +this.advanceSearch.openPrice
+            if(this.advanceSearch.openPriceDown && !this.advanceSearch.openPriceUp) {
+                return val >= +this.advanceSearch.openPriceDown
+            } else {
+                if(!this.advanceSearch.openPriceDown && this.advanceSearch.openPriceUp) {
+                    return val <= +this.advanceSearch.openPriceUp
+                } else {
+                    if(this.advanceSearch.openPriceDown && this.advanceSearch.openPriceUp) {
+                        return (val >= +this.advanceSearch.openPriceDown && val <= +this.advanceSearch.openPriceUp)
+                    }
+                }
+            }
         },
         advanceSearchStock(val) {
-            if(!this.advanceSearch.stock) {
+            if(!this.advanceSearch.stockDown && !this.advanceSearch.stockUp) {
                 return true
             }
-            return val >= +this.advanceSearch.stock
-        },
-        advanceSearchbottomPrice(val) {
-            if(!this.advanceSearch.bottomPrice) {
-                return true
+            if(this.advanceSearch.stockDown && !this.advanceSearch.stockUp) {
+                return val >= +this.advanceSearch.stockDown
+            } else {
+                if(!this.advanceSearch.stockDown && this.advanceSearch.stockUp) {
+                    return val <= +this.advanceSearch.stockUp
+                } else {
+                    if(this.advanceSearch.stockDown && this.advanceSearch.stockUp) {
+                        return (val >= +this.advanceSearch.stockDown && val <= +this.advanceSearch.stockUp)
+                    }
+                }
             }
-            return val >= +this.advanceSearch.bottomPrice
         },
         advanceSearchKategori(val) {
             if(!this.advanceSearch.kategori) {
@@ -948,7 +1210,7 @@ export default {
         },
         //view Breakpoint
         popUpBreakPoint() {
-            if (this.$vuetify.breakpoint.name == 'xs' || this.$vuetify.breakpoint.name == 'sm') {
+            if (this.$vuetify.breakpoint.name == 'xs') {
                 return true
             } else {
                 return false
@@ -972,6 +1234,17 @@ export default {
 
     .descTable tr td {
         height: 35px
+    }
+
+    .showAdvanceSearchOptionText {
+        color: red;
+    -webkit-touch-callout: none; /* iOS Safari */
+        -webkit-user-select: none; /* Safari */
+        -khtml-user-select: none; /* Konqueror HTML */
+        -moz-user-select: none; /* Firefox */
+            -ms-user-select: none; /* Internet Explorer/Edge */
+                user-select: none; /* Non-prefixed version, currently
+                                    supported by Chrome and Opera */
     }
 
 </style>
