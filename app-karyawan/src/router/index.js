@@ -91,6 +91,14 @@ const routes = [
     meta: {
       drawer: true
     }
+  },
+  {
+    path: '/importBarang',
+    name: 'ImportBarang',
+    component: () => import('../views/ImportBarang.vue'),
+    meta: {
+      drawer: true
+    }
   }
 ]
 
