@@ -4,11 +4,12 @@
             name="test"
             ref="pond"
             label-idle="Drop files here or <span class='filepond--label-action'>Browse</span> <span class='filepondFormatText'>Format: xls / xlsx</span>"
-            accepted-file-types="application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            accepted-file-types="application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.oasis.opendocument.spreadsheet"
             v-bind:files="myFiles"
             instant-upload="false"
             v-on:updatefiles="handleFilePondUpdateFile"
             labelInvalidField="remove"
+            :fileValidateTypeDetectType="detectorFunction"
             fileValidateTypeLabelExpectedTypes="Hanya menerima format XLS dan XLSX"
         />
     </v-app>
@@ -35,7 +36,26 @@ export default {
     methods: {
         handleFilePondUpdateFile(files) {
             this.myFiles = files.map(files => files.file);
-        }
+        },
+
+        detectorFunction(source, type) {
+            return new Promise((resolve, reject) => {
+                let validTypes = [
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    "application/vnd.ms-excel",
+                    "application/vnd.oasis.opendocument.spreadsheet"
+                ]
+                let bCondition01 = (validTypes.indexOf(type) > -1)
+                let ext = source.name.slice(-5).toLowerCase()
+                let bCondition02 = (type == "") && (ext === ".xlsx")
+                if (bCondition01 || bCondition02) {
+                    resolve(validTypes[0])
+                } else {
+                    reject()
+                }
+                resolve(type);
+            })
+        },
     }
 }
 </script>
