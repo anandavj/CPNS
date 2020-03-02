@@ -15,6 +15,8 @@ class Product extends REST_Controller
         $this->load->model('product_model');
         $this->load->model('category_model');
         $this->load->model('unit_model');
+        $this->load->model('product_tag_model');
+        $this->load->model('product_image_model');
     }
 
     public function index_post()
@@ -27,9 +29,11 @@ class Product extends REST_Controller
         $unit_id = $this->post('unitId');
         $open_price = $this->post('openPrice');
         $bottom_price = $this->post('bottomPrice');
+        $tags = $this->post('tags');
+        $images = $this->post('images');
 
         if (
-            !isset($name) || !isset($category_id) || !isset($specification) || !isset($unit_id) || !isset($open_price) || !isset($bottom_price)
+            !isset($name) || !isset($category_id) || !isset($specification) || !isset($unit_id) || !isset($open_price) || !isset($bottom_price) || !isset($tags) || !isset($images)
         ) {
             $required_parameters = [];
             if (!isset($name)) array_push($required_parameters, 'name');
@@ -38,6 +42,8 @@ class Product extends REST_Controller
             if (!isset($unit_id)) array_push($required_parameters, 'unitId');
             if (!isset($open_price)) array_push($required_parameters, 'openPrice');
             if (!isset($bottom_price)) array_push($required_parameters, 'bottomPrice');
+            if (!isset($tags)) array_push($required_parameters, 'tags');
+            if (!isset($images)) array_push($required_parameters, 'images');
             $this->response(
                 array(
                     'status' => FALSE,
@@ -70,7 +76,27 @@ class Product extends REST_Controller
             return;
         }
 
-        if ($this->product_model->insert_product($name, $category_id, $specification, $description, $stock, $unit_id, $open_price, $bottom_price)) {
+        if ($product_id = $this->product_model->insert_product($name, $category_id, $specification, $description, $stock, $unit_id, $open_price, $bottom_price)) {
+            if(!$this->product_tag_model->insert_product_tag($product_id, $tags)){
+                $this->response(
+                    array(
+                        'status' => FALSE,
+                        'message' => $this::INSERT_FAILED_MESSAGE." failed to insert product tag"
+                    ),REST_Controller::HTTP_INTERNAL_SERVER_ERROR
+                );
+                return;
+            }
+
+            if(!$this->product_image_model->insert_product_image($product_id, $images)){
+                $this->response(
+                    array(
+                        'status' => FALSE,
+                        'message' => $this::INSERT_FAILED_MESSAGE." failed to insert image tag"
+                    ),REST_Controller::HTTP_INTERNAL_SERVER_ERROR
+                );
+                return;    
+            }
+            
             $this->response(
                 array(
                     'status' => TRUE,
@@ -107,6 +133,9 @@ class Product extends REST_Controller
         $unit_id = $this->put('unitId');
         $open_price = $this->put('openPrice');
         $bottom_price = $this->put('bottomPrice');
+        $tags = $this->put('tags');
+        $images = $this->put('images');
+
         $datas = array();
         
         if(!isset($id)){
@@ -184,7 +213,26 @@ class Product extends REST_Controller
 
     
         if ($this->product_model->update_product($id, $datas)) {
-            
+            if(!$this->product_tag_model->update_product_tag($id,$tags)){
+                $this->response(
+                    array(
+                        'status' => FALSE,
+                        'message' => $this::UPDATE_FAILED_MESSAGE. " failed to update product tag"
+                    ),REST_Controller::HTTP_INTERNAL_SERVER_ERROR
+                );
+                return;
+            }
+
+            if(!$this->product_image_model->update_product_image($id, $images)){
+                $this->response(
+                    array(
+                        'status' => FALSE,
+                        'message' => $this::UPDATE_FAILED_MESSAGE. " failed to update image tag"
+                    ),REST_Controller::HTTP_INTERNAL_SERVER_ERROR
+                );
+                return;
+            }
+
             $this->response(
                 array(
                     'status' => TRUE,

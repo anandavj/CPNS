@@ -20,7 +20,7 @@ class Product_model extends CI_Model{
             'open_price' => $open_price,
             'bottom_price' => $bottom_price
         ));
-        return $this->db->affected_rows();
+        return $this->db->insert_id();
     }
 
     public function get_all_product(){

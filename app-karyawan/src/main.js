@@ -8,7 +8,7 @@ import firebase from'firebase';
 import axios from 'axios';
 
 Vue.config.productionTip = false
-axios.defaults.baseURL = 'http://localhost/BuanaPaksa/CPNS/backend/api/'
+axios.defaults.baseURL = 'http://localhost:8000/backend/api/'
 
 const config = {
   apiKey: "AIzaSyAGXPPSZkTQC0Qq5zoFmoDe3AdvbPBHYKE",

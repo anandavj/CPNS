@@ -23,8 +23,7 @@ class User_model extends CI_Model{
 
     public function get_all_user(){
         $this->db->select('id, user_task_group_id as '.Schema::USER_TASK_GROUP_ID.', name, email, 
-        telephone, address, uid, place_of_birth as '. Schema::PLACE_OF_BIRTH.', date_of_birth as'.
-        Schema::DATE_OF_BIRTH.', religion, status');
+        telephone, address, uid, place_of_birth as '. Schema::PLACE_OF_BIRTH.', date_of_birth as dateOfBirth, religion, status');
         $this->db->from('user');
         return $this->db->get()->result_array();
     }
