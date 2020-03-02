@@ -102,7 +102,7 @@ const api = {
                     reject(error)
                 })
         } )
-    }
+    },
 
     // UNIT
     getAllUnit() {
