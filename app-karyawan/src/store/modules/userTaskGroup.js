@@ -42,17 +42,7 @@ const userTaskGroup = {
                 })
             })
         },
-        getAllUserTaskGroup(){
-            return new Promise((resolve, reject) => {
-                axios.get(tableName)
-                .then(response => {
-                    resolve(response.data);
-                })
-                .catch(error => {
-                    if(error.response.status == 500) reject(this.state.serverErrorMessage)
-                })
-            })
-        },
+
         updateUserTaskGroup(){
             return new Promise((resolve, reject) => {
                 axios.put(tableName, this.state.userTaskGroup)

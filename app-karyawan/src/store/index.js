@@ -1,10 +1,5 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import task from './modules/task'
-import userTaskGroup from './modules/userTaskGroup'
-import groupTask from './modules/groupTask'
-import user from './modules/user'
-import userTask from './modules/userTask'
 
 Vue.use(Vuex)
 
@@ -20,10 +15,6 @@ export default new Vuex.Store({
   actions: {
   },
   modules: {
-    task,
-    userTaskGroup,
-    groupTask,
-    user,
-    userTask
+
   }
 })
