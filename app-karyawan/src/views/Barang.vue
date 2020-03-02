@@ -2,7 +2,7 @@
     <v-app>
         <div>
             <!-- *************************************************************************************************************** -->
-            <!-- Search Barang in Barangs Array -->
+            <!-- Search Barang in products Array -->
             <!-- *************************************************************************************************************** -->
             <v-row justify="end" no-gutters>
                 <v-col cols="12">
@@ -12,22 +12,23 @@
                         :clearable='true'
                         append-icon="mdi-magnify"
                         class="font-regular font-weight-light mb-n4"
-                        v-model="advanceSearch.nama"
+                        v-model="advanceSearch.name"
                     />
                 </v-col>
                 <v-expand-transition v-if="!popUpBreakPoint">
                     <v-col cols="12" v-if="showAdvanceSearchOption">
                         <v-row no-gutters>
                             <v-col cols="12">
-                                <v-text-field
-                                    label="Kategori"
+                                <v-select
+                                    :items="categories"
                                     outlined
                                     dense
-                                    :clearable="true"
-                                    v-model="advanceSearch.kategori"
+                                    label="Kategori"
+                                    v-model="advanceSearch.category"
                                     class="mb-n4"
                                     color="accent"
-                                />  
+                                    item-text="name"
+                                />   
                             </v-col>
                             <v-col cols="3">
                                 <v-text-field
@@ -35,7 +36,7 @@
                                     outlined
                                     dense
                                     :clearable="true"
-                                    v-model="advanceSearch.stockDown"
+                                    v-model="advanceSearch.stock_down"
                                     class="mb-n4 mr-3"
                                     color="accent"
                                 />
@@ -46,7 +47,7 @@
                                     outlined
                                     dense
                                     :clearable="true"
-                                    v-model="advanceSearch.stockUp"
+                                    v-model="advanceSearch.stock_up"
                                     class="mb-n4 mr-3"
                                     color="accent"
                                 />
@@ -57,8 +58,8 @@
                                     outlined
                                     dense
                                     :clearable="true"
-                                    v-model="advanceSearch.openPriceDown"
-                                    @click:clear="advanceSearch.openPriceDown = null"
+                                    v-model="advanceSearch.open_price_down"
+                                    @click:clear="advanceSearch.open_price_down = null"
                                     class="mb-n4 mr-3"
                                     type="number"
                                     color="accent"
@@ -70,8 +71,8 @@
                                     outlined
                                     dense
                                     :clearable="true"
-                                    v-model="advanceSearch.openPriceUp"
-                                    @click:clear="advanceSearch.openPriceUp = null"
+                                    v-model="advanceSearch.open_price_up"
+                                    @click:clear="advanceSearch.open_price_up = null"
                                     class="mb-n4"
                                     type="number"
                                     color="accent"
@@ -84,14 +85,15 @@
                     <v-col cols="12" v-if="showAdvanceSearchOption">
                         <v-row no-gutters>
                             <v-col cols="12">
-                                <v-text-field
-                                    label="Kategori"
+                                <v-select
+                                    :items="categories"
                                     outlined
                                     dense
-                                    :clearable="true"
-                                    v-model="advanceSearch.kategori"
+                                    label="Kategori"
+                                    v-model="advanceSearch.category"
                                     class="mb-n4"
                                     color="accent"
+                                    item-text="name"
                                 />  
                             </v-col>
                             <v-col cols="6">
@@ -100,7 +102,7 @@
                                     outlined
                                     dense
                                     :clearable="true"
-                                    v-model="advanceSearch.stockDown"
+                                    v-model="advanceSearch.stock_down"
                                     class="mb-n4 mr-3"
                                     color="accent"
                                 />
@@ -111,7 +113,7 @@
                                     outlined
                                     dense
                                     :clearable="true"
-                                    v-model="advanceSearch.stockUp"
+                                    v-model="advanceSearch.stock_up"
                                     class="mb-n4"
                                     color="accent"
                                 />
@@ -122,8 +124,8 @@
                                     outlined
                                     dense
                                     :clearable="true"
-                                    v-model="advanceSearch.openPriceDown"
-                                    @click:clear="advanceSearch.openPriceDown = null"
+                                    v-model="advanceSearch.open_price_down"
+                                    @click:clear="advanceSearch.open_price_down = null"
                                     class="mb-n4 mr-3"
                                     type="number"
                                     color="accent"
@@ -135,8 +137,8 @@
                                     outlined
                                     dense
                                     :clearable="true"
-                                    v-model="advanceSearch.openPriceUp"
-                                    @click:clear="advanceSearch.openPriceUp = null"
+                                    v-model="advanceSearch.open_price_up"
+                                    @click:clear="advanceSearch.open_price_up = null"
                                     class="mb-n4"
                                     type="number"
                                     color="accent"
@@ -147,7 +149,7 @@
                 </v-expand-transition>
                 <v-col>
                     <v-btn class="body-2" text dense color="blue white--text"  @click="showAdvanceSearch"><span class="mr-1"><v-icon v-if="!showAdvanceSearchOption">mdi-filter-menu-outline</v-icon><v-icon v-else>mdi-filter-minus-outline</v-icon></span>Filter</v-btn>
-                    <v-btn text :disabled="advanceSearch.nama == '' && (advanceSearch.openPriceDown == '' || advanceSearch.openPriceDown == null) && (advanceSearch.openPriceUp == '' || advanceSearch.openPriceUp == null) && (advanceSearch.stockDown == '' || advanceSearch.stockDown == null) && (advanceSearch.stockUp == '' || advanceSearch.stockUp == null) && advanceSearch.kategori == ''" v-if="showAdvanceSearchOption" dense @click="clearAllAdvanceSearch" class="caption showAdvanceSearchOptionText"><v-icon>mdi-filter-variant-remove</v-icon> Clear Filter</v-btn>
+                    <v-btn text :disabled="advanceSearch.name == '' && (advanceSearch.open_price_down == '' || advanceSearch.open_price_down == null) && (advanceSearch.open_price_up == '' || advanceSearch.open_price_up == null) && (advanceSearch.stock_down == '' || advanceSearch.stock_down == null) && (advanceSearch.stock_up == '' || advanceSearch.stock_up == null) && advanceSearch.category == ''" v-if="showAdvanceSearchOption" dense @click="clearAllAdvanceSearch" class="caption showAdvanceSearchOptionText"><v-icon>mdi-filter-variant-remove</v-icon> Clear Filter</v-btn>
                 </v-col>
             </v-row>
             <!-- *************************************************************************************************************** -->
@@ -173,26 +175,28 @@
                                         <div class="title">Gambar Produk</div>
                                     </v-col>
                                     <v-col cols="12">
-                                        <v-file-input v-model="barang.gambar" color="accent" prepend-icon="mdi-camera" chips multiple accept="image/*" label="Upload Produk"></v-file-input>
+                                        <v-file-input v-model="product.image" color="accent" prepend-icon="mdi-camera" chips multiple accept="image/*" label="Upload Produk"></v-file-input>
                                     </v-col>
                                     <!--  -->
                                     <v-col cols="12" class="my-n4">
                                         <div class="title">Informasi Produk</div>
                                     </v-col>
                                     <v-col cols="3">
-                                        <v-text-field label="ID" v-model="barang.id"/>
+                                        <v-text-field label="ID" v-model="product.id"/>
                                     </v-col>
                                     <v-col cols="9">
-                                        <v-text-field label="Nama" v-model="barang.nama"/>
+                                        <v-text-field label="Nama" v-model="product.name"/>
                                     </v-col>
                                     <!-- PC / LAPTOP -->
                                     <v-col cols="6" class="mt-n4" v-if="!popUpBreakPoint">
                                         <v-row no-gutters class="align-center">
                                             <v-col cols="11">
                                                 <v-select
-                                                    v-model="barang.kategori"
+                                                    v-model="product.category_id"
                                                     :items="categories"
                                                     label="Kategori"
+                                                    item-text="name"
+                                                    item-value="id"
                                                 />
                                             </v-col>
                                             <v-col cols="1">
@@ -218,9 +222,11 @@
                                         <v-row no-gutters class="align-center">
                                             <v-col cols="11">
                                                 <v-select
-                                                    v-model="barang.kategori"
+                                                    v-model="product.category_id"
                                                     :items="categories"
                                                     label="Kategori"
+                                                    item-text="name"
+                                                    item-value="id"
                                                 />
                                             </v-col>
                                             <v-col cols="1">
@@ -246,14 +252,14 @@
                                         <v-card>
                                             <v-form ref="form">
                                                 <v-card-text>
-                                                    <v-text-field color="accent" outlined v-model="formNewKategoriModel" label="Nama Kategori"/>
+                                                    <v-text-field color="accent" outlined v-model="formNewCategoryModel" label="Nama Kategori"/>
                                                 </v-card-text>
                                             </v-form>
                                             <v-card-actions>
                                                 <v-container>
                                                     <v-row justify="center">
                                                         <v-btn class="my-n11" color="red darken-1" text @click="close">Batal</v-btn>
-                                                        <v-btn class="my-n11" color="blue darken-1" text @click="saveNewKategori">Save</v-btn>
+                                                        <v-btn class="my-n11" color="blue darken-1" text @click="saveNewCategory">Save</v-btn>
                                                     </v-row>
                                                 </v-container>
                                             </v-card-actions>
@@ -265,9 +271,11 @@
                                         <v-row no-gutters class="align-center">
                                             <v-col cols="11">
                                                 <v-select
-                                                    v-model="barang.satuan"
-                                                    :items="satuans"
+                                                    v-model="product.unit_id"
+                                                    :items="units"
                                                     label="Satuan"
+                                                    item-text="name"
+                                                    item-value="id"
                                                 />
                                             </v-col>
                                             <v-col cols="1">
@@ -278,7 +286,7 @@
                                                             icon
                                                             color="accent"
                                                             v-on="on"
-                                                            @click="popUpNewSatuan = !popUpNewSatuan"
+                                                            @click="popUpNewUnit = !popUpNewUnit"
                                                         >
                                                             <v-icon>mdi-plus</v-icon>
                                                         </v-btn>
@@ -293,9 +301,11 @@
                                         <v-row no-gutters class="align-center">
                                             <v-col cols="11">
                                                 <v-select
-                                                    v-model="barang.satuan"
-                                                    :items="satuans"
+                                                    v-model="product.unit_id"
+                                                    :items="units"
                                                     label="Satuan"
+                                                    item-text="name"
+                                                    item-value="id"
                                                 />
                                             </v-col>
                                             <v-col cols="1">
@@ -306,7 +316,7 @@
                                                             icon
                                                             color="accent"
                                                             v-on="on"
-                                                            @click="popUpNewSatuan = !popUpNewSatuan"
+                                                            @click="popUpNewUnit = !popUpNewUnit"
                                                         >
                                                             <v-icon>mdi-plus</v-icon>
                                                         </v-btn>
@@ -316,21 +326,21 @@
                                             </v-col>
                                         </v-row>
                                     </v-col>
-                                    <!-- Dialog New Kategori -->
-                                    <v-dialog v-model="popUpNewSatuan" persistent max-width="350px" style="z-index:10">
+                                    <!-- Dialog New Unit -->
+                                    <v-dialog v-model="popUpNewUnit" persistent max-width="350px" style="z-index:10">
                                         <v-card>
                                             <v-form ref="form">
                                                 <v-card-text>
-                                                    <v-text-field color="accent" v-model="formNewSatuanModel.name" label="Nama Unit"/>
-                                                    <v-text-field color="accent" v-model="formNewSatuanModel.singkatan" label="Singkatan"/>
-                                                    <v-text-field color="accent" v-model="formNewSatuanModel.jenis" label="Jenis Satuan"/>
+                                                    <v-text-field color="accent" v-model="formNewUnitModel.name" label="Nama Unit"/>
+                                                    <v-text-field color="accent" v-model="formNewUnitModel.abbreviation" label="Singkatan"/>
+                                                    <v-text-field color="accent" v-model="formNewUnitModel.description" label="Jenis Satuan"/>
                                                 </v-card-text>
                                             </v-form>
                                             <v-card-actions>
                                                 <v-container>
                                                     <v-row justify="center">
                                                         <v-btn class="my-n9" color="red darken-1" text @click="close">Batal</v-btn>
-                                                        <v-btn class="my-n9" color="blue darken-1" text @click="saveNewSatuan">Save</v-btn>
+                                                        <v-btn class="my-n9" color="blue darken-1" text @click="saveNewUnit">Save</v-btn>
                                                     </v-row>
                                                 </v-container>
                                             </v-card-actions>
@@ -338,31 +348,31 @@
                                     </v-dialog>
                                     <!--  -->
                                     <v-col cols="6" v-if="popUpBreakPoint" class="my-n4">
-                                        <v-text-field label="Open Price" v-model="barang.openPrice"/>
+                                        <v-text-field label="Open Price" v-model="product.open_price"/>
                                     </v-col>
                                     <v-col cols="4" v-else>
-                                        <v-text-field label="Open Price" v-model="barang.openPrice"/>
+                                        <v-text-field label="Open Price" v-model="product.open_price"/>
                                     </v-col>
                                     <v-col cols="6" v-if="popUpBreakPoint" class="my-n4">
-                                        <v-text-field label="Bottom Price" v-model="barang.bottomPrice"/>
+                                        <v-text-field label="Bottom Price" v-model="product.bottom_price"/>
                                     </v-col>
                                     <v-col cols="4" v-else>
-                                        <v-text-field label="Bottom Price" v-model="barang.bottomPrice"/>
+                                        <v-text-field label="Bottom Price" v-model="product.bottom_price"/>
                                     </v-col>
                                     <v-col cols="12" v-if="popUpBreakPoint" class="my-n4">
-                                        <v-text-field label="Stock" v-model="barang.stock"/>
+                                        <v-text-field label="Stock" v-model="product.stock"/>
                                     </v-col>
                                     <v-col cols="4" v-else>
-                                        <v-text-field label="Stock" v-model="barang.stock"/>
+                                        <v-text-field label="Stock" v-model="product.stock"/>
                                     </v-col>
                                     <v-col cols="12">
-                                        <v-textarea label="Deskripsi" v-model="barang.deskripsi" outlined/>
+                                        <v-textarea label="Deskripsi" v-model="product.description" outlined/>
                                     </v-col>
                                     <v-col cols="12" class="mt-n7">
                                         <v-row no-gutters class="align-center">
                                             <v-col cols="11">
                                                 <v-autocomplete
-                                                    v-model="barang.tag"
+                                                    v-model="product.tag"
                                                     :items="tags"
                                                     label="Tag"
                                                     multiple
@@ -374,6 +384,8 @@
                                                     item-color="accent"
                                                     :search-input.sync="searchInput"
                                                     @change="searchInput=''"
+                                                    item-text="name"
+                                                    item-value="id"
                                                 >
                                                 </v-autocomplete>
                                             </v-col>
@@ -393,7 +405,7 @@
                                                     <span>Tambah Tag Baru</span>
                                                 </v-tooltip>
                                             </v-col>
-                                            <!-- Dialog New Kategori -->
+                                            <!-- Dialog New Tag -->
                                             <v-dialog v-model="popUpNewTag" persistent max-width="350px" style="z-index:10">
                                                 <v-card>
                                                     <v-form ref="form">
@@ -421,7 +433,7 @@
                             <v-container>
                                 <v-row justify="center">
                                     <v-btn class="mt-n12" color="red darken-1" text @click="close">Cancel</v-btn>
-                                    <v-btn class="mt-n12" color="blue darken-1" text @click="saveNewBarang">Save</v-btn>
+                                    <v-btn class="mt-n12" color="blue darken-1" text @click="saveNewProduct">Save</v-btn>
                                 </v-row>
                             </v-container>
                         </v-card-actions>
@@ -441,9 +453,9 @@
                         <span class="title font-weight-light"> Edit Open Price</span>
                         <v-btn absolute right icon @click="close"><v-icon>mdi-close</v-icon></v-btn>
                     </v-toolbar>
-                    <v-card-title>{{barangQuickEdit.nama}}</v-card-title>
+                    <v-card-title>{{productQuickEdit.name}}</v-card-title>
                     <v-form ref="form">
-                            <v-card-text><v-text-field color="blue" outlined v-model="barangQuickEdit.openPrice" placeholder="Harga Barang"></v-text-field></v-card-text>
+                            <v-card-text><v-text-field color="blue" outlined v-model="productQuickEdit.open_price" placeholder="Harga Barang"></v-text-field></v-card-text>
                     </v-form>
                     <v-card-actions>
                         <v-container>
@@ -458,7 +470,7 @@
             <v-dialog persistent v-model="popUpConfirmSaveQuickEdit" width="500px">
                 <v-card>
                     <v-card-title>Konfirmasi</v-card-title>
-                    <v-card-text>Apakah Anda Yakin ingin mengubah Harga Barang <b>{{barangQuickEdit.nama}}</b>?</v-card-text>
+                    <v-card-text>Apakah Anda Yakin ingin mengubah Harga Barang <b>{{productQuickEdit.name}}</b>?</v-card-text>
                     <v-card-actions>
                         <v-container>
                             <v-row justify="center">
@@ -476,8 +488,8 @@
             <!-- List Barang -->
             <!-- *************************************************************************************************************** -->
             <v-data-table
-                :headers="barangHeaders"
-                :items="barangs"
+                :headers="productHeaders"
+                :items="products"
                 @click:row="details"
                 :disable-sort="true"
                 :hide-default-footer="true"
@@ -489,21 +501,21 @@
                 style="cursor:pointer"
             >
                 <template v-slot:item.actions="{ item }">
-                    <v-icon class="mr-2" @click.stop="editBarang(item)">mdi-pencil</v-icon>
-                    <v-icon @click.stop="deleteBarang(item)">mdi-delete</v-icon>
+                    <v-icon class="mr-2" @click.stop="editProduct(item)">mdi-pencil</v-icon>
+                    <v-icon @click.stop="deleteProduct(item)">mdi-delete</v-icon>
                 </template>
-                <template v-slot:item.openPrice="{ item }">
+                <template v-slot:item.open_price="{ item }">
                     <template v-if="editToggle">
                         <v-btn
                         text 
                         @click.stop="quickEdit(item)" 
                         class="blue--text pa-0 font-weight-light"
                         >
-                            {{ item.openPrice }}
+                            {{ item.open_price }}
                         </v-btn>
                     </template>
                     <template v-else>
-                        <v-layout justify-center >{{item.openPrice}}</v-layout>
+                        <v-layout justify-center >{{item.open_price}}</v-layout>
                     </template>
                 </template>
             </v-data-table>
@@ -523,19 +535,19 @@
                     <v-container>
                         <v-col cols="12">
                             <v-card max-width="100%" color="grey">
-                                <v-img :src="gambarBarangSelected"></v-img>
+                                <v-img :src="productImageSelected"></v-img>
                             </v-card>
                         </v-col>
                         <v-row>
-                            <v-col cols="3" v-for="(img,index) in barang.gambar" :key="index">
+                            <v-col cols="3" v-for="(img,index) in product.image" :key="index">
                                 <v-card width="100%" @click="changePic(img)">
-                                    <v-img :src="img" v-if="gambarBarangSelected == img" gradient="to top right, rgba(0,0,0,.73), rgba(0,0,0,.73)"></v-img>
+                                    <v-img :src="img" v-if="productImageSelected == img" gradient="to top right, rgba(0,0,0,.73), rgba(0,0,0,.73)"></v-img>
                                     <v-img :src="img" v-else></v-img>
                                 </v-card>
                             </v-col>
                         </v-row>
                         <v-col cols="12">
-                            <span class="display-1">{{barang.nama}}</span>
+                            <span class="display-1">{{product.name}}</span>
                         </v-col>
                         <v-col class="my-n4" cols="12">
                             <v-chip
@@ -543,7 +555,7 @@
                                 class="mr-1"
                                 label
                                 text-color="white"
-                                v-for="(tag,idx) in barang.tag" :key="idx"
+                                v-for="(tag,idx) in product.tag" :key="idx"
                                 small
                             >
                                 {{tag}}
@@ -554,37 +566,37 @@
                                 <tr>
                                     <td>ID Barang</td>
                                     <td width="25%" align="end">:</td>
-                                    <td>{{barang.id}}</td>
+                                    <td>{{product.id}}</td>
                                 </tr>
                                 <tr>
                                     <td>Kategori</td>
                                     <td width="25%" align="end">:</td>
-                                    <td>{{barang.kategori}}</td>
+                                    <td>{{product.category_id}}</td>
                                 </tr>
                                 <tr>
                                     <td>Satuan</td>
                                     <td width="25%" align="end">:</td>
-                                    <td>{{barang.satuan}}</td>
+                                    <td>{{product.unit_id}}</td>
                                 </tr>
                                 <tr>
                                     <td>Open Price</td>
                                     <td width="25%" align="end">:</td>
-                                    <td>{{barang.openPrice}}</td>
+                                    <td>{{product.open_price}}</td>
                                 </tr>
                                 <tr>
                                     <td>Bottom Price</td>
                                     <td width="25%" align="end">:</td>
-                                    <td>{{barang.bottomPrice}}</td>
+                                    <td>{{product.bottom_price}}</td>
                                 </tr>
                                 <tr>
                                     <td>Stock</td>
                                     <td width="25%" align="end">:</td>
-                                    <td>{{barang.stock}}</td>
+                                    <td>{{product.stock}}</td>
                                 </tr>
                                 <tr>
                                     <td>Deskripsi</td>
                                     <td width="25%" align="end">:</td>
-                                    <td>{{barang.deskripsi}}</td>
+                                    <td>{{product.description}}</td>
                                 </tr>
 
                             </table>
@@ -605,14 +617,14 @@
                                 <v-row>
                                     <v-col cols="12">
                                         <v-card max-width="400px" color="grey">
-                                            <v-img :src="gambarBarangSelected"></v-img>
+                                            <v-img :src="productImageSelected"></v-img>
                                         </v-card>
                                     </v-col>
                                 </v-row>
                                 <v-row>
-                                    <v-col cols="3" v-for="(img,index) in barang.gambar" :key="index">
+                                    <v-col cols="3" v-for="(img,index) in product.image" :key="index">
                                         <v-card width="300px" @click="changePic(img)">
-                                            <v-img :src="img" v-if="gambarBarangSelected == img" gradient="to top right, rgba(0,0,0,.73), rgba(0,0,0,.73)"></v-img>
+                                            <v-img :src="img" v-if="productImageSelected == img" gradient="to top right, rgba(0,0,0,.73), rgba(0,0,0,.73)"></v-img>
                                             <v-img :src="img" v-else></v-img>
                                         </v-card>
                                     </v-col>
@@ -621,7 +633,7 @@
                             <v-col cols="7" class="px-6">
                                 <v-row>
                                     <v-col cols="12">
-                                        <span class="display-1">{{barang.nama}}</span>
+                                        <span class="display-1">{{product.name}}</span>
                                     </v-col>
                                     <v-col class="my-n4" cols="12">
                                         <v-chip
@@ -629,7 +641,7 @@
                                             class="mr-1"
                                             label
                                             text-color="white"
-                                            v-for="(tag,idx) in barang.tag" :key="idx"
+                                            v-for="(tag,idx) in product.tag" :key="idx"
                                             small
                                         >
                                             {{tag}}
@@ -640,37 +652,37 @@
                                             <tr>
                                                 <td>ID Barang</td>
                                                 <td width="25%" align="end">:</td>
-                                                <td>{{barang.id}}</td>
+                                                <td>{{product.id}}</td>
                                             </tr>
                                             <tr>
                                                 <td>Kategori</td>
                                                 <td width="25%" align="end">:</td>
-                                                <td>{{barang.kategori}}</td>
+                                                <td>{{product.category_id}}</td>
                                             </tr>
                                             <tr>
                                                 <td>Satuan</td>
                                                 <td width="25%" align="end">:</td>
-                                                <td>{{barang.satuan}}</td>
+                                                <td>{{product.unit_id}}</td>
                                             </tr>
                                             <tr>
                                                 <td>Open Price</td>
                                                 <td width="25%" align="end">:</td>
-                                                <td>{{barang.openPrice}}</td>
+                                                <td>{{product.open_price}}</td>
                                             </tr>
                                             <tr>
                                                 <td>Bottom Price</td>
                                                 <td width="25%" align="end">:</td>
-                                                <td>{{barang.bottomPrice}}</td>
+                                                <td>{{product.bottom_price}}</td>
                                             </tr>
                                             <tr>
                                                 <td>Stock</td>
                                                 <td width="25%" align="end">:</td>
-                                                <td>{{barang.stock}}</td>
+                                                <td>{{product.stock}}</td>
                                             </tr>
                                             <tr>
                                                 <td>Deskripsi</td>
                                                 <td width="25%" align="end">:</td>
-                                                <td>{{barang.deskripsi}}</td>
+                                                <td>{{product.description}}</td>
                                             </tr>
 
                                         </table>
@@ -700,25 +712,27 @@
                                     <div class="title">Gambar Produk</div>
                                 </v-col>
                                 <v-col cols="12">
-                                    <v-file-input v-model="barang.gambar" color="accent" prepend-icon="mdi-camera" chips multiple accept="image/*" label="Upload Produk"></v-file-input>
+                                    <v-file-input v-model="product.image" color="accent" prepend-icon="mdi-camera" chips multiple accept="image/*" label="Upload Produk"></v-file-input>
                                 </v-col>
                                 <!--  -->
                                 <v-col cols="12" class="my-n4">
                                     <div class="title">Informasi Produk</div>
                                 </v-col>
                                 <v-col cols="3">
-                                    <v-text-field label="ID" v-model="barang.id"/>
+                                    <v-text-field label="ID" v-model="product.id"/>
                                 </v-col>
                                 <v-col cols="9">
-                                    <v-text-field label="Nama" v-model="barang.nama"/>
+                                    <v-text-field label="Nama" v-model="product.name"/>
                                 </v-col>
                                 <v-col cols="6" class="mt-n4">
                                     <v-row no-gutters class="align-center">
                                         <v-col cols="11">
                                             <v-select
-                                                v-model="barang.kategori"
+                                                v-model="product.category_id"
                                                 :items="categories"
                                                 label="Kategori"
+                                                item-text="name"
+                                                item-value="id"
                                             />
                                         </v-col>
                                         <v-col cols="1">
@@ -742,14 +756,14 @@
                                             <v-card>
                                                 <v-form ref="form">
                                                     <v-card-text>
-                                                        <v-text-field color="accent" outlined v-model="formNewKategoriModel" label="Nama Kategori"/>
+                                                        <v-text-field color="accent" outlined v-model="formNewCategoryModel" label="Nama Kategori"/>
                                                     </v-card-text>
                                                 </v-form>
                                                 <v-card-actions>
                                                     <v-container>
                                                         <v-row justify="center">
                                                             <v-btn class="my-n11" color="red darken-1" text @click="close">Batal</v-btn>
-                                                            <v-btn class="my-n11" color="blue darken-1" text @click="saveNewKategori">Save</v-btn>
+                                                            <v-btn class="my-n11" color="blue darken-1" text @click="saveNewCategory">Save</v-btn>
                                                         </v-row>
                                                     </v-container>
                                                 </v-card-actions>
@@ -762,9 +776,11 @@
                                     <v-row no-gutters class="align-center">
                                         <v-col cols="11">
                                             <v-select
-                                                v-model="barang.satuan"
-                                                :items="satuans"
+                                                v-model="product.unit_id"
+                                                :items="units"
                                                 label="Satuan"
+                                                item-text="name"
+                                                item-value="id"
                                             />
                                         </v-col>
                                         <v-col cols="1">
@@ -775,7 +791,7 @@
                                                         icon
                                                         color="accent"
                                                         v-on="on"
-                                                        @click="popUpNewSatuan = !popUpNewSatuan"
+                                                        @click="popUpNewUnit = !popUpNewUnit"
                                                     >
                                                         <v-icon>mdi-plus</v-icon>
                                                     </v-btn>
@@ -784,20 +800,20 @@
                                             </v-tooltip>
                                         </v-col>
                                         <!-- Dialog New Kategori -->
-                                        <v-dialog v-model="popUpNewSatuan" persistent max-width="350px" style="z-index:10">
+                                        <v-dialog v-model="popUpNewUnit" persistent max-width="350px" style="z-index:10">
                                             <v-card>
                                                 <v-form ref="form">
                                                     <v-card-text>
-                                                        <v-text-field color="accent" v-model="formNewSatuanModel.name" label="Nama Unit"/>
-                                                        <v-text-field color="accent" v-model="formNewSatuanModel.singkatan" label="Singkatan"/>
-                                                        <v-text-field color="accent" v-model="formNewSatuanModel.jenis" label="Jenis Satuan"/>
+                                                        <v-text-field color="accent" v-model="formNewUnitModel.name" label="Nama Unit"/>
+                                                        <v-text-field color="accent" v-model="formNewUnitModel.abbreviation" label="Singkatan"/>
+                                                        <v-text-field color="accent" v-model="formNewUnitModel.description" label="Jenis Satuan"/>
                                                     </v-card-text>
                                                 </v-form>
                                                 <v-card-actions>
                                                     <v-container>
                                                         <v-row justify="center">
                                                             <v-btn class="my-n9" color="red darken-1" text @click="close">Batal</v-btn>
-                                                            <v-btn class="my-n9" color="blue darken-1" text @click="saveNewSatuan">Save</v-btn>
+                                                            <v-btn class="my-n9" color="blue darken-1" text @click="saveNewUnit">Save</v-btn>
                                                         </v-row>
                                                     </v-container>
                                                 </v-card-actions>
@@ -807,22 +823,22 @@
                                     </v-row>
                                 </v-col>
                                 <v-col cols="4">
-                                    <v-text-field label="Open Price" v-model="barang.openPrice"/>
+                                    <v-text-field label="Open Price" v-model="product.open_price"/>
                                 </v-col>
                                 <v-col cols="4">
-                                    <v-text-field label="Bottom Price" v-model="barang.bottomPrice"/>
+                                    <v-text-field label="Bottom Price" v-model="product.bottom_price"/>
                                 </v-col>
                                 <v-col cols="4">
-                                    <v-text-field label="Stock" v-model="barang.stock"/>
+                                    <v-text-field label="Stock" v-model="product.stock"/>
                                 </v-col>
                                 <v-col cols="12">
-                                    <v-textarea label="Deskripsi" v-model="barang.deskripsi" outlined/>
+                                    <v-textarea label="Deskripsi" v-model="product.description" outlined/>
                                 </v-col>
                                 <v-col cols="12" class="mt-n7">
                                     <v-row no-gutters class="align-center">
                                         <v-col cols="11">
                                             <v-autocomplete
-                                                v-model="barang.tag"
+                                                v-model="product.tag"
                                                 :items="tags"
                                                 label="Tag"
                                                 multiple
@@ -834,6 +850,8 @@
                                                 item-color="accent"
                                                 :search-input.sync="searchInput"
                                                 @change="searchInput=''"
+                                                item-text="name"
+                                                item-value="id"
                                             >
                                             </v-autocomplete>
                                         </v-col>
@@ -896,7 +914,7 @@
             <v-dialog persistent v-model="popUpConfirmSaveEdit" width="500px">
                 <v-card>
                     <v-card-title>Konfirmasi</v-card-title>
-                    <v-card-text>Apakah Anda Yakin ingin mengubah barang <b>{{barang.nama}}</b></v-card-text>
+                    <v-card-text>Apakah Anda Yakin ingin mengubah barang <b>{{product.name}}</b></v-card-text>
                     <v-card-actions>
                         <v-container>
                             <v-row justify="center">
@@ -914,86 +932,77 @@
 </template>
 
 <script>
+import api from "@/api.js"
 
 export default {
     name: 'Barang',
+    mounted() {
+        this.get()
+    },
     data() {
         return {
             advanceSearch: {
-                nama:'',
-                stockDown:null,
-                stockUp:null,
-                openPriceDown:null,
-                openPriceUp:null,
-                kategori:''
+                name:'',
+                stock_down:null,
+                stock_up:null,
+                open_price_down:null,
+                open_price_up:null,
+                category:''
             },
-            barangs: [
-                {id:1, nama:'Paku', openPrice:5000, bottomPrice:3000, stock:100, satuan:'biji', gambar:[
-                    'https://picsum.photos/id/231/200',
-                    'https://picsum.photos/id/22/200',
-                    'https://picsum.photos/id/221/200',
-                    'https://picsum.photos/id/13/200',
-                    'https://picsum.photos/id/1/200',
-                    'https://picsum.photos/id/14/200',
-                    'https://picsum.photos/id/123/200',
-                    'https://picsum.photos/id/222/200',
-                ],
-                tag:[
-                    'tag 1','tag 2','tag 3','tag 4'
-                ]},
-                {id:2, nama:'Kayu', openPrice:12000, bottomPrice:3000, stock:400, satuan:'biji'},
-                {id:3, nama:'Atap', openPrice:100000, bottomPrice:3000, stock:1100, satuan:'biji'}
-            ],
-            barang: {
+            products: [],
+            product: {
                 id:null,
-                nama:'',
-                openPrice:null,
-                bottomPrice:null,
+                name:'',
+                open_price:null,
+                bottom_price:null,
+                specification:'',
                 stock:null,
-                kategori:'',
-                satuan:{},
+                category_id:null,
+                unit_id:null,
                 tag:[],
-                gambar:[]
+                image:[]
             },
-            barangDefault: {
+            productDefault: {
                 id:null,
-                nama:'',
-                openPrice:null,
-                bottomPrice:null,
+                name:'',
+                open_price:null,
+                bottom_price:null,
+                specification:'',
                 stock:null,
-                kategori:'',
-                satuan:{},
+                category_id:null,
+                unit_id:null,
                 tag:[],
-                gambar:[]
+                image:[]
             },
-            barangQuickEdit: {
+            productQuickEdit: {
                 id:null,
-                nama:'',
-                openPrice:null
+                name:'',
+                open_price:null
             },
-            barangQuickEditDefault: {
+            productQuickEditDefault: {
                 id:null,
-                nama:'',
-                openPrice:null
+                name:'',
+                open_price:null
             },
             categories: [],
-            satuans: [],
-            tags: ['tag 1','tag 2','tag 3','tag 4'],
-            formNewKategoriModel:'',
-            formNewSatuanModel: {
+            units: [],
+            tags: [],
+            formNewCategoryModel:'',
+            formNewUnitModel: {
+                id:null,
                 name:'',
-                singkatan:'',
-                jenis:''
+                abbreviation:'',
+                description:''
             },
-            formNewSatuanModelDefault: {
+            formNewUnitModelDefault: {
+                id:null,
                 name:'',
-                singkatan:'',
-                jenis:''
+                abbreviation:'',
+                description:''
             },
-            gambarBarangSelected:'',
+            productImageSelected:'',
             searchInput:'',
             formNewTagModel: '',
-            searchBarang:'',
             editToggle:false,
             popUpQuickEdit: false,
             popUpNew: false,
@@ -1002,7 +1011,7 @@ export default {
             popUpConfirmSaveQuickEdit: false,
             popUpConfirmSaveEdit: false,
             popUpNewCategory: false,
-            popUpNewSatuan: false,
+            popUpNewUnit: false,
             popUpNewTag: false,
             showAdvanceSearchOption: false,
             selectedIndex: -1,
@@ -1010,6 +1019,20 @@ export default {
     },
 
     methods: {
+        get() {
+            api.getAllProducts()
+                .then(products => {
+                    this.products = products
+                })
+            api.getAllCategory()
+                .then(categories => {
+                    this.categories = categories
+                })
+            api.getAllUnit()
+                .then(units => {
+                    this.units = units
+                })
+        },
         // Advance Search
         showAdvanceSearch() {
             if(!this.showAdvanceSearchOption) {
@@ -1021,109 +1044,109 @@ export default {
             }
         },
         clearAllAdvanceSearch() {
-            this.advanceSearch.nama = ''
-            this.advanceSearch.stockDown = null
-            this.advanceSearch.stockUp = null
-            this.advanceSearch.kategori = ''
-            this.advanceSearch.openPriceDown = null
-            this.advanceSearch.openPriceUp = null
+            this.advanceSearch.name = ''
+            this.advanceSearch.stock_down = null
+            this.advanceSearch.stock_up = null
+            this.advanceSearch.category = ''
+            this.advanceSearch.open_price_down = null
+            this.advanceSearch.open_price_up = null
 
         },
-        advanceSearchNama(val) {
-            if(!this.advanceSearch.nama) {
+        advanceSearchName(val) {
+            if(!this.advanceSearch.name) {
                 return true
             }
-            return val.toLowerCase().includes(this.advanceSearch.nama.toLowerCase())
+            return val.toLowerCase().includes(this.advanceSearch.name.toLowerCase())
         },
         advanceSearchOpenPrice(val) {
-            if(!this.advanceSearch.openPriceDown && !this.advanceSearch.openPriceUp) {
+            if(!this.advanceSearch.open_price_down && !this.advanceSearch.open_price_up) {
                 return true
             }
-            if(this.advanceSearch.openPriceDown && !this.advanceSearch.openPriceUp) {
-                return val >= +this.advanceSearch.openPriceDown
+            if(this.advanceSearch.open_price_down && !this.advanceSearch.open_price_up) {
+                return val >= +this.advanceSearch.open_price_down
             } else {
-                if(!this.advanceSearch.openPriceDown && this.advanceSearch.openPriceUp) {
-                    return val <= +this.advanceSearch.openPriceUp
+                if(!this.advanceSearch.open_price_down && this.advanceSearch.open_price_up) {
+                    return val <= +this.advanceSearch.open_price_up
                 } else {
-                    if(this.advanceSearch.openPriceDown && this.advanceSearch.openPriceUp) {
-                        return (val >= +this.advanceSearch.openPriceDown && val <= +this.advanceSearch.openPriceUp)
+                    if(this.advanceSearch.open_price_down && this.advanceSearch.open_price_up) {
+                        return (val >= +this.advanceSearch.open_price_down && val <= +this.advanceSearch.open_price_up)
                     }
                 }
             }
         },
         advanceSearchStock(val) {
-            if(!this.advanceSearch.stockDown && !this.advanceSearch.stockUp) {
+            if(!this.advanceSearch.stock_down && !this.advanceSearch.stock_up) {
                 return true
             }
-            if(this.advanceSearch.stockDown && !this.advanceSearch.stockUp) {
-                return val >= +this.advanceSearch.stockDown
+            if(this.advanceSearch.stock_down && !this.advanceSearch.stock_up) {
+                return val >= +this.advanceSearch.stock_down
             } else {
-                if(!this.advanceSearch.stockDown && this.advanceSearch.stockUp) {
-                    return val <= +this.advanceSearch.stockUp
+                if(!this.advanceSearch.stock_down && this.advanceSearch.stock_up) {
+                    return val <= +this.advanceSearch.stock_up
                 } else {
-                    if(this.advanceSearch.stockDown && this.advanceSearch.stockUp) {
-                        return (val >= +this.advanceSearch.stockDown && val <= +this.advanceSearch.stockUp)
+                    if(this.advanceSearch.stock_down && this.advanceSearch.stock_up) {
+                        return (val >= +this.advanceSearch.stock_down && val <= +this.advanceSearch.stock_up)
                     }
                 }
             }
         },
-        advanceSearchKategori(val) {
-            if(!this.advanceSearch.kategori) {
+        advanceSearchCategory(val) {
+            if(!this.advanceSearch.category) {
                 return true
             }
-            return val === this.advanceSearch.kategori
+            return val === this.advanceSearch.category
         },
         details(item) {
-            this.selectedIndex = this.barangs.indexOf(item)
-            this.barang = Object.assign({},item)
+            this.selectedIndex = this.products.indexOf(item)
+            this.product = Object.assign({},item)
             this.popupDetails = true
-            this.gambarBarangSelected = this.barang.gambar[0]
+            this.productImageSelected = this.product.image[0]
         },
         close() {
             if(this.popupDetails) {
                 this.popupDetails = false
-                this.barang = Object.assign({},this.barangDefault)
+                this.product = Object.assign({},this.productDefault)
                 this.selectedIndex = -1
-                this.gambarBarangSelected = ''
+                this.productImageSelected = ''
             } else {
                 if(this.popUpNew) {
                     if(this.popUpNewCategory) {
                         this.popUpNewCategory = false
-                        this.formNewKategoriModel = ''
+                        this.formNewCategoryModel = ''
                     } else {
-                        if(this.popUpNewSatuan) {
-                            this.popUpNewSatuan = false
-                            this.formNewSatuanModel = Object.assign({},this.formNewSatuanModelDefault)
+                        if(this.popUpNewUnit) {
+                            this.popUpNewUnit = false
+                            this.formNewUnitModel = Object.assign({},this.formNewUnitModelDefault)
                         } else {
                             if(this.popUpNewTag) {
                                 this.popUpNewTag = false
                                 this.formNewTagModel = ''
                             } else {
                                 this.popUpNew = false
-                                this.barang = Object.assign({},this.barangDefault)
+                                this.product = Object.assign({},this.productDefault)
                             }
                         }
                     }
                 } else {
                     if(this.popUpQuickEdit) {
                         this.popUpQuickEdit = false
-                        this.barangQuickEdit = Object.assign({},this.barangQuickEditDefault)
+                        this.productQuickEdit = Object.assign({},this.productQuickEditDefault)
                     } else {
                         if(this.popUpEdit) {
                             if(this.popUpNewCategory) {
                                 this.popUpNewCategory = false
-                                this.formNewKategoriModel = ''
+                                this.formNewCategoryModel = ''
                             } else {
-                                if(this.popUpNewSatuan) {
-                                    this.popUpNewSatuan = false
-                                    this.formNewSatuanModel = Object.assign({},this.formNewSatuanModelDefault)
+                                if(this.popUpNewUnit) {
+                                    this.popUpNewUnit = false
+                                    this.formNewUnitModel = Object.assign({},this.formNewUnitModelDefault)
                                 } else {
                                     if(this.popUpNewTag) {
                                         this.popUpNewTag = false
                                         this.formNewTagModel = ''
                                     } else {
                                         this.popUpEdit = false
-                                        this.barang = Object.assign({},this.barangDefault)
+                                        this.product = Object.assign({},this.productDefault)
                                         this.selectedIndex = -1
                                     }
                                 }
@@ -1144,10 +1167,10 @@ export default {
             }
         },
         quickEdit(item) {
-            this.selectedIndex = this.barangs.indexOf(item)
-            this.barangQuickEdit.openPrice = item.openPrice
-            this.barangQuickEdit.nama = item.nama
-            this.barangQuickEdit.id = item.id
+            this.selectedIndex = this.products.indexOf(item)
+            this.productQuickEdit.open_price = item.open_price
+            this.productQuickEdit.name = item.name
+            this.productQuickEdit.id = item.id
             this.popUpQuickEdit = true
         },
         confirmSave() {
@@ -1165,45 +1188,45 @@ export default {
         },
         //this need promise to ensure that the data in the db and vue in synced !!! IMPORTANT !!!
         saveEditedPrice() {
-            let obj = this.barangs.find( ({id}) => id === this.barangQuickEdit.id )
-            this.barangs[this.barangs.indexOf(obj)].openPrice = this.barangQuickEdit.openPrice
+            let obj = this.products.find( ({id}) => id === this.productQuickEdit.id )
+            this.products[this.products.indexOf(obj)].open_price = this.productQuickEdit.open_price
             this.popUpConfirmSaveQuickEdit = false
-            this.barangQuickEdit = Object.assign({},this.barangQuickEditDefault)
+            this.productQuickEdit = Object.assign({},this.productQuickEditDefault)
         },
-        editBarang(item) {
-            this.selectedIndex = this.barangs.indexOf(item)
-            this.barang = Object.assign({},item)
+        editProduct(item) {
+            this.selectedIndex = this.products.indexOf(item)
+            this.product = Object.assign({},item)
             this.popUpEdit = true
         },
         save() {
-            let obj = this.barangs.find( ({id}) => id === this.barang.id )
-            var loop = Object.getOwnPropertyNames(this.barangDefault)
+            let obj = this.products.find( ({id}) => id === this.product.id )
+            var loop = Object.getOwnPropertyNames(this.productDefault)
             for(let i=0; i<loop.length; i++) {
-                this.barangs[this.barangs.indexOf(obj)][loop[i]] = this.barang[loop[i]]
+                this.products[this.products.indexOf(obj)][loop[i]] = this.product[loop[i]]
             }
             this.popUpConfirmSaveEdit = false
-            this.barang = Object.assign({},this.barangDefault)
+            this.product = Object.assign({},this.productDefault)
         },
-        saveNewBarang() {
+        saveNewProduct() {
             if(this.$refs.form.validate()) {
-                this.barangs.push(this.barang)
-                this.barang = Object.assign({},this.barangDefault)
+                this.products.push(this.product)
+                this.product = Object.assign({},this.productDefault)
                 this.close()
             }
         },
         changePic(val) {
-            this.gambarBarangSelected = val
+            this.productImageSelected = val
         }
     },
     
     computed: {
-        barangHeaders() {
+        productHeaders() {
             return [
-                {text:'Nama', value:'nama', width:'70%', filter:this.advanceSearchNama},
-                {text:'Open Price', value:'openPrice', align:'center', filter:this.advanceSearchOpenPrice},
+                {text:'Nama', value:'name', width:'70%', filter:this.advanceSearchName},
+                {text:'Open Price', value:'open_price', align:'center', filter:this.advanceSearchOpenPrice},
                 {text:'Stock', value:'stock', filter:this.advanceSearchStock},
                 {value:'actions',width:'7%'},
-                {value:'kategori', align: ' d-none', filter:this.advanceSearchKategori},
+                {value:'kategori', align: ' d-none', filter:this.advanceSearchCategory},
                 {value:'bottomPrice', align: ' d-none', filter:this.advanceSearchbottomPrice},
 
             ]
@@ -1221,8 +1244,8 @@ export default {
     watch: {
         popupDetails() {
             if(this.popupDetails == false) {
-                this.gambarBarangSelected = ''
-                this.barang = Object.assign({},this.barangDefault)
+                this.productImageSelected = ''
+                this.product = Object.assign({},this.productDefault)
             }
         }
     },

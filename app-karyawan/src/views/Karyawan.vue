@@ -509,6 +509,7 @@
 </template>
 
 <script>
+import api from '@/api.js'
 export default {
     name: 'Karyawan',
     mounted() {
@@ -600,10 +601,10 @@ export default {
     
     methods: {
         get(){
-            this.$store.dispatch('getAllUser').then(karyawans => {
+            api.getAllUser().then(karyawans => {
                 this.karyawans = karyawans
                 karyawans.forEach(karyawan => {
-                    this.$store.dispatch('getUserTaskById', karyawan.id).then(tasks => {
+                    api.getUserTaskById(karyawan.id).then(tasks => {
                         let userTasks = []
                         tasks.forEach(task => {
                             userTasks.push(task.taskId)
@@ -612,10 +613,10 @@ export default {
                     })
                 });
             })
-            this.$store.dispatch('getAllUserTaskGroup').then(userTaskGroups => {
+            api.getAllUserTaskGroup().then(userTaskGroups => {
                 this.listuserTaskGroupId = userTaskGroups
             })
-            this.$store.dispatch('getAllTask').then(tasks => {
+            api.getAllTask().then(tasks => {
                 this.tasks = tasks
             })
         },
