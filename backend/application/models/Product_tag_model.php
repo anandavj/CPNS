@@ -5,15 +5,15 @@ class Product_tag_model extends CI_Model
 {
     private const TABLE_NAME = 'product_tag';
 
-    public function insert_product_tag($product_id, $image_id)
+    public function insert_product_tag($product_id, $tag_id)
     {
-        foreach ($image_id as $item) {
-            $result = $this->db->get_where($this::TABLE_NAME, "image_id='{$item}' 
+        foreach ($tag_id as $item) {
+            $result = $this->db->get_where($this::TABLE_NAME, "tag_id='{$item}' 
                 AND product_id='{$product_id}'")->num_rows();
             if ($result == 0) {
                 $this->db->insert($this::TABLE_NAME, array(
                     'product_id' => $product_id,
-                    'image_id' => $item
+                    'tag_id' => $item
                 ));
             }
             
@@ -23,7 +23,7 @@ class Product_tag_model extends CI_Model
 
     public function get_all_product_tag()
     {
-        $this->db->select("id, product_id as productId");
+        $this->db->select("id, product_id as productId, tag_id as tagId");
         $this->db->from($this::TABLE_NAME);
         return $this->db->get()->result_array();
     }
@@ -42,26 +42,26 @@ class Product_tag_model extends CI_Model
         else return false;
     }
 
-    public function update_product_tag($product_id, $image_id)
+    public function update_product_tag($product_id, $tag_id)
     {
         $result = $this->db->get_where($this::TABLE_NAME, "product_id = '{$product_id}'")->result_array();
 
-        $current_images = [];
+        $current_tags = [];
         foreach ($result as $row) {
-            array_push($current_images, $row['image_id']);
+            array_push($current_tags, $row['tag_id']);
         }
 
-        $insert_data = array_diff($image_id, $current_images);
-        $delete_data = array_diff($current_images, $image_id);
+        $insert_data = array_diff($tag_id, $current_tags);
+        $delete_data = array_diff($current_tags, $tag_id);
 
-        // return $insert_data;
+
 
         $this->insert_product_tag($product_id, $insert_data);
 
-        foreach ($delete_data as $image) {
+        foreach ($delete_data as $tag) {
             $this->db->delete($this::TABLE_NAME, array(
                 'product_id' => $product_id,
-                'image_id' => $image
+                'tag_id' => $tag
             ));
         }
         
