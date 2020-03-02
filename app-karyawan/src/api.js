@@ -4,9 +4,16 @@ const taskTable = 'task'
 const userTable = 'user'
 const userTaskTable = 'user_task'
 const userTaskGroupTable = 'user_task_group'
+const productTable = 'product'
+const categoryTable = 'category'
+const unitTable = 'unit'
 
 const api = {
     
+    /* ================================================================================================================================================= */
+    /* USER */
+    /* ================================================================================================================================================= */
+
     //TASK
     getAllTask(){
         return new Promise((resolve, reject) => {
@@ -55,6 +62,63 @@ const api = {
             })
         })
     },
+
+    /* ================================================================================================================================================= */
+    /* ================================================================================================================================================= */
+
+    /* ================================================================================================================================================= */
+    /* Product */
+    /* ================================================================================================================================================= */
+
+    // PRODUCT
+    getAllProducts() {
+        return new Promise( (resolve, reject) => {
+            axios.get(productTable)
+                .then(response => {
+                    resolve(response.data)
+                }) .catch(error => {
+                    if(error.response.status == 500) reject(this.state.serverErrorMessage)
+                })
+        } )
+    },
+
+    // CATEGORY
+    getAllCategory() {
+        return new Promise( (resolve, reject) => {
+            axios.get(categoryTable)
+                .then(response => {
+                    resolve(response.data)
+                }) .catch(error => {
+                    if(error.response.status == 500) reject(this.state.serverErrorMessage)
+                })
+        } )
+    },
+    getCategoryById(id) {
+        return new Promise( (resolve, reject) => {
+            axios.get(categoryTable, {params: {id: id}})
+                .then(response => {
+                    resolve(response.data)
+                }) .catch(error => {
+                    reject(error)
+                })
+        } )
+    }
+
+    // UNIT
+    getAllUnit() {
+        return new Promise( (resolve, reject) => {
+            axios.get(unitTable)
+                .then(response => {
+                    resolve(response.data)
+                }) .catch(error => {
+                    if(error.respose.status == 500) reject(this.state.serverErrorMessage)
+                })
+        } )
+    }
+
+    /* ================================================================================================================================================= */
+    /* ================================================================================================================================================= */
+    
 }
 
 export default api
