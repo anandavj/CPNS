@@ -1018,7 +1018,6 @@ export default {
             tags: [],
             formNewCategoryModel:'',
             formNewUnitModel: {
-                id:null,
                 name:'',
                 abbreviation:'',
                 description:''
@@ -1252,6 +1251,23 @@ export default {
                     api.getAllCategory()
                         .then((categories) => {
                             this.categories = categories
+                            this.close()
+                        })
+                })
+        },
+        saveNewUnit() {
+            api.addUnit(this.formNewUnitModel)
+                .then((response) => {
+                    this.snackbarColor = 'success'
+                    this.snackbarMessage = response
+                }) .catch(error => {
+                    this.snackbarColor = 'error'
+                    this.snackbarMessage = error
+                }) .finally(() => {
+                    this.snackbar = true
+                    api.getAllUnit()
+                        .then((units) => {
+                            this.units = units
                             this.close()
                         })
                 })
