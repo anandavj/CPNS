@@ -28,6 +28,7 @@
                                     class="mb-n4"
                                     color="accent"
                                     item-text="name"
+                                    item-value="id"
                                 />   
                             </v-col>
                             <v-col cols="3">
@@ -94,6 +95,7 @@
                                     class="mb-n4"
                                     color="accent"
                                     item-text="name"
+                                    item-value="id"
                                 />  
                             </v-col>
                             <v-col cols="6">
@@ -181,11 +183,17 @@
                                     <v-col cols="12" class="my-n4">
                                         <div class="title">Informasi Produk</div>
                                     </v-col>
-                                    <v-col cols="3">
-                                        <v-text-field label="ID" v-model="product.id"/>
-                                    </v-col>
-                                    <v-col cols="9">
+                                    <v-col cols="6" v-if="!popUpBreakPoint">
                                         <v-text-field label="Nama" v-model="product.name"/>
+                                    </v-col>
+                                    <v-col cols="12" v-else class="mt-n4">
+                                        <v-text-field label="Nama" v-model="product.name"/>
+                                    </v-col>
+                                    <v-col cols="6" v-if="!popUpBreakPoint">
+                                        <v-text-field label="Spesifikasi" v-model="product.specification"/>
+                                    </v-col>
+                                    <v-col cols="12" v-else class="mt-n4">
+                                        <v-text-field label="Spesifikasi" v-model="product.specification"/>
                                     </v-col>
                                     <!-- PC / LAPTOP -->
                                     <v-col cols="6" class="mt-n4" v-if="!popUpBreakPoint">
@@ -571,12 +579,12 @@
                                 <tr>
                                     <td>Kategori</td>
                                     <td width="25%" align="end">:</td>
-                                    <td>{{product.category_id}}</td>
+                                    <td>{{categoryName}}</td>
                                 </tr>
                                 <tr>
                                     <td>Satuan</td>
                                     <td width="25%" align="end">:</td>
-                                    <td>{{product.unit_id}}</td>
+                                    <td>{{unitName}}</td>
                                 </tr>
                                 <tr>
                                     <td>Open Price</td>
@@ -657,12 +665,12 @@
                                             <tr>
                                                 <td>Kategori</td>
                                                 <td width="25%" align="end">:</td>
-                                                <td>{{product.category_id}}</td>
+                                                <td>{{categoryName}}</td>
                                             </tr>
                                             <tr>
                                                 <td>Satuan</td>
                                                 <td width="25%" align="end">:</td>
-                                                <td>{{product.unit_id}}</td>
+                                                <td>{{unitName}}</td>
                                             </tr>
                                             <tr>
                                                 <td>Open Price</td>
@@ -927,12 +935,28 @@
             </v-dialog>
             <!-- *************************************************************************************************************** -->
             <!-- *************************************************************************************************************** -->
+            <v-snackbar
+                v-model="snackbar"
+                multi-line
+                v-bind:color="snackbarColor"
+            >
+                {{ snackbarMessage }}
+                <v-btn
+                    text
+                    @click="snackbar = false"
+                >
+                    <v-icon>
+                        mdi-close
+                    </v-icon>
+                </v-btn>
+            </v-snackbar>
         </div>
     </v-app>
 </template>
 
 <script>
 import api from "@/api.js"
+import _ from "lodash"
 
 export default {
     name: 'Barang',
@@ -941,6 +965,9 @@ export default {
     },
     data() {
         return {
+            snackbar: false,
+            snackbarMessage: '',
+            snackbarColor: '',
             advanceSearch: {
                 name:'',
                 stock_down:null,
@@ -962,6 +989,8 @@ export default {
                 tag:[],
                 image:[]
             },
+            categoryName:'',
+            unitName:'',
             productDefault: {
                 id:null,
                 name:'',
@@ -1099,6 +1128,8 @@ export default {
         details(item) {
             this.selectedIndex = this.products.indexOf(item)
             this.product = Object.assign({},item)
+            this.categoryName = _.find(this.categories,['id', this.product.category_id]).name
+            this.unitName = _.find(this.units,['id', this.product.unit_id]).name
             this.popupDetails = true
             this.productImageSelected = this.product.image[0]
         },
@@ -1108,6 +1139,7 @@ export default {
                 this.product = Object.assign({},this.productDefault)
                 this.selectedIndex = -1
                 this.productImageSelected = ''
+                this.categoryName = ''
             } else {
                 if(this.popUpNew) {
                     if(this.popUpNewCategory) {
@@ -1207,6 +1239,23 @@ export default {
             this.popUpConfirmSaveEdit = false
             this.product = Object.assign({},this.productDefault)
         },
+        saveNewCategory() {
+            api.addCategory(this.formNewCategoryModel)
+                .then((response) => {
+                    this.snackbarColor = 'success'
+                    this.snackbarMessage = response
+                }) .catch(error => {
+                    this.snackbarColor = 'error'
+                    this.snackbarMessage = error
+                }) .finally(() => {
+                    this.snackbar = true
+                    api.getAllCategory()
+                        .then((categories) => {
+                            this.categories = categories
+                            this.close()
+                        })
+                })
+        },
         saveNewProduct() {
             if(this.$refs.form.validate()) {
                 this.products.push(this.product)
@@ -1226,8 +1275,8 @@ export default {
                 {text:'Open Price', value:'open_price', align:'center', filter:this.advanceSearchOpenPrice},
                 {text:'Stock', value:'stock', filter:this.advanceSearchStock},
                 {value:'actions',width:'7%'},
-                {value:'kategori', align: ' d-none', filter:this.advanceSearchCategory},
-                {value:'bottomPrice', align: ' d-none', filter:this.advanceSearchbottomPrice},
+                {value:'category_id', align: ' d-none', filter:this.advanceSearchCategory},
+                {value:'bottom_price', align: ' d-none', filter:this.advanceSearchbottomPrice},
 
             ]
         },
