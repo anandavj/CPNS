@@ -1,6 +1,7 @@
 import axios from 'axios'
 
 const taskTable = 'task'
+const groupTaskTable = 'group_task'
 const userTable = 'user'
 const userTaskTable = 'user_task'
 const userTaskGroupTable = 'user_task_group'
@@ -26,6 +27,48 @@ const api = {
                 resolve(response.data);
             })
             .catch(error => {
+                if(error.response.status == 500) reject(this.state.serverErrorMessage)
+            })
+        })
+    },
+
+    //GROUP TASK
+    insertGroupTask(){
+        return new Promise((resolve, reject) => {
+            let data = {
+                userTaskGroupId: this.state.userTaskGroup.id,
+                taskId: this.state.userTaskGroup.taskId
+            }
+
+            axios.post(groupTaskTable, data).then(() => {
+                resolve(this.state.insertSuccessMessage)
+            }).catch(error => {
+                if(error.response.status == 500) reject(this.state.serverErrorMessage)
+            })
+        })
+    },
+
+    getGroupTaskByUserTaskGroupId(userTaskGroupId){
+        return new Promise((resolve, reject) => {
+            axios.get(groupTaskTable, {params: {userTaskGroupId: userTaskGroupId}})
+            .then(response => {
+                resolve(response.data);
+            })
+            .catch(error => {
+                if(error.response.status == 500) reject(this.state.serverErrorMessage)
+            })
+        })
+    },
+    updateGroupTask(){
+        return new Promise((resolve, reject) => {
+            let data = {
+                userTaskGroupId: this.state.userTaskGroup.id,
+                taskId: this.state.userTaskGroup.taskId
+            }
+
+            axios.put(groupTaskTable, data).then(() => {
+                resolve(this.state.insertSuccessMessage)
+            }).catch(error => {
                 if(error.response.status == 500) reject(this.state.serverErrorMessage)
             })
         })
