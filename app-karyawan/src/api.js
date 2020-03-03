@@ -7,6 +7,10 @@ const userTaskGroupTable = 'user_task_group'
 const productTable = 'product'
 const categoryTable = 'category'
 const unitTable = 'unit'
+const insertSuccessMessage = 'Berhasil ditambahkan'
+// const updateSuccessMessage = 'Berhasil ditambahkan'
+// const deleteSuccessMessage = 'Berhasil ditambahkan'
+const serverErrorMessage = 'Terjadi kesalahan pada server'
 
 const api = {
     
@@ -93,13 +97,13 @@ const api = {
                 })
         } )
     },
-    getCategoryById(id) {
+    addCategory(name) {
         return new Promise( (resolve, reject) => {
-            axios.get(categoryTable, {params: {id: id}})
-                .then(response => {
-                    resolve(response.data)
+            axios.post(categoryTable, {name:name})
+                .then(() => {
+                    resolve(insertSuccessMessage)
                 }) .catch(error => {
-                    reject(error)
+                    if(error.response.status == 500) reject(serverErrorMessage)
                 })
         } )
     },
