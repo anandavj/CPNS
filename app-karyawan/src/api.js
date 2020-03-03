@@ -118,6 +118,16 @@ const api = {
                     if(error.respose.status == 500) reject(this.state.serverErrorMessage)
                 })
         } )
+    },
+    addUnit(unit) {
+        return new Promise( (resolve, reject) => {
+            axios.post(unitTable, unit)
+                .then(() => {
+                    resolve(insertSuccessMessage)
+                }) .catch(error => {
+                    if(error.response.status == 500) reject(serverErrorMessage)
+                })
+        } )
     }
 
     /* ================================================================================================================================================= */
