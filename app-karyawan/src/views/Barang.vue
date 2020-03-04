@@ -177,7 +177,7 @@
                                         <div class="title">Gambar Produk</div>
                                     </v-col>
                                     <v-col cols="12">
-                                        <v-file-input v-model="product.image" color="accent" prepend-icon="mdi-camera" chips multiple accept="image/*" label="Upload Produk"></v-file-input>
+                                        <v-file-input v-model="product.images" color="accent" prepend-icon="mdi-camera" chips multiple accept="image/*" label="Upload Produk"></v-file-input>
                                     </v-col>
                                     <!--  -->
                                     <v-col cols="12" class="my-n4">
@@ -201,7 +201,7 @@
                                             <v-col cols="11">
                                                 <v-autocomplete
                                                     class="mb-n4"
-                                                    v-model="product.category_id"
+                                                    v-model="product.categoryId"
                                                     :items="categories"
                                                     label="Kategori"
                                                     chips
@@ -213,7 +213,7 @@
                                                     @change="categorySearchInput=''"
                                                     item-text="name"
                                                     item-value="id"
-                                                    :readonly="product.category_id"
+                                                    :readonly="product.categoryId"
                                                 >
                                                     <template v-slot:selection="data">
                                                         <v-chip color="white" class="pa-0">
@@ -246,7 +246,7 @@
                                             <v-col cols="11">
                                                 <v-autocomplete
                                                     class="mt-n4"
-                                                    v-model="product.category_id"
+                                                    v-model="product.categoryId"
                                                     :items="categories"
                                                     label="Kategori"
                                                     chips
@@ -258,7 +258,7 @@
                                                     @change="categorySearchInput=''"
                                                     item-text="name"
                                                     item-value="id"
-                                                    :readonly="product.category_id"
+                                                    :readonly="product.categoryId"
                                                 >
                                                     <template v-slot:selection="data">
                                                         <v-chip color="white" class="pa-0">
@@ -310,7 +310,7 @@
                                             <v-col cols="11">
                                                 <v-autocomplete
                                                     class="mb-n4"
-                                                    v-model="product.unit_id"
+                                                    v-model="product.unitId"
                                                     :items="units"
                                                     label="Satuan"
                                                     chips
@@ -322,7 +322,7 @@
                                                     @change="unitSearchInput=''"
                                                     item-text="name"
                                                     item-value="id"
-                                                    :readonly="product.unit_id"
+                                                    :readonly="product.unitId"
                                                 >
                                                     <template v-slot:selection="data">
                                                         <v-chip color="white" class="pa-0">
@@ -355,7 +355,7 @@
                                             <v-col cols="11">
                                                 <v-autocomplete
                                                     class="mt-n4"
-                                                    v-model="product.unit_id"
+                                                    v-model="product.unitId"
                                                     :items="units"
                                                     label="Satuan"
                                                     chips
@@ -367,7 +367,7 @@
                                                     @change="unitSearchInput=''"
                                                     item-text="name"
                                                     item-value="id"
-                                                    :readonly="product.unit_id"
+                                                    :readonly="product.unitId"
                                                 >
                                                     <template v-slot:selection="data">
                                                         <v-chip color="white" class="pa-0">
@@ -416,16 +416,16 @@
                                     </v-dialog>
                                     <!--  -->
                                     <v-col cols="6" v-if="popUpBreakPoint" class="my-n4">
-                                        <v-text-field label="Open Price" v-model="product.open_price"/>
+                                        <v-text-field label="Open Price" v-model="product.openPrice"/>
                                     </v-col>
                                     <v-col cols="4" v-else>
-                                        <v-text-field label="Open Price" v-model="product.open_price"/>
+                                        <v-text-field label="Open Price" v-model="product.openPrice"/>
                                     </v-col>
                                     <v-col cols="6" v-if="popUpBreakPoint" class="my-n4">
-                                        <v-text-field label="Bottom Price" v-model="product.bottom_price"/>
+                                        <v-text-field label="Bottom Price" v-model="product.bottomPrice"/>
                                     </v-col>
                                     <v-col cols="4" v-else>
-                                        <v-text-field label="Bottom Price" v-model="product.bottom_price"/>
+                                        <v-text-field label="Bottom Price" v-model="product.bottomPrice"/>
                                     </v-col>
                                     <v-col cols="12" v-if="popUpBreakPoint" class="my-n4">
                                         <v-text-field label="Stock" v-model="product.stock"/>
@@ -440,7 +440,7 @@
                                         <v-row no-gutters class="align-center">
                                             <v-col cols="11">
                                                 <v-autocomplete
-                                                    v-model="product.tag"
+                                                    v-model="product.tags"
                                                     :items="tags"
                                                     label="Tag"
                                                     multiple
@@ -607,7 +607,7 @@
                             </v-card>
                         </v-col>
                         <v-row>
-                            <v-col cols="3" v-for="(img,index) in product.image" :key="index">
+                            <v-col cols="3" v-for="(img,index) in product.images" :key="index">
                                 <v-card width="100%" @click="changePic(img)">
                                     <v-img :src="img" v-if="productImageSelected == img" gradient="to top right, rgba(0,0,0,.73), rgba(0,0,0,.73)"></v-img>
                                     <v-img :src="img" v-else></v-img>
@@ -623,7 +623,7 @@
                                 class="mr-1"
                                 label
                                 text-color="white"
-                                v-for="(tag,idx) in product.tag" :key="idx"
+                                v-for="(tag,idx) in product.tags" :key="idx"
                                 small
                             >
                                 {{tag}}
@@ -649,12 +649,12 @@
                                 <tr>
                                     <td>Open Price</td>
                                     <td width="25%" align="end">:</td>
-                                    <td>{{product.open_price}}</td>
+                                    <td>{{product.openPrice}}</td>
                                 </tr>
                                 <tr>
                                     <td>Bottom Price</td>
                                     <td width="25%" align="end">:</td>
-                                    <td>{{product.bottom_price}}</td>
+                                    <td>{{product.bottomPrice}}</td>
                                 </tr>
                                 <tr>
                                     <td>Stock</td>
@@ -690,7 +690,7 @@
                                     </v-col>
                                 </v-row>
                                 <v-row>
-                                    <v-col cols="3" v-for="(img,index) in product.image" :key="index">
+                                    <v-col cols="3" v-for="(img,index) in product.images" :key="index">
                                         <v-card width="300px" @click="changePic(img)">
                                             <v-img :src="img" v-if="productImageSelected == img" gradient="to top right, rgba(0,0,0,.73), rgba(0,0,0,.73)"></v-img>
                                             <v-img :src="img" v-else></v-img>
@@ -709,7 +709,7 @@
                                             class="mr-1"
                                             label
                                             text-color="white"
-                                            v-for="(tag,idx) in product.tag" :key="idx"
+                                            v-for="(tag,idx) in product.tags" :key="idx"
                                             small
                                         >
                                             {{tag}}
@@ -735,12 +735,12 @@
                                             <tr>
                                                 <td>Open Price</td>
                                                 <td width="25%" align="end">:</td>
-                                                <td>{{product.open_price}}</td>
+                                                <td>{{product.openPrice}}</td>
                                             </tr>
                                             <tr>
                                                 <td>Bottom Price</td>
                                                 <td width="25%" align="end">:</td>
-                                                <td>{{product.bottom_price}}</td>
+                                                <td>{{product.bottomPrice}}</td>
                                             </tr>
                                             <tr>
                                                 <td>Stock</td>
@@ -780,7 +780,7 @@
                                     <div class="title">Gambar Produk</div>
                                 </v-col>
                                 <v-col cols="12">
-                                    <v-file-input v-model="product.image" color="accent" prepend-icon="mdi-camera" chips multiple accept="image/*" label="Upload Produk"></v-file-input>
+                                    <v-file-input v-model="product.images" color="accent" prepend-icon="mdi-camera" chips multiple accept="image/*" label="Upload Produk"></v-file-input>
                                 </v-col>
                                 <!--  -->
                                 <v-col cols="12" class="my-n4">
@@ -796,7 +796,7 @@
                                     <v-row no-gutters class="align-center">
                                         <v-col cols="11">
                                             <v-select
-                                                v-model="product.category_id"
+                                                v-model="product.categoryId"
                                                 :items="categories"
                                                 label="Kategori"
                                                 item-text="name"
@@ -844,7 +844,7 @@
                                     <v-row no-gutters class="align-center">
                                         <v-col cols="11">
                                             <v-select
-                                                v-model="product.unit_id"
+                                                v-model="product.unitId"
                                                 :items="units"
                                                 label="Satuan"
                                                 item-text="name"
@@ -891,10 +891,10 @@
                                     </v-row>
                                 </v-col>
                                 <v-col cols="4">
-                                    <v-text-field label="Open Price" v-model="product.open_price"/>
+                                    <v-text-field label="Open Price" v-model="product.openPrice"/>
                                 </v-col>
                                 <v-col cols="4">
-                                    <v-text-field label="Bottom Price" v-model="product.bottom_price"/>
+                                    <v-text-field label="Bottom Price" v-model="product.bottomPrice"/>
                                 </v-col>
                                 <v-col cols="4">
                                     <v-text-field label="Stock" v-model="product.stock"/>
@@ -906,7 +906,7 @@
                                     <v-row no-gutters class="align-center">
                                         <v-col cols="11">
                                             <v-autocomplete
-                                                v-model="product.tag"
+                                                v-model="product.tags"
                                                 :items="tags"
                                                 label="Tag"
                                                 multiple
@@ -1039,29 +1039,29 @@ export default {
             products: [],
             product: {
                 id:null,
-                name:'',
-                open_price:null,
-                bottom_price:null,
-                specification:'',
+                name:"",
+                openPrice:null,
+                bottomPrice:null,
+                specification:"",
                 stock:null,
-                category_id:null,
-                unit_id:null,
-                tag:[],
-                image:[]
+                categoryId:null,
+                unitId:null,
+                tags:[],
+                images:[]
             },
             categoryName:'',
             unitName:'',
             productDefault: {
                 id:null,
                 name:'',
-                open_price:null,
-                bottom_price:null,
+                openPrice:null,
+                bottomPrice:null,
                 specification:'',
                 stock:null,
-                category_id:null,
-                unit_id:null,
-                tag:[],
-                image:[]
+                categoryId:null,
+                unitId:null,
+                tags:[],
+                images:[]
             },
             productQuickEdit: {
                 id:null,
@@ -1189,10 +1189,10 @@ export default {
         details(item) {
             this.selectedIndex = this.products.indexOf(item)
             this.product = Object.assign({},item)
-            this.categoryName = _.find(this.categories,['id', this.product.category_id]).name
-            this.unitName = _.find(this.units,['id', this.product.unit_id]).name
+            this.categoryName = _.find(this.categories,['id', this.product.categoryId]).name
+            this.unitName = _.find(this.units,['id', this.product.unitId]).name
             this.popupDetails = true
-            this.productImageSelected = this.product.image[0]
+            this.productImageSelected = this.product.images[0]
         },
         close() {
             if(this.popupDetails) {
@@ -1313,7 +1313,7 @@ export default {
                     api.getAllCategory()
                         .then((categories) => {
                             this.categories = categories
-                            this.product.category_id = _.find(this.categories,['name', this.formNewCategoryModel]).id
+                            this.product.categoryId = _.find(this.categories,['name', this.formNewCategoryModel]).id
                             this.close()
                         })
                 })
@@ -1331,7 +1331,7 @@ export default {
                     api.getAllUnit()
                         .then((units) => {
                             this.units = units
-                            this.product.unit_id = _.find(this.units,['name', this.formNewUnitModel.name]).id
+                            this.product.unitId = _.find(this.units,['name', this.formNewUnitModel.name]).id
                             this.close()
                         })
                 })
