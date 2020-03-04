@@ -201,7 +201,7 @@
                                             <v-col cols="11">
                                                 <v-autocomplete
                                                     class="mb-n4"
-                                                    v-model="product.category_id"
+                                                    v-model="product.categoryId"
                                                     :items="categories"
                                                     label="Kategori"
                                                     chips
@@ -213,7 +213,7 @@
                                                     @change="categorySearchInput=''"
                                                     item-text="name"
                                                     item-value="id"
-                                                    :readonly="product.category_id"
+                                                    :readonly="product.categoryId"
                                                 >
                                                     <template v-slot:selection="data">
                                                         <v-chip color="white" class="pa-0">
@@ -246,7 +246,7 @@
                                             <v-col cols="11">
                                                 <v-autocomplete
                                                     class="mt-n4"
-                                                    v-model="product.category_id"
+                                                    v-model="product.categoryId"
                                                     :items="categories"
                                                     label="Kategori"
                                                     chips
@@ -258,7 +258,7 @@
                                                     @change="categorySearchInput=''"
                                                     item-text="name"
                                                     item-value="id"
-                                                    :readonly="product.category_id"
+                                                    :readonly="product.categoryId"
                                                 >
                                                     <template v-slot:selection="data">
                                                         <v-chip color="white" class="pa-0">
@@ -310,7 +310,7 @@
                                             <v-col cols="11">
                                                 <v-autocomplete
                                                     class="mb-n4"
-                                                    v-model="product.unit_id"
+                                                    v-model="product.unitId"
                                                     :items="units"
                                                     label="Satuan"
                                                     chips
@@ -322,7 +322,7 @@
                                                     @change="unitSearchInput=''"
                                                     item-text="name"
                                                     item-value="id"
-                                                    :readonly="product.unit_id"
+                                                    :readonly="product.unitId"
                                                 >
                                                     <template v-slot:selection="data">
                                                         <v-chip color="white" class="pa-0">
@@ -355,7 +355,7 @@
                                             <v-col cols="11">
                                                 <v-autocomplete
                                                     class="mt-n4"
-                                                    v-model="product.unit_id"
+                                                    v-model="product.unitId"
                                                     :items="units"
                                                     label="Satuan"
                                                     chips
@@ -367,7 +367,7 @@
                                                     @change="unitSearchInput=''"
                                                     item-text="name"
                                                     item-value="id"
-                                                    :readonly="product.unit_id"
+                                                    :readonly="product.unitId"
                                                 >
                                                     <template v-slot:selection="data">
                                                         <v-chip color="white" class="pa-0">
@@ -416,16 +416,16 @@
                                     </v-dialog>
                                     <!--  -->
                                     <v-col cols="6" v-if="popUpBreakPoint" class="my-n4">
-                                        <v-text-field label="Open Price" v-model="product.open_price"/>
+                                        <v-text-field label="Open Price" v-model="product.openPrice"/>
                                     </v-col>
                                     <v-col cols="4" v-else>
-                                        <v-text-field label="Open Price" v-model="product.open_price"/>
+                                        <v-text-field label="Open Price" v-model="product.openPrice"/>
                                     </v-col>
                                     <v-col cols="6" v-if="popUpBreakPoint" class="my-n4">
-                                        <v-text-field label="Bottom Price" v-model="product.bottom_price"/>
+                                        <v-text-field label="Bottom Price" v-model="product.bottomPrice"/>
                                     </v-col>
                                     <v-col cols="4" v-else>
-                                        <v-text-field label="Bottom Price" v-model="product.bottom_price"/>
+                                        <v-text-field label="Bottom Price" v-model="product.bottomPrice"/>
                                     </v-col>
                                     <v-col cols="12" v-if="popUpBreakPoint" class="my-n4">
                                         <v-text-field label="Stock" v-model="product.stock"/>
@@ -440,7 +440,7 @@
                                         <v-row no-gutters class="align-center">
                                             <v-col cols="11">
                                                 <v-autocomplete
-                                                    v-model="product.tag"
+                                                    v-model="product.tags"
                                                     :items="tags"
                                                     label="Tag"
                                                     multiple
@@ -452,7 +452,7 @@
                                                     item-color="accent"
                                                     :search-input.sync="tagSearchInput"
                                                     @change="tagSearchInput=''"
-                                                    item-text="name"
+                                                    item-text="tagName"
                                                     item-value="id"
                                                 >
                                                 </v-autocomplete>
@@ -623,7 +623,7 @@
                                 class="mr-1"
                                 label
                                 text-color="white"
-                                v-for="(tag,idx) in product.tag" :key="idx"
+                                v-for="(tag,idx) in product.tags" :key="idx"
                                 small
                             >
                                 {{tag}}
@@ -649,12 +649,12 @@
                                 <tr>
                                     <td>Open Price</td>
                                     <td width="25%" align="end">:</td>
-                                    <td>{{product.open_price}}</td>
+                                    <td>{{product.openPrice}}</td>
                                 </tr>
                                 <tr>
                                     <td>Bottom Price</td>
                                     <td width="25%" align="end">:</td>
-                                    <td>{{product.bottom_price}}</td>
+                                    <td>{{product.bottomPrice}}</td>
                                 </tr>
                                 <tr>
                                     <td>Stock</td>
@@ -709,7 +709,7 @@
                                             class="mr-1"
                                             label
                                             text-color="white"
-                                            v-for="(tag,idx) in product.tag" :key="idx"
+                                            v-for="(tag,idx) in product.tags" :key="idx"
                                             small
                                         >
                                             {{tag}}
@@ -735,12 +735,12 @@
                                             <tr>
                                                 <td>Open Price</td>
                                                 <td width="25%" align="end">:</td>
-                                                <td>{{product.open_price}}</td>
+                                                <td>{{product.openPrice}}</td>
                                             </tr>
                                             <tr>
                                                 <td>Bottom Price</td>
                                                 <td width="25%" align="end">:</td>
-                                                <td>{{product.bottom_price}}</td>
+                                                <td>{{product.bottomPrice}}</td>
                                             </tr>
                                             <tr>
                                                 <td>Stock</td>
@@ -796,7 +796,7 @@
                                     <v-row no-gutters class="align-center">
                                         <v-col cols="11">
                                             <v-select
-                                                v-model="product.category_id"
+                                                v-model="product.categoryId"
                                                 :items="categories"
                                                 label="Kategori"
                                                 item-text="name"
@@ -844,7 +844,7 @@
                                     <v-row no-gutters class="align-center">
                                         <v-col cols="11">
                                             <v-select
-                                                v-model="product.unit_id"
+                                                v-model="product.unitId"
                                                 :items="units"
                                                 label="Satuan"
                                                 item-text="name"
@@ -891,10 +891,10 @@
                                     </v-row>
                                 </v-col>
                                 <v-col cols="4">
-                                    <v-text-field label="Open Price" v-model="product.open_price"/>
+                                    <v-text-field label="Open Price" v-model="product.openPrice"/>
                                 </v-col>
                                 <v-col cols="4">
-                                    <v-text-field label="Bottom Price" v-model="product.bottom_price"/>
+                                    <v-text-field label="Bottom Price" v-model="product.bottomPrice"/>
                                 </v-col>
                                 <v-col cols="4">
                                     <v-text-field label="Stock" v-model="product.stock"/>
@@ -906,7 +906,7 @@
                                     <v-row no-gutters class="align-center">
                                         <v-col cols="11">
                                             <v-autocomplete
-                                                v-model="product.tag"
+                                                v-model="product.tags"
                                                 :items="tags"
                                                 label="Tag"
                                                 multiple
@@ -918,7 +918,7 @@
                                                 item-color="accent"
                                                 :search-input.sync="tagSearchInput"
                                                 @change="tagSearchInput=''"
-                                                item-text="name"
+                                                item-text="tagName"
                                                 item-value="id"
                                             >
                                             </v-autocomplete>
@@ -1040,28 +1040,32 @@ export default {
             product: {
                 id:null,
                 name:'',
-                open_price:null,
-                bottom_price:null,
+                openPrice:null,
+                bottomPrice:null,
                 specification:'',
                 stock:null,
-                category_id:null,
-                unit_id:null,
-                tag:[],
-                image:[]
+                categoryId:null,
+                unitId:null,
+                tags:[],
+                images:[],
+                productCode:'',
+                retailId:''
             },
             categoryName:'',
             unitName:'',
             productDefault: {
                 id:null,
                 name:'',
-                open_price:null,
-                bottom_price:null,
+                openPrice:null,
+                bottomPrice:null,
                 specification:'',
                 stock:null,
-                category_id:null,
-                unit_id:null,
-                tag:[],
-                image:[]
+                categoryId:null,
+                unitId:null,
+                tags:[],
+                images:[],
+                productCode:'',
+                retailId:''
             },
             productQuickEdit: {
                 id:null,
@@ -1121,6 +1125,10 @@ export default {
             api.getAllUnit()
                 .then(units => {
                     this.units = units
+                })
+            api.getAllTag()
+                .then(tags => {
+                    this.tags = tags
                 })
         },
         // Advance Search
@@ -1189,8 +1197,8 @@ export default {
         details(item) {
             this.selectedIndex = this.products.indexOf(item)
             this.product = Object.assign({},item)
-            this.categoryName = _.find(this.categories,['id', this.product.category_id]).name
-            this.unitName = _.find(this.units,['id', this.product.unit_id]).name
+            this.categoryName = _.find(this.categories,['id', this.product.categoryId]).name
+            this.unitName = _.find(this.units,['id', this.product.unitId]).name
             this.popupDetails = true
             this.productImageSelected = this.product.image[0]
         },
@@ -1313,7 +1321,7 @@ export default {
                     api.getAllCategory()
                         .then((categories) => {
                             this.categories = categories
-                            this.product.category_id = _.find(this.categories,['name', this.formNewCategoryModel]).id
+                            this.product.categoryId = _.find(this.categories,['name', this.formNewCategoryModel]).id
                             this.close()
                         })
                 })
@@ -1331,7 +1339,25 @@ export default {
                     api.getAllUnit()
                         .then((units) => {
                             this.units = units
-                            this.product.unit_id = _.find(this.units,['name', this.formNewUnitModel.name]).id
+                            this.product.unitId = _.find(this.units,['name', this.formNewUnitModel.name]).id
+                            this.close()
+                        })
+                })
+        },
+        saveNewTag() {
+            api.addTag(this.formNewTagModel)
+                .then((response) => {
+                    this.snackbarColor = 'success'
+                    this.snackbarMessage = response
+                }) .catch(error => {
+                    this.snackbarColor = 'error'
+                    this.snackbarMessage = error
+                }) .finally(() => {
+                    this.snackbar = true
+                    api.getAllTag()
+                        .then((tags) => {
+                            this.tags = tags
+                            this.product.tags.push(_.find(this.tags,['tagName', this.formNewTagModel]).id)
                             this.close()
                         })
                 })
@@ -1365,11 +1391,11 @@ export default {
         productHeaders() {
             return [
                 {text:'Nama', value:'name', width:'70%', filter:this.advanceSearchName},
-                {text:'Open Price', value:'open_price', align:'center', filter:this.advanceSearchOpenPrice},
+                {text:'Open Price', value:'openPrice', align:'center', filter:this.advanceSearchOpenPrice},
                 {text:'Stock', value:'stock', filter:this.advanceSearchStock},
                 {value:'actions',width:'7%'},
-                {value:'category_id', align: ' d-none', filter:this.advanceSearchCategory},
-                {value:'bottom_price', align: ' d-none', filter:this.advanceSearchbottomPrice},
+                {value:'categoryId', align: ' d-none', filter:this.advanceSearchCategory},
+                {value:'bottomPrice', align: ' d-none', filter:this.advanceSearchbottomPrice},
 
             ]
         },
