@@ -24,6 +24,9 @@ class Product_model extends CI_Model{
     }
 
     public function get_all_product(){
+        $this->db->select('id, name, category_id as categoryId, specification, description, unit_id as unitId, open_price as openPrice, bottom_price as bottomPrice');
+        $this->db->from($this::TABLE_NAME);
+        return $this->db->get()->result_array();
         return $this->db->get($this::TABLE_NAME)->result_array();
     }
 
