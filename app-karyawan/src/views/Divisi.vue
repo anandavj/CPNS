@@ -32,7 +32,7 @@
                             <v-card-text>
                                 <v-row>
                                     <v-col cols="12">
-                                        <v-text-field color="accent" label="Nama Divisi" v-model="name"/>
+                                        <v-text-field color="accent" label="Nama Divisi" v-model="divisi.name"/>
                                     </v-col>
                                     <v-col cols="12">
                                         <div class="title mt-n3">Permission</div>
@@ -41,7 +41,7 @@
                                                 <v-expansion-panel-header>{{permission.modul}}</v-expansion-panel-header>
                                                 <v-expansion-panel-content v-for="(permissionList,idx) in permission.action" :key="idx">
                                                     <v-checkbox
-                                                        v-model="taskId"
+                                                        v-model="divisi.taskId"
                                                         :label="permissionList.label"
                                                         :value="permissionList.id"
                                                         class="font-weight-light my-n3"
@@ -140,7 +140,7 @@
                         <v-card-text>
                             <v-row>
                                 <v-col cols="12">
-                                    <v-text-field label="Nama Divisi" v-model="name"/>
+                                    <v-text-field label="Nama Divisi" v-model="divisi.name"/>
                                 </v-col>
                                 <v-col cols="12">
                                     <div class="title mt-n3">Permission</div>
@@ -149,7 +149,7 @@
                                             <v-expansion-panel-header>{{permission.modul}}</v-expansion-panel-header>
                                             <v-expansion-panel-content v-for="(permissionList,idx) in permission.action" :key="idx">
                                                 <v-checkbox
-                                                    v-model="taskId"
+                                                    v-model="divisi.taskId"
                                                     :label="permissionList.label"
                                                     :value="permissionList.id"
                                                     class="font-weight-light my-n3"
@@ -183,7 +183,7 @@
                         <v-card-text>
                             <v-row>
                                 <v-col cols="12">
-                                    <v-text-field label="Nama Divisi" v-model="name"/>
+                                    <v-text-field label="Nama Divisi" v-model="divisi.name"/>
                                 </v-col>
                                 <v-col cols="12">
                                     <div class="title mt-n3">Permission</div>
@@ -192,7 +192,7 @@
                                             <v-expansion-panel-header>{{permission.modul}}</v-expansion-panel-header>
                                             <v-expansion-panel-content v-for="(permissionList,idx) in permission.action" :key="idx">
                                                 <v-checkbox
-                                                    v-model="taskId"
+                                                    v-model="divisi.taskId"
                                                     :label="permissionList.label"
                                                     :value="permissionList.id"
                                                     class="font-weight-light my-n3"
@@ -224,7 +224,7 @@
             <v-dialog persistent v-model="popUpConfirmSave" width="500px">
                 <v-card>
                     <v-card-title>Konfirmasi</v-card-title>
-                    <v-card-text>Apakah Anda Yakin ingin mengubah divisi <b>{{name}}</b>?</v-card-text>
+                    <v-card-text>Apakah Anda Yakin ingin mengubah divisi <b>{{divisi.name}}</b>?</v-card-text>
                     <v-card-actions>
                         <v-container>
                             <v-row justify="center">
@@ -244,7 +244,7 @@
             <v-dialog persistent v-model="popUpConfirmDelete" width="500px">
                 <v-card>
                     <v-card-title>Konfirmasi</v-card-title>
-                    <v-card-text>Apakah Anda Yakin ingin menghapus divisi <b>{{name}}</b>?</v-card-text>
+                    <v-card-text>Apakah Anda Yakin ingin menghapus divisi <b>{{divisi.name}}</b>?</v-card-text>
                     <v-card-actions>
                         <v-container>
                             <v-row justify="center">
@@ -277,6 +277,8 @@
 </template>
 
 <script>
+import api from "@/api.js"
+
 export default {
     name: 'Divisi',
     mounted() {
@@ -293,29 +295,29 @@ export default {
             ],
             divisis: [],
             task: [
-                {
-                    modul:'Barang', 
-                    action: [
-                        {id:2,label:'Add Barang'},
-                        {id:3,label:'Read Barang'}
-                    ]
-                },
-                {
-                    modul:'Karyawan', 
-                    action: [
-                        {id:2,label:'Add Karyawan'},
-                        {id:3,label:'Read Karyawan'}
-                    ]
-                }
+                // {
+                //     modul:'Barang', 
+                //     action: [
+                //         {id:2,label:'Add Barang'},
+                //         {id:3,label:'Read Barang'}
+                //     ]
+                // },
+                // {
+                //     modul:'Karyawan', 
+                //     action: [
+                //         {id:2,label:'Add Karyawan'},
+                //         {id:3,label:'Read Karyawan'}
+                //     ]
+                // }
             ],
             divisi: {
                 id:null,
-                nama:'',
+                name:null,
                 taskId: []
             },
             divisiDefault: {
                 id:null,
-                nama:'',
+                name:null,
                 taskId: []
             },
             panel: [],
@@ -333,11 +335,10 @@ export default {
 
     methods: {
         get(){
-            this.$store.dispatch('getAllUserTaskGroup').then(userTaskGroup => {
+            api.getAllUserTaskGroup().then(userTaskGroup => {
                 userTaskGroup.forEach(userTaskGroupElement => {
                     userTaskGroupElement.taskId = []
-                    this.$store.commit('setUserTaskGroupId', userTaskGroupElement.id)
-                    this.$store.dispatch('getGroupTaskByUserTaskGroupId').then(groupTask => {
+                    api.getGroupTaskByUserTaskGroupId(userTaskGroupElement.id).then(groupTask => {
                         groupTask.task.forEach(taskElement => {
                             userTaskGroupElement.taskId.push(taskElement.taskId)
                         });
@@ -346,7 +347,7 @@ export default {
                 this.divisis = userTaskGroup
                 this.loadingListDivisi = false
             })
-            this.$store.dispatch('getAllTask').then(task => {
+            api.getAllTask().then(task => {
                 this.task = task
             })
         },
@@ -394,7 +395,7 @@ export default {
             // //to find the object inside karyawans
             // let obj = this.divisis.find( ({id}) => id === this.divisi.id )
             // //assign all the value of the property of obj2 in karyawans with karyawan
-            // this.divisis[this.divisis.indexOf(obj)].nama = this.divisi.name
+            // this.divisis[this.divisis.indexOf(obj)].nama = divisi.name
             // this.divisis[this.divisis.indexOf(obj)].task = this.divisi.task
             // this.popUpConfirmSave = false
             // this.divisi = Object.assign({},this.divisiDefault)
@@ -466,15 +467,15 @@ export default {
 
     computed: {
         //vuex
-        name: {
-            get(){ return this.$store.state.userTaskGroup.name },
-            set(value){ this.$store.commit('setUserTaskGroupName', value)}
-        },
+        // name: {
+        //     get(){ return this.$store.state.userTaskGroup.name },
+        //     set(value){ this.$store.commit('setUserTaskGroupName', value)}
+        // },
 
-        taskId: {
-            get(){ return this.$store.state.userTaskGroup.taskId},
-            set(value) { this.$store.commit('setTaskId', value)}
-        },
+        // taskId: {
+        //     get(){ return this.$store.state.userTaskGroup.taskId},
+        //     set(value) { this.$store.commit('setTaskId', value)}
+        // },
 
         //view Breakpoint
         popUpBreakPoint() {

@@ -1,29 +1,28 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class surat_jalan_model extends CI_Model{
+class Delivery_order_model extends CI_Model{
 
-    private const TABLE_NAME = 'surat_jalan';
-    public function insert_surat_jalan($name, $receiver_name, $date, $reference_number, $address,
-    $items, $description){
+    private const TABLE_NAME = 'delivery_order';
+    public function insert_delivery_order($name, $receiver_name, $date, $reference_number, $address, $description, $status){
         $this->db->insert($this::TABLE_NAME, array(
             'name' => $name,
             'receiver_name' => $receiver_name,
             'date' => $date,
             'reference_number' => $reference_number,
             'address' => $address,
-            'items' => $items,
             'description' => $description,
+            'status' => $status,
         ));
         
-        return $this->db->affected_rows();
+        return $this->db->insert_id();
     }
 
-    public function get_all_surat_jalan(){
+    public function get_all_delivery_order(){
         return $this->db->get($this::TABLE_NAME)->result_array();
     }
 
-    public function get_surat_jalan_where($id){
+    public function get_delivery_order_where($id){
         return $this->db->get_where($this::TABLE_NAME, "id='{$id}'")->result_array();
     }
 
@@ -32,8 +31,7 @@ class surat_jalan_model extends CI_Model{
         else return false;
     }
 
-    public function update_surat_jalan($id, $name, $receiver_name, $date, $reference_number, $address,
-    $items, $description){
+    public function update_delivery_order($id, $name, $receiver_name, $date, $reference_number, $address, $description, $status){
         // Check apakah tidak merubah apa-apa?
         // kenapa perlu? karena jika update tidak ada perubahan affected_rows() return 0
         $result = $this->db->get_where($this::TABLE_NAME, array(
@@ -42,8 +40,8 @@ class surat_jalan_model extends CI_Model{
             'date' => $date,
             'reference_number' => $reference_number,
             'address' => $address,
-            'items' => $items,
-            'description' => $description       
+            'description' => $description,
+            'status' => $status       
         ));
         if($result->num_rows() > 0) return true;
 
@@ -54,14 +52,14 @@ class surat_jalan_model extends CI_Model{
             'date' => $date,
             'reference_number' => $reference_number,
             'address' => $address,
-            'items' => $items,
-            'description' => $description
+            'description' => $description,
+            'status' => $status
         ), "id='{$id}'");
         
         return $this->db->affected_rows();
     }
 
-    public function delete_surat_jalan($id){
+    public function delete_delivery_order($id){
         $this->db->delete($this::TABLE_NAME, "id='{$id}'");
         return $this->db->affected_rows();
     }

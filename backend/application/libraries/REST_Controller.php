@@ -30,6 +30,7 @@ abstract class REST_Controller extends \CI_Controller {
     const ID_ALREADY_EXISTS_MESSAGE = 'ID already exists.';
     const INVALID_ID_MESSAGE = 'Invalid ID.';
     const REQUIRED_PARAMETER_MESSAGE = 'Required parameter is not specified. Invalid parameter(s): ';
+    const NAME_EXISTS_MESSAGE = 'name was already exists';
 
     // Note: Only the widely used HTTP status codes are documented
 

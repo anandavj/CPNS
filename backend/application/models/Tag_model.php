@@ -5,11 +5,11 @@ class Tag_model extends CI_Model
 {
 
     private const TABLE_NAME = 'tag';
-    public function insert_tag($tag_name)
+    public function insert_tag($name)
     {
         if(!isset($description)) $description = '';
         $this->db->insert($this::TABLE_NAME, array(
-            'tag_name' => $tag_name
+            'tag_name' => $name
         ));
 
         return $this->db->affected_rows();
@@ -31,19 +31,24 @@ class Tag_model extends CI_Model
         else return false;
     }
 
-    public function update_tag($id, $tag_name)
+    public function is_name_exists($name){
+        if($this->db->get_where($this::TABLE_NAME, "tag_name='{$name}'")->num_rows() > 0) return true;
+        else return false;
+    }
+
+    public function update_tag($id, $name)
     {
         // Check apakah tidak merubah apa-apa?
         // kenapa perlu? karena jika update tidak ada perubahan affected_rows() return 0
         $result = $this->db->get_where($this::TABLE_NAME, array(
             'id' => $id,
-            'tag_name' => $tag_name
+            'tag_name' => $name
         ));
         if ($result->num_rows() > 0) return true;
 
         // Update
         $this->db->update($this::TABLE_NAME, array(
-            'tag_name' => $tag_name
+            'tag_name' => $name
         ), "id='{$id}'");
 
         return $this->db->affected_rows();

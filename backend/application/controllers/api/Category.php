@@ -30,6 +30,16 @@ class Category extends REST_Controller
             return;
         }
 
+        if($this->category_model->is_name_exists($name)){
+            $this->response(
+                array(
+                    'status' => FALSE,
+                    'message' => $this::NAME_EXISTS_MESSAGE
+                ),REST_Controller::HTTP_BAD_REQUEST
+            );
+            return;
+        }
+
         if ($this->category_model->insert_category($name)) {
             $this->response(
                 array(

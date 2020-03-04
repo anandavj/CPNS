@@ -17,9 +17,9 @@ class Tag extends REST_Controller
 
     public function index_post()
     {
-        $tag_name = $this->post('tagName');
+        $name = $this->post('tagName');
 
-        if (!isset($tag_name)) {
+        if (!isset($name)) {
             $this->response(
                 array(
                     'status' => FALSE,
@@ -29,7 +29,17 @@ class Tag extends REST_Controller
             return;
         }
 
-        if ($this->tag_model->insert_tag($tag_name)) {
+        if($this->tag_model->is_name_exists($name)){
+            $this->response(
+                array(
+                    'status' => FALSE,
+                    'message' => $this::NAME_EXISTS_MESSAGE
+                ),REST_Controller::HTTP_BAD_REQUEST
+            );
+            return;
+        }
+
+        if ($this->tag_model->insert_tag($name)) {
             $this->response(
                 array(
                     'status' => TRUE,
@@ -57,9 +67,9 @@ class Tag extends REST_Controller
     public function index_put()
     {
         $id = $this->put('id');
-        $tag_name = $this->put('tagName');   
+        $name = $this->put('tagName');   
         
-        if (!isset($tag_name)) {
+        if (!isset($name)) {
             $this->response(
                 array(
                     'status' => FALSE,
@@ -79,7 +89,7 @@ class Tag extends REST_Controller
             return;
         }
 
-        if ($this->tag_model->update_tag($id, $tag_name)) {
+        if ($this->tag_model->update_tag($id, $name)) {
             $this->response(
                 array(
                     'status' => TRUE,

@@ -6,13 +6,14 @@ require APPPATH . '/libraries/REST_Controller.php';
 
 use Restserver\Libraries\REST_Controller;
 
-class Surat_jalan extends REST_Controller
+class delivery_order extends REST_Controller
 {
 
     public function __construct()
     {
         parent::__construct();
-        $this->load->model("surat_jalan_model");
+        $this->load->model("delivery_order_model");
+        $this->load->model("product_delivery_order_model");
     }
 
     public function index_post()
@@ -24,8 +25,9 @@ class Surat_jalan extends REST_Controller
         $address = $this->post('address');
         $items = $this->post('items');
         $description = $this->post('description');
+        $status = $this->post('status');
 
-        if (!isset($name) || !isset($receiver_name) || !isset($reference_number) || !isset($date) || !isset($address) || !isset($items) || !isset($description)) {
+        if (!isset($name) || !isset($receiver_name) || !isset($reference_number) || !isset($date) || !isset($address) || !isset($items) || !isset($description) || !isset($status)) {
             $required_parameters = [];
             if (!isset($name)) array_push($required_parameters, 'name');
             if (!isset($receiver_name)) array_push($required_parameters, 'receiverName');
@@ -34,6 +36,7 @@ class Surat_jalan extends REST_Controller
             if (!isset($address)) array_push($required_parameters, 'address');
             if (!isset($description)) array_push($required_parameters, 'description');
             if (!isset($items)) array_push($required_parameters, 'items');
+            if (!isset($status)) array_push($required_parameters, 'status');
             $this->response(
                 array(
                     'status' => FALSE,
@@ -44,22 +47,24 @@ class Surat_jalan extends REST_Controller
             return;
         }
 
-        if ($this->surat_jalan_model->insert_surat_jalan($name, $receiver_name, $reference_number, $date, $address, $items, $description)) {
-            $this->response(
-                array(
-                    'status' => TRUE,
-                    'message' => $this::INSERT_SUCCESS_MESSSAGE
-                ),
-                REST_Controller::HTTP_OK
-            );
-        } else {
-            $this->response(
-                array(
-                    'status' => FALSE,
-                    'message' => $this::INSERT_FAILED_MESSAGE
-                ),
-                REST_Controller::HTTP_INTERNAL_SERVER_ERROR
-            );
+        if ($insert_id = $this->delivery_order_model->insert_delivery_order($name, $receiver_name, $reference_number, $date, $address, $description, $status)) {
+            if ($this->product_delivery_order_model->insert_product_delivery_order($insert_id, $items)) {
+                $this->response(
+                    array(
+                        'status' => TRUE,
+                        'message' => $this::INSERT_SUCCESS_MESSSAGE
+                    ),
+                    REST_Controller::HTTP_CREATED
+                );
+            } else {
+                $this->response(
+                    array(
+                        'status' => FALSE,
+                        'message' => $this::INSERT_FAILED_MESSAGE
+                    ),
+                    REST_Controller::HTTP_INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
@@ -67,23 +72,25 @@ class Surat_jalan extends REST_Controller
     {
         $id = $this->get('id');
 
-        if (isset($id)) $this->response($this->surat_jalan_model->get_surat_jalan_where($id), REST_Controller::HTTP_OK);
-        else $this->response($this->surat_jalan_model->get_all_surat_jalan(), REST_Controller::HTTP_OK);
+        if (isset($id)) $this->response($this->delivery_order_model->get_delivery_order_where($id), REST_Controller::HTTP_OK);
+        else $this->response($this->delivery_order_model->get_all_delivery_order(), REST_Controller::HTTP_OK);
     }
 
     public function index_put()
     {
-        $id = $this->post('id');
-        $name = $this->post('name');
-        $receiver_name = $this->post('receiverName');
-        $reference_number = $this->post('referenceNumber');
-        $date = $this->post('date');
-        $address = $this->post('address');
-        $items = $this->post('items');
-        $description = $this->post('description');
+        $id = $this->put('id');
+        $name = $this->put('name');
+        $receiver_name = $this->put('receiverName');
+        $reference_number = $this->put('referenceNumber');
+        $date = $this->put('date');
+        $address = $this->put('address');
+        $items = $this->put('items');
+        $description = $this->put('description');
+        $status = $this->put('status');
 
-        if (!isset($name) || !isset($receiver_name) || !isset($reference_number) || !isset($date) || !isset($address) || !isset($items) || !isset($description)) {
+        if (!isset($id) || !isset($name) || !isset($receiver_name) || !isset($reference_number) || !isset($date) || !isset($address) || !isset($items) || !isset($description) || !isset($status)) {
             $required_parameters = [];
+            if (!isset($id)) array_push($required_parameters, 'id');
             if (!isset($name)) array_push($required_parameters, 'name');
             if (!isset($receiver_name)) array_push($required_parameters, 'receiverName');
             if (!isset($reference_number)) array_push($required_parameters, 'referenceNumber');
@@ -91,6 +98,7 @@ class Surat_jalan extends REST_Controller
             if (!isset($address)) array_push($required_parameters, 'address');
             if (!isset($description)) array_push($required_parameters, 'description');
             if (!isset($items)) array_push($required_parameters, 'items');
+            if (!isset($status)) array_push($required_parameters, 'status');
             $this->response(
                 array(
                     'status' => FALSE,
@@ -101,7 +109,7 @@ class Surat_jalan extends REST_Controller
             return;
         }
 
-        if ($this->surat_jalan_model->is_not_exists($id)) {
+        if ($this->delivery_order_model->is_not_exists($id)) {
             $this->response(
                 array(
                     'status' => FALSE,
@@ -112,22 +120,25 @@ class Surat_jalan extends REST_Controller
             return;
         }
 
-        if ($this->surat_jalan_model->update_surat_jalan($id, $name, $receiver_name, $reference_number, $date, $address, $items, $description)) {
-            $this->response(
-                array(
-                    'status' => TRUE,
-                    'message' => $this::UPDATE_SUCCESS_MESSSAGE
-                ),
-                REST_Controller::HTTP_OK
-            );
-        } else {
-            $this->response(
-                array(
-                    'status' => FALSE,
-                    'message' => $this::UPDATE_FAILED_MESSAGE
-                ),
-                REST_Controller::HTTP_INTERNAL_SERVER_ERROR
-            );
+        if ($this->delivery_order_model->update_delivery_order($id, $name, $receiver_name, $reference_number, $date, $address, $description, $status)) {
+            if ($this->product_delivery_order_model->update_product_delivery_order($id, $items)) {
+
+                $this->response(
+                    array(
+                        'status' => TRUE,
+                        'message' => $this::UPDATE_SUCCESS_MESSSAGE
+                    ),
+                    REST_Controller::HTTP_OK
+                );
+            } else {
+                $this->response(
+                    array(
+                        'status' => FALSE,
+                        'message' => $this::UPDATE_FAILED_MESSAGE
+                    ),
+                    REST_Controller::HTTP_INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
@@ -146,7 +157,7 @@ class Surat_jalan extends REST_Controller
             return;
         }
 
-        if ($this->surat_jalan_model->is_not_exists($id)) {
+        if ($this->delivery_order_model->is_not_exists($id)) {
             $this->response(
                 array(
                     'status' => FALSE,
@@ -157,7 +168,7 @@ class Surat_jalan extends REST_Controller
             return;
         }
 
-        if ($this->surat_jalan_model->delete_surat_jalan($id)) {
+        if ($this->delivery_order_model->delete_delivery_order($id)) {
             $this->response(
                 array(
                     'status' => TRUE,
