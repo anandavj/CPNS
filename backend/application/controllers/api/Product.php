@@ -17,6 +17,8 @@ class Product extends REST_Controller
         $this->load->model('unit_model');
         $this->load->model('product_tag_model');
         $this->load->model('product_image_model');
+        $this->load->model('image_model');
+        $this->load->model('tag_model');
     }
 
     public function index_post() //POST
@@ -86,7 +88,35 @@ class Product extends REST_Controller
             return;
         }
 
+        foreach($tags as $tag_id){
+            if($this->tag_model->is_not_exists($tag_id)){
+                $this->response(
+                    array(
+                        'status' => FALSE,
+                        'message' => $this::INVALID_ID_MESSAGE. " atleast one of tagId does not exist"
+                    ),REST_Controller::HTTP_BAD_REQUEST
+                );
+                return;
+            }
+        }
+
+        foreach($images as $image_id){
+            if($this->image_model->is_not_exists($image_id)){
+                $this->response(
+                    array(
+                        'status' => FALSE,
+                        'message' => $this::INVALID_ID_MESSAGE. " atleast one of imageId does not exist"
+                    ),REST_Controller::HTTP_BAD_REQUEST
+                );
+                return;
+            }
+        }
+
+
         if ($product_id = $this->product_model->insert_product($name, $category_id, $specification, $description, $stock, $unit_id, $open_price, $bottom_price)) {
+         
+            
+            
             if(!$this->product_tag_model->insert_product_tag($product_id, $tags)){
                 $this->response(
                     array(
