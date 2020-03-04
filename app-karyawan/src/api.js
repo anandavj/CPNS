@@ -8,6 +8,7 @@ const userTaskGroupTable = 'user_task_group'
 const productTable = 'product'
 const categoryTable = 'category'
 const unitTable = 'unit'
+const tagTable = 'tag'
 const insertSuccessMessage = 'Berhasil ditambahkan'
 const updateSuccessMessage = 'Berhasil diperbarui'
 const deleteSuccessMessage = 'Berhasil dihapus'
@@ -212,6 +213,28 @@ const api = {
                     resolve(insertSuccessMessage)
                 }) .catch(error => {
                     if(error.response.status == 500) reject(serverErrorMessage)
+                })
+        } )
+    },
+
+    // TAG
+    getAllTag() {
+        return new Promise( (resolve, reject) => {
+            axios.get(tagTable)
+                .then(response => {
+                    resolve(response.data)
+                }) .catch(error => {
+                    if(error.response.status == 500) reject(serverErrorMessage)
+                })
+        } )
+    },
+    addTag(tag) {
+        return new Promise( (resolve, reject) => {
+            axios.post(tagTable, {tagName:tag})
+                .then(() => {
+                    resolve(insertSuccessMessage)
+                }) .catch(error => {
+                    if(error.respose.status == 500) reject(serverErrorMessage)
                 })
         } )
     }
