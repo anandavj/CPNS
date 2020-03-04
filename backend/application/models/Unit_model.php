@@ -34,6 +34,11 @@ class Unit_model extends CI_Model
         else return false;
     }
 
+    public function is_name_exists($name){
+        if($this->db->get_where($this::TABLE_NAME, "name='{$name}'")->num_rows() > 0) return true;
+        else return false;
+    }
+    
     public function update_unit($id, $name, $abbreviation, $description)
     {
         // Check apakah tidak merubah apa-apa?

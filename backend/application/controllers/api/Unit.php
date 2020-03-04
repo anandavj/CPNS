@@ -23,13 +23,24 @@ class Unit extends REST_Controller
 
         if (!isset($name) || !isset($abbreviation)) {
             $required_parameters = [];
-            if(!isset($name)) array_push($required_parameters, 'name');
-            if(!isset($abbreviation)) array_push($required_parameters, 'abbreviation');
+            if (!isset($name)) array_push($required_parameters, 'name');
+            if (!isset($abbreviation)) array_push($required_parameters, 'abbreviation');
             $this->response(
                 array(
                     'status' => FALSE,
-                    'message' => $this::REQUIRED_PARAMETER_MESSAGE.implode(', ', $required_parameters)
-                ), REST_Controller::HTTP_BAD_REQUEST
+                    'message' => $this::REQUIRED_PARAMETER_MESSAGE . implode(', ', $required_parameters)
+                ),
+                REST_Controller::HTTP_BAD_REQUEST
+            );
+            return;
+        }
+
+        if($this->unit_model->is_name_exists($name)){
+            $this->response(
+                array(
+                    'status' => FALSE,
+                    'message' => $this::NAME_EXISTS_MESSAGE
+                ),REST_Controller::HTTP_BAD_REQUEST
             );
             return;
         }
@@ -39,14 +50,16 @@ class Unit extends REST_Controller
                 array(
                     'status' => TRUE,
                     'message' => $this::INSERT_SUCCESS_MESSSAGE
-                ), REST_Controller::HTTP_CREATED
+                ),
+                REST_Controller::HTTP_CREATED
             );
         } else {
             $this->response(
                 array(
                     'status' => FALSE,
                     'message' => $this::REQUIRED_PARAMETER_MESSAGE
-                ), REST_Controller::HTTP_INTERNAL_SERVER_ERROR
+                ),
+                REST_Controller::HTTP_INTERNAL_SERVER_ERROR
             );
         }
     }
@@ -65,19 +78,20 @@ class Unit extends REST_Controller
         $name = $this->put('name');
         $abbreviation = $this->put('abbreviation');
         $description = $this->put('description');
-        
-        
-        if (!isset($id) || !isset($abbreviation) || !isset($name) || !isset($description) ) {
+
+
+        if (!isset($id) || !isset($abbreviation) || !isset($name) || !isset($description)) {
             $required_parameters = [];
-            if(!isset($id)) array_push($required_parameters, 'id');
-            if(!isset($name)) array_push($required_parameters, 'name');
-            if(!isset($abbreviation)) array_push($required_parameters, 'abbreviation');
-            if(!isset($description)) array_push($required_parameters, 'description');
+            if (!isset($id)) array_push($required_parameters, 'id');
+            if (!isset($name)) array_push($required_parameters, 'name');
+            if (!isset($abbreviation)) array_push($required_parameters, 'abbreviation');
+            if (!isset($description)) array_push($required_parameters, 'description');
             $this->response(
                 array(
                     'status' => FALSE,
-                    'message' => $this::REQUIRED_PARAMETER_MESSAGE.implode(', ', $required_parameters)
-                ),REST_Controller::HTTP_BAD_REQUEST
+                    'message' => $this::REQUIRED_PARAMETER_MESSAGE . implode(', ', $required_parameters)
+                ),
+                REST_Controller::HTTP_BAD_REQUEST
             );
             return;
         }
@@ -86,8 +100,9 @@ class Unit extends REST_Controller
             $this->response(
                 array(
                     'status' => FALSE,
-                    'message' => $this::INVALID_ID_MESSAGE." id does not exist"
-                ),REST_Controller::HTTP_BAD_REQUEST
+                    'message' => $this::INVALID_ID_MESSAGE . " id does not exist"
+                ),
+                REST_Controller::HTTP_BAD_REQUEST
             );
             return;
         }
@@ -97,14 +112,16 @@ class Unit extends REST_Controller
                 array(
                     'status' => TRUE,
                     'message' => $this::UPDATE_SUCCESS_MESSSAGE
-                ), REST_Controller::HTTP_OK
+                ),
+                REST_Controller::HTTP_OK
             );
         } else {
             $this->response(
                 array(
                     'status' => FALSE,
                     'message' => $this::UPDATE_FAILED_MESSAGE
-                ),REST_Controller::HTTP_INTERNAL_SERVER_ERROR
+                ),
+                REST_Controller::HTTP_INTERNAL_SERVER_ERROR
             );
         }
     }
@@ -117,8 +134,9 @@ class Unit extends REST_Controller
             $this->response(
                 array(
                     'status' => FALSE,
-                    'message' => $this::REQUIRED_PARAMETER_MESSAGE."id"
-                ),REST_Controller::HTTP_BAD_REQUEST
+                    'message' => $this::REQUIRED_PARAMETER_MESSAGE . "id"
+                ),
+                REST_Controller::HTTP_BAD_REQUEST
             );
             return;
         }
@@ -127,8 +145,9 @@ class Unit extends REST_Controller
             $this->response(
                 array(
                     'status' => FALSE,
-                    'message' => $this::INVALID_ID_MESSAGE." id does not exist"
-                ),REST_Controller::HTTP_BAD_REQUEST
+                    'message' => $this::INVALID_ID_MESSAGE . " id does not exist"
+                ),
+                REST_Controller::HTTP_BAD_REQUEST
             );
             return;
         }
@@ -138,14 +157,16 @@ class Unit extends REST_Controller
                 array(
                     'status' => TRUE,
                     'message' => $this::DELETE_SUCCESS_MESSSAGE
-                ), REST_Controller::HTTP_OK
+                ),
+                REST_Controller::HTTP_OK
             );
         } else {
             $this->response(
                 array(
                     'status' => FALSE,
                     'message' => $this::DELETE_FAILED_MESSAGE
-                ),REST_Controller::HTTP_INTERNAL_SERVER_ERROR
+                ),
+                REST_Controller::HTTP_INTERNAL_SERVER_ERROR
             );
         }
     }

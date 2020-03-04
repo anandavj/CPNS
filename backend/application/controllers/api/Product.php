@@ -19,7 +19,7 @@ class Product extends REST_Controller
         $this->load->model('product_image_model');
     }
 
-    public function index_post()
+    public function index_post() //POST
     {
         $name = $this->post('name');
         $category_id = $this->post('categoryId');
@@ -76,6 +76,16 @@ class Product extends REST_Controller
             return;
         }
 
+        if($this->product_model->is_name_exists($name)){
+            $this->response(
+                array(
+                    'status' => FALSE,
+                    'message' => $this::NAME_EXISTS_MESSAGE
+                ),REST_Controller::HTTP_BAD_REQUEST
+            );
+            return;
+        }
+
         if ($product_id = $this->product_model->insert_product($name, $category_id, $specification, $description, $stock, $unit_id, $open_price, $bottom_price)) {
             if(!$this->product_tag_model->insert_product_tag($product_id, $tags)){
                 $this->response(
@@ -115,14 +125,14 @@ class Product extends REST_Controller
         }
     }
 
-    public function index_get()
+    public function index_get() //GET
     {
         $id = $this->get('id');
         if (isset($id)) $this->response($this->product_model->get_product_where($id),REST_Controller::HTTP_OK);
         else $this->response($this->product_model->get_all_product(),REST_Controller::HTTP_OK);
     }
 
-    public function index_put()
+    public function index_put() //UPDATE
     {
         $id = $this->put('id');
         $name = $this->put('name');
@@ -252,7 +262,7 @@ class Product extends REST_Controller
         }
     }
 
-    public function index_delete()
+    public function index_delete() //DELETE
     {
         $id = $this->input->get('id');
 
