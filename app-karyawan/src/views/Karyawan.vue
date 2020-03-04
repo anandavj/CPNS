@@ -119,7 +119,7 @@
                                                 <v-expansion-panel-header>{{permission.modul}}</v-expansion-panel-header>
                                                 <v-expansion-panel-content v-for="(permissionList,idx) in permission.action" :key="idx">
                                                     <v-checkbox
-                                                        v-model="karyawan.tasks"
+                                                        v-model="karyawan.taskId"
                                                         :label="permissionList.label"
                                                         :value="permissionList.id"
                                                         class="font-weight-light my-n3"
@@ -138,6 +138,14 @@
                                     <v-btn class="mt-n5" color="red darken-1" text @click="close">Tidak</v-btn>
                                     <v-btn class="mt-n5" color="blue darken-1" text @click="saveNewKaryawan">Ya</v-btn>
                                 </v-row>
+                                <div v-if="loading">
+                                    <v-progress-linear
+                                        indeterminate
+                                        height="8"
+                                        color="yellow darken-2"
+                                        >
+                                    </v-progress-linear>
+                                </div>
                             </v-container>
                         </v-card-actions>
                     </v-card>
@@ -157,6 +165,7 @@
                 :disable-sort="true"
                 :hide-default-footer="true"
                 :mobile-breakpoint="1"
+                :items-per-page="1000"
                 item-key="id"
                 no-data-text="Data Karyawan Kosong"
                 no-results-text="Data Karyawan Tidak Ditemukan"
@@ -165,7 +174,7 @@
             >
                 <template v-slot:item.actions="{ item }">
                     <v-icon class="mr-2" @click.stop="editKaryawan(item)">mdi-pencil</v-icon>
-                    <v-icon @click.stop="deleteKaryawan(item)">mdi-delete</v-icon>
+                    <v-icon class="mr-2" @click.stop="deleteKaryawan(item)">mdi-delete</v-icon>
                 </template>
             </v-data-table>
             <!-- *************************************************************************************************************** -->
@@ -245,7 +254,7 @@
                                             <v-expansion-panel-content v-for="(permissionList,idx) in permission.action" :key="idx">
                                                 <v-checkbox
                                                     disabled
-                                                    v-model="karyawan.tasks"
+                                                    v-model="karyawan.taskId"
                                                     :label="permissionList.label"
                                                     :value="permissionList.id"
                                                     class="font-weight-light my-n3"
@@ -351,7 +360,7 @@
                                             <v-expansion-panel-header>{{permission.modul}}</v-expansion-panel-header>
                                             <v-expansion-panel-content v-for="(permissionList,idx) in permission.action" :key="idx">
                                                 <v-checkbox
-                                                    v-model="karyawan.tasks"
+                                                    v-model="karyawan.taskId"
                                                     :label="permissionList.label"
                                                     :value="permissionList.id"
                                                     class="font-weight-light my-n3"
@@ -459,7 +468,7 @@
                                             <v-expansion-panel-header>{{permission.modul}}</v-expansion-panel-header>
                                             <v-expansion-panel-content v-for="(permissionList,idx) in permission.action" :key="idx">
                                                 <v-checkbox
-                                                    v-model="karyawan.tasks"
+                                                    v-model="karyawan.taskId"
                                                     :label="permissionList.label"
                                                     :value="permissionList.id"
                                                     class="font-weight-light my-n3"
@@ -504,6 +513,21 @@
             </v-dialog>
             <!-- *************************************************************************************************************** -->
             <!-- *************************************************************************************************************** -->
+            <v-snackbar
+                v-model="snackbar"
+                multi-line
+                v-bind:color="snackbarColor"
+            >
+                {{ snackbarMessage }}
+                <v-btn
+                    text
+                    @click="snackbar = false"
+                >
+                    <v-icon>
+                        mdi-close
+                    </v-icon>
+                </v-btn>
+            </v-snackbar>
         </div>
     </v-app>
 </template>
@@ -536,7 +560,7 @@ export default {
                 status:'', 
                 address:'',
                 telephone:'',
-                tasks: [],
+                taskId: [],
                 uid: ''
             },
             karyawanDefault: {
@@ -551,7 +575,7 @@ export default {
                 status:'', 
                 address:'',
                 telephone:'',
-                tasks: [],
+                taskId: [],
                 uid: ''
             },
             tasks: [
@@ -567,6 +591,10 @@ export default {
             listuserTaskGroupId:[],
             tempnameKaryawan:'',
             searchKaryawan:'',
+            loading: false,
+            snackbar: false,
+            snackbarColor: null,
+            snackbarMessage: null,
             showPassword: false,
             popUpNew: false,
             datePickerMenuAdd: false,
@@ -609,7 +637,7 @@ export default {
                         tasks.forEach(task => {
                             userTasks.push(task.taskId)
                         });
-                        karyawan.tasks = userTasks
+                        karyawan.taskId = userTasks
                     })
                 });
             })
@@ -621,12 +649,11 @@ export default {
             })
         },
         selectuserTaskGroupId(value){
-            this.$store.commit('setUserTaskGroupId', value)
             this.karyawan.userTaskGroupId = value
-            this.$store.dispatch('getGroupTaskByUserTaskGroupId').then(groupTasks => {
-                this.karyawan.tasks = []
+            api.getGroupTaskByUserTaskGroupId(value).then(groupTasks => {
+                this.karyawan.taskId = []
                 groupTasks.task.forEach(element => {
-                    this.karyawan.tasks.push(element.taskId)
+                    this.karyawan.taskId.push(element.taskId)
                 });
             })
         },
@@ -663,16 +690,20 @@ export default {
             }
         },
         saveNewKaryawan() {
+            this.loading = true
             if(this.$refs.form.validate()) {
-                // this.karyawans.push(this.karyawan)
-                // this.karyawan = Object.assign({},this.karyawanDefault)
-
-                this.$store.dispatch('insertUser', this.karyawan).then(response => {
-                    console.log(response)
+                api.insertUser(this.karyawan).then(response => {
+                    this.snackbarColor = 'success'
+                    this.snackbarMessage = response
                 }).catch(error => {
-                    console.log(error)
+                    this.snackbarColor = 'error'
+                    this.snackbarMessage = error
+                }).finally(() => {
+                    this.loading = false
+                    this.snackbar = true
+                    this.close()
+                    this.get()
                 })
-                this.close()
             }
         },
         editKaryawan(item) {

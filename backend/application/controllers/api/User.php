@@ -5,6 +5,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 require APPPATH . '/libraries/REST_Controller.php';
 
 use Restserver\Libraries\REST_Controller;
+use Kreait\Firebase\Factory;
 
 class User extends REST_Controller
 {
@@ -28,10 +29,11 @@ class User extends REST_Controller
         $status = $this->post('status');
         $telephone = $this->post('telephone');
         $address = $this->post('address');
+        $taskId = $this->post('taskId');
         $uid = $this->post('uid');
 
         if (!isset($user_task_group_id) || !isset($name) || !isset($telephone) || !isset($address) || !isset($uid) || 
-        !isset($place_of_birth) || !isset($date_of_birth) || !isset($religion) || !isset($status)) {
+        !isset($place_of_birth) || !isset($date_of_birth) || !isset($religion) || !isset($status) || !isset($taskId)) {
             $required_parameters = [];
             if (!isset($user_task_group_id)) array_push($required_parameters, 'userTaskGroupId');
             if (!isset($name)) array_push($required_parameters, 'name');
@@ -41,6 +43,7 @@ class User extends REST_Controller
             if (!isset($status)) array_push($required_parameters, 'status');
             if (!isset($telephone)) array_push($required_parameters, 'telephone');
             if (!isset($address)) array_push($required_parameters, 'address');
+            if (!isset($taskId)) array_push($required_parameters, 'taskId');
             if (!isset($uid)) array_push($required_parameters, 'uid');
             $this->response(
                 array(
@@ -67,18 +70,18 @@ class User extends REST_Controller
         if ($this->user_model->insert_user($user_task_group_id, $name, $place_of_birth, $date_of_birth, 
         $religion, $status, $telephone, $address, $uid)) {
             $insert_id = $this->db->insert_id();
-            $tasks = $this->group_task_model->get_group_task_where($user_task_group_id);
-            $user_task = [];
-            foreach ($tasks['task'] as $task) {
-                array_push($user_task, $task['taskId']);
-            }
+            // $tasks = $this->group_task_model->get_group_task_where($user_task_group_id);
+            // $user_task = [];
+            // foreach ($tasks['task'] as $task) {
+            //     array_push($user_task, $task['taskId']);
+            // }
 
-            if ($this->user_task_model->insert_user_task($insert_id, $user_task)) {
+            if ($this->user_task_model->insert_user_task($insert_id, $taskId)) {
                 $this->response(
                     array(
                         'status' => TRUE,
                         'message' => $this::INSERT_SUCCESS_MESSSAGE,
-                        'id' => $insert_id
+                        // 'id' => $insert_id
                     ),
                     REST_Controller::HTTP_CREATED
                 );
@@ -107,6 +110,8 @@ class User extends REST_Controller
 
     public function index_get()
     {
+
+        // $factory = (new Factory)->withDatabaseUri('https://test-7a393.firebaseio.com')->createAuth();
         $id = $this->get('id');
 
         if (isset($id)) $this->response($this->user_model->get_user_where($id), REST_Controller::HTTP_OK);

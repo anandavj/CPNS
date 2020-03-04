@@ -12,6 +12,7 @@ const tagTable = 'tag'
 const insertSuccessMessage = 'Berhasil ditambahkan'
 const updateSuccessMessage = 'Berhasil diperbarui'
 const deleteSuccessMessage = 'Berhasil dihapus'
+const insertFailedMessage = 'Gagal ditambahkan'
 const serverErrorMessage = 'Terjadi kesalahan pada server'
 
 const api = {
@@ -75,6 +76,18 @@ const api = {
     },
 
     //USER
+    insertUser(karyawan){
+        return new Promise((resolve, reject) => {
+            axios.post(userTable, karyawan)                
+            .then(() => {
+                resolve(insertSuccessMessage)
+            })
+            .catch(error => {
+                if(error.response.status == 500) reject(serverErrorMessage)
+                else reject(insertFailedMessage)
+            })
+        })
+    },
     getAllUser(){
         return new Promise((resolve, reject) => {
             axios.get(userTable).then(response => {
