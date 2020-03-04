@@ -43,7 +43,7 @@ const api = {
             axios.post(groupTaskTable, data).then(() => {
                 resolve(this.state.insertSuccessMessage)
             }).catch(error => {
-                if(error.response.status == 500) reject(this.state.serverErrorMessage)
+                if(error.response.status == 500) reject(serverErrorMessage)
             })
         })
     },
@@ -55,7 +55,7 @@ const api = {
                 resolve(response.data);
             })
             .catch(error => {
-                if(error.response.status == 500) reject(this.state.serverErrorMessage)
+                if(error.response.status == 500) reject(serverErrorMessage)
             })
         })
     },
@@ -69,7 +69,7 @@ const api = {
             axios.put(groupTaskTable, data).then(() => {
                 resolve(this.state.insertSuccessMessage)
             }).catch(error => {
-                if(error.response.status == 500) reject(this.state.serverErrorMessage)
+                if(error.response.status == 500) reject(serverErrorMessage)
             })
         })
     },
