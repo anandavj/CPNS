@@ -26,7 +26,7 @@ const api = {
                 resolve(response.data);
             })
             .catch(error => {
-                if(error.response.status == 500) reject(this.state.serverErrorMessage)
+                if(error.response.status == 500) reject(serverErrorMessage)
             })
         })
     },
@@ -38,7 +38,7 @@ const api = {
                 resolve(response.data)
             })
             .catch(error => {
-                if(error.response.status == 500) reject(this.state.serverErrorMessage)
+                if(error.response.status == 500) reject(serverErrorMessage)
             })
         })
     },
@@ -62,7 +62,7 @@ const api = {
                 resolve(response.data);
             })
             .catch(error => {
-                if(error.response.status == 500) reject(this.state.serverErrorMessage)
+                if(error.response.status == 500) reject(serverErrorMessage)
             })
         })
     },
@@ -81,7 +81,17 @@ const api = {
                 .then(response => {
                     resolve(response.data)
                 }) .catch(error => {
-                    if(error.response.status == 500) reject(this.state.serverErrorMessage)
+                    if(error.response.status == 500) reject(serverErrorMessage)
+                })
+        } )
+    },
+    addProduct(product) {
+        return new Promise( (resolve, reject) => {
+            axios.post(productTable,product)
+                .then(() => {
+                    resolve(insertSuccessMessage)
+                }) .catch(error => {
+                    if(error.response.status == 500) reject(serverErrorMessage)
                 })
         } )
     },
@@ -93,7 +103,7 @@ const api = {
                 .then(response => {
                     resolve(response.data)
                 }) .catch(error => {
-                    if(error.response.status == 500) reject(this.state.serverErrorMessage)
+                    if(error.response.status == 500) reject(serverErrorMessage)
                 })
         } )
     },
@@ -115,7 +125,7 @@ const api = {
                 .then(response => {
                     resolve(response.data)
                 }) .catch(error => {
-                    if(error.respose.status == 500) reject(this.state.serverErrorMessage)
+                    if(error.respose.status == 500) reject(serverErrorMessage)
                 })
         } )
     },
