@@ -4,13 +4,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Product_model extends CI_Model{
 
     private const TABLE_NAME = 'product';
-    public function insert_product($name, $category_id, $specification, $description, $stock, $unit_id, $open_price, $bottom_price){
+    public function insert_product($product_code, $name, $category_id, $specification, $description, $stock, $unit_id, $open_price, $bottom_price, $retail_id){
         
         if(!isset($stock)){
             $stock = 0;
         }
        
         $this->db->insert($this::TABLE_NAME, array(
+            'product_code' => $product_code,
             'name' => $name,
             'category_id ' => $category_id,
             'specification' => $specification,
@@ -18,20 +19,23 @@ class Product_model extends CI_Model{
             'stock' => $stock,
             'unit_id' => $unit_id,
             'open_price' => $open_price,
-            'bottom_price' => $bottom_price
+            'bottom_price' => $bottom_price,
+            'retail_id' => $retail_id
         ));
         return $this->db->insert_id();
     }
 
     public function get_all_product(){
-        $this->db->select('id, name, category_id as categoryId, specification, description, unit_id as unitId, open_price as openPrice, bottom_price as bottomPrice');
+        $this->db->select('id, product_code as productCode, name, category_id as categoryId, specification, description, unit_id as unitId, open_price as openPrice, bottom_price as bottomPrice, retail_id as retailId');
         $this->db->from($this::TABLE_NAME);
         return $this->db->get()->result_array();
-        return $this->db->get($this::TABLE_NAME)->result_array();
     }
 
     public function get_product_where($id){
-        return $this->db->get_where($this::TABLE_NAME, "id='{$id}'")->result_array();
+        $this->db->select('id, product_code as productCode, name, category_id as categoryId, specification, description, unit_id as unitId, open_price as openPrice, bottom_price as bottomPrice, retail_id as retailId');
+        $this->db->from($this::TABLE_NAME);
+        $this->db->where("id='{$id}'");
+        return $this->db->get()->result_array();
     }
 
     public function is_not_exists($id){
