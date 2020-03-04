@@ -199,13 +199,28 @@
                                     <v-col cols="6" class="mt-n4" v-if="!popUpBreakPoint">
                                         <v-row no-gutters class="align-center">
                                             <v-col cols="11">
-                                                <v-select
+                                                <v-autocomplete
+                                                    class="mb-n4"
                                                     v-model="product.category_id"
                                                     :items="categories"
                                                     label="Kategori"
+                                                    chips
+                                                    :clearable="true"
+                                                    :auto-select-first="true"
+                                                    color="accent"
+                                                    item-color="blue"
+                                                    :search-input.sync="categorySearchInput"
+                                                    @change="categorySearchInput=''"
                                                     item-text="name"
                                                     item-value="id"
-                                                />
+                                                    :readonly="product.category_id"
+                                                >
+                                                    <template v-slot:selection="data">
+                                                        <v-chip color="white" class="pa-0">
+                                                            {{data.item.name}}
+                                                        </v-chip>
+                                                    </template>
+                                                </v-autocomplete>
                                             </v-col>
                                             <v-col cols="1">
                                                 <v-tooltip bottom color="accent">
@@ -229,13 +244,28 @@
                                     <v-col cols="12" class="mt-n4" v-else>
                                         <v-row no-gutters class="align-center">
                                             <v-col cols="11">
-                                                <v-select
+                                                <v-autocomplete
+                                                    class="mt-n4"
                                                     v-model="product.category_id"
                                                     :items="categories"
                                                     label="Kategori"
+                                                    chips
+                                                    :clearable="true"
+                                                    :auto-select-first="true"
+                                                    color="accent"
+                                                    item-color="blue"
+                                                    :search-input.sync="categorySearchInput"
+                                                    @change="categorySearchInput=''"
                                                     item-text="name"
                                                     item-value="id"
-                                                />
+                                                    :readonly="product.category_id"
+                                                >
+                                                    <template v-slot:selection="data">
+                                                        <v-chip color="white" class="pa-0">
+                                                            {{data.item.name}}
+                                                        </v-chip>
+                                                    </template>
+                                                </v-autocomplete>
                                             </v-col>
                                             <v-col cols="1">
                                                 <v-tooltip bottom color="accent">
@@ -278,13 +308,28 @@
                                     <v-col cols="6" class="mt-n4" v-if="!popUpBreakPoint">
                                         <v-row no-gutters class="align-center">
                                             <v-col cols="11">
-                                                <v-select
+                                                <v-autocomplete
+                                                    class="mb-n4"
                                                     v-model="product.unit_id"
                                                     :items="units"
                                                     label="Satuan"
+                                                    chips
+                                                    :clearable="true"
+                                                    :auto-select-first="true"
+                                                    color="accent"
+                                                    item-color="blue"
+                                                    :search-input.sync="unitSearchInput"
+                                                    @change="unitSearchInput=''"
                                                     item-text="name"
                                                     item-value="id"
-                                                />
+                                                    :readonly="product.unit_id"
+                                                >
+                                                    <template v-slot:selection="data">
+                                                        <v-chip color="white" class="pa-0">
+                                                            {{data.item.name}}
+                                                        </v-chip>
+                                                    </template>
+                                                </v-autocomplete>
                                             </v-col>
                                             <v-col cols="1">
                                                 <v-tooltip bottom color="accent">
@@ -308,13 +353,28 @@
                                     <v-col cols="12" class="mt-n4" v-else>
                                         <v-row no-gutters class="align-center">
                                             <v-col cols="11">
-                                                <v-select
+                                                <v-autocomplete
+                                                    class="mt-n4"
                                                     v-model="product.unit_id"
                                                     :items="units"
                                                     label="Satuan"
+                                                    chips
+                                                    :clearable="true"
+                                                    :auto-select-first="true"
+                                                    color="accent"
+                                                    item-color="blue"
+                                                    :search-input.sync="unitSearchInput"
+                                                    @change="unitSearchInput=''"
                                                     item-text="name"
                                                     item-value="id"
-                                                />
+                                                    :readonly="product.unit_id"
+                                                >
+                                                    <template v-slot:selection="data">
+                                                        <v-chip color="white" class="pa-0">
+                                                            {{data.item.name}}
+                                                        </v-chip>
+                                                    </template>
+                                                </v-autocomplete>
                                             </v-col>
                                             <v-col cols="1">
                                                 <v-tooltip bottom color="accent">
@@ -374,7 +434,7 @@
                                         <v-text-field label="Stock" v-model="product.stock"/>
                                     </v-col>
                                     <v-col cols="12">
-                                        <v-textarea label="Deskripsi" v-model="product.description" outlined/>
+                                        <v-textarea label="Deskripsi (Opsional)" v-model="product.description" outlined/>
                                     </v-col>
                                     <v-col cols="12" class="mt-n7">
                                         <v-row no-gutters class="align-center">
@@ -385,13 +445,13 @@
                                                     label="Tag"
                                                     multiple
                                                     chips
-                                                    deletable-chips= "true"
+                                                    :deletable-chips= "true"
                                                     hint="Bisa memilih lebih dari 1 Tag"
                                                     persistent-hint
                                                     color="accent"
                                                     item-color="accent"
-                                                    :search-input.sync="searchInput"
-                                                    @change="searchInput=''"
+                                                    :search-input.sync="tagSearchInput"
+                                                    @change="tagSearchInput=''"
                                                     item-text="name"
                                                     item-value="id"
                                                 >
@@ -856,8 +916,8 @@
                                                 persistent-hint
                                                 color="accent"
                                                 item-color="accent"
-                                                :search-input.sync="searchInput"
-                                                @change="searchInput=''"
+                                                :search-input.sync="tagSearchInput"
+                                                @change="tagSearchInput=''"
                                                 item-text="name"
                                                 item-value="id"
                                             >
@@ -1029,7 +1089,9 @@ export default {
                 description:''
             },
             productImageSelected:'',
-            searchInput:'',
+            categorySearchInput:'',
+            unitSearchInput:'',
+            tagSearchInput:'',
             formNewTagModel: '',
             editToggle:false,
             popUpQuickEdit: false,
@@ -1251,6 +1313,7 @@ export default {
                     api.getAllCategory()
                         .then((categories) => {
                             this.categories = categories
+                            this.product.category_id = _.find(this.categories,['name', this.formNewCategoryModel]).id
                             this.close()
                         })
                 })
@@ -1268,15 +1331,29 @@ export default {
                     api.getAllUnit()
                         .then((units) => {
                             this.units = units
+                            this.product.unit_id = _.find(this.units,['name', this.formNewUnitModel.name]).id
                             this.close()
                         })
                 })
         },
         saveNewProduct() {
             if(this.$refs.form.validate()) {
-                this.products.push(this.product)
-                this.product = Object.assign({},this.productDefault)
-                this.close()
+                api.addCategory(this.product)
+                    .then((response) => {
+                        this.snackbarColor = 'success'
+                        this.snackbarMessage = response
+                    }) .catch(error => {
+                        this.snackbarColor = 'error'
+                        this.snackbarMessage = error
+                    }) .finally(() => {
+                        this.snackBar = true
+                        api.getAllProducts()
+                            .then((products) => {
+                                this.products = products
+                                this.product = Object.assign({},this.productDefault)
+                                this.close()
+                            })
+                    })
             }
         },
         changePic(val) {
