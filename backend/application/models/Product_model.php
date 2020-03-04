@@ -26,13 +26,13 @@ class Product_model extends CI_Model{
     }
 
     public function get_all_product(){
-        $this->db->select('id, product_code as productCode, name, category_id as categoryId, specification, description, unit_id as unitId, open_price as openPrice, bottom_price as bottomPrice, retail_id as retailId');
+        $this->db->select('id, product_code as productCode, name, category_id as categoryId, specification, description, unit_id as unitId, open_price as openPrice, bottom_price as bottomPrice, stock, retail_id as retailId');
         $this->db->from($this::TABLE_NAME);
         return $this->db->get()->result_array();
     }
 
     public function get_product_where($id){
-        $this->db->select('id, product_code as productCode, name, category_id as categoryId, specification, description, unit_id as unitId, open_price as openPrice, bottom_price as bottomPrice, retail_id as retailId');
+        $this->db->select('id, product_code as productCode, name, category_id as categoryId, specification, description, unit_id as unitId, open_price as openPrice, bottom_price as bottomPrice, stock, retail_id as retailId');
         $this->db->from($this::TABLE_NAME);
         $this->db->where("id='{$id}'");
         return $this->db->get()->result_array();

@@ -17,12 +17,17 @@ class Tag_model extends CI_Model
 
     public function get_all_tag()
     {
-        return $this->db->get($this::TABLE_NAME)->result_array();
+        $this->db->select("id, tag_name as tagName");
+        $this->db->from($this::TABLE_NAME);
+        return $this->db->get()->result_array();
     }
 
     public function get_tag_where($id)
     {
-        return $this->db->get_where($this::TABLE_NAME, "id='{$id}'")->result_array();
+        $this->db->select("id, tag_name as tagName");
+        $this->db->from($this::TABLE_NAME);
+        $this->db->where("id = '{$id}'");
+        return $this->db->get()->result_array();
     }
 
     public function is_not_exists($id)
