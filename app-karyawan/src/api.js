@@ -9,8 +9,8 @@ const productTable = 'product'
 const categoryTable = 'category'
 const unitTable = 'unit'
 const insertSuccessMessage = 'Berhasil ditambahkan'
-// const updateSuccessMessage = 'Berhasil ditambahkan'
-// const deleteSuccessMessage = 'Berhasil ditambahkan'
+const updateSuccessMessage = 'Berhasil diperbarui'
+const deleteSuccessMessage = 'Berhasil dihapus'
 const serverErrorMessage = 'Terjadi kesalahan pada server'
 
 const api = {
@@ -33,21 +33,20 @@ const api = {
     },
 
     //GROUP TASK
-    insertGroupTask(){
+    insertGroupTask(userTaskGroup){
         return new Promise((resolve, reject) => {
             let data = {
-                userTaskGroupId: this.state.userTaskGroup.id,
-                taskId: this.state.userTaskGroup.taskId
+                userTaskGroupId: userTaskGroup.id,
+                taskId: userTaskGroup.taskId
             }
 
             axios.post(groupTaskTable, data).then(() => {
-                resolve(this.state.insertSuccessMessage)
+                resolve(insertSuccessMessage)
             }).catch(error => {
                 if(error.response.status == 500) reject(serverErrorMessage)
             })
         })
     },
-
     getGroupTaskByUserTaskGroupId(userTaskGroupId){
         return new Promise((resolve, reject) => {
             axios.get(groupTaskTable, {params: {userTaskGroupId: userTaskGroupId}})
@@ -59,15 +58,15 @@ const api = {
             })
         })
     },
-    updateGroupTask(){
+    updateGroupTask(userTaskGroup){
         return new Promise((resolve, reject) => {
             let data = {
-                userTaskGroupId: this.state.userTaskGroup.id,
-                taskId: this.state.userTaskGroup.taskId
+                userTaskGroupId: userTaskGroup.id,
+                taskId: userTaskGroup.taskId
             }
 
             axios.put(groupTaskTable, data).then(() => {
-                resolve(this.state.insertSuccessMessage)
+                resolve(updateSuccessMessage)
             }).catch(error => {
                 if(error.response.status == 500) reject(serverErrorMessage)
             })
@@ -103,6 +102,40 @@ const api = {
             axios.get(userTaskGroupTable)
             .then(response => {
                 resolve(response.data);
+            })
+            .catch(error => {
+                if(error.response.status == 500) reject(serverErrorMessage)
+            })
+        })
+    },
+    insertUserTaskGroup(userTaskGroup){
+        return new Promise((resolve, reject) => {
+            axios.post(userTaskGroupTable, userTaskGroup)
+            .then(response => {
+                userTaskGroup.id = response.data.id
+                resolve(insertSuccessMessage)
+            })
+            .catch(error => {
+                if(error.response.status == 500) reject(serverErrorMessage)
+            })
+        })
+    },
+    updateUserTaskGroup(userTaskGroup){
+        return new Promise((resolve, reject) => {
+            axios.put(userTaskGroupTable, userTaskGroup)
+            .then(() => {
+                resolve(updateSuccessMessage);
+            })
+            .catch(error => {
+                if(error.response.status == 500) reject(serverErrorMessage)
+            })
+        })
+    },
+    deleteUserTaskGroup(userTaskGroup){
+        return new Promise((resolve, reject) => {
+            axios.delete(userTaskGroupTable, {params: {id: userTaskGroup.id}})
+            .then(() => {
+                resolve(deleteSuccessMessage);
             })
             .catch(error => {
                 if(error.response.status == 500) reject(serverErrorMessage)

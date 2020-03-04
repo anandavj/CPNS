@@ -30,41 +30,7 @@ const userTaskGroup = {
         }
     },
     actions: {
-        insertUserTaskGroup(){
-            return new Promise((resolve, reject) => {
-                axios.post(tableName, this.state.userTaskGroup)
-                .then(response => {
-                    this.state.userTaskGroup.id = response.data.id
-                    resolve(this.state.insertSuccessMessage)
-                })
-                .catch(error => {
-                    if(error.response.status == 500) reject(this.state.serverErrorMessage)
-                })
-            })
-        },
-
-        updateUserTaskGroup(){
-            return new Promise((resolve, reject) => {
-                axios.put(tableName, this.state.userTaskGroup)
-                .then(() => {
-                    resolve(this.state.updateSuccessMessage);
-                })
-                .catch(error => {
-                    if(error.response.status == 500) reject(this.state.serverErrorMessage)
-                })
-            })
-        },
-        deleteUserTaskGroup(){
-            return new Promise((resolve, reject) => {
-                axios.delete(tableName, {params: {id: this.state.userTaskGroup.id}})
-                .then(() => {
-                    resolve(this.state.deleteSuccessMessage);
-                })
-                .catch(error => {
-                    if(error.response.status == 500) reject(this.state.serverErrorMessage)
-                })
-            })
-        },
+        
     }
 }
 

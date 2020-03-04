@@ -36,7 +36,7 @@
                                     </v-col>
                                     <v-col cols="12">
                                         <div class="title mt-n3">Permission</div>
-                                        <v-expansion-panels accordion class="elevation-0" multiple="true" v-model="panel">
+                                        <v-expansion-panels accordion class="elevation-0" :multiple="true" v-model="panel">
                                             <v-expansion-panel v-for="(permission,index) in task" :key="index">
                                                 <v-expansion-panel-header>{{permission.modul}}</v-expansion-panel-header>
                                                 <v-expansion-panel-content v-for="(permissionList,idx) in permission.action" :key="idx">
@@ -144,7 +144,7 @@
                                 </v-col>
                                 <v-col cols="12">
                                     <div class="title mt-n3">Permission</div>
-                                    <v-expansion-panels accordion class="elevation-0" multiple="true" v-model="panel">
+                                    <v-expansion-panels accordion class="elevation-0" :multiple="true" v-model="panel">
                                         <v-expansion-panel v-for="(permission,index) in task" :key="index">
                                             <v-expansion-panel-header>{{permission.modul}}</v-expansion-panel-header>
                                             <v-expansion-panel-content v-for="(permissionList,idx) in permission.action" :key="idx">
@@ -187,7 +187,7 @@
                                 </v-col>
                                 <v-col cols="12">
                                     <div class="title mt-n3">Permission</div>
-                                    <v-expansion-panels accordion class="elevation-0" multiple="true" v-model="panel">
+                                    <v-expansion-panels accordion class="elevation-0" :multiple="true" v-model="panel">
                                         <v-expansion-panel v-for="(permission,index) in task" :key="index">
                                             <v-expansion-panel-header>{{permission.modul}}</v-expansion-panel-header>
                                             <v-expansion-panel-content v-for="(permissionList,idx) in permission.action" :key="idx">
@@ -231,6 +231,14 @@
                                 <v-btn class="mt-n5" color="red darken-1" text @click="close">Tidak</v-btn>
                                 <v-btn class="mt-n5" color="blue darken-1" text @click="updateDivisi">Ya</v-btn>
                             </v-row>
+                            <div v-if="loadingUpdateDivisi">
+                                <v-progress-linear
+                                    indeterminate
+                                    height="8"
+                                    color="yellow darken-2"
+                                >
+                                </v-progress-linear>
+                            </div>
                         </v-container>
                     </v-card-actions>
                 </v-card>
@@ -251,6 +259,14 @@
                                 <v-btn class="mt-n5" color="red darken-1" text @click="close">Tidak</v-btn>
                                 <v-btn class="mt-n5" color="blue darken-1" text @click="deleteDivisi">Ya</v-btn>
                             </v-row>
+                            <div v-if="loadingDeleteDivisi">
+                                <v-progress-linear
+                                    indeterminate
+                                    height="8"
+                                    color="yellow darken-2"
+                                >
+                                </v-progress-linear>
+                            </div>
                         </v-container>
                     </v-card-actions>
                 </v-card>
@@ -323,6 +339,8 @@ export default {
             panel: [],
             searchDivisi:'',
             loadingAddNewDivisi:false,
+            loadingUpdateDivisi:false,
+            loadingDeleteDivisi:false,
             loadingListDivisi:true,
             popUpDetails: false,
             popUpNew: false,
@@ -358,15 +376,16 @@ export default {
         },
         saveNewDivisi() {
             this.loadingAddNewDivisi = true
-            this.$store.dispatch('insertUserTaskGroup').then(() => {
-                this.$store.dispatch('insertGroupTask').then(response => {
-                    this.loadingAddNewDivisi = false
+            api.insertUserTaskGroup(this.divisi).then(() => {
+                api.insertGroupTask(this.divisi).then(response => {
                     this.snackbarColor = 'success'
                     this.snackbarMessage = response
                 }).catch(error => {
                     this.snackbarColor = 'error'
                     this.snackbarMessage = error
                 }).finally(() => {
+                    this.loadingAddNewDivisi = false
+                    this.divisi = this.divisiDefault
                     this.snackbar = true
                     this.get()
                     this.close()
@@ -374,14 +393,19 @@ export default {
             }).catch(error => {
                 this.snackbarColor = 'error'
                 this.snackbarMessage = error
+                this.loadingAddNewDivisi = false
+                this.divisi = this.divisiDefault
+                this.snackbar = true
+                this.get()
+                this.close()
             })
         },
         editDivisi(item) {
-            this.$store.commit('setUserTaskGroup', item)
+            this.divisi = Object.assign({}, item)
             this.popUpEdit = true
         },
         confirmDeleteDivisi(item){
-            this.$store.commit('setUserTaskGroup', item)
+            this.divisi = item
             this.popUpConfirmDelete = true
         },
         confirmSave() {
@@ -392,91 +416,59 @@ export default {
         },
         //this need promise to ensure that the data in the db and vue in synced !!! IMPORTANT !!!
         updateDivisi() {
-            // //to find the object inside karyawans
-            // let obj = this.divisis.find( ({id}) => id === this.divisi.id )
-            // //assign all the value of the property of obj2 in karyawans with karyawan
-            // this.divisis[this.divisis.indexOf(obj)].nama = divisi.name
-            // this.divisis[this.divisis.indexOf(obj)].task = this.divisi.task
-            // this.popUpConfirmSave = false
-            // this.divisi = Object.assign({},this.divisiDefault)
-            this.$store.dispatch('updateUserTaskGroup').then(() => {
-                this.$store.dispatch('insertGroupTask').then(response => {
-                    this.loadingAddNewDivisi = false
+            this.loadingUpdateDivisi = true
+            api.updateUserTaskGroup(this.divisi).then(() => {
+                api.updateGroupTask(this.divisi).then(response => {
                     this.snackbarColor = 'success'
                     this.snackbarMessage = response
                 }).catch(error => {
                     this.snackbarColor = 'error'
                     this.snackbarMessage = error
                 }).finally(() => {
+                    this.loadingUpdateDivisi = false
+                    this.divisi = this.divisiDefault
                     this.snackbar = true
                     this.get()
                     this.close()
                 })
             }).catch(error => {
+                this.loadingUpdateDivisi = false
                 this.snackbarColor = 'error'
                 this.snackbarMessage = error
-            }).finally(() => {
+                this.divisi = this.divisiDefault
                 this.snackbar = true
                 this.get()
                 this.close()
-            });
+            })
         },
         deleteDivisi() {
-            this.$store.dispatch('deleteUserTaskGroup').then(response => {
+            this.loadingDeleteDivisi = true
+            api.deleteUserTaskGroup(this.divisi).then(response => {
                 this.snackbarColor = 'success'
                 this.snackbarMessage = response
             }).catch(error => {
                 this.snackbarColor = 'error'
                 this.snackbarMessage = error
             }).finally(() => {
+                this.loadingDeleteDivisi = false
                 this.snackbar = true
                 this.get()
                 this.close()
             });
         },
         close() {
-            if(this.popUpDetails) {
-                this.$store.commit('setNewUserTaskGroup')
-                this.selectedIndex = -1
-                this.popUpDetails = false
-            } else {
-                if(this.popUpNew) {
-                    this.$store.commit('setNewUserTaskGroup')
-                    this.popUpNew = false
-                    this.panel = []
-                } else {
-                    if (this.popUpEdit) {
-                        this.popUpEdit = false
-                        this.$store.commit('setNewUserTaskGroup')
-                        this.selectedIndex = -1
-                    } else {
-                        if(this.popUpConfirmSave) {
-                            this.popUpConfirmSave = false
-                            this.popUpEdit = true
-                            this.panel = []
-                        }
-                    }
-                }
-            }
-            if(this.popUpConfirmDelete) {
-                this.$store.commit('setNewUserTaskGroup')
-                this.popUpConfirmDelete = false
-            }
+            this.divisi = this.divisiDefault
+            this.selectedIndex = -1
+            this.popUpDetails = false
+            this.popUpNew = false
+            this.popUpEdit = false
+            this.popUpConfirmSave = false
+            this.popUpConfirmDelete = false
+            this.panel = []
         }
     },
 
     computed: {
-        //vuex
-        // name: {
-        //     get(){ return this.$store.state.userTaskGroup.name },
-        //     set(value){ this.$store.commit('setUserTaskGroupName', value)}
-        // },
-
-        // taskId: {
-        //     get(){ return this.$store.state.userTaskGroup.taskId},
-        //     set(value) { this.$store.commit('setTaskId', value)}
-        // },
-
         //view Breakpoint
         popUpBreakPoint() {
             if (this.$vuetify.breakpoint.name == 'xs' || this.$vuetify.breakpoint.name == 'sm') {
