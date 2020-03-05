@@ -18,7 +18,7 @@
                 <v-expand-transition v-if="!popUpBreakPoint">
                     <v-col cols="12" v-if="showAdvanceSearchOption">
                         <v-row no-gutters>
-                            <v-col cols="12">
+                            <v-col cols="9">
                                 <v-select
                                     :items="categories"
                                     outlined
@@ -38,8 +38,26 @@
                                     dense
                                     :clearable="true"
                                     v-model="advanceSearch.stock_down"
-                                    class="mb-n4 mr-3"
+                                    class="mb-n4 ml-3"
                                     color="accent"
+                                />
+                            </v-col>
+                            <v-col cols="9">
+                                <v-autocomplete
+                                    v-model="advanceSearch.tags"
+                                    class="mb-n4"
+                                    :items="tags"
+                                    label="Tag"
+                                    outlined
+                                    chips
+                                    dense
+                                    :deletable-chips="true"
+                                    color="accent"
+                                    item-color="accent"
+                                    :search-input.sync="tagSearchInputFilter"
+                                    @change="tagSearchInputFilter=''"
+                                    item-text="tagName"
+                                    item-value="id"
                                 />
                             </v-col>
                             <v-col cols="3">
@@ -49,33 +67,7 @@
                                     dense
                                     :clearable="true"
                                     v-model="advanceSearch.stock_up"
-                                    class="mb-n4 mr-3"
-                                    color="accent"
-                                />
-                            </v-col>
-                            <v-col cols="3">
-                                <v-text-field
-                                    label="Min Open Price"
-                                    outlined
-                                    dense
-                                    :clearable="true"
-                                    v-model="advanceSearch.open_price_down"
-                                    @click:clear="advanceSearch.open_price_down = null"
-                                    class="mb-n4 mr-3"
-                                    type="number"
-                                    color="accent"
-                                />
-                            </v-col>
-                            <v-col cols="3">
-                                <v-text-field
-                                    label="Max Open Price"
-                                    outlined
-                                    dense
-                                    :clearable="true"
-                                    v-model="advanceSearch.open_price_up"
-                                    @click:clear="advanceSearch.open_price_up = null"
-                                    class="mb-n4"
-                                    type="number"
+                                    class="mb-n4 ml-3"
                                     color="accent"
                                 />
                             </v-col>
@@ -151,7 +143,7 @@
                 </v-expand-transition>
                 <v-col>
                     <v-btn class="body-2" text dense color="blue white--text"  @click="showAdvanceSearch"><span class="mr-1"><v-icon v-if="!showAdvanceSearchOption">mdi-filter-menu-outline</v-icon><v-icon v-else>mdi-filter-minus-outline</v-icon></span>Filter</v-btn>
-                    <v-btn text :disabled="advanceSearch.name == '' && (advanceSearch.open_price_down == '' || advanceSearch.open_price_down == null) && (advanceSearch.open_price_up == '' || advanceSearch.open_price_up == null) && (advanceSearch.stock_down == '' || advanceSearch.stock_down == null) && (advanceSearch.stock_up == '' || advanceSearch.stock_up == null) && advanceSearch.category == ''" v-if="showAdvanceSearchOption" dense @click="clearAllAdvanceSearch" class="caption showAdvanceSearchOptionText"><v-icon>mdi-filter-variant-remove</v-icon> Clear Filter</v-btn>
+                    <v-btn text :disabled="advanceSearch.name == '' && advanceSearch.tags == '' && (advanceSearch.stock_down == '' || advanceSearch.stock_down == null) && (advanceSearch.stock_up == '' || advanceSearch.stock_up == null) && advanceSearch.category == ''" v-if="showAdvanceSearchOption" dense @click="clearAllAdvanceSearch" class="caption showAdvanceSearchOptionText"><v-icon>mdi-filter-variant-remove</v-icon> Clear Filter</v-btn>
                 </v-col>
             </v-row>
             <!-- *************************************************************************************************************** -->
@@ -205,6 +197,7 @@
                                                     :items="categories"
                                                     label="Kategori"
                                                     chips
+                                                    dense
                                                     :clearable="true"
                                                     :auto-select-first="true"
                                                     color="accent"
@@ -213,7 +206,7 @@
                                                     @change="categorySearchInput=''"
                                                     item-text="name"
                                                     item-value="id"
-                                                    :readonly="product.categoryId"
+                                                    :readonly="product.categoryId!=null"
                                                 >
                                                     <template v-slot:selection="data">
                                                         <v-chip color="white" class="pa-0">
@@ -250,6 +243,7 @@
                                                     :items="categories"
                                                     label="Kategori"
                                                     chips
+                                                    dense
                                                     :clearable="true"
                                                     :auto-select-first="true"
                                                     color="accent"
@@ -258,7 +252,7 @@
                                                     @change="categorySearchInput=''"
                                                     item-text="name"
                                                     item-value="id"
-                                                    :readonly="product.categoryId"
+                                                    :readonly="product.categoryId!=null"
                                                 >
                                                     <template v-slot:selection="data">
                                                         <v-chip color="white" class="pa-0">
@@ -314,6 +308,7 @@
                                                     :items="units"
                                                     label="Satuan"
                                                     chips
+                                                    dense
                                                     :clearable="true"
                                                     :auto-select-first="true"
                                                     color="accent"
@@ -322,7 +317,7 @@
                                                     @change="unitSearchInput=''"
                                                     item-text="name"
                                                     item-value="id"
-                                                    :readonly="product.unitId"
+                                                    :readonly="product.unitId!=null"
                                                 >
                                                     <template v-slot:selection="data">
                                                         <v-chip color="white" class="pa-0">
@@ -359,6 +354,7 @@
                                                     :items="units"
                                                     label="Satuan"
                                                     chips
+                                                    dense
                                                     :clearable="true"
                                                     :auto-select-first="true"
                                                     color="accent"
@@ -367,7 +363,7 @@
                                                     @change="unitSearchInput=''"
                                                     item-text="name"
                                                     item-value="id"
-                                                    :readonly="product.unitId"
+                                                    :readonly="product.unitId!=null"
                                                 >
                                                     <template v-slot:selection="data">
                                                         <v-chip color="white" class="pa-0">
@@ -445,6 +441,7 @@
                                                     label="Tag"
                                                     multiple
                                                     chips
+                                                    dense
                                                     :deletable-chips= "true"
                                                     hint="Bisa memilih lebih dari 1 Tag"
                                                     persistent-hint
@@ -523,7 +520,7 @@
                     </v-toolbar>
                     <v-card-title>{{productQuickEdit.name}}</v-card-title>
                     <v-form ref="form">
-                            <v-card-text><v-text-field color="blue" outlined v-model="productQuickEdit.open_price" placeholder="Harga Barang"></v-text-field></v-card-text>
+                            <v-card-text><v-text-field color="blue" outlined v-model="productQuickEdit.openPrice" placeholder="Harga Barang"></v-text-field></v-card-text>
                     </v-form>
                     <v-card-actions>
                         <v-container>
@@ -572,18 +569,18 @@
                     <v-icon class="mr-2" @click.stop="editProduct(item)">mdi-pencil</v-icon>
                     <v-icon @click.stop="deleteProduct(item)">mdi-delete</v-icon>
                 </template>
-                <template v-slot:item.open_price="{ item }">
+                <template v-slot:item.openPrice="{ item }">
                     <template v-if="editToggle">
                         <v-btn
                         text 
                         @click.stop="quickEdit(item)" 
                         class="blue--text pa-0 font-weight-light"
                         >
-                            {{ item.open_price }}
+                            {{ item.openPrice }}
                         </v-btn>
                     </template>
                     <template v-else>
-                        <v-layout justify-center >{{item.open_price}}</v-layout>
+                        <v-layout justify-center >{{item.openPrice}}</v-layout>
                     </template>
                 </template>
             </v-data-table>
@@ -911,6 +908,7 @@
                                                 label="Tag"
                                                 multiple
                                                 chips
+                                                dense
                                                 deletable-chips= "true"
                                                 hint="Bisa memilih lebih dari 1 Tag"
                                                 persistent-hint
@@ -1032,9 +1030,8 @@ export default {
                 name:'',
                 stock_down:null,
                 stock_up:null,
-                open_price_down:null,
-                open_price_up:null,
-                category:''
+                category:'',
+                tags:''
             },
             products: [],
             product: {
@@ -1070,12 +1067,12 @@ export default {
             productQuickEdit: {
                 id:null,
                 name:'',
-                open_price:null
+                openPrice:null
             },
             productQuickEditDefault: {
                 id:null,
                 name:'',
-                open_price:null
+                openPrice:null
             },
             categories: [],
             units: [],
@@ -1096,6 +1093,7 @@ export default {
             categorySearchInput:'',
             unitSearchInput:'',
             tagSearchInput:'',
+            tagSearchInputFilter:'',
             formNewTagModel: '',
             editToggle:false,
             popUpQuickEdit: false,
@@ -1146,8 +1144,7 @@ export default {
             this.advanceSearch.stock_down = null
             this.advanceSearch.stock_up = null
             this.advanceSearch.category = ''
-            this.advanceSearch.open_price_down = null
-            this.advanceSearch.open_price_up = null
+            this.advanceSearch.tags = ''
 
         },
         advanceSearchName(val) {
@@ -1156,21 +1153,11 @@ export default {
             }
             return val.toLowerCase().includes(this.advanceSearch.name.toLowerCase())
         },
-        advanceSearchOpenPrice(val) {
-            if(!this.advanceSearch.open_price_down && !this.advanceSearch.open_price_up) {
+        advanceSearchTags(val) {
+            if(!this.advanceSearch.tags) {
                 return true
             }
-            if(this.advanceSearch.open_price_down && !this.advanceSearch.open_price_up) {
-                return val >= +this.advanceSearch.open_price_down
-            } else {
-                if(!this.advanceSearch.open_price_down && this.advanceSearch.open_price_up) {
-                    return val <= +this.advanceSearch.open_price_up
-                } else {
-                    if(this.advanceSearch.open_price_down && this.advanceSearch.open_price_up) {
-                        return (val >= +this.advanceSearch.open_price_down && val <= +this.advanceSearch.open_price_up)
-                    }
-                }
-            }
+            return val.includes(+this.advanceSearch.tags)
         },
         advanceSearchStock(val) {
             if(!this.advanceSearch.stock_down && !this.advanceSearch.stock_up) {
@@ -1269,7 +1256,7 @@ export default {
         },
         quickEdit(item) {
             this.selectedIndex = this.products.indexOf(item)
-            this.productQuickEdit.open_price = item.open_price
+            this.productQuickEdit.openPrice = item.openPrice
             this.productQuickEdit.name = item.name
             this.productQuickEdit.id = item.id
             this.popUpQuickEdit = true
@@ -1289,10 +1276,23 @@ export default {
         },
         //this need promise to ensure that the data in the db and vue in synced !!! IMPORTANT !!!
         saveEditedPrice() {
-            let obj = this.products.find( ({id}) => id === this.productQuickEdit.id )
-            this.products[this.products.indexOf(obj)].open_price = this.productQuickEdit.open_price
-            this.popUpConfirmSaveQuickEdit = false
-            this.productQuickEdit = Object.assign({},this.productQuickEditDefault)
+            
+            api.updateProductOpenPrice(this.productQuickEdit)
+                .then((response) => {
+                    this.snackbarColor = 'success'
+                    this.snackbarMessage = response
+                }) .catch(error => {
+                    this.snackbarColor = 'error'
+                    this.snackbarMessage = error
+                }) .finally(() => {
+                    this.snackbar = true
+                    api.getAllProducts()
+                        .then((products) => {
+                            this.productQuickEdit = Object.assign({},this.productQuickEditDefault)
+                            this.products = products
+                            this.popUpConfirmSaveQuickEdit = false
+                        })
+                })
         },
         editProduct(item) {
             this.selectedIndex = this.products.indexOf(item)
@@ -1364,7 +1364,7 @@ export default {
         },
         saveNewProduct() {
             if(this.$refs.form.validate()) {
-                api.addCategory(this.product)
+                api.addProduct(this.product)
                     .then((response) => {
                         this.snackbarColor = 'success'
                         this.snackbarMessage = response
@@ -1372,7 +1372,7 @@ export default {
                         this.snackbarColor = 'error'
                         this.snackbarMessage = error
                     }) .finally(() => {
-                        this.snackBar = true
+                        this.snackbar = true
                         api.getAllProducts()
                             .then((products) => {
                                 this.products = products
@@ -1391,11 +1391,11 @@ export default {
         productHeaders() {
             return [
                 {text:'Nama', value:'name', width:'70%', filter:this.advanceSearchName},
-                {text:'Open Price', value:'openPrice', align:'center', filter:this.advanceSearchOpenPrice},
+                {text:'Open Price', value:'openPrice', align:'center'},
                 {text:'Stock', value:'stock', filter:this.advanceSearchStock},
                 {value:'actions',width:'7%'},
                 {value:'categoryId', align: ' d-none', filter:this.advanceSearchCategory},
-                {value:'bottomPrice', align: ' d-none', filter:this.advanceSearchbottomPrice},
+                {value:'tags', align: ' d-none', filter:this.advanceSearchTags},
 
             ]
         },
