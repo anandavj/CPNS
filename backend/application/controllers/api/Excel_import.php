@@ -10,14 +10,19 @@ class Excel_import extends REST_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->model('excel_import_model');
-        $this->load->model('category_model');
-        $this->load->model('unit_model');
-        $this->load->library('excel');
+            $this->load->model('excel_import_model');
+            $this->load->model('category_model');
+            $this->load->model('product_model');
+            $this->load->model('unit_model');
+            $this->load->library('excel');
+            $this->load->library('upload');
+            $this->load->helper(array('form', 'url'));
     }
 
     function index()
     {
+        $data = array(1);
+        $this->load->view('import', $data);
     }
 
     function fetch()
@@ -35,11 +40,26 @@ class Excel_import extends REST_Controller
             array_push($res, $row->unit);
             array_push($res, $row->open_price);
         }
+
+        return($data);
     }
 
-    function import()
+    function index_get(){
+        $data = $this->product_model->get_all_product();
+        $this->load->view('import', $data);
+    }
+
+
+
+    function index_post ()
     {
+        // print_r($_FILES);
+        $this->response(array($this->post(), $_FILES));
+        return;
+
         if (isset($_FILES["file"]["name"])) {
+            
+            
             $path = ($_FILES["file"]["tmp_name"]);
             $object = PHPExcel_IOFactory::load($path);
             $datas = [];

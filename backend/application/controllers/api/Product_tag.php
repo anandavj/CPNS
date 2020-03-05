@@ -88,7 +88,7 @@ class Product_tag extends REST_Controller
     {
         $product_id = $this->get('productId');
 
-        if (isset($tag_id)) $this->response($this->product_tag_model->get_product_tag_where($product_id), REST_Controller::HTTP_OK);
+        if (isset($product_id)) $this->response($this->product_tag_model->get_product_tag_where($product_id), REST_Controller::HTTP_OK);
         else $this->response($this->product_tag_model->get_all_product_tag(), REST_Controller::HTTP_OK);
     }
 
