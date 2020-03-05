@@ -743,14 +743,21 @@ export default {
 
     computed: {
         karyawanHeaders() {
-            return [
-                {text:'name',value:'name'},
-                {text:'',value:'actions'}
-            ]
+            if(!this.popUpBreakPoint) {
+                return [
+                    {text:'name',value:'name'},
+                    {text:'',value:'actions',width:'10%'}
+                ]
+            } else {
+                return [
+                    {text:'name',value:'name'},
+                    {text:'',value:'actions',width:'30%'}
+                ]
+            }
         },
         //view Breakpoint
         popUpBreakPoint() {
-            if (this.$vuetify.breakpoint.name == 'xs' || this.$vuetify.breakpoint.name == 'sm') {
+            if (this.$vuetify.breakpoint.name == 'xs') {
                 return true
             } else {
                 return false
