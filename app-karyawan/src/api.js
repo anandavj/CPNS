@@ -14,6 +14,7 @@ const updateSuccessMessage = 'Berhasil diperbarui'
 const deleteSuccessMessage = 'Berhasil dihapus'
 const insertFailedMessage = 'Gagal ditambahkan'
 const serverErrorMessage = 'Terjadi kesalahan pada server'
+const existErrorMessage = 'Sudah terdaftar'
 
 const api = {
     
@@ -185,7 +186,21 @@ const api = {
                 })
         } )
     },
+    updateProductOpenPrice(product) {
+        return new Promise( (resolve, reject) => {
+            let data = {
+                id: product.id,
+                openPrice: product.openPrice
+            }
 
+            axios.put(productTable, data)
+                .then(() => {
+                    resolve(updateSuccessMessage)
+                }) .catch(error => {
+                    if(error.response.status == 500) reject(serverErrorMessage)
+                })
+        } )
+    },
     // CATEGORY
     getAllCategory() {
         return new Promise( (resolve, reject) => {
@@ -215,7 +230,7 @@ const api = {
                 .then(response => {
                     resolve(response.data)
                 }) .catch(error => {
-                    if(error.respose.status == 500) reject(serverErrorMessage)
+                    if(error.response.status == 500) reject(serverErrorMessage)
                 })
         } )
     },
@@ -247,7 +262,13 @@ const api = {
                 .then(() => {
                     resolve(insertSuccessMessage)
                 }) .catch(error => {
-                    if(error.respose.status == 500) reject(serverErrorMessage)
+                    if(error.response.status == 500) {
+                        reject(serverErrorMessage)
+                    } else {
+                        if(error.response.status == 400) {
+                            reject(existErrorMessage)
+                        }
+                    }
                 })
         } )
     }
