@@ -98,6 +98,16 @@ const api = {
             })
         })
     },
+    updateUser(karyawan){
+        return new Promise((resolve, reject) => {
+            axios.put(userTable, karyawan).then(() => {
+                resolve(updateSuccessMessage)
+            }).catch(error => {
+                if(error.response.status == 500) reject(serverErrorMessage)
+                else reject(insertFailedMessage)
+            })
+        })
+    },
 
     //USER TASK
     getUserTaskById(id){

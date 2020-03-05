@@ -32,7 +32,7 @@
                             <v-card-text>
                                 <v-row>
                                     <v-col cols="12">
-                                        <v-text-field color="accent" label="name" v-model="karyawan.name" :rules="nameRules"/>
+                                        <v-text-field color="accent" label="Nama" v-model="karyawan.name" :rules="nameRules"/>
                                     </v-col>
                                     <v-col cols="6">
                                         <v-text-field color="accent" label="Email" v-model="karyawan.email" :rules="emailRules"/>
@@ -83,7 +83,7 @@
                                     <v-col cols="6">
                                         <v-select
                                         :items="religions"
-                                        label="religion"
+                                        label="Agama"
                                         color="accent"
                                         v-model="karyawan.religion"
                                         ></v-select>
@@ -97,7 +97,7 @@
                                         ></v-select>
                                     </v-col>
                                     <v-col cols="12">
-                                        <v-text-field color="accent" label="address" v-model="karyawan.address" :rules="addressRules"/>
+                                        <v-text-field color="accent" label="Alamat" v-model="karyawan.address" :rules="addressRules"/>
                                     </v-col>
                                     <v-col cols="6">
                                         <v-text-field color="accent" label="Nomor HP" v-model="karyawan.telephone" type="number" :rules="telephoneRules"/>
@@ -107,7 +107,7 @@
                                         item-text="name"
                                         item-value="id"
                                         :items="listuserTaskGroupId"
-                                        label="userTaskGroupId"
+                                        label="Divisi"
                                         color="accent"
                                         v-model="karyawan.userTaskGroupId"
                                         v-on:change="selectuserTaskGroupId"></v-select>
@@ -167,6 +167,7 @@
                 :mobile-breakpoint="1"
                 :items-per-page="1000"
                 item-key="id"
+                :loading="loadingList"
                 no-data-text="Data Karyawan Kosong"
                 no-results-text="Data Karyawan Tidak Ditemukan"
                 class="font-regular font-weight-light"
@@ -289,7 +290,7 @@
                                     <v-text-field color="accent" label="Email" v-model="karyawan.email" :rules="emailRules"/>
                                 </v-col>
                                 <v-col cols="6">
-                                    <v-text-field color="accent" label="name" v-model="karyawan.name" :rules="nameRules"/>
+                                    <v-text-field color="accent" label="Nama" v-model="karyawan.name" :rules="nameRules"/>
                                 </v-col>
                                 <v-col cols="6">
                                     <v-text-field color="accent" label="Tempat Lahir" v-model="karyawan.placeOfBirth" :rules="placeOfBirthRules"/>
@@ -324,7 +325,7 @@
                                 <v-col cols="6">
                                     <v-select
                                     :items="religions"
-                                    label="religion"
+                                    label="Agama"
                                     color="accent"
                                     v-model="karyawan.religion"
                                     ></v-select>
@@ -338,7 +339,7 @@
                                     ></v-select>
                                 </v-col>
                                 <v-col cols="12">
-                                    <v-text-field color="accent" label="address" v-model="karyawan.address" :rules="addressRules"/>
+                                    <v-text-field color="accent" label="Alamat" v-model="karyawan.address" :rules="addressRules"/>
                                 </v-col>
                                 <v-col cols="6">
                                     <v-text-field color="accent" label="Nomor HP" v-model="karyawan.telephone" type="number" :rules="telephoneRules"/>
@@ -348,7 +349,7 @@
                                     item-text="name"
                                     item-value="id"
                                     :items="listuserTaskGroupId"
-                                    label="userTaskGroupId"
+                                    label="Divisi"
                                     color="accent"
                                     v-model="karyawan.userTaskGroupId"
                                     ></v-select>
@@ -397,7 +398,7 @@
                                     <v-text-field color="accent" label="Email" v-model="karyawan.email" :rules="emailRules"/>
                                 </v-col>
                                 <v-col cols="6">
-                                    <v-text-field color="accent" label="name" v-model="karyawan.name" :rules="nameRules"/>
+                                    <v-text-field color="accent" label="Nama" v-model="karyawan.name" :rules="nameRules"/>
                                 </v-col>
                                 <v-col cols="6">
                                     <v-text-field color="accent" label="Tempat Lahir" v-model="karyawan.placeOfBirth" :rules="placeOfBirthRules"/>
@@ -432,7 +433,7 @@
                                 <v-col cols="6">
                                     <v-select
                                     :items="religions"
-                                    label="religion"
+                                    label="Agama"
                                     color="accent"
                                     v-model="karyawan.religion"
                                     ></v-select>
@@ -446,7 +447,7 @@
                                     ></v-select>
                                 </v-col>
                                 <v-col cols="12">
-                                    <v-text-field color="accent" label="address" v-model="karyawan.address" :rules="addressRules"/>
+                                    <v-text-field color="accent" label="Alamat" v-model="karyawan.address" :rules="addressRules"/>
                                 </v-col>
                                 <v-col cols="6">
                                     <v-text-field color="accent" label="Nomor HP" v-model="karyawan.telephone" type="number" :rules="telephoneRules"/>
@@ -456,7 +457,7 @@
                                     item-text="name"
                                     item-value="id"
                                     :items="listuserTaskGroupId"
-                                    label="userTaskGroupId"
+                                    label="Divisi"
                                     color="accent"
                                     v-model="karyawan.userTaskGroupId"
                                     ></v-select>
@@ -507,6 +508,14 @@
                                 <v-btn class="mt-n5" color="red darken-1" text @click="close">Tidak</v-btn>
                                 <v-btn class="mt-n5" color="blue darken-1" text @click="save">Ya</v-btn>
                             </v-row>
+                            <div v-if="loadingConfirm">
+                                <v-progress-linear
+                                    indeterminate
+                                    height="8"
+                                    color="yellow darken-2"
+                                >
+                                </v-progress-linear>
+                            </div>
                         </v-container>
                     </v-card-actions>
                 </v-card>
@@ -591,7 +600,9 @@ export default {
             listuserTaskGroupId:[],
             tempnameKaryawan:'',
             searchKaryawan:'',
+            loadingList:true,
             loading: false,
+            loadingConfirm: false,
             snackbar: false,
             snackbarColor: null,
             snackbarMessage: null,
@@ -640,6 +651,7 @@ export default {
                         karyawan.taskId = userTasks
                     })
                 });
+                this.loadingList = false
             })
             api.getAllUserTaskGroup().then(userTaskGroups => {
                 this.listuserTaskGroupId = userTaskGroups
@@ -663,31 +675,13 @@ export default {
             this.popupDetails = true
         },
         close() {
-            if(this.popupDetails) {
-                this.popupDetails = false
-                this.karyawan = Object.assign({},this.karyawanDefault)
-                this.selectedIndex = -1
-                this.$refs.form.reset()
-            } else {
-                if(this.popUpEdit) {
-                    this.popUpEdit = false
-                    this.karyawan = Object.assign({},this.karyawanDefault)
-                    this.selectedIndex = -1
-                    this.$refs.form.reset()
-                } else {
-                    if(this.popUpConfirmSave) {
-                        this.popUpConfirmSave = false
-                        this.popUpEdit = true
-                        this.$refs.form.reset()
-                    } else {
-                        if(this.popUpNew) {
-                            this.popUpNew = false
-                            this.karyawan = Object.assign({},this.karyawanDefault)
-                            this.$refs.form.reset()
-                        }
-                    }
-                }
-            }
+            this.popupDetails = false
+            this.popUpConfirmSave = false
+            this.popUpEdit = false
+            this.popUpNew = false
+            this.popUpEdit = false
+            this.selectedIndex = -1
+            this.karyawan = Object.assign({},this.karyawanDefault)
         },
         saveNewKaryawan() {
             this.loading = true
@@ -730,8 +724,20 @@ export default {
             // for(let i=0; i<loop.length; i++) {
             //     this.karyawans[this.karyawans.indexOf(obj)][loop[i]] = this.karyawan[loop[i]]
             // }
-            // this.popUpConfirmSave = false
             // this.karyawan = Object.assign({},this.karyawanDefault)
+            this.loadingConfirm = true
+            api.updateUser(this.karyawan).then(response => {
+                this.snackbarColor = 'success'
+                this.snackbarMessage = response
+            }).catch(error => {
+                this.snackbarColor = 'error'
+                this.snackbarMessage = error
+            }).finally(() => {
+                this.get()
+                this.loadingConfirm = false
+                this.popUpConfirmSave = false
+                this.snackbar = true
+            })
         }
     },
 
@@ -739,7 +745,7 @@ export default {
         karyawanHeaders() {
             return [
                 {text:'name',value:'name'},
-                {text:'',value:'actions',width:'7%'}
+                {text:'',value:'actions'}
             ]
         },
         //view Breakpoint
