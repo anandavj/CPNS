@@ -15,6 +15,7 @@
                         v-model="advanceSearch.name"
                     />
                 </v-col>
+                <!-- PC / Laptop -->
                 <v-expand-transition v-if="!popUpBreakPoint">
                     <v-col cols="12" v-if="showAdvanceSearchOption">
                         <v-row no-gutters>
@@ -74,6 +75,7 @@
                         </v-row>
                     </v-col>
                 </v-expand-transition>
+                <!-- Mobile Phone -->
                 <v-expand-transition v-else>
                     <v-col cols="12" v-if="showAdvanceSearchOption">
                         <v-row no-gutters>
@@ -89,6 +91,24 @@
                                     item-text="name"
                                     item-value="id"
                                 />  
+                            </v-col>
+                             <v-col cols="12">
+                                <v-autocomplete
+                                    v-model="advanceSearch.tags"
+                                    class="mb-n4"
+                                    :items="tags"
+                                    label="Tag"
+                                    outlined
+                                    chips
+                                    dense
+                                    :deletable-chips="true"
+                                    color="accent"
+                                    item-color="accent"
+                                    :search-input.sync="tagSearchInputFilter"
+                                    @change="tagSearchInputFilter=''"
+                                    item-text="tagName"
+                                    item-value="id"
+                                />
                             </v-col>
                             <v-col cols="6">
                                 <v-text-field
@@ -109,32 +129,6 @@
                                     :clearable="true"
                                     v-model="advanceSearch.stock_up"
                                     class="mb-n4"
-                                    color="accent"
-                                />
-                            </v-col>
-                            <v-col cols="6">
-                                <v-text-field
-                                    label="Min Open Price"
-                                    outlined
-                                    dense
-                                    :clearable="true"
-                                    v-model="advanceSearch.open_price_down"
-                                    @click:clear="advanceSearch.open_price_down = null"
-                                    class="mb-n4 mr-3"
-                                    type="number"
-                                    color="accent"
-                                />
-                            </v-col>
-                            <v-col cols="6">
-                                <v-text-field
-                                    label="Max Open Price"
-                                    outlined
-                                    dense
-                                    :clearable="true"
-                                    v-model="advanceSearch.open_price_up"
-                                    @click:clear="advanceSearch.open_price_up = null"
-                                    class="mb-n4"
-                                    type="number"
                                     color="accent"
                                 />
                             </v-col>
@@ -169,7 +163,7 @@
                                         <div class="title">Gambar Produk</div>
                                     </v-col>
                                     <v-col cols="12">
-                                        <v-file-input v-model="product.image" color="accent" prepend-icon="mdi-camera" chips multiple accept="image/*" label="Upload Produk"></v-file-input>
+                                        <v-file-input v-model="product.images" color="accent" prepend-icon="mdi-camera" chips multiple accept="image/*" label="Upload Produk"></v-file-input>
                                     </v-col>
                                     <!--  -->
                                     <v-col cols="12" class="my-n4">
@@ -238,7 +232,6 @@
                                         <v-row no-gutters class="align-center">
                                             <v-col cols="11">
                                                 <v-autocomplete
-                                                    class="mt-n4"
                                                     v-model="product.categoryId"
                                                     :items="categories"
                                                     label="Kategori"
@@ -349,7 +342,6 @@
                                         <v-row no-gutters class="align-center">
                                             <v-col cols="11">
                                                 <v-autocomplete
-                                                    class="mt-n4"
                                                     v-model="product.unitId"
                                                     :items="units"
                                                     label="Satuan"
@@ -511,7 +503,7 @@
             <!-- *************************************************************************************************************** -->
             <!-- Quick Edit Open Price -->
             <!-- *************************************************************************************************************** -->
-            <v-switch value v-model="editToggle" class="pa-0 mb-0 mt-5" label="Edit Price"></v-switch>
+            <v-switch v-if="!popUpBreakPoint" value v-model="editToggle" class="pa-0 mb-0 mt-5" label="Edit Price"></v-switch>
             <v-dialog v-model="popUpQuickEdit" persistent max-width='350px'>
                 <v-card>
                     <v-toolbar dense flat>
@@ -552,38 +544,78 @@
             <!-- *************************************************************************************************************** -->
             <!-- List Barang -->
             <!-- *************************************************************************************************************** -->
-            <v-data-table
-                :headers="productHeaders"
-                :items="products"
-                @click:row="details"
-                :disable-sort="true"
-                :hide-default-footer="true"
-                :mobile-breakpoint="1"
-                item-key="nama"
-                no-data-text="Data Barang Kosong"
-                no-results-text="Data Barang Tidak Ditemukan"
-                class="font-regular font-weight-light"
-                style="cursor:pointer"
-            >
-                <template v-slot:item.actions="{ item }">
-                    <v-icon class="mr-2" @click.stop="editProduct(item)">mdi-pencil</v-icon>
-                    <v-icon @click.stop="deleteProduct(item)">mdi-delete</v-icon>
-                </template>
-                <template v-slot:item.openPrice="{ item }">
-                    <template v-if="editToggle">
-                        <v-btn
-                        text 
-                        @click.stop="quickEdit(item)" 
-                        class="blue--text pa-0 font-weight-light"
-                        >
-                            {{ item.openPrice }}
-                        </v-btn>
+            <!-- PC / Laptop -->
+            <div v-if="!popUpBreakPoint">
+                <v-data-table
+                    :headers="productHeaders"
+                    :items="products"
+                    @click:row="details"
+                    :hide-default-footer="true"
+                    item-key="nama"
+                    no-data-text="Data Barang Kosong"
+                    no-results-text="Data Barang Tidak Ditemukan"
+                    class="font-regular font-weight-light"
+                    style="cursor:pointer"
+                >
+                    <template v-slot:item.actions="{ item }">
+                        <v-icon class="mr-2" @click.stop="editProduct(item)">mdi-pencil</v-icon>
+                        <v-icon @click.stop="deleteProduct(item)">mdi-delete</v-icon>
                     </template>
-                    <template v-else>
-                        <v-layout justify-center >{{item.openPrice}}</v-layout>
+                    <template v-slot:item.openPrice="{ item }">
+                        <template v-if="editToggle">
+                            <v-btn
+                            text 
+                            @click.stop="quickEdit(item)" 
+                            class="blue--text pa-0 font-weight-light"
+                            >
+                                {{ item.openPrice }}
+                            </v-btn>
+                        </template>
+                        <template v-else>
+                            <v-layout justify-center >{{item.openPrice}}</v-layout>
+                        </template>
                     </template>
-                </template>
-            </v-data-table>
+                </v-data-table>
+            </div>
+            <!-- Mobile Phone -->
+            <div v-else>
+                <v-data-table
+                    :headers="productHeaders"
+                    :items="products"
+                    @click:row="details"
+                    :hide-default-footer="true"
+                    item-key="nama"
+                    no-data-text="Data Barang Kosong"
+                    no-results-text="Data Barang Tidak Ditemukan"
+                    class="font-regular font-weight-light mt-n4"
+                    style="cursor:pointer"
+                >
+                    <template v-slot:item="{ item }">
+                        <v-card @click.stop="details(item)" class="mt-1 mb-3 mx-2 pa-2" color="grey lighten-2" outlined>
+                            <div class="d-flex flex-no-wrap justify-space-between mt-n2 align-center">
+                                <div>
+                                    <v-card-title class="body-2">{{ item.name }}</v-card-title>
+                                    <v-card-subtitle>{{item.stock}}</v-card-subtitle>
+                                </div>
+                                <div>
+                                    <v-card-subtitle>Rp{{item.openPrice}}</v-card-subtitle>
+                                </div>
+                            </div>
+                            <div class="d-flex flex-no-wrap justify-space-between mt-n2 ml-4 mr-4">
+                                <v-btn @click.stop="quickEdit(item)" dense color="white--text green darken-3" small width="48%" class="caption">
+                                    Edit Open Price
+                                </v-btn>
+                                <v-btn @click.stop="editProduct(item)" dense color="white--text yellow darken-3" small width="22%">
+                                    <v-icon>mdi-pencil</v-icon>
+                                </v-btn>
+                                <v-btn @click.stop="deleteProduct(item)" dense color="white--text red" small width="22%">
+                                    <v-icon>mdi-delete</v-icon>
+                                </v-btn>
+                            </div>
+                        </v-card>
+                    </template>
+                </v-data-table>
+            </div>
             <!-- *************************************************************************************************************** -->
             <!-- *************************************************************************************************************** -->
 
@@ -600,12 +632,12 @@
                     <v-container>
                         <v-col cols="12">
                             <v-card max-width="100%" color="grey">
-                                <v-img :src="productImageSelected"></v-img>
+                                <v-img :src="productImageSelected" v-if="productImageSelected != ''"></v-img>
                             </v-card>
                         </v-col>
                         <v-row>
-                            <v-col cols="3" v-for="(img,index) in product.image" :key="index">
-                                <v-card width="100%" @click="changePic(img)">
+                            <v-col cols="3" v-for="(img,index) in product.images" :key="index">
+                                <v-card width="100%" @click="changePic(img)" v-if="product.images.length != 0">
                                     <v-img :src="img" v-if="productImageSelected == img" gradient="to top right, rgba(0,0,0,.73), rgba(0,0,0,.73)"></v-img>
                                     <v-img :src="img" v-else></v-img>
                                 </v-card>
@@ -687,7 +719,7 @@
                                     </v-col>
                                 </v-row>
                                 <v-row>
-                                    <v-col cols="3" v-for="(img,index) in product.image" :key="index">
+                                    <v-col cols="3" v-for="(img,index) in product.images" :key="index">
                                         <v-card width="300px" @click="changePic(img)">
                                             <v-img :src="img" v-if="productImageSelected == img" gradient="to top right, rgba(0,0,0,.73), rgba(0,0,0,.73)"></v-img>
                                             <v-img :src="img" v-else></v-img>
@@ -777,28 +809,50 @@
                                     <div class="title">Gambar Produk</div>
                                 </v-col>
                                 <v-col cols="12">
-                                    <v-file-input v-model="product.image" color="accent" prepend-icon="mdi-camera" chips multiple accept="image/*" label="Upload Produk"></v-file-input>
+                                    <v-file-input v-model="product.images" color="accent" prepend-icon="mdi-camera" chips multiple accept="image/*" label="Upload Produk"></v-file-input>
                                 </v-col>
                                 <!--  -->
                                 <v-col cols="12" class="my-n4">
                                     <div class="title">Informasi Produk</div>
                                 </v-col>
-                                <v-col cols="3">
-                                    <v-text-field label="ID" v-model="product.id"/>
-                                </v-col>
-                                <v-col cols="9">
+                                <v-col cols="6" v-if="!popUpBreakPoint">
                                     <v-text-field label="Nama" v-model="product.name"/>
                                 </v-col>
-                                <v-col cols="6" class="mt-n4">
+                                <v-col cols="12" v-else class="mt-n4">
+                                    <v-text-field label="Nama" v-model="product.name"/>
+                                </v-col>
+                                <v-col cols="6" v-if="!popUpBreakPoint">
+                                    <v-text-field label="Spesifikasi" v-model="product.specification"/>
+                                </v-col>
+                                <v-col cols="12" v-else class="mt-n4">
+                                    <v-text-field label="Spesifikasi" v-model="product.specification"/>
+                                </v-col>
+                                <v-col cols="6" class="mt-n4" v-if="!popUpBreakPoint">
                                     <v-row no-gutters class="align-center">
                                         <v-col cols="11">
-                                            <v-select
+                                            <v-autocomplete
+                                                class="mb-n4"
                                                 v-model="product.categoryId"
                                                 :items="categories"
                                                 label="Kategori"
+                                                chips
+                                                dense
+                                                :clearable="true"
+                                                :auto-select-first="true"
+                                                color="accent"
+                                                item-color="blue"
+                                                :search-input.sync="categorySearchInput"
+                                                @change="categorySearchInput=''"
                                                 item-text="name"
                                                 item-value="id"
-                                            />
+                                                :readonly="product.categoryId!=null"
+                                            >
+                                                <template v-slot:selection="data">
+                                                    <v-chip color="white" class="pa-0">
+                                                        {{data.item.name}}
+                                                    </v-chip>
+                                                </template>
+                                            </v-autocomplete>
                                         </v-col>
                                         <v-col cols="1">
                                             <v-tooltip bottom color="accent">
@@ -816,37 +870,99 @@
                                                 <span>Tambah Kategori Baru</span>
                                             </v-tooltip>
                                         </v-col>
-                                        <!-- Dialog New Kategori -->
-                                        <v-dialog v-model="popUpNewCategory" persistent max-width="350px" style="z-index:10">
-                                            <v-card>
-                                                <v-form ref="form">
-                                                    <v-card-text>
-                                                        <v-text-field color="accent" outlined v-model="formNewCategoryModel" label="Nama Kategori"/>
-                                                    </v-card-text>
-                                                </v-form>
-                                                <v-card-actions>
-                                                    <v-container>
-                                                        <v-row justify="center">
-                                                            <v-btn class="my-n11" color="red darken-1" text @click="close">Batal</v-btn>
-                                                            <v-btn class="my-n11" color="blue darken-1" text @click="saveNewCategory">Save</v-btn>
-                                                        </v-row>
-                                                    </v-container>
-                                                </v-card-actions>
-                                            </v-card>
-                                        </v-dialog>
-                                        <!--  -->
                                     </v-row>
                                 </v-col>
-                                <v-col cols="6" class="mt-n4">
+                                <!-- Mobile Phone -->
+                                <v-col cols="12" class="mt-n4" v-else>
                                     <v-row no-gutters class="align-center">
                                         <v-col cols="11">
-                                            <v-select
+                                            <v-autocomplete
+                                                v-model="product.categoryId"
+                                                :items="categories"
+                                                label="Kategori"
+                                                chips
+                                                dense
+                                                :clearable="true"
+                                                :auto-select-first="true"
+                                                color="accent"
+                                                item-color="blue"
+                                                :search-input.sync="categorySearchInput"
+                                                @change="categorySearchInput=''"
+                                                item-text="name"
+                                                item-value="id"
+                                                :readonly="product.categoryId!=null"
+                                            >
+                                                <template v-slot:selection="data">
+                                                    <v-chip color="white" class="pa-0">
+                                                        {{data.item.name}}
+                                                    </v-chip>
+                                                </template>
+                                            </v-autocomplete>
+                                        </v-col>
+                                        <v-col cols="1">
+                                            <v-tooltip bottom color="accent">
+                                                <template v-slot:activator="{ on }">
+                                                    <v-btn
+                                                        text
+                                                        icon
+                                                        color="accent"
+                                                        v-on="on"
+                                                        @click="popUpNewCategory = !popUpNewCategory"
+                                                    >
+                                                        <v-icon>mdi-plus</v-icon>
+                                                    </v-btn>
+                                                </template>
+                                                <span>Tambah Kategori Baru</span>
+                                            </v-tooltip>
+                                        </v-col>
+                                    </v-row>
+                                </v-col>
+                                <!-- Dialog New Kategori -->
+                                <v-dialog v-model="popUpNewCategory" persistent max-width="350px" style="z-index:10">
+                                    <v-card>
+                                        <v-form ref="form">
+                                            <v-card-text>
+                                                <v-text-field color="accent" outlined v-model="formNewCategoryModel" label="Nama Kategori"/>
+                                            </v-card-text>
+                                        </v-form>
+                                        <v-card-actions>
+                                            <v-container>
+                                                <v-row justify="center">
+                                                    <v-btn class="my-n11" color="red darken-1" text @click="close">Batal</v-btn>
+                                                    <v-btn class="my-n11" color="blue darken-1" text @click="saveNewCategory">Save</v-btn>
+                                                </v-row>
+                                            </v-container>
+                                        </v-card-actions>
+                                    </v-card>
+                                </v-dialog>
+                                <!--  -->
+                                <!-- PC / Laptop -->
+                                <v-col cols="6" class="mt-n4" v-if="!popUpBreakPoint">
+                                    <v-row no-gutters class="align-center">
+                                        <v-col cols="11">
+                                            <v-autocomplete
+                                                class="mb-n4"
                                                 v-model="product.unitId"
                                                 :items="units"
                                                 label="Satuan"
+                                                chips
+                                                dense
+                                                :clearable="true"
+                                                :auto-select-first="true"
+                                                color="accent"
+                                                item-color="blue"
+                                                :search-input.sync="unitSearchInput"
+                                                @change="unitSearchInput=''"
                                                 item-text="name"
                                                 item-value="id"
-                                            />
+                                                :readonly="product.unitId!=null"
+                                            >
+                                                <template v-slot:selection="data">
+                                                    <v-chip color="white" class="pa-0">
+                                                        {{data.item.name}}
+                                                    </v-chip>
+                                                </template>
+                                            </v-autocomplete>
                                         </v-col>
                                         <v-col cols="1">
                                             <v-tooltip bottom color="accent">
@@ -864,40 +980,94 @@
                                                 <span>Tambah Satuan Baru</span>
                                             </v-tooltip>
                                         </v-col>
-                                        <!-- Dialog New Kategori -->
-                                        <v-dialog v-model="popUpNewUnit" persistent max-width="350px" style="z-index:10">
-                                            <v-card>
-                                                <v-form ref="form">
-                                                    <v-card-text>
-                                                        <v-text-field color="accent" v-model="formNewUnitModel.name" label="Nama Unit"/>
-                                                        <v-text-field color="accent" v-model="formNewUnitModel.abbreviation" label="Singkatan"/>
-                                                        <v-text-field color="accent" v-model="formNewUnitModel.description" label="Jenis Satuan"/>
-                                                    </v-card-text>
-                                                </v-form>
-                                                <v-card-actions>
-                                                    <v-container>
-                                                        <v-row justify="center">
-                                                            <v-btn class="my-n9" color="red darken-1" text @click="close">Batal</v-btn>
-                                                            <v-btn class="my-n9" color="blue darken-1" text @click="saveNewUnit">Save</v-btn>
-                                                        </v-row>
-                                                    </v-container>
-                                                </v-card-actions>
-                                            </v-card>
-                                        </v-dialog>
-                                        <!--  -->
                                     </v-row>
                                 </v-col>
-                                <v-col cols="4">
+                                <!-- Mobile Phone -->
+                                <v-col cols="12" class="mt-n4" v-else>
+                                    <v-row no-gutters class="align-center">
+                                        <v-col cols="11">
+                                            <v-autocomplete
+                                                v-model="product.unitId"
+                                                :items="units"
+                                                label="Satuan"
+                                                chips
+                                                dense
+                                                :clearable="true"
+                                                :auto-select-first="true"
+                                                color="accent"
+                                                item-color="blue"
+                                                :search-input.sync="unitSearchInput"
+                                                @change="unitSearchInput=''"
+                                                item-text="name"
+                                                item-value="id"
+                                                :readonly="product.unitId!=null"
+                                            >
+                                                <template v-slot:selection="data">
+                                                    <v-chip color="white" class="pa-0">
+                                                        {{data.item.name}}
+                                                    </v-chip>
+                                                </template>
+                                            </v-autocomplete>
+                                        </v-col>
+                                        <v-col cols="1">
+                                            <v-tooltip bottom color="accent">
+                                                <template v-slot:activator="{ on }">
+                                                    <v-btn
+                                                        text
+                                                        icon
+                                                        color="accent"
+                                                        v-on="on"
+                                                        @click="popUpNewUnit = !popUpNewUnit"
+                                                    >
+                                                        <v-icon>mdi-plus</v-icon>
+                                                    </v-btn>
+                                                </template>
+                                                <span>Tambah Satuan Baru</span>
+                                            </v-tooltip>
+                                        </v-col>
+                                    </v-row>
+                                </v-col>
+                                <!-- Dialog New Unit -->
+                                <v-dialog v-model="popUpNewUnit" persistent max-width="350px" style="z-index:10">
+                                    <v-card>
+                                        <v-form ref="form">
+                                            <v-card-text>
+                                                <v-text-field color="accent" v-model="formNewUnitModel.name" label="Nama Unit"/>
+                                                <v-text-field color="accent" v-model="formNewUnitModel.abbreviation" label="Singkatan"/>
+                                                <v-text-field color="accent" v-model="formNewUnitModel.description" label="Jenis Satuan"/>
+                                            </v-card-text>
+                                        </v-form>
+                                        <v-card-actions>
+                                            <v-container>
+                                                <v-row justify="center">
+                                                    <v-btn class="my-n9" color="red darken-1" text @click="close">Batal</v-btn>
+                                                    <v-btn class="my-n9" color="blue darken-1" text @click="saveNewUnit">Save</v-btn>
+                                                </v-row>
+                                            </v-container>
+                                        </v-card-actions>
+                                    </v-card>
+                                </v-dialog>
+                                <!--  -->
+                                <v-col cols="6" v-if="popUpBreakPoint" class="my-n4">
                                     <v-text-field label="Open Price" v-model="product.openPrice"/>
                                 </v-col>
-                                <v-col cols="4">
+                                <v-col cols="4" v-else>
+                                    <v-text-field label="Open Price" v-model="product.openPrice"/>
+                                </v-col>
+                                <v-col cols="6" v-if="popUpBreakPoint" class="my-n4">
                                     <v-text-field label="Bottom Price" v-model="product.bottomPrice"/>
                                 </v-col>
-                                <v-col cols="4">
+                                <v-col cols="4" v-else>
+                                    <v-text-field label="Bottom Price" v-model="product.bottomPrice"/>
+                                </v-col>
+                                <v-col cols="12" v-if="popUpBreakPoint" class="my-n4">
+                                    <v-text-field label="Stock" v-model="product.stock"/>
+                                </v-col>
+                                <v-col cols="4" v-else>
                                     <v-text-field label="Stock" v-model="product.stock"/>
                                 </v-col>
                                 <v-col cols="12">
-                                    <v-textarea label="Deskripsi" v-model="product.description" outlined/>
+                                    <v-textarea label="Deskripsi (Opsional)" v-model="product.description" outlined/>
                                 </v-col>
                                 <v-col cols="12" class="mt-n7">
                                     <v-row no-gutters class="align-center">
@@ -909,7 +1079,7 @@
                                                 multiple
                                                 chips
                                                 dense
-                                                deletable-chips= "true"
+                                                :deletable-chips= "true"
                                                 hint="Bisa memilih lebih dari 1 Tag"
                                                 persistent-hint
                                                 color="accent"
@@ -986,6 +1156,25 @@
                             <v-row justify="center">
                                 <v-btn class="mt-n5" color="red darken-1" text @click="close">Tidak</v-btn>
                                 <v-btn class="mt-n5" color="blue darken-1" text @click="save">Ya</v-btn>
+                            </v-row>
+                        </v-container>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+            <!-- *************************************************************************************************************** -->
+            <!-- *************************************************************************************************************** -->
+            <!-- *************************************************************************************************************** -->
+            <!-- Confirm on Edit -->
+            <!-- *************************************************************************************************************** -->
+            <v-dialog persistent v-model="popUpConfirmDelete" width="500px">
+                <v-card>
+                    <v-card-title>Konfirmasi</v-card-title>
+                    <v-card-text>Apakah Anda Yakin ingin Menghapus barang <b>{{product.name}}</b></v-card-text>
+                    <v-card-actions>
+                        <v-container>
+                            <v-row justify="center">
+                                <v-btn class="mt-n5" color="red darken-1" text @click="close">Tidak</v-btn>
+                                <v-btn class="mt-n5" color="blue darken-1" text @click="confirmDeleteProduct">Ya</v-btn>
                             </v-row>
                         </v-container>
                     </v-card-actions>
@@ -1102,6 +1291,7 @@ export default {
             popUpEdit: false,
             popUpConfirmSaveQuickEdit: false,
             popUpConfirmSaveEdit: false,
+            popUpConfirmDelete: false,
             popUpNewCategory: false,
             popUpNewUnit: false,
             popUpNewTag: false,
@@ -1187,7 +1377,7 @@ export default {
             this.categoryName = _.find(this.categories,['id', this.product.categoryId]).name
             this.unitName = _.find(this.units,['id', this.product.unitId]).name
             this.popupDetails = true
-            this.productImageSelected = this.product.image[0]
+            this.productImageSelected = this.product.images[0]
         },
         close() {
             if(this.popupDetails) {
@@ -1274,9 +1464,7 @@ export default {
                 }
             }
         },
-        //this need promise to ensure that the data in the db and vue in synced !!! IMPORTANT !!!
         saveEditedPrice() {
-            
             api.updateProductOpenPrice(this.productQuickEdit)
                 .then((response) => {
                     this.snackbarColor = 'success'
@@ -1299,14 +1487,46 @@ export default {
             this.product = Object.assign({},item)
             this.popUpEdit = true
         },
+        deleteProduct(item) {
+            this.selectedIndex = this.products.indexOf(item)
+            this.product = Object.assign({},item)
+            this.popUpConfirmDelete = true
+        },
+        confirmDeleteProduct() {
+            api.deleteProduct(this.product)
+                .then((response) => {
+                    this.snackbarColor = 'success'
+                    this.snackbarMessage = response
+                }) .catch(error => {
+                    this.snackbarColor = 'error'
+                    this.snackbarMessage = error
+                }) .finally(() => {
+                    this.snackbar = true
+                    api.getAllProducts()
+                        .then((products) => {
+                            this.product = Object.assign({},this.productDefault)
+                            this.products = products
+                            this.popUpConfirmDelete = false
+                        })
+                })
+        },
         save() {
-            let obj = this.products.find( ({id}) => id === this.product.id )
-            var loop = Object.getOwnPropertyNames(this.productDefault)
-            for(let i=0; i<loop.length; i++) {
-                this.products[this.products.indexOf(obj)][loop[i]] = this.product[loop[i]]
-            }
-            this.popUpConfirmSaveEdit = false
-            this.product = Object.assign({},this.productDefault)
+            api.updateProduct(this.product)
+                .then((response) => {
+                    this.snackbarColor = 'success'
+                    this.snackbarMessage = response
+                }) .catch(error => {
+                    this.snackbarColor = 'error'
+                    this.snackbarMessage = error
+                }) .finally(() => {
+                    this.snackbar = true
+                    api.getAllProducts()
+                        .then((products) => {
+                            this.product = Object.assign({},this.productDefault)
+                            this.products = products
+                            this.popUpConfirmSaveEdit = false
+                        })
+                })
         },
         saveNewCategory() {
             api.addCategory(this.formNewCategoryModel)

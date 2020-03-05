@@ -201,6 +201,27 @@ const api = {
                 })
         } )
     },
+    updateProduct(product) {
+        return new Promise( (resolve, reject) => {
+            axios.put(productTable, product)
+                .then(() => {
+                    resolve(updateSuccessMessage)
+                }) .catch(error => {
+                    if(error.response.status == 500) reject(serverErrorMessage)
+                })
+        } )
+    },
+    deleteProduct(product) {
+        return new Promise( (resolve, reject) => {
+            axios.delete(productTable, {params: {id: product.id}})
+                .then(() => {
+                    resolve(deleteSuccessMessage);
+                })
+                .catch(error => {
+                    if(error.response.status == 500) reject(serverErrorMessage)
+                })
+        } )
+    },
     // CATEGORY
     getAllCategory() {
         return new Promise( (resolve, reject) => {
