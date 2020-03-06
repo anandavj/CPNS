@@ -29,10 +29,13 @@ class User_task_model extends CI_Model
 
     public function get_user_task_where($id)
     {
-        $this->db->select('id, user_id as '.Schema::USER_ID.', task_id as '.Schema::TASK_ID);
+        $this->db->select('task_id as '.Schema::TASK_ID);
         $this->db->from($this::TABLE_NAME);
         $this->db->where("user_id='{$id}'");
-        return $this->db->get()->result_array();
+        $res = $this->db->get()->result_array();
+        $result = [];
+        foreach($res as $row) array_push($result, $row['taskId']);
+        return $result;
     }
 
     public function is_not_exists($user_id)
