@@ -633,7 +633,6 @@ export default {
                     namaPenerima:'Yoga',
                     alamat:'Yogya',
                     barangs:[
-                        {id:1, nama:'Paku', jumlah:100}
                     ],
                     status:'Dikirim',
                     keterangan:''

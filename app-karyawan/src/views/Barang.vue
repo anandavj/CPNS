@@ -170,16 +170,16 @@
                                         <div class="title">Informasi Produk</div>
                                     </v-col>
                                     <v-col cols="6" v-if="!popUpBreakPoint">
-                                        <v-text-field label="Nama" v-model="product.name"/>
+                                        <v-text-field label="Nama" color="accent" v-model="product.name"/>
                                     </v-col>
                                     <v-col cols="12" v-else class="mt-n4">
-                                        <v-text-field label="Nama" v-model="product.name"/>
+                                        <v-text-field label="Nama" color="accent" v-model="product.name"/>
                                     </v-col>
                                     <v-col cols="6" v-if="!popUpBreakPoint">
-                                        <v-text-field label="Spesifikasi" v-model="product.specification"/>
+                                        <v-text-field label="Spesifikasi" color="accent" v-model="product.specification"/>
                                     </v-col>
                                     <v-col cols="12" v-else class="mt-n4">
-                                        <v-text-field label="Spesifikasi" v-model="product.specification"/>
+                                        <v-text-field label="Spesifikasi" color="accent" v-model="product.specification"/>
                                     </v-col>
                                     <!-- PC / LAPTOP -->
                                     <v-col cols="6" class="mt-n4" v-if="!popUpBreakPoint">
@@ -404,22 +404,22 @@
                                     </v-dialog>
                                     <!--  -->
                                     <v-col cols="6" v-if="popUpBreakPoint" class="my-n4">
-                                        <v-text-field label="Open Price" v-model="product.openPrice"/>
+                                        <v-text-field label="Open Price" color="accent" v-model="product.openPrice"/>
                                     </v-col>
                                     <v-col cols="4" v-else>
-                                        <v-text-field label="Open Price" v-model="product.openPrice"/>
+                                        <v-text-field label="Open Price" color="accent" v-model="product.openPrice"/>
                                     </v-col>
                                     <v-col cols="6" v-if="popUpBreakPoint" class="my-n4">
-                                        <v-text-field label="Bottom Price" v-model="product.bottomPrice"/>
+                                        <v-text-field label="Bottom Price" color="accent" v-model="product.bottomPrice"/>
                                     </v-col>
                                     <v-col cols="4" v-else>
-                                        <v-text-field label="Bottom Price" v-model="product.bottomPrice"/>
+                                        <v-text-field label="Bottom Price" color="accent" v-model="product.bottomPrice"/>
                                     </v-col>
                                     <v-col cols="12" v-if="popUpBreakPoint" class="my-n4">
-                                        <v-text-field label="Stock" v-model="product.stock"/>
+                                        <v-text-field label="Stock" color="accent" v-model="product.stock"/>
                                     </v-col>
                                     <v-col cols="4" v-else>
-                                        <v-text-field label="Stock" v-model="product.stock"/>
+                                        <v-text-field label="Stock" color="accent" v-model="product.stock"/>
                                     </v-col>
                                     <v-col cols="12">
                                         <v-textarea label="Deskripsi (Opsional)" v-model="product.description" outlined/>
@@ -816,16 +816,16 @@
                                     <div class="title">Informasi Produk</div>
                                 </v-col>
                                 <v-col cols="6" v-if="!popUpBreakPoint">
-                                    <v-text-field label="Nama" v-model="product.name"/>
+                                    <v-text-field label="Nama" color="accent" v-model="product.name"/>
                                 </v-col>
                                 <v-col cols="12" v-else class="mt-n4">
-                                    <v-text-field label="Nama" v-model="product.name"/>
+                                    <v-text-field label="Nama" color="accent" v-model="product.name"/>
                                 </v-col>
                                 <v-col cols="6" v-if="!popUpBreakPoint">
-                                    <v-text-field label="Spesifikasi" v-model="product.specification"/>
+                                    <v-text-field label="Spesifikasi" color="accent" v-model="product.specification"/>
                                 </v-col>
                                 <v-col cols="12" v-else class="mt-n4">
-                                    <v-text-field label="Spesifikasi" v-model="product.specification"/>
+                                    <v-text-field label="Spesifikasi" color="accent" v-model="product.specification"/>
                                 </v-col>
                                 <v-col cols="6" class="mt-n4" v-if="!popUpBreakPoint">
                                     <v-row no-gutters class="align-center">
@@ -1049,22 +1049,22 @@
                                 </v-dialog>
                                 <!--  -->
                                 <v-col cols="6" v-if="popUpBreakPoint" class="my-n4">
-                                    <v-text-field label="Open Price" v-model="product.openPrice"/>
+                                    <v-text-field label="Open Price" color="accent" v-model="product.openPrice"/>
                                 </v-col>
                                 <v-col cols="4" v-else>
-                                    <v-text-field label="Open Price" v-model="product.openPrice"/>
+                                    <v-text-field label="Open Price" color="accent" v-model="product.openPrice"/>
                                 </v-col>
                                 <v-col cols="6" v-if="popUpBreakPoint" class="my-n4">
-                                    <v-text-field label="Bottom Price" v-model="product.bottomPrice"/>
+                                    <v-text-field label="Bottom Price" color="accent" v-model="product.bottomPrice"/>
                                 </v-col>
                                 <v-col cols="4" v-else>
-                                    <v-text-field label="Bottom Price" v-model="product.bottomPrice"/>
+                                    <v-text-field label="Bottom Price" color="accent" v-model="product.bottomPrice"/>
                                 </v-col>
                                 <v-col cols="12" v-if="popUpBreakPoint" class="my-n4">
-                                    <v-text-field label="Stock" v-model="product.stock"/>
+                                    <v-text-field label="Stock" color="accent" v-model="product.stock"/>
                                 </v-col>
                                 <v-col cols="4" v-else>
-                                    <v-text-field label="Stock" v-model="product.stock"/>
+                                    <v-text-field label="Stock" color="accent" v-model="product.stock"/>
                                 </v-col>
                                 <v-col cols="12">
                                     <v-textarea label="Deskripsi (Opsional)" v-model="product.description" outlined/>
@@ -1305,6 +1305,16 @@ export default {
             api.getAllProducts()
                 .then(products => {
                     this.products = products
+                    // products.forEach(product => {
+                    //     api.getTagByProductId(product.id)
+                    //         .then(tags => {
+                    //             let productTags = []
+                    //             tags.forEach(tag => {
+                    //                 productTags.push(tag.tagId)
+                    //             })
+                    //             product.tags = productTags
+                    //         })
+                    // })
                 })
             api.getAllCategory()
                 .then(categories => {
@@ -1347,7 +1357,7 @@ export default {
             if(!this.advanceSearch.tags) {
                 return true
             }
-            return val.includes(+this.advanceSearch.tags)
+            return val.includes(this.advanceSearch.tags)
         },
         advanceSearchStock(val) {
             if(!this.advanceSearch.stock_down && !this.advanceSearch.stock_up) {

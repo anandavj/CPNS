@@ -51,10 +51,16 @@
                                     <v-col cols="6" class="my-n5">
                                         <v-text-field v-model="nomorStockOpname.nomor" dense color="accent" outlined label="Nomor Stock Opname"/>
                                     </v-col>
-                                    <v-col cols="4" class="my-n5">
+                                    <v-col cols="4" class="my-n5" v-if="!popUpBreakPoint">
                                         <v-text-field v-model="nomorStockOpname.hasilPeriksa" dense color="accent" outlined label="Hasil Periksa"/>
                                     </v-col>
-                                    <v-col cols="2" class="my-n5">
+                                    <v-col cols="6" class="my-n5" v-else>
+                                        <v-text-field v-model="nomorStockOpname.hasilPeriksa" dense color="accent" outlined label="Hasil Periksa"/>
+                                    </v-col>
+                                    <v-col cols="2" class="my-n5" v-if="!popUpBreakPoint">
+                                        <v-btn width="100%" outlined color="blue" @click="addNewPemeriksa = !addNewPemeriksa"><v-icon class="mr-3">mdi-account-group</v-icon>Daftarkan Pemeriksa</v-btn>
+                                    </v-col>
+                                    <v-col cols="12" class="mt-n5" v-else>
                                         <v-btn width="100%" outlined color="blue" @click="addNewPemeriksa = !addNewPemeriksa"><v-icon class="mr-3">mdi-account-group</v-icon>Daftarkan Pemeriksa</v-btn>
                                     </v-col>
                                     <v-container class="my-n3">
@@ -174,11 +180,17 @@
                             <v-col cols="6" class="my-n5">
                                 <v-text-field v-model="nomorStockOpname.nomor" dense color="accent" filled disabled outlined label="Nomor Stock Opname"/>
                             </v-col>
-                            <v-col cols="4" class="my-n5">
-                                <v-text-field v-model="nomorStockOpname.hasilPeriksa" dense color="accent" filled disabled outlined label="Hasil Periksa"/>
+                            <v-col cols="4" class="my-n5" v-if="!popUpBreakPoint">
+                                <v-text-field v-model="nomorStockOpname.hasilPeriksa" dense color="accent" outlined label="Hasil Periksa"/>
                             </v-col>
-                            <v-col cols="2" class="my-n5">
-                                <v-btn width="100%" outlined color="blue"><v-icon class="mr-3">mdi-account-group</v-icon>Daftar Pemeriksa</v-btn>
+                            <v-col cols="6" class="my-n5" v-else>
+                                <v-text-field v-model="nomorStockOpname.hasilPeriksa" dense color="accent" outlined label="Hasil Periksa"/>
+                            </v-col>
+                            <v-col cols="2" class="my-n5" v-if="!popUpBreakPoint">
+                                <v-btn width="100%" outlined color="blue" @click="addNewPemeriksa = !addNewPemeriksa"><v-icon class="mr-3">mdi-account-group</v-icon>Daftarkan Pemeriksa</v-btn>
+                            </v-col>
+                            <v-col cols="12" class="mt-n5" v-else>
+                                <v-btn width="100%" outlined color="blue" @click="addNewPemeriksa = !addNewPemeriksa"><v-icon class="mr-3">mdi-account-group</v-icon>Daftarkan Pemeriksa</v-btn>
                             </v-col>
                             <v-col cols="12" class="my-n5">
                                 <v-textarea v-model="nomorStockOpname.keterangan" dense color="accent" filled disabled outlined auto-grow="true" label="Keterangan"/>

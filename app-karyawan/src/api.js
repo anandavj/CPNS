@@ -9,6 +9,7 @@ const productTable = 'product'
 const categoryTable = 'category'
 const unitTable = 'unit'
 const tagTable = 'tag'
+const productTagTable = 'product_tag'
 const insertSuccessMessage = 'Berhasil ditambahkan'
 const updateSuccessMessage = 'Berhasil diperbarui'
 const deleteSuccessMessage = 'Berhasil dihapus'
@@ -302,6 +303,16 @@ const api = {
                     }
                 })
         } )
+    },
+    getTagByProductId(id) {
+        return new Promise( (resolve, reject) => {
+            axios.get(productTagTable, {params: {id: id}})
+                .then(response => {
+                    resolve(response.data)
+                }) .catch(error => {
+                    reject(error)
+                })
+        })
     }
 
     /* ================================================================================================================================================= */
