@@ -30,10 +30,17 @@ class Product_image_model extends CI_Model
 
     public function get_product_image_where($product_id)
     {   
-        $this->db->select("id, product_id as productId, image_id as imageId");
+        $this->db->select("image_id as imageId");
         $this->db->from($this::TABLE_NAME);
         $this->db->where("product_id = '{$product_id}'");
-        return $this->db->get()->result_array();
+        $res = [];
+        foreach($this->db->get()->result_array() as $image){
+            array_push($res,$image['imageId']);
+        }
+        return $res;
+
+
+      
     }
 
     public function is_not_exists($id)

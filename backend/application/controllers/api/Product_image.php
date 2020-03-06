@@ -88,7 +88,7 @@ class Product_image extends REST_Controller
     {
         $product_id = $this->get('productId');
 
-        if (isset($image_id)) $this->response($this->product_image_model->get_product_image_where($product_id), REST_Controller::HTTP_OK);
+        if (isset($product_id)) $this->response($this->product_image_model->get_product_image_where($product_id), REST_Controller::HTTP_OK);
         else $this->response($this->product_image_model->get_all_product_image(), REST_Controller::HTTP_OK);
     }
 

@@ -10,3 +10,5 @@ class Excel extends PHPExcel{
     }
   
 }
+
+?>

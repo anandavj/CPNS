@@ -166,7 +166,14 @@ class Product extends REST_Controller
     public function index_get() //GET
     {
         $id = $this->get('id');
-        if (isset($id)) $this->response($this->product_model->get_product_where($id),REST_Controller::HTTP_OK);
+        if (isset($id)){
+            $result = $this->product_model->get_product_where($id);
+            $product_tag = $this->product_tag_model->get_product_tag_where($id);
+            $product_image = $this->product_image_model->get_product_image_where($id);
+            $result = array_merge($result[0],array('tags' => $product_tag),array('images' => $product_image));
+
+            $this->response($result,REST_Controller::HTTP_OK);
+        }
         else $this->response($this->product_model->get_all_product(),REST_Controller::HTTP_OK);
     }
 

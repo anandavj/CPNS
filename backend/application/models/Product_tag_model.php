@@ -30,10 +30,16 @@ class Product_tag_model extends CI_Model
 
     public function get_product_tag_where($product_id)
     {   
-        $this->db->select("id, product_id as productId, tag_id as tagId");
+        $this->db->select("tag_id as tagId");
         $this->db->from($this::TABLE_NAME);
         $this->db->where("product_id = '{$product_id}'");
-        return $this->db->get()->result_array();
+        $res = [];
+        foreach($this->db->get()->result_array() as $tag){
+            array_push($res,$tag['tagId']);
+        }
+        return $res;
+
+
     }
 
     public function is_not_exists($id)

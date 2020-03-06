@@ -125,7 +125,9 @@ class User extends REST_Controller
         $name = $this->put('name');
         $phone = $this->put('phone');
         $address = $this->put('address');
-
+        $place_of_birth = $this->put('placeOfBirth');
+        $religion = $this->put('religion');
+        $status = $this->put('status');
 
         if (!isset($id)) {
             $this->response(
@@ -147,8 +149,6 @@ class User extends REST_Controller
             );
             return;
         }
-
-
 
         $datas = array();
         $update_user_task = 0;
@@ -175,6 +175,15 @@ class User extends REST_Controller
         }
         if (isset($address)) {
             $datas = array_merge($datas, array('address' => $address));
+        }
+        if (isset($place_of_birth)) {
+            $datas = array_merge($datas, array('place_of_birth' => $place_of_birth));
+        }
+        if (isset($religion)) {
+            $datas = array_merge($datas, array('religion' => $religion));
+        }
+        if (isset($status)) {
+            $datas = array_merge($datas, array('status' => $status ));
         }
 
         if ($this->user_model->update_user($id, $datas)) {
