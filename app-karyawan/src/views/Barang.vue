@@ -163,7 +163,7 @@
                                         <div class="title">Gambar Produk</div>
                                     </v-col>
                                     <v-col cols="12">
-                                        <v-file-input v-model="product.images" color="accent" prepend-icon="mdi-camera" chips multiple accept="image/*" label="Upload Produk"></v-file-input>
+                                        <v-file-input v-model="product.images" color="accent" prepend-icon="mdi-camera" chips multiple accept="image/*" label="Upload Gambar Produk"></v-file-input>
                                     </v-col>
                                     <!--  -->
                                     <v-col cols="12" class="my-n4">
@@ -503,11 +503,11 @@
             <!-- *************************************************************************************************************** -->
             <!-- Quick Edit Open Price -->
             <!-- *************************************************************************************************************** -->
-            <v-switch v-if="!popUpBreakPoint" value v-model="editToggle" class="pa-0 mb-0 mt-5" label="Edit Price"></v-switch>
+            <v-switch v-if="!popUpBreakPoint" value v-model="editToggle" class="pa-0 mb-0 mt-5" label="Edit Harga"></v-switch>
             <v-dialog v-model="popUpQuickEdit" persistent max-width='350px'>
                 <v-card>
                     <v-toolbar dense flat>
-                        <span class="title font-weight-light"> Edit Open Price</span>
+                        <span class="title font-weight-light"> Edit Harga</span>
                         <v-btn absolute right icon @click="close"><v-icon>mdi-close</v-icon></v-btn>
                     </v-toolbar>
                     <v-card-title>{{productQuickEdit.name}}</v-card-title>
@@ -602,8 +602,8 @@
                                 </div>
                             </div>
                             <div class="d-flex flex-no-wrap justify-space-between mt-n2 ml-4 mr-4">
-                                <v-btn @click.stop="quickEdit(item)" dense color="white--text green darken-3" small width="48%" class="caption">
-                                    Edit Open Price
+                                <v-btn @click.stop="quickEdit(item)" dense color="green darken-3" outlined small width="48%" class="caption">
+                                    Edit Harga
                                 </v-btn>
                                 <v-btn @click.stop="editProduct(item)" dense color="white--text yellow darken-3" small width="22%">
                                     <v-icon>mdi-pencil</v-icon>
@@ -809,7 +809,7 @@
                                     <div class="title">Gambar Produk</div>
                                 </v-col>
                                 <v-col cols="12">
-                                    <v-file-input v-model="product.images" color="accent" prepend-icon="mdi-camera" chips multiple accept="image/*" label="Upload Produk"></v-file-input>
+                                    <v-file-input v-model="product.images" color="accent" prepend-icon="mdi-camera" chips multiple accept="image/*" label="Upload Gambar Produk"></v-file-input>
                                 </v-col>
                                 <!--  -->
                                 <v-col cols="12" class="my-n4">
@@ -1621,9 +1621,9 @@ export default {
         productHeaders() {
             return [
                 {text:'Nama', value:'name', width:'70%', filter:this.advanceSearchName},
-                {text:'Open Price', value:'openPrice', align:'center'},
+                {text:'Harga', value:'openPrice', align:'center'},
                 {text:'Stock', value:'stock', filter:this.advanceSearchStock},
-                {value:'actions',width:'7%'},
+                {value:'actions',width:'10%'},
                 {value:'categoryId', align: ' d-none', filter:this.advanceSearchCategory},
                 {value:'tags', align: ' d-none', filter:this.advanceSearchTags},
 
