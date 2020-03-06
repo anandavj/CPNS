@@ -114,8 +114,24 @@ class User extends REST_Controller
         // $factory = (new Factory)->withDatabaseUri('https://test-7a393.firebaseio.com')->createAuth();
         $id = $this->get('id');
 
-        if (isset($id)) $this->response($this->user_model->get_user_where($id), REST_Controller::HTTP_OK);
-        else $this->response($this->user_model->get_all_user(), REST_Controller::HTTP_OK);
+        if (isset($id)){
+            $result = $this->user_model->get_user_where($id);
+            $user_task = $this->user_task_model->get_user_task_where($id);
+            $result = array_merge($result[0], array('userTask' => $user_task));
+
+            $this->response($result, REST_Controller::HTTP_OK);
+        }
+        
+        else {
+            $index = 0;
+            $result = $this->user_model->get_all_user();
+            foreach($result as $row){
+                $user_task = $this->user_task_model->get_user_task_where($row['id']);
+                $result[$index] = array_merge($result[$index], array('userTask' => $user_task));
+                $index++;
+            }
+        }
+            $this->response($result, REST_Controller::HTTP_OK);
     }
 
     public function index_put()
