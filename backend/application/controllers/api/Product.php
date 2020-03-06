@@ -174,7 +174,20 @@ class Product extends REST_Controller
 
             $this->response($result,REST_Controller::HTTP_OK);
         }
-        else $this->response($this->product_model->get_all_product(),REST_Controller::HTTP_OK);
+        else {
+            $res =[];
+            $index = 0;
+            $result = $this->product_model->get_all_product();
+            foreach ($result as $row){
+               $product_tag = $this->product_tag_model->get_product_tag_where($row['id']);
+               $product_image = $this->product_image_model->get_product_image_where($row['id']);
+               $temp = array_merge($result[$index], array('tags' => $product_tag, 'images' => $product_image));
+               $result[$index] = $temp;
+               $index++;
+            }
+            $this->response($result,REST_Controller::HTTP_OK);
+        }
+        
     }
 
     public function index_put() //UPDATE

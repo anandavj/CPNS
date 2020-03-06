@@ -45,18 +45,22 @@ class Excel_import extends REST_Controller
     }
 
     function index_get(){
-        $data = $this->product_model->get_all_product();
+        // $data['product'] = $this->product_model->get_all_product();
+        $data['product'] = "BOI";
         $this->load->view('import', $data);
     }
 
 
 
     function index_post ()
-    {
+    {   $data['product'] = "BOI";
+        $data['files'] = $_FILES;
+        $data['filename'] = $_FILES["file"]["name"];
+        $this->load->view('import',$data);
         // print_r($_FILES);
-        $this->response(array($this->post(), $_FILES));
-        return;
-
+        // $this->response(array($this->post(), $_FILES));
+        // return;
+        
         if (isset($_FILES["file"]["name"])) {
             
             
