@@ -20,17 +20,21 @@
                     <v-col cols="12" v-if="showAdvanceSearchOption">
                         <v-row no-gutters>
                             <v-col cols="9">
-                                <v-select
-                                    :items="categories"
-                                    outlined
-                                    dense
-                                    label="Kategori"
+                                <v-autocomplete
                                     v-model="advanceSearch.category"
                                     class="mb-n4"
+                                    :items="categories"
+                                    label="Kategori"
+                                    outlined
+                                    dense
+                                    :clearable="true"
                                     color="accent"
+                                    :search-input.sync="categorySearchInput"
+                                    @change="categorySearchInput=''"
                                     item-text="name"
                                     item-value="id"
-                                />   
+                                    :readonly="advanceSearch.category != null"
+                                />
                             </v-col>
                             <v-col cols="3">
                                 <v-text-field
@@ -50,15 +54,14 @@
                                     :items="tags"
                                     label="Tag"
                                     outlined
-                                    chips
                                     dense
-                                    :deletable-chips="true"
+                                    :clearable="true"
                                     color="accent"
-                                    item-color="accent"
                                     :search-input.sync="tagSearchInputFilter"
                                     @change="tagSearchInputFilter=''"
                                     item-text="tagName"
                                     item-value="id"
+                                    :readonly="advanceSearch.tags != null"
                                 />
                             </v-col>
                             <v-col cols="3">
@@ -80,17 +83,21 @@
                     <v-col cols="12" v-if="showAdvanceSearchOption">
                         <v-row no-gutters>
                             <v-col cols="12">
-                                <v-select
-                                    :items="categories"
-                                    outlined
-                                    dense
-                                    label="Kategori"
+                                <v-autocomplete
                                     v-model="advanceSearch.category"
                                     class="mb-n4"
+                                    :items="categories"
+                                    label="Kategori"
+                                    outlined
+                                    dense
+                                    :clearable="true"
                                     color="accent"
+                                    :search-input.sync="categorySearchInput"
+                                    @change="categorySearchInput=''"
                                     item-text="name"
                                     item-value="id"
-                                />  
+                                    :readonly="advanceSearch.category != null"
+                                />
                             </v-col>
                              <v-col cols="12">
                                 <v-autocomplete
@@ -99,15 +106,14 @@
                                     :items="tags"
                                     label="Tag"
                                     outlined
-                                    chips
                                     dense
-                                    :deletable-chips="true"
+                                    :clearable="true"
                                     color="accent"
-                                    item-color="accent"
                                     :search-input.sync="tagSearchInputFilter"
                                     @change="tagSearchInputFilter=''"
                                     item-text="tagName"
                                     item-value="id"
+                                    :readonly="advanceSearch.tags != null"
                                 />
                             </v-col>
                             <v-col cols="6">
@@ -137,7 +143,7 @@
                 </v-expand-transition>
                 <v-col>
                     <v-btn class="body-2" text dense color="blue white--text"  @click="showAdvanceSearch"><span class="mr-1"><v-icon v-if="!showAdvanceSearchOption">mdi-filter-menu-outline</v-icon><v-icon v-else>mdi-filter-minus-outline</v-icon></span>Filter</v-btn>
-                    <v-btn text :disabled="advanceSearch.name == '' && advanceSearch.tags == '' && (advanceSearch.stock_down == '' || advanceSearch.stock_down == null) && (advanceSearch.stock_up == '' || advanceSearch.stock_up == null) && advanceSearch.category == ''" v-if="showAdvanceSearchOption" dense @click="clearAllAdvanceSearch" class="caption showAdvanceSearchOptionText"><v-icon>mdi-filter-variant-remove</v-icon> Clear Filter</v-btn>
+                    <v-btn text :disabled="advanceSearch.name == '' && advanceSearch.tags == null && (advanceSearch.stock_down == '' || advanceSearch.stock_down == null) && (advanceSearch.stock_up == '' || advanceSearch.stock_up == null) && advanceSearch.category == null" v-if="showAdvanceSearchOption" dense @click="clearAllAdvanceSearch" class="caption showAdvanceSearchOptionText"><v-icon>mdi-filter-variant-remove</v-icon> Clear Filter</v-btn>
                 </v-col>
             </v-row>
             <!-- *************************************************************************************************************** -->
@@ -170,19 +176,31 @@
                                         <div class="title">Informasi Produk</div>
                                     </v-col>
                                     <v-col cols="6" v-if="!popUpBreakPoint">
-                                        <v-text-field label="Nama" color="accent" v-model="product.name"/>
+                                        <v-text-field label="Nama" color="accent" v-model="product.name" :rules="rules.productName"/>
                                     </v-col>
                                     <v-col cols="12" v-else class="mt-n4">
-                                        <v-text-field label="Nama" color="accent" v-model="product.name"/>
+                                        <v-text-field label="Nama" color="accent" v-model="product.name" :rules="rules.productName"/>
                                     </v-col>
                                     <v-col cols="6" v-if="!popUpBreakPoint">
-                                        <v-text-field label="Spesifikasi" color="accent" v-model="product.specification"/>
+                                        <v-text-field label="Spesifikasi" color="accent" v-model="product.specification" :rules="rules.productSpecification"/>
                                     </v-col>
                                     <v-col cols="12" v-else class="mt-n4">
-                                        <v-text-field label="Spesifikasi" color="accent" v-model="product.specification"/>
+                                        <v-text-field label="Spesifikasi" color="accent" v-model="product.specification" :rules="rules.productSpecification"/>
+                                    </v-col>
+                                    <v-col cols="6" v-if="!popUpBreakPoint" class="mt-n6">
+                                        <v-text-field label="Kode Produk" color="accent" v-model="product.productCode" :rules="rules.productCode"/>
+                                    </v-col>
+                                    <v-col cols="12" v-else class="mt-n4">
+                                        <v-text-field label="Kode Produk" color="accent" v-model="product.productCode" :rules="rules.productCode"/>
+                                    </v-col>
+                                     <v-col cols="6" v-if="!popUpBreakPoint" class="mt-n6">
+                                        <v-text-field label="Retail ID" color="accent" v-model="product.retailId" :rules="rules.productRetailId"/>
+                                    </v-col>
+                                    <v-col cols="12" v-else class="mt-n4">
+                                        <v-text-field label="Retail ID" color="accent" v-model="product.retailId" :rules="rules.productRetailId"/>
                                     </v-col>
                                     <!-- PC / LAPTOP -->
-                                    <v-col cols="6" class="mt-n4" v-if="!popUpBreakPoint">
+                                    <v-col cols="6" class="mt-n6" v-if="!popUpBreakPoint">
                                         <v-row no-gutters class="align-center">
                                             <v-col cols="11">
                                                 <v-autocomplete
@@ -277,7 +295,7 @@
                                         <v-card>
                                             <v-form ref="form">
                                                 <v-card-text>
-                                                    <v-text-field color="accent" outlined v-model="formNewCategoryModel" label="Nama Kategori"/>
+                                                    <v-text-field :rules="rules.newCategory" color="accent" outlined v-model="formNewCategoryModel" label="Nama Kategori"/>
                                                 </v-card-text>
                                             </v-form>
                                             <v-card-actions>
@@ -292,7 +310,7 @@
                                     </v-dialog>
                                     <!--  -->
                                     <!-- PC / Laptop -->
-                                    <v-col cols="6" class="mt-n4" v-if="!popUpBreakPoint">
+                                    <v-col cols="6" class="mt-n6" v-if="!popUpBreakPoint">
                                         <v-row no-gutters class="align-center">
                                             <v-col cols="11">
                                                 <v-autocomplete
@@ -387,7 +405,7 @@
                                         <v-card>
                                             <v-form ref="form">
                                                 <v-card-text>
-                                                    <v-text-field color="accent" v-model="formNewUnitModel.name" label="Nama Unit"/>
+                                                    <v-text-field :rules="rules.newUnit" color="accent" v-model="formNewUnitModel.name" label="Nama Unit"/>
                                                     <v-text-field color="accent" v-model="formNewUnitModel.abbreviation" label="Singkatan"/>
                                                     <v-text-field color="accent" v-model="formNewUnitModel.description" label="Jenis Satuan"/>
                                                 </v-card-text>
@@ -404,22 +422,22 @@
                                     </v-dialog>
                                     <!--  -->
                                     <v-col cols="6" v-if="popUpBreakPoint" class="my-n4">
-                                        <v-text-field label="Open Price" color="accent" v-model="product.openPrice"/>
+                                        <v-text-field label="Open Price" color="accent" v-model="product.openPrice" :rules="rules.productOpenPrice"/>
                                     </v-col>
                                     <v-col cols="4" v-else>
-                                        <v-text-field label="Open Price" color="accent" v-model="product.openPrice"/>
+                                        <v-text-field label="Open Price" color="accent" v-model="product.openPrice" :rules="rules.productOpenPrice"/>
                                     </v-col>
                                     <v-col cols="6" v-if="popUpBreakPoint" class="my-n4">
-                                        <v-text-field label="Bottom Price" color="accent" v-model="product.bottomPrice"/>
+                                        <v-text-field label="Bottom Price" color="accent" v-model="product.bottomPrice" :rules="rules.productBottomPrice"/>
                                     </v-col>
                                     <v-col cols="4" v-else>
-                                        <v-text-field label="Bottom Price" color="accent" v-model="product.bottomPrice"/>
+                                        <v-text-field label="Bottom Price" color="accent" v-model="product.bottomPrice" :rules="rules.productBottomPrice"/>
                                     </v-col>
                                     <v-col cols="12" v-if="popUpBreakPoint" class="my-n4">
-                                        <v-text-field label="Stock" color="accent" v-model="product.stock"/>
+                                        <v-text-field label="Stock" color="accent" v-model="product.stock" :rules="rules.productStock"/>
                                     </v-col>
                                     <v-col cols="4" v-else>
-                                        <v-text-field label="Stock" color="accent" v-model="product.stock"/>
+                                        <v-text-field label="Stock" color="accent" v-model="product.stock" :rules="rules.productStock"/>
                                     </v-col>
                                     <v-col cols="12">
                                         <v-textarea label="Deskripsi (Opsional)" v-model="product.description" outlined/>
@@ -467,7 +485,7 @@
                                                 <v-card>
                                                     <v-form ref="form">
                                                         <v-card-text>
-                                                            <v-text-field color="accent" v-model="formNewTagModel" label="Nama Tag"/>
+                                                            <v-text-field :rules="rules.newTag" color="accent" v-model="formNewTagModel" label="Nama Tag"/>
                                                         </v-card-text>
                                                     </v-form>
                                                     <v-card-actions>
@@ -512,7 +530,7 @@
                     </v-toolbar>
                     <v-card-title>{{productQuickEdit.name}}</v-card-title>
                     <v-form ref="form">
-                            <v-card-text><v-text-field color="blue" outlined v-model="productQuickEdit.openPrice" placeholder="Harga Barang"></v-text-field></v-card-text>
+                            <v-card-text><v-text-field color="blue" outlined v-model="productQuickEdit.openPrice" placeholder="Harga Barang" :rules="rules.productOpenPriceQuickEdit"></v-text-field></v-card-text>
                     </v-form>
                     <v-card-actions>
                         <v-container>
@@ -555,7 +573,8 @@
                     no-data-text="Data Barang Kosong"
                     no-results-text="Data Barang Tidak Ditemukan"
                     class="font-regular font-weight-light"
-                    style="cursor:pointer"
+                    style="cursor:pointer; background-color: #F5F5F5"
+                    
                 >
                     <template v-slot:item.actions="{ item }">
                         <v-icon class="mr-2" @click.stop="editProduct(item)">mdi-pencil</v-icon>
@@ -588,10 +607,10 @@
                     no-data-text="Data Barang Kosong"
                     no-results-text="Data Barang Tidak Ditemukan"
                     class="font-regular font-weight-light mt-n4"
-                    style="cursor:pointer"
+                    style="cursor:pointer; background-color: #F5F5F5"
                 >
                     <template v-slot:item="{ item }">
-                        <v-card @click.stop="details(item)" class="mt-1 mb-3 mx-2 pa-2" color="grey lighten-2" outlined>
+                        <v-card @click.stop="details(item)" class="mt-1 mb-3 mx-2 pa-2" color="white" outlined>
                             <div class="d-flex flex-no-wrap justify-space-between mt-n2 align-center">
                                 <div>
                                     <v-card-title class="body-2">{{ item.name }}</v-card-title>
@@ -655,7 +674,7 @@
                                 v-for="(tag,idx) in product.tags" :key="idx"
                                 small
                             >
-                                {{tag}}
+                                {{revealTagName(tag)}}
                             </v-chip>
                         </v-col>
                         <v-col cols="12">
@@ -663,7 +682,12 @@
                                 <tr>
                                     <td>ID Barang</td>
                                     <td width="25%" align="end">:</td>
-                                    <td>{{product.id}}</td>
+                                    <td>{{product.productCode}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Retail ID</td>
+                                    <td width="25%" align="end">:</td>
+                                    <td>{{product.retailId}}</td>
                                 </tr>
                                 <tr>
                                     <td>Kategori</td>
@@ -741,7 +765,7 @@
                                             v-for="(tag,idx) in product.tags" :key="idx"
                                             small
                                         >
-                                            {{tag}}
+                                            {{revealTagName(tag)}}
                                         </v-chip>
                                     </v-col>
                                     <v-col cols="12">
@@ -749,7 +773,12 @@
                                             <tr>
                                                 <td>ID Barang</td>
                                                 <td width="25%" align="end">:</td>
-                                                <td>{{product.id}}</td>
+                                                <td>{{product.productCode}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Retail ID</td>
+                                                <td width="25%" align="end">:</td>
+                                                <td>{{product.retailId}}</td>
                                             </tr>
                                             <tr>
                                                 <td>Kategori</td>
@@ -816,18 +845,30 @@
                                     <div class="title">Informasi Produk</div>
                                 </v-col>
                                 <v-col cols="6" v-if="!popUpBreakPoint">
-                                    <v-text-field label="Nama" color="accent" v-model="product.name"/>
+                                    <v-text-field label="Nama" color="accent" v-model="product.name" :rules="rules.productName"/>
                                 </v-col>
                                 <v-col cols="12" v-else class="mt-n4">
-                                    <v-text-field label="Nama" color="accent" v-model="product.name"/>
+                                    <v-text-field label="Nama" color="accent" v-model="product.name" :rules="rules.productName"/>
                                 </v-col>
                                 <v-col cols="6" v-if="!popUpBreakPoint">
-                                    <v-text-field label="Spesifikasi" color="accent" v-model="product.specification"/>
+                                    <v-text-field label="Spesifikasi" color="accent" v-model="product.specification" :rules="rules.productSpecification"/>
                                 </v-col>
                                 <v-col cols="12" v-else class="mt-n4">
-                                    <v-text-field label="Spesifikasi" color="accent" v-model="product.specification"/>
+                                    <v-text-field label="Spesifikasi" color="accent" v-model="product.specification" :rules="rules.productSpecification"/>
                                 </v-col>
-                                <v-col cols="6" class="mt-n4" v-if="!popUpBreakPoint">
+                                <v-col cols="6" v-if="!popUpBreakPoint" class="mt-n6">
+                                    <v-text-field label="Kode Produk" color="accent" v-model="product.productCode" :rules="rules.productCode"/>
+                                </v-col>
+                                <v-col cols="12" v-else class="mt-n4">
+                                    <v-text-field label="Kode Produk" color="accent" v-model="product.productCode" :rules="rules.productCode"/>
+                                </v-col>
+                                    <v-col cols="6" v-if="!popUpBreakPoint" class="mt-n6">
+                                    <v-text-field label="Retail ID" color="accent" v-model="product.retailId" :rules="rules.productRetailId"/>
+                                </v-col>
+                                <v-col cols="12" v-else class="mt-n4">
+                                    <v-text-field label="Retail ID" color="accent" v-model="product.retailId" :rules="rules.productRetailId"/>
+                                </v-col>
+                                <v-col cols="6" class="mt-n6" v-if="!popUpBreakPoint">
                                     <v-row no-gutters class="align-center">
                                         <v-col cols="11">
                                             <v-autocomplete
@@ -922,7 +963,7 @@
                                     <v-card>
                                         <v-form ref="form">
                                             <v-card-text>
-                                                <v-text-field color="accent" outlined v-model="formNewCategoryModel" label="Nama Kategori"/>
+                                                <v-text-field :rules="rules.newCategory" color="accent" outlined v-model="formNewCategoryModel" label="Nama Kategori"/>
                                             </v-card-text>
                                         </v-form>
                                         <v-card-actions>
@@ -937,7 +978,7 @@
                                 </v-dialog>
                                 <!--  -->
                                 <!-- PC / Laptop -->
-                                <v-col cols="6" class="mt-n4" v-if="!popUpBreakPoint">
+                                <v-col cols="6" class="mt-n6" v-if="!popUpBreakPoint">
                                     <v-row no-gutters class="align-center">
                                         <v-col cols="11">
                                             <v-autocomplete
@@ -1032,7 +1073,7 @@
                                     <v-card>
                                         <v-form ref="form">
                                             <v-card-text>
-                                                <v-text-field color="accent" v-model="formNewUnitModel.name" label="Nama Unit"/>
+                                                <v-text-field :rules="rules.newUnit" color="accent" v-model="formNewUnitModel.name" label="Nama Unit"/>
                                                 <v-text-field color="accent" v-model="formNewUnitModel.abbreviation" label="Singkatan"/>
                                                 <v-text-field color="accent" v-model="formNewUnitModel.description" label="Jenis Satuan"/>
                                             </v-card-text>
@@ -1049,22 +1090,22 @@
                                 </v-dialog>
                                 <!--  -->
                                 <v-col cols="6" v-if="popUpBreakPoint" class="my-n4">
-                                    <v-text-field label="Open Price" color="accent" v-model="product.openPrice"/>
+                                    <v-text-field label="Open Price" color="accent" v-model="product.openPrice" :rules="rules.productOpenPrice"/>
                                 </v-col>
                                 <v-col cols="4" v-else>
-                                    <v-text-field label="Open Price" color="accent" v-model="product.openPrice"/>
+                                    <v-text-field label="Open Price" color="accent" v-model="product.openPrice" :rules="rules.productOpenPrice"/>
                                 </v-col>
                                 <v-col cols="6" v-if="popUpBreakPoint" class="my-n4">
-                                    <v-text-field label="Bottom Price" color="accent" v-model="product.bottomPrice"/>
+                                    <v-text-field label="Bottom Price" color="accent" v-model="product.bottomPrice" :rules="rules.productBottomPrice"/>
                                 </v-col>
                                 <v-col cols="4" v-else>
-                                    <v-text-field label="Bottom Price" color="accent" v-model="product.bottomPrice"/>
+                                    <v-text-field label="Bottom Price" color="accent" v-model="product.bottomPrice" :rules="rules.productBottomPrice"/>
                                 </v-col>
                                 <v-col cols="12" v-if="popUpBreakPoint" class="my-n4">
-                                    <v-text-field label="Stock" color="accent" v-model="product.stock"/>
+                                    <v-text-field label="Stock" color="accent" v-model="product.stock" :rules="rules.productStock"/>
                                 </v-col>
                                 <v-col cols="4" v-else>
-                                    <v-text-field label="Stock" color="accent" v-model="product.stock"/>
+                                    <v-text-field label="Stock" color="accent" v-model="product.stock" :rules="rules.productStock"/>
                                 </v-col>
                                 <v-col cols="12">
                                     <v-textarea label="Deskripsi (Opsional)" v-model="product.description" outlined/>
@@ -1112,7 +1153,7 @@
                                             <v-card>
                                                 <v-form ref="form">
                                                     <v-card-text>
-                                                        <v-text-field color="accent" v-model="formNewTagModel" label="Nama Tag"/>
+                                                        <v-text-field :rules="rules.newTag" color="accent" v-model="formNewTagModel" label="Nama Tag"/>
                                                     </v-card-text>
                                                 </v-form>
                                                 <v-card-actions>
@@ -1219,8 +1260,8 @@ export default {
                 name:'',
                 stock_down:null,
                 stock_up:null,
-                category:'',
-                tags:''
+                category:null,
+                tags:null
             },
             products: [],
             product: {
@@ -1256,12 +1297,14 @@ export default {
             productQuickEdit: {
                 id:null,
                 name:'',
-                openPrice:null
+                openPrice:null,
+                bottomPrice:null
             },
             productQuickEditDefault: {
                 id:null,
                 name:'',
-                openPrice:null
+                openPrice:null,
+                bottomPrice:null
             },
             categories: [],
             units: [],
@@ -1297,6 +1340,48 @@ export default {
             popUpNewTag: false,
             showAdvanceSearchOption: false,
             selectedIndex: -1,
+            rules: {
+                productName: [
+                    v => !!v || 'Nama Produk Harus Diisi'
+                ],
+                productSpecification: [
+                    v => !!v || 'Spesifikasi Harus Diisi'
+                ],
+                productCode: [
+                    v => !!v || 'Kode Produk Harus Diisi'
+                ],
+                productRetailId: [
+                    v => !!v || 'Retail ID Harus Diisi'
+                ],
+                productBottomPrice: [
+                    v => !!v || 'Harga Harus Diisi',
+                    v => v <= +this.product.bottomPrice || 'Harga Bottom Price Harus Lebih Rendah dari Harga Bottom Price',
+                    v => v >= 0 || 'Harga tidak valid'
+                ],
+                productOpenPrice: [
+                    v => !!v || 'Harga Harus Diisi',
+                    v => v >= +this.product.bottomPrice || 'Harga Open Price Harus Lebih Tinggi dari Harga Bottom Price',
+                    v => v >= 0 || 'Harga tidak valid'
+                ],
+                productStock: [
+                    v => !!v || 'Stock Harus Diisi',
+                    v => v >= 0 || 'Stock tidak valid'
+                ],
+                newCategory: [
+                    v => !!v || 'Nama Kategori Tidak Valid'
+                ],
+                newUnit: [
+                    v => !!v || 'Unit Tidak Valid'
+                ],
+                newTag: [
+                    v => !!v || 'Tag Tidak Valid'
+                ],
+                productOpenPriceQuickEdit: [
+                    v => !!v || 'Harga Harus Diisi',
+                    v => v >= +this.productQuickEdit.bottomPrice || 'Harga Open Price Harus Lebih Tinggi dari Harga Bottom Price',
+                    v => v >= 0 || 'Harga tidak valid'
+                ]
+            }
         }
     },
 
@@ -1343,8 +1428,8 @@ export default {
             this.advanceSearch.name = ''
             this.advanceSearch.stock_down = null
             this.advanceSearch.stock_up = null
-            this.advanceSearch.category = ''
-            this.advanceSearch.tags = ''
+            this.advanceSearch.category = null
+            this.advanceSearch.tags = null
 
         },
         advanceSearchName(val) {
@@ -1388,6 +1473,9 @@ export default {
             this.unitName = _.find(this.units,['id', this.product.unitId]).name
             this.popupDetails = true
             this.productImageSelected = this.product.images[0]
+        },
+        revealTagName(tag) {
+            return _.find(this.tags,['id', tag]).tagName
         },
         close() {
             if(this.popupDetails) {
@@ -1456,6 +1544,7 @@ export default {
         },
         quickEdit(item) {
             this.selectedIndex = this.products.indexOf(item)
+            this.productQuickEdit.bottomPrice = item.bottomPrice
             this.productQuickEdit.openPrice = item.openPrice
             this.productQuickEdit.name = item.name
             this.productQuickEdit.id = item.id
@@ -1539,58 +1628,64 @@ export default {
                 })
         },
         saveNewCategory() {
-            api.addCategory(this.formNewCategoryModel)
-                .then((response) => {
-                    this.snackbarColor = 'success'
-                    this.snackbarMessage = response
-                }) .catch(error => {
-                    this.snackbarColor = 'error'
-                    this.snackbarMessage = error
-                }) .finally(() => {
-                    this.snackbar = true
-                    api.getAllCategory()
-                        .then((categories) => {
-                            this.categories = categories
-                            this.product.categoryId = _.find(this.categories,['name', this.formNewCategoryModel]).id
-                            this.close()
-                        })
-                })
+            if(this.$refs.form.validate()) {
+                api.addCategory(this.formNewCategoryModel)
+                    .then((response) => {
+                        this.snackbarColor = 'success'
+                        this.snackbarMessage = response
+                    }) .catch(error => {
+                        this.snackbarColor = 'error'
+                        this.snackbarMessage = error
+                    }) .finally(() => {
+                        this.snackbar = true
+                        api.getAllCategory()
+                            .then((categories) => {
+                                this.categories = categories
+                                this.product.categoryId = _.find(this.categories,['name', this.formNewCategoryModel]).id
+                                this.close()
+                            })
+                    })
+            }
         },
         saveNewUnit() {
-            api.addUnit(this.formNewUnitModel)
-                .then((response) => {
-                    this.snackbarColor = 'success'
-                    this.snackbarMessage = response
-                }) .catch(error => {
-                    this.snackbarColor = 'error'
-                    this.snackbarMessage = error
-                }) .finally(() => {
-                    this.snackbar = true
-                    api.getAllUnit()
-                        .then((units) => {
-                            this.units = units
-                            this.product.unitId = _.find(this.units,['name', this.formNewUnitModel.name]).id
-                            this.close()
-                        })
-                })
+            if(this.$refs.form.validate()) {
+                api.addUnit(this.formNewUnitModel)
+                    .then((response) => {
+                        this.snackbarColor = 'success'
+                        this.snackbarMessage = response
+                    }) .catch(error => {
+                        this.snackbarColor = 'error'
+                        this.snackbarMessage = error
+                    }) .finally(() => {
+                        this.snackbar = true
+                        api.getAllUnit()
+                            .then((units) => {
+                                this.units = units
+                                this.product.unitId = _.find(this.units,['name', this.formNewUnitModel.name]).id
+                                this.close()
+                            })
+                    })
+            }
         },
         saveNewTag() {
-            api.addTag(this.formNewTagModel)
-                .then((response) => {
-                    this.snackbarColor = 'success'
-                    this.snackbarMessage = response
-                }) .catch(error => {
-                    this.snackbarColor = 'error'
-                    this.snackbarMessage = error
-                }) .finally(() => {
-                    this.snackbar = true
-                    api.getAllTag()
-                        .then((tags) => {
-                            this.tags = tags
-                            this.product.tags.push(_.find(this.tags,['tagName', this.formNewTagModel]).id)
-                            this.close()
-                        })
-                })
+            if(this.$refs.form.validate()) {
+                api.addTag(this.formNewTagModel)
+                    .then((response) => {
+                        this.snackbarColor = 'success'
+                        this.snackbarMessage = response
+                    }) .catch(error => {
+                        this.snackbarColor = 'error'
+                        this.snackbarMessage = error
+                    }) .finally(() => {
+                        this.snackbar = true
+                        api.getAllTag()
+                            .then((tags) => {
+                                this.tags = tags
+                                this.product.tags.push(_.find(this.tags,['tagName', this.formNewTagModel]).id)
+                                this.close()
+                            })
+                    })
+            }
         },
         saveNewProduct() {
             if(this.$refs.form.validate()) {
@@ -1626,7 +1721,6 @@ export default {
                 {value:'actions',width:'10%'},
                 {value:'categoryId', align: ' d-none', filter:this.advanceSearchCategory},
                 {value:'tags', align: ' d-none', filter:this.advanceSearchTags},
-
             ]
         },
         //view Breakpoint
@@ -1645,6 +1739,27 @@ export default {
                 this.productImageSelected = ''
                 this.product = Object.assign({},this.productDefault)
             }
+        },
+        close() {
+            this.$refs.form.resetValidation()
+        },
+        popUpNew() {
+            this.$refs.form.resetValidation()
+        },
+        popUpEdit() {
+            this.$refs.form.resetValidation()
+        },
+        popUpNewCategory() {
+            this.$refs.form.resetValidation()
+        },
+        popUpNewUnit() {
+            this.$refs.form.resetValidation()
+        },
+        popUpNewTag() {
+            this.$refs.form.resetValidation()
+        },
+        popUpQuickEdit() {
+            this.$refs.form.resetValidation()
         }
     },
     
