@@ -9,7 +9,7 @@ class Category_model extends CI_Model{
             'name' => $name
         ));
         
-        return $this->db->affected_rows();
+        return $this->db->insert_id();
     }
 
     public function get_all_category(){
@@ -18,6 +18,10 @@ class Category_model extends CI_Model{
 
     public function get_category_where($id){
         return $this->db->get_where($this::TABLE_NAME, "id='{$id}'")->result_array();
+    }
+
+    public function get_by_name($category_name){
+        return $this->db->get_where($this::TABLE_NAME, "name='{$category_name}'")->result_array()[0]['id'];
     }
 
     public function is_not_exists($id){

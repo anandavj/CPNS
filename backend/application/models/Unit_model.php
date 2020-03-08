@@ -15,7 +15,7 @@ class Unit_model extends CI_Model
 
         ));
 
-        return $this->db->affected_rows();
+        return $this->db->insert_id();
     }
 
     public function get_all_unit()
@@ -28,9 +28,18 @@ class Unit_model extends CI_Model
         return $this->db->get_where($this::TABLE_NAME, "id='{$id}'")->result_array();
     }
 
+    public function get_by_abbreviation($abbrev){
+        return $this->db->get_where($this::TABLE_NAME, "abbreviation='{$abbrev}'")->result_array()[0]['id'];
+    }
+
     public function is_not_exists($id)
     {
         if ($this->db->get_where($this::TABLE_NAME, "id='{$id}'")->num_rows() == 0) return true;
+        else return false;
+    }
+
+    public function is_abbreviation_exists($abbrev){
+        if($this->db->get_where($this::TABLE_NAME, "abbreviation='{$abbrev}'")->num_rows() > 0)  return true;
         else return false;
     }
 

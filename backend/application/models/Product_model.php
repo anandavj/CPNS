@@ -4,6 +4,18 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Product_model extends CI_Model{
 
     private const TABLE_NAME = 'product';
+    
+    
+    public function insert_product_import($datas){
+        foreach($datas as $data){
+            if($this->is_name_exists($data['name'])) continue;
+            else{
+                $this->db->insert($data);
+            }
+        }
+        return $this->db->affected_rows();
+    }
+
     public function insert_product($product_code, $name, $category_id, $specification, $description, $stock, $unit_id, $open_price, $bottom_price, $retail_id){
         
         if(!isset($stock)){

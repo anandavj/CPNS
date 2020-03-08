@@ -10,10 +10,13 @@ class Excel_import extends REST_Controller
     public function __construct()
     {
         parent::__construct();
-            $this->load->model('excel_import_model');
-            $this->load->model('category_model');
-            $this->load->model('product_model');
-            $this->load->model('unit_model');
+        $this->load->model('product_model');
+        $this->load->model('category_model');
+        $this->load->model('unit_model');
+        $this->load->model('product_tag_model');
+        $this->load->model('product_image_model');
+        $this->load->model('image_model');
+        $this->load->model('tag_model');
             $this->load->library('excel');
             $this->load->library('upload');
             $this->load->helper(array('form', 'url'));
@@ -71,34 +74,56 @@ class Excel_import extends REST_Controller
                 $highestRow = $worksheet->getHighestRow();
                 $highestColumn = $worksheet->getHighestColumn();
                 for ($row = 2; $row < $highestRow; $row++) {
-                    $product_id = $worksheet->getCellByColumnAndRow(0, $row)->getValue();
-                    $product_name = $worksheet->getCellByColumnAndRow(1, $row)->getValue();
-                    $specification = $worksheet->getCellByColumnAndRow(2, $row)->getValue();
-                    $category = $worksheet->getCellByColumnAndRow(3, $row)->getValue();
+                    $product_code = $worksheet->getCellByColumnAndRow(1, $row)->getValue();
+                    $product_name = $worksheet->getCellByColumnAndRow(2, $row)->getValue();
+                    $specification = $worksheet->getCellByColumnAndRow(3, $row)->getValue();
                     $stock = $worksheet->getCellByColumnAndRow(4, $row)->getValue();
                     $unit = $worksheet->getCellByColumnAndRow(5, $row)->getValue();
                     $open_price = $worksheet->getCellByColumnAndRow(6, $row)->getValue();
+                    $category = $worksheet->getCellByColumnAndRow(7, $row)->getValue();
+                    $retail_id = $worksheet->getCellByColumnAndRow(8,$row)->getValue();
+                    
+                    if(!isset($product_code)) $product_code = "undefined";
+                    if(!isset($category)) $category = "undefined";
+                    
+                    
+                    if(!isset($unit)) $unit = "undefined";
+                    if(!isset($stock)) $stock = 0;
+                    if(!isset($retail_id)) $retail_id = "undefined";
 
-                    if (!$this->category_model->is_category_exists($category)) $this->category_model->insert_category($category);
-                    $category_id = $this->category_model->get_by_name($category);
+                    
+                    if(!$this->category_model->is_name_exists($category)){
+                        $category_id = $this->category_model->insert_category($category);
+                    }
+                    else{
+                        $category_id = $this->category_model->get_by_name($category);
+                    }
 
-                    if (!$this->unit_model->is_category_exists($unit)) $this->unit_model->insert_category($unit);
-                    $unit_id = $this->unit_model->get_by_abbreviation($unit);
+                    if(!$this->unit_model->is_abbreviation_exists($unit)){
+                        $unit_id = $this->unit_model->insert_unit("undefined", $unit, "undefined");
+                    }else{
+                        $unit_id = $this->unit_model->get_by_abbreviation($unit);
+                    }
 
 
-                    $data = array(
-                        'id' => $product_id,
+                    $data = array(  
+                        'product_code' => $product_code,
                         'name' => $product_name,
+                        'open_price' => $open_price,
+                        'bottom_price' => 0,
                         'specification' => $specification,
+                        'stock' => $stock,
                         'category_id' => $category_id,
                         'unit_id' => $unit_id,
-                        'open_price' => $open_price,
-                        'stock' => $stock
+                        'retail_id' => $retail_id
                     );
                     array_push($datas, $data);
                 }
             }
-            if ($this->excel_import_model->insert($datas)) {
+            // $this->response($datas);
+            // return;
+
+            if ($this->product_model->insert_product_import($datas)) {
                 $this->response(
                     array(
                         'status' => TRUE,
