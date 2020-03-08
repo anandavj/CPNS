@@ -63,9 +63,11 @@
         </v-card>
       </v-dialog>
     </v-navigation-drawer>
-    <v-content app class="mx-4 my-4 mx-md-10 my-md-n5">
-      <router-view></router-view>
-    </v-content>
+    <div style="background-color: #F5F5F5">
+      <v-content style="background-color: #F5F5F5" app class="mx-4 my-4 mx-md-10 my-md-n5">
+        <router-view style="background-color: #F5F5F5"></router-view>
+      </v-content>
+    </div>
   </v-app>
 </template>
 
