@@ -83,10 +83,12 @@ class Excel_import extends REST_Controller
                     $category = $worksheet->getCellByColumnAndRow(7, $row)->getValue();
                     $retail_id = $worksheet->getCellByColumnAndRow(8,$row)->getValue();
                     
+
+                    if(!isset($product_name)) $product_name = "undefined";
                     if(!isset($product_code)) $product_code = "undefined";
                     if(!isset($category)) $category = "undefined";
-                    
-                    
+                    if(!isset($open_price)) $open_price = 0;
+                    if(!isset($specification)) $specification = "undefined";
                     if(!isset($unit)) $unit = "undefined";
                     if(!isset($stock)) $stock = 0;
                     if(!isset($retail_id)) $retail_id = "undefined";

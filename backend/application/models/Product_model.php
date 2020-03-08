@@ -10,7 +10,8 @@ class Product_model extends CI_Model{
         foreach($datas as $data){
             if($this->is_name_exists($data['name'])) continue;
             else{
-                $this->db->insert($data);
+                // $this->db->set($data);
+                $this->db->insert($this::TABLE_NAME, $data);
             }
         }
         return $this->db->affected_rows();
