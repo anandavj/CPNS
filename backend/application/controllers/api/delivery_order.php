@@ -74,8 +74,26 @@ class delivery_order extends REST_Controller
     {
         $id = $this->get('id');
 
-        if (isset($id)) $this->response($this->delivery_order_model->get_delivery_order_where($id), REST_Controller::HTTP_OK);
-        else $this->response($this->delivery_order_model->get_all_delivery_order(), REST_Controller::HTTP_OK);
+        if (isset($id)){
+            $result = $this->delivery_order_model->get_delivery_order_where($id);
+            $products = $this->product_delivery_order_model->get_product_delivery_order_where($id);
+
+            $result =  array_merge($result[0], array('products' => $products[0]));
+
+
+            $this->response($result,REST_Controller::HTTP_OK);
+        }    
+        else{
+            $result = [];
+            $index = 0;
+            $datas = $this->delivery_order_model->get_all_delivery_order();
+            foreach($datas as $data){
+                $temp = array_merge($datas[$index], array('products' => $this->product_delivery_order_model->get_product_delivery_order_where($data['id'])));
+                array_push($result, $temp);
+                $index++;
+            }
+            $this->response($result, REST_Controller::HTTP_OK);
+        }
     }
 
     public function index_put()
