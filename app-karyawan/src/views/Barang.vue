@@ -568,11 +568,15 @@
                     :headers="productHeaders"
                     :items="products"
                     @click:row="details"
+                    :footer-props="{
+                        'items-per-page-options': [10, 50, 100, -1]
+                    }"
                     item-key="nama"
                     no-data-text="Data Barang Kosong"
                     no-results-text="Data Barang Tidak Ditemukan"
-                    class="font-regular font-weight-light mb-12 pb-4"
-                    style="cursor:pointer; background-color: #F5F5F5"
+                    class="font-regular font-weight-light"
+                    style="cursor:pointer;"
+                    
                 >
                     <template v-slot:top="{ pagination, options, updateOptions }">
                         <div>

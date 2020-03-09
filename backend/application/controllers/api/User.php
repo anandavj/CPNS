@@ -117,7 +117,7 @@ class User extends REST_Controller
         if (isset($id)){
             $result = $this->user_model->get_user_where($id);
             $user_task = $this->user_task_model->get_user_task_where($id);
-            $result = array_merge($result[0], array('userTask' => $user_task));
+            $result = array_merge($result[0], array('taskId' => $user_task));
 
             $this->response($result, REST_Controller::HTTP_OK);
         }
@@ -127,7 +127,7 @@ class User extends REST_Controller
             $result = $this->user_model->get_all_user();
             foreach($result as $row){
                 $user_task = $this->user_task_model->get_user_task_where($row['id']);
-                $result[$index] = array_merge($result[$index], array('userTask' => $user_task));
+                $result[$index] = array_merge($result[$index], array('taskId' => $user_task));
                 $index++;
             }
         }
@@ -139,11 +139,15 @@ class User extends REST_Controller
         $id = $this->put('id');
         $user_task_group_id = $this->put('userTaskGroupId');
         $name = $this->put('name');
+        $email = $this->put('email');
         $phone = $this->put('phone');
         $address = $this->put('address');
         $place_of_birth = $this->put('placeOfBirth');
         $religion = $this->put('religion');
         $status = $this->put('status');
+        $task_id = $this->put('taskId'); //ini baru ditambahin mal
+        //yang belum algo buat ngesave taskIdnya ke database
+        //pengen nyoba nambah tapi merge array, malah masuk ke model user.
 
         if (!isset($id)) {
             $this->response(
@@ -185,6 +189,9 @@ class User extends REST_Controller
         }
         if (isset($name)) {
             $datas = array_merge($datas, array('name' => $name));
+        }
+        if (isset($name)) {
+            $datas = array_merge($datas, array('email' => $email));
         }
         if (isset($phone)) {
             $datas = array_merge($datas, array('telephone' => $phone));

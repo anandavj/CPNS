@@ -23,17 +23,25 @@ class Product_delivery_order_model extends CI_Model
 
     public function get_all_product_delivery_order()
     {
-        $this->db->select("id, delivery_order_id as productId, product_id as delivery_orderId");
+        $this->db->select("id, delivery_order_id as deliveryOrderId, product_id as productId, amount");
         $this->db->from($this::TABLE_NAME);
         return $this->db->get()->result_array();
     }
 
     public function get_product_delivery_order_where($delivery_order_id)
     {   
-        $this->db->select("id, delivery_order_id as productId, product_id as delivery_orderId");
-        $this->db->from($this::TABLE_NAME);
-        $this->db->where("delivery_order_id = '{$delivery_order_id}'");
-        return $this->db->get()->result_array();
+        
+        $res = $this->db->query("SELECT product_delivery_order.id, product_id AS productId, name, amount 
+                    FROM product_delivery_order
+                    JOIN product
+                    ON product_delivery_order.product_id = product.id
+                    WHERE product_delivery_order.delivery_order_id = '{$delivery_order_id}' 
+                     ");
+        // $this->db->select("product_delivery_order.id, product_id as productId, amount");
+        // $this->db->from($this::TABLE_NAME);
+        // $this->db->where("delivery_order_id = '{$delivery_order_id}'");
+        // $this->db->join("product", "'product_delivery_order.product_id'='product.id'");
+        return $res->result_array();
     }
 
     public function is_not_exists($id)
