@@ -117,7 +117,7 @@ class User extends REST_Controller
         if (isset($id)){
             $result = $this->user_model->get_user_where($id);
             $user_task = $this->user_task_model->get_user_task_where($id);
-            $result = array_merge($result[0], array('userTask' => $user_task));
+            $result = array_merge($result[0], array('taskId' => $user_task));
 
             $this->response($result, REST_Controller::HTTP_OK);
         }
@@ -127,7 +127,7 @@ class User extends REST_Controller
             $result = $this->user_model->get_all_user();
             foreach($result as $row){
                 $user_task = $this->user_task_model->get_user_task_where($row['id']);
-                $result[$index] = array_merge($result[$index], array('userTask' => $user_task));
+                $result[$index] = array_merge($result[$index], array('taskId' => $user_task));
                 $index++;
             }
         }
@@ -250,7 +250,7 @@ class User extends REST_Controller
 
     public function index_delete()
     {
-        $id = $this->delete('id');
+        $id = $this->input->get('id');
 
         if (!isset($id)) {
             $this->response(

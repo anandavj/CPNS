@@ -176,7 +176,7 @@
             >
                 <template v-slot:item.actions="{ item }">
                     <v-icon class="mr-2" @click.stop="editKaryawan(item)">mdi-pencil</v-icon>
-                    <v-icon class="mr-2" @click.stop="deleteKaryawan(item)">mdi-delete</v-icon>
+                    <v-icon class="mr-2" @click.stop="confirmDelete(item)">mdi-delete</v-icon>
                 </template>
             </v-data-table>
             <!-- *************************************************************************************************************** -->
@@ -523,6 +523,36 @@
             </v-dialog>
             <!-- *************************************************************************************************************** -->
             <!-- *************************************************************************************************************** -->
+            <!-- *************************************************************************************************************** -->
+            <!-- *************************************************************************************************************** -->
+            
+            <!-- *************************************************************************************************************** -->
+            <!-- Confirm on Delete -->
+            <!-- *************************************************************************************************************** -->
+            <v-dialog persistent v-model="popUpConfirmDelete" width="500px">
+                <v-card>
+                    <v-card-title>Konfirmasi</v-card-title>
+                    <v-card-text>Apakah Anda Yakin ingin menghapus Karyawan <b>{{karyawan.name}}</b>?</v-card-text>
+                    <v-card-actions>
+                        <v-container>
+                            <v-row justify="center">
+                                <v-btn class="mt-n5" color="red darken-1" text @click="close">Tidak</v-btn>
+                                <v-btn class="mt-n5" color="blue darken-1" text @click="deleteKaryawan">Ya</v-btn>
+                            </v-row>
+                            <div v-if="loadingDelete">
+                                <v-progress-linear
+                                    indeterminate
+                                    height="8"
+                                    color="yellow darken-2"
+                                >
+                                </v-progress-linear>
+                            </div>
+                        </v-container>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+            <!-- *************************************************************************************************************** -->
+            <!-- *************************************************************************************************************** -->
             <v-snackbar
                 v-model="snackbar"
                 multi-line
@@ -614,6 +644,7 @@ export default {
             popupDetails: false,
             popUpEdit: false,
             popUpConfirmSave: false,
+            popUpConfirmDelete: false,
             panel: false,
             selectedIndex: -1,
             // -----
@@ -669,6 +700,7 @@ export default {
         close() {
             this.popupDetails = false
             this.popUpConfirmSave = false
+            this.popUpConfirmDelete = false
             this.popUpEdit = false
             this.popUpNew = false
             this.popUpEdit = false
@@ -698,12 +730,29 @@ export default {
             this.karyawan = Object.assign({},item)
             this.popUpEdit = true
         },
+        deleteKaryawan(){
+            api.deleteUser(this.karyawan).then(response => {
+                this.snackbarColor = 'success'
+                this.snackbarMessage = response
+            }).catch(error => {
+                this.snackbarColor = 'error'
+                this.snackbarMessage = error
+            }).finally(() => {
+                this.close()
+                this.snackbar = true
+                this.get()
+            })
+        },
         // Save Karyawan
         confirmSave() {
             if(this.$refs.form.validate()) {
                 this.popUpEdit = false
                 this.popUpConfirmSave = true
             }
+        },
+        confirmDelete(item){
+            this.karyawan = item
+            this.popUpConfirmDelete = true
         },
 
         //this need promise to ensure that the data in the db and vue in synced !!! IMPORTANT !!!

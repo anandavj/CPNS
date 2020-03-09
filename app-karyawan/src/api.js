@@ -15,6 +15,8 @@ const insertSuccessMessage = 'Berhasil ditambahkan'
 const updateSuccessMessage = 'Berhasil diperbarui'
 const deleteSuccessMessage = 'Berhasil dihapus'
 const insertFailedMessage = 'Gagal ditambahkan'
+// const updateFailedMessage = 'Gagal diperbarui'
+const deleteFailedMessage = 'Gagal dihapus'
 const serverErrorMessage = 'Terjadi kesalahan pada server'
 const existErrorMessage = 'Sudah terdaftar'
 
@@ -108,6 +110,16 @@ const api = {
             }).catch(error => {
                 if(error.response.status == 500) reject(serverErrorMessage)
                 else reject(insertFailedMessage)
+            })
+        })
+    },
+    deleteUser(karyawan){
+        return new Promise((resolve, reject) => {
+            axios.delete(userTable, {params: {id: karyawan.id}}).then(() => {
+                resolve(deleteSuccessMessage)
+            }).catch(error => {
+                if(error.response.status == 500) reject(serverErrorMessage)
+                else reject(deleteFailedMessage)
             })
         })
     },
