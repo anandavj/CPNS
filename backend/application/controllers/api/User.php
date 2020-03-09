@@ -144,6 +144,7 @@ class User extends REST_Controller
         $place_of_birth = $this->put('placeOfBirth');
         $religion = $this->put('religion');
         $status = $this->put('status');
+        $tasks = $this->put('taskId');
 
         if (!isset($id)) {
             $this->response(
@@ -201,7 +202,7 @@ class User extends REST_Controller
         if (isset($status)) {
             $datas = array_merge($datas, array('status' => $status ));
         }
-
+        
         if ($this->user_model->update_user($id, $datas)) {
             if ($update_user_task) {
                 $result = $this->group_task_model->get_group_task_where($user_task_group_id);
@@ -209,18 +210,23 @@ class User extends REST_Controller
                 foreach ($result as $row) {
                     array_push($tasks, $row['task_id']);
                 }
-                // $this->response($tasks);
-                // return;
 
-                if (!$this->user_task_model->update_user_task($id, $tasks)) {
+                
+
+            }
+
+            if(isset($tasks)){
+                if (!$this->user_task_model->update_user_task($id, $tasks)){
                     $this->response(
                         array(
                             'status' => FALSE,
-                            'message' => $this::UPDATE_FAILED_MESSAGE . " Details: user_task_group_id updated but failed on update user_task"
+                            'message' => $this::UPDATE_FAILED_MESSAGE." Failed to update user_task"
                         ),
-                        REST_Controller::HTTP_INTERNAL_SERVER_ERROR
+                        REST_Controller::HTTP_BAD_REQUEST
                     );
+                    return;
                 }
+      
             }
 
             $this->response(

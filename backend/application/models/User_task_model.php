@@ -4,10 +4,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class User_task_model extends CI_Model
 {
     private const TABLE_NAME = 'user_task';
-
+    
     public function insert_user_task($user_id, $data)
     {
+        $this->load->model('task_model');
+
         foreach ($data as $task_id) {
+            if($this->task_model->is_not_exists($task_id)) return true;
             $this->db->select('user_id','task_id');
             $check = $this->db->get_where($this::TABLE_NAME, array('user_id'=>$user_id, 'task_id'=>$task_id));
             if ($check->num_rows() == 0) {
