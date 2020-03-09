@@ -163,9 +163,10 @@
                 :search="searchKaryawan"
                 @click:row="details"
                 :disable-sort="true"
-                :hide-default-footer="true"
+                :footer-props="{
+                    'items-per-page-options': [10, 50, 100, -1]
+                }"
                 :mobile-breakpoint="1"
-                :items-per-page="1000"
                 item-key="id"
                 :loading="loadingList"
                 no-data-text="Data Karyawan Kosong"
