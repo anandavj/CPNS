@@ -8,9 +8,10 @@ class Product_model extends CI_Model{
     
     public function insert_product_import($datas){
         foreach($datas as $data){
-            if($this->is_name_exists($data['name'])) continue;
+            
+            if($this->is_name_exists($data['name'], $data['specification'])) continue;
             else{
-                // $this->db->set($data);
+                $this->db->set($data);
                 $this->db->insert($this::TABLE_NAME, $data);
             }
         }
@@ -58,6 +59,12 @@ class Product_model extends CI_Model{
 
     public function is_name_exists($name){
         if($this->db->get_where($this::TABLE_NAME, "name='{$name}'")->num_rows() > 0) return true;
+        else return false;
+    }
+
+    public function is_name_and_specification_exists($name, $specification){
+        $specification = str_replace("'", "\'", $specification);
+        if($this->db->get_where($this::TABLE_NAME, `name='{$name}' AND specification=$specification`)->num_rows() > 0) return true;
         else return false;
     }
 

@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Delivery_order_model extends CI_Model{
 
     private const TABLE_NAME = 'delivery_order';
-    public function insert_delivery_order($name, $receiver_name, $date, $reference_number, $address, $description, $status){
+    public function insert_delivery_order($name, $receiver_name, $date, $reference_number, $address, $description, $status, $type){
         $this->db->insert($this::TABLE_NAME, array(
             'name' => $name,
             'receiver_name' => $receiver_name,
@@ -13,6 +13,7 @@ class Delivery_order_model extends CI_Model{
             'address' => $address,
             'description' => $description,
             'status' => $status,
+            'type' => $type,
         ));
         
         return $this->db->insert_id();
@@ -31,7 +32,7 @@ class Delivery_order_model extends CI_Model{
         else return false;
     }
 
-    public function update_delivery_order($id, $name, $receiver_name, $date, $reference_number, $address, $description, $status){
+    public function update_delivery_order($id, $name, $receiver_name, $date, $reference_number, $address, $description, $status, $type){
         // Check apakah tidak merubah apa-apa?
         // kenapa perlu? karena jika update tidak ada perubahan affected_rows() return 0
         $result = $this->db->get_where($this::TABLE_NAME, array(
@@ -41,7 +42,8 @@ class Delivery_order_model extends CI_Model{
             'reference_number' => $reference_number,
             'address' => $address,
             'description' => $description,
-            'status' => $status       
+            'status' => $status,       
+            'type' => $type       
         ));
         if($result->num_rows() > 0) return true;
 
@@ -53,7 +55,8 @@ class Delivery_order_model extends CI_Model{
             'reference_number' => $reference_number,
             'address' => $address,
             'description' => $description,
-            'status' => $status
+            'status' => $status,
+            'type' => $type
         ), "id='{$id}'");
         
         return $this->db->affected_rows();

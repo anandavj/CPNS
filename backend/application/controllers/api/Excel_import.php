@@ -121,9 +121,9 @@ class Excel_import extends REST_Controller
                     );
                     array_push($datas, $data);
                 }
+                // $this->response($datas);
+                // return;
             }
-            // $this->response($datas);
-            // return;
 
             if ($this->product_model->insert_product_import($datas)) {
                 $this->response(

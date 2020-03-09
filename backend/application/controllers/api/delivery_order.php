@@ -26,6 +26,7 @@ class delivery_order extends REST_Controller
         $items = $this->post('items');
         $description = $this->post('description');
         $status = $this->post('status');
+        $type = $this->post('type');
 
         if (!isset($name) || !isset($receiver_name) || !isset($reference_number) || !isset($date) || !isset($address) || !isset($items) || !isset($description) || !isset($status)) {
             $required_parameters = [];
@@ -37,6 +38,7 @@ class delivery_order extends REST_Controller
             if (!isset($description)) array_push($required_parameters, 'description');
             if (!isset($items)) array_push($required_parameters, 'items');
             if (!isset($status)) array_push($required_parameters, 'status');
+            if (!isset($type)) array_push($required_parameters, 'type');
             $this->response(
                 array(
                     'status' => FALSE,
@@ -87,8 +89,9 @@ class delivery_order extends REST_Controller
         $items = $this->put('items');
         $description = $this->put('description');
         $status = $this->put('status');
+        $type = $this->put('type');
 
-        if (!isset($id) || !isset($name) || !isset($receiver_name) || !isset($reference_number) || !isset($date) || !isset($address) || !isset($items) || !isset($description) || !isset($status)) {
+        if (!isset($id) || !isset($name) || !isset($receiver_name) || !isset($reference_number) || !isset($date) || !isset($address) || !isset($items) || !isset($description) || !isset($status) || !isset($type)) {
             $required_parameters = [];
             if (!isset($id)) array_push($required_parameters, 'id');
             if (!isset($name)) array_push($required_parameters, 'name');
@@ -99,6 +102,7 @@ class delivery_order extends REST_Controller
             if (!isset($description)) array_push($required_parameters, 'description');
             if (!isset($items)) array_push($required_parameters, 'items');
             if (!isset($status)) array_push($required_parameters, 'status');
+            if (!isset($type)) array_push($required_parameters, 'type');
             $this->response(
                 array(
                     'status' => FALSE,
@@ -120,7 +124,7 @@ class delivery_order extends REST_Controller
             return;
         }
 
-        if ($this->delivery_order_model->update_delivery_order($id, $name, $receiver_name, $reference_number, $date, $address, $description, $status)) {
+        if ($this->delivery_order_model->update_delivery_order($id, $name, $receiver_name, $reference_number, $date, $address, $description, $status, $type)) {
             if ($this->product_delivery_order_model->update_product_delivery_order($id, $items)) {
 
                 $this->response(
