@@ -642,15 +642,6 @@ export default {
         get(){
             api.getAllUser().then(karyawans => {
                 this.karyawans = karyawans
-                karyawans.forEach(karyawan => {
-                    api.getUserTaskById(karyawan.id).then(tasks => {
-                        let userTasks = []
-                        tasks.forEach(task => {
-                            userTasks.push(task.taskId)
-                        });
-                        karyawan.taskId = userTasks
-                    })
-                });
                 this.loadingList = false
             })
             api.getAllUserTaskGroup().then(userTaskGroups => {
