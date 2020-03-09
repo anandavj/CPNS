@@ -30,7 +30,7 @@
                                     :solo="true"
                                     :clearable="true"
                                     append-icon="mdi-magnify"
-                                    v-model="advanceSearch.nomor"
+                                    v-model="advanceSearch.referenceNumber"
                                     class="mb-n4"
                                 />
                             </v-col>
@@ -58,12 +58,12 @@
                                                     v-on="on"
                                                     :solo="true"
                                                     :clearable="true"
-                                                    @click:clear="advanceSearch.tanggal = null"
+                                                    @click:clear="advanceSearch.date = null"
                                                     dense
                                                     class="mr-3"
                                                     ></v-text-field>
                                                 </template>
-                                                <v-date-picker v-model="advanceSearch.tanggal" show-current="false" no-title scrollable :weekday-format="dayFormat" @change="showAdvancedatePickerMenuAdd = false">
+                                                <v-date-picker v-model="advanceSearch.date" show-current="false" no-title scrollable :weekday-format="dayFormat" @change="showAdvancedatePickerMenuAdd = false">
                                                 </v-date-picker>
                                             </v-menu>
                                         </v-col>
@@ -75,7 +75,7 @@
                                                 dense
                                                 class="mr-3"
                                                 color="accent"
-                                                v-model="advanceSearch.nama"
+                                                v-model="advanceSearch.name"
                                             >
                                             </v-text-field>
                                         </v-col>
@@ -107,7 +107,7 @@
                                                 dense
                                                 color="accent"
                                                 class="mb-n4"
-                                                v-model="advanceSearch.nama"
+                                                v-model="advanceSearch.name"
                                             >
                                             </v-text-field>
                                         </v-col>
@@ -131,11 +131,11 @@
                                                     v-on="on"
                                                     :solo="true"
                                                     :clearable="true"
-                                                    @click:clear="advanceSearch.tanggal = null"
+                                                    @click:clear="advanceSearch.date = null"
                                                     dense
                                                     ></v-text-field>
                                                 </template>
-                                                <v-date-picker v-model="advanceSearch.tanggal" show-current="false" no-title scrollable :weekday-format="dayFormat" @change="showAdvancedatePickerMenuAdd = false">
+                                                <v-date-picker v-model="advanceSearch.date" show-current="false" no-title scrollable :weekday-format="dayFormat" @change="showAdvancedatePickerMenuAdd = false">
                                                 </v-date-picker>
                                             </v-menu>
                                         </v-col>
@@ -158,7 +158,7 @@
                             </v-expand-transition>
                             <v-col>
                                 <v-btn class="body-2" text dense color="blue white--text"  @click="showAdvanceSearch"><span class="mr-1"><v-icon v-if="!showAdvanceSearchOption">mdi-filter-menu-outline</v-icon><v-icon v-else>mdi-filter-minus-outline</v-icon></span>Filter</v-btn>
-                                <v-btn text :disabled="advanceSearch.nama == '' && (advanceSearch.tanggal == '' || advanceSearch.tanggal == null) && advanceSearch.status == ''" v-if="showAdvanceSearchOption" dense @click="clearAllAdvanceSearch" class="caption showAdvanceSearchOptionText"><v-icon>mdi-filter-variant-remove</v-icon> Clear Filter</v-btn>
+                                <v-btn text :disabled="advanceSearch.name == '' && (advanceSearch.date == '' || advanceSearch.date == null) && advanceSearch.status == ''" v-if="showAdvanceSearchOption" dense @click="clearAllAdvanceSearch" class="caption showAdvanceSearchOptionText"><v-icon>mdi-filter-variant-remove</v-icon> Clear Filter</v-btn>
                             </v-col>
                         </v-row>
                         <!-- List Surat Jalan -->
@@ -166,7 +166,7 @@
                         <div v-if="popUpBreakPoint">
                             <v-data-table
                                 :headers="listSuratJalanHeader"
-                                :items="listSuratJalans"
+                                :items="suratJalans"
                                 item-key="nomor"
                                 :hide-default-footer="true"
                                 @click:row="detailSuratJalan"
@@ -201,14 +201,14 @@
                                     </v-toolbar>
                                     <v-card-text>
                                         <v-data-table
-                                            :headers="suratJalanProsesHeader"
-                                            :items="surat.barangs"
+                                            :headers="deliveryOrderProcessHeader"
+                                            :items="deliveryOrder.items"
                                             :show-select="true"
                                             :disable-sort="true"
                                             :disable-filtering="true"
                                             :mobile-breakpoint="1"
                                             :hide-default-footer="true"
-                                            v-model="selectedItemsForSuratJalan"
+                                            v-model="selectedItemsForDeliveryOrder"
                                         />
                                     </v-card-text>
                                 </v-card>
@@ -219,7 +219,7 @@
                         <div v-else>
                             <v-data-table
                                 :headers="listSuratJalanHeader"
-                                :items="listSuratJalans"
+                                :items="suratJalans"
                                 item-key="nomor"
                                 :hide-default-footer="true"
                                 @click:row="detailSuratJalan"
@@ -245,14 +245,14 @@
                                     </v-toolbar>
                                     <v-card-text>
                                         <v-data-table
-                                            :headers="suratJalanProsesHeader"
-                                            :items="surat.barangs"
+                                            :headers="deliveryOrderProcessHeader"
+                                            :items="deliveryOrder.items"
                                             :show-select="true"
                                             :disable-sort="true"
                                             :disable-filtering="true"
                                             :mobile-breakpoint="1"
                                             :hide-default-footer="true"
-                                            v-model="selectedItemsForSuratJalan"
+                                            v-model="selectedItemsForDeliveryOrder"
                                         />
                                     </v-card-text>
                                 </v-card>
@@ -265,7 +265,7 @@
                             <v-card>
                                 <v-toolbar dense flat>
                                     <span class="title font-weight-light">Detail Surat Jalan</span>
-                                    <v-btn absolute right icon @click="close" :disabled="suratJalanEditToggle"><v-icon>mdi-close</v-icon></v-btn>
+                                    <v-btn absolute right icon @click="close" :disabled="deliveryOrderEditToggle"><v-icon>mdi-close</v-icon></v-btn>
                                 </v-toolbar>
                                 <v-form ref="form" class="px-2">
                                     <v-card-text>
@@ -273,14 +273,14 @@
                                             <v-col cols="12" class="my-n8">
                                                 <v-row justify="space-between">
                                                     <v-col>
-                                                        <v-switch :disabled="suratJalanEditToggle" value v-model="suratJalanEditToggle" class="pa-0 ma-0" label="Edit Surat Jalan"></v-switch>
+                                                        <v-switch :disabled="deliveryOrderEditToggle" value v-model="deliveryOrderEditToggle" class="pa-0 ma-0" label="Edit Surat Jalan"></v-switch>
                                                     </v-col>
                                                     <!-- Tanggal -->
                                                     <v-col cols="5" v-if="popUpBreakPoint">
-                                                        <v-text-field v-model="surat.tanggal" dense color="accent" outlined filled disabled label="Tanggal"/>
+                                                        <v-text-field v-model="deliveryOrder.date" dense color="accent" outlined filled disabled label="Tanggal"/>
                                                     </v-col>
                                                     <v-col cols="3" v-else>
-                                                        <v-text-field v-model="surat.tanggal" dense color="accent" outlined filled disabled label="Tanggal"/>
+                                                        <v-text-field v-model="deliveryOrder.date" dense color="accent" outlined filled disabled label="Tanggal"/>
                                                     </v-col>
                                                     <!--  -->
                                                 </v-row>
@@ -294,38 +294,38 @@
                                             </v-col>
                                             <!-- Nama Penerima -->
                                             <v-col cols="12" class="my-n5" v-if="popUpBreakPoint">
-                                                <v-text-field v-model="surat.namaPenerima" dense color="accent" outlined :filled="!suratJalanEditToggle" :disabled="!suratJalanEditToggle" label="Nama Penerima"/>
+                                                <v-text-field v-model="deliveryOrder.receiverName" dense color="accent" outlined :filled="!deliveryOrderEditToggle" :disabled="!deliveryOrderEditToggle" label="Nama Penerima"/>
                                             </v-col>
                                             <v-col cols="6" class="my-n5" v-else>
-                                                <v-text-field v-model="surat.namaPenerima" dense color="accent" outlined :filled="!suratJalanEditToggle" :disabled="!suratJalanEditToggle" label="Nama Penerima"/>
+                                                <v-text-field v-model="deliveryOrder.receiverName" dense color="accent" outlined :filled="!deliveryOrderEditToggle" :disabled="!deliveryOrderEditToggle" label="Nama Penerima"/>
                                             </v-col>
                                             <!--  -->
                                             <!-- Nomor Surat -->
                                             <v-col cols="12" class="my-n5" v-if="popUpBreakPoint">
-                                                <v-text-field v-model="surat.nomor" dense color="accent" outlined :filled="!suratJalanEditToggle" :disabled="!suratJalanEditToggle" label="Nomor Surat"/>
+                                                <v-text-field v-model="deliveryOrder.referenceNumber" dense color="accent" outlined :filled="!deliveryOrderEditToggle" :disabled="!deliveryOrderEditToggle" label="Nomor Surat"/>
                                             </v-col>
                                             <v-col cols="6" class="my-n5" v-else>
-                                                <v-text-field v-model="surat.nomor" dense color="accent" outlined :filled="!suratJalanEditToggle" :disabled="!suratJalanEditToggle" label="Nomor Surat"/>
+                                                <v-text-field v-model="deliveryOrder.referenceNumber" dense color="accent" outlined :filled="!deliveryOrderEditToggle" :disabled="!deliveryOrderEditToggle" label="Nomor Surat"/>
                                             </v-col>
                                             <!--  -->
                                             <!-- Alamat -->
                                             <v-col cols="12" class="my-n5" v-if="popUpBreakPoint">
-                                                <v-text-field v-model="surat.alamat" dense color="accent" outlined :filled="!suratJalanEditToggle" :disabled="!suratJalanEditToggle" label="Alamat"/>
+                                                <v-text-field v-model="deliveryOrder.address" dense color="accent" outlined :filled="!deliveryOrderEditToggle" :disabled="!deliveryOrderEditToggle" label="Alamat"/>
                                             </v-col>
                                             <v-col cols="6" class="my-n5" v-else>
-                                                <v-text-field v-model="surat.alamat" dense color="accent" outlined :filled="!suratJalanEditToggle" :disabled="!suratJalanEditToggle" label="Alamat"/>
+                                                <v-text-field v-model="deliveryOrder.address" dense color="accent" outlined :filled="!deliveryOrderEditToggle" :disabled="!deliveryOrderEditToggle" label="Alamat"/>
                                             </v-col>
                                             <!--  -->
                                             <!-- Nama Surat -->
                                             <v-col cols="12" class="my-n5" v-if="popUpBreakPoint">
-                                                <v-text-field v-model="surat.nama" dense color="accent" outlined :filled="!suratJalanEditToggle" :disabled="!suratJalanEditToggle" label="Nama Surat"/>
+                                                <v-text-field v-model="deliveryOrder.name" dense color="accent" outlined :filled="!deliveryOrderEditToggle" :disabled="!deliveryOrderEditToggle" label="Nama Surat"/>
                                             </v-col>
                                             <v-col cols="6" class="my-n5" v-else>
-                                                <v-text-field v-model="surat.nama" dense color="accent" outlined :filled="!suratJalanEditToggle" :disabled="!suratJalanEditToggle" label="Nama Surat"/>
+                                                <v-text-field v-model="deliveryOrder.name" dense color="accent" outlined :filled="!deliveryOrderEditToggle" :disabled="!deliveryOrderEditToggle" label="Nama Surat"/>
                                             </v-col>
                                             <!--  -->
                                             <v-col cols="12" class="my-n5">
-                                                <v-textarea v-model="surat.keterangan" dense color="accent" outlined :filled="!suratJalanEditToggle" :disabled="!suratJalanEditToggle" :auto-grow="true" :no-resize="true" label="Keterangan"/>
+                                                <v-textarea v-model="deliveryOrder.description" dense color="accent" outlined :filled="!deliveryOrderEditToggle" :disabled="!deliveryOrderEditToggle" :auto-grow="true" :no-resize="true" label="Keterangan"/>
                                             </v-col>
                                             <v-col cols="12" class="mb-n5 mt-n3">
                                                 <v-divider></v-divider>
@@ -338,19 +338,19 @@
                                             <!-- PC / Laptop View -->
                                             <v-col cols="12" class="my-n4" v-if="!popUpBreakPoint">
                                                 <v-data-table
-                                                    :headers="suratJalanNewHeader"
-                                                    :items="surat.barangs"
+                                                    :headers="deliveryOrderNewHeaders"
+                                                    :items="deliveryOrder.items"
                                                     :hide-default-footer="true"
                                                     :disable-filtering="true"
                                                     :disable-pagination="true"
                                                     :disable-sort="true"
                                                     no-data-text="Belum ada Barang yang ditambah"
                                                 >
-                                                    <template v-slot:body.append v-if="suratJalanEditToggle">
+                                                    <template v-slot:body.append v-if="deliveryOrderEditToggle">
                                                         <tr>
-                                                            <td><v-text-field color="accent" id="focusGained" v-on:keyup.enter="addSuratJalanNewItem" outlined dense v-model="suratJalanNewItem.id"/></td>
-                                                            <td><v-text-field color="accent" v-on:keyup.enter="addSuratJalanNewItem" outlined dense v-model="suratJalanNewItem.nama"/></td>
-                                                            <td><v-text-field color="accent" v-on:keyup.enter="addSuratJalanNewItem" outlined dense v-model="suratJalanNewItem.jumlah"/></td>
+                                                            <td><v-text-field color="accent" id="focusGained" v-on:keyup.enter="addSuratJalanNewItem" outlined dense v-model="deliveryOrderNewItem.productId"/></td>
+                                                            <td><v-text-field color="accent" v-on:keyup.enter="addSuratJalanNewItem" outlined dense v-model="deliveryOrderNewItem.productName"/></td>
+                                                            <td><v-text-field color="accent" v-on:keyup.enter="addSuratJalanNewItem" outlined dense v-model="deliveryOrderNewItem.amount"/></td>
                                                         </tr>
                                                     </template>
                                                 </v-data-table>
@@ -358,8 +358,8 @@
                                             <!-- Mobile view -->
                                             <v-col cols="12" class="mb-4 mt-n10" v-else>
                                                 <v-data-table
-                                                    :headers="suratJalanNewHeader"
-                                                    :items="surat.barangs"
+                                                    :headers="deliveryOrderNewHeaders"
+                                                    :items="deliveryOrder.items"
                                                     :hide-default-footer="true"
                                                     :disable-filtering="true"
                                                     :disable-pagination="true"
@@ -373,7 +373,7 @@
                                                             </td>
                                                         </tr>
                                                     </template>
-                                                    <template v-slot:body.append="{ headers }" v-if="suratJalanEditToggle">
+                                                    <template v-slot:body.append="{ headers }" v-if="deliveryOrderEditToggle">
                                                         <tr>
                                                             <td :colspan="headers.length" class="text-center">
                                                                 <v-row>
@@ -381,13 +381,13 @@
                                                                         Tambah Barang
                                                                     </v-col>
                                                                     <v-col cols="12">
-                                                                        <v-text-field class="mb-n4" color="accent" label="ID Barang" outlined dense v-model="suratJalanNewItem.id"/>
+                                                                        <v-text-field class="mb-n4" color="accent" label="ID Barang" outlined dense v-model="deliveryOrderNewItem.productId"/>
                                                                     </v-col>
                                                                     <v-col cols="12" class="mt-n4">
-                                                                        <v-text-field class="mb-n4" color="accent" label="Nama Barang" outlined dense v-model="suratJalanNewItem.nama"/>
+                                                                        <v-text-field class="mb-n4" color="accent" label="Nama Barang" outlined dense v-model="deliveryOrderNewItem.productName"/>
                                                                     </v-col>
                                                                     <v-col cols="9" class="mt-n4 mr-n3">
-                                                                        <v-text-field class="mb-n4" color="accent" label="Jumlah" outlined dense v-model="suratJalanNewItem.jumlah"/>
+                                                                        <v-text-field class="mb-n4" color="accent" label="Jumlah" outlined dense v-model="deliveryOrderNewItem.amount"/>
                                                                     </v-col>
                                                                     <v-col cols="3" class="mt-n4">
                                                                         <v-btn color="green" dark @click="addSuratJalanNewItem"><v-icon>mdi-plus</v-icon></v-btn>
@@ -414,7 +414,7 @@
                                         </v-row>
                                     </v-card-text>
                                 </v-form>
-                                <v-card-actions v-if="suratJalanEditToggle">
+                                <v-card-actions v-if="deliveryOrderEditToggle">
                                     <v-container>
                                         <v-row justify="center">
                                             <v-btn class="mt-n12" color="red darken-1" text @click="close">Cancel</v-btn>
@@ -443,10 +443,10 @@
                                                     <v-row justify="end">
                                                         <!-- Tanggal -->
                                                         <v-col cols="5" v-if="popUpBreakPoint">
-                                                            <v-text-field v-model="surat.tanggal" dense color="accent" outlined filled disabled label="Tanggal"/>
+                                                            <v-text-field v-model="deliveryOrder.date" dense color="accent" outlined filled disabled label="Tanggal"/>
                                                         </v-col>
                                                         <v-col cols="3" v-else>
-                                                            <v-text-field v-model="surat.tanggal" dense color="accent" outlined filled disabled label="Tanggal"/>
+                                                            <v-text-field v-model="deliveryOrder.date" dense color="accent" outlined filled disabled label="Tanggal"/>
                                                         </v-col>
                                                     </v-row>
                                                 </v-col>
@@ -459,38 +459,38 @@
                                                 </v-col>
                                                 <!-- Nama Penerima -->
                                                 <v-col cols="12" class="my-n5" v-if="popUpBreakPoint">
-                                                    <v-text-field v-model="surat.namaPenerima" dense color="accent" outlined label="Nama Penerima"/>
+                                                    <v-text-field v-model="deliveryOrder.receiverName" dense color="accent" outlined label="Nama Penerima"/>
                                                 </v-col>
                                                 <v-col cols="6" class="my-n5" v-else>
-                                                    <v-text-field v-model="surat.namaPenerima" dense color="accent" outlined label="Nama Penerima"/>
+                                                    <v-text-field v-model="deliveryOrder.receiverName" dense color="accent" outlined label="Nama Penerima"/>
                                                 </v-col>
                                                 <!--  -->
                                                 <!-- Nomor Surat -->
                                                 <v-col cols="12" class="my-n5" v-if="popUpBreakPoint">
-                                                    <v-text-field v-model="surat.nomor" dense color="accent" outlined label="Nomor Surat"/>
+                                                    <v-text-field v-model="deliveryOrder.referenceNumber" dense color="accent" outlined label="Nomor Surat"/>
                                                 </v-col>
                                                 <v-col cols="6" class="my-n5" v-else>
-                                                    <v-text-field v-model="surat.nomor" dense color="accent" outlined label="Nomor Surat"/>
+                                                    <v-text-field v-model="deliveryOrder.referenceNumber" dense color="accent" outlined label="Nomor Surat"/>
                                                 </v-col>
                                                 <!--  -->
                                                 <!-- Alamat -->
                                                 <v-col cols="12" class="my-n5" v-if="popUpBreakPoint">
-                                                    <v-text-field v-model="surat.alamat" dense color="accent" outlined label="Alamat"/>
+                                                    <v-text-field v-model="deliveryOrder.address" dense color="accent" outlined label="Alamat"/>
                                                 </v-col>
                                                 <v-col cols="6" class="my-n5" v-else>
-                                                    <v-text-field v-model="surat.alamat" dense color="accent" outlined label="Alamat"/>
+                                                    <v-text-field v-model="deliveryOrder.address" dense color="accent" outlined label="Alamat"/>
                                                 </v-col>
                                                 <!--  -->
                                                 <!-- Nama Surat -->
                                                 <v-col cols="12" class="my-n5" v-if="popUpBreakPoint">
-                                                    <v-text-field v-model="surat.nama" dense color="accent" outlined label="Nama Surat"/>
+                                                    <v-text-field v-model="deliveryOrder.name" dense color="accent" outlined label="Nama Surat"/>
                                                 </v-col>
                                                 <v-col cols="6" class="my-n5" v-else>
-                                                    <v-text-field v-model="surat.nama" dense color="accent" outlined label="Nama Surat"/>
+                                                    <v-text-field v-model="deliveryOrder.name" dense color="accent" outlined label="Nama Surat"/>
                                                 </v-col>
                                                 <!--  -->
                                                 <v-col cols="12" class="my-n5">
-                                                    <v-textarea v-model="surat.keterangan" dense color="accent" :auto-grow="true" outlined label="Keterangan"/>
+                                                    <v-textarea v-model="deliveryOrder.description" dense color="accent" :auto-grow="true" outlined label="Keterangan"/>
                                                 </v-col>
                                                 <v-col cols="12" class="mb-n5 mt-n3" v-if="!popUpBreakPoint">
                                                     <v-divider v-if="!popUpBreakPoint"></v-divider>
@@ -503,19 +503,69 @@
                                                 <!-- PC / Laptop View -->
                                                 <v-col cols="12" class="mt-n4" v-if="!popUpBreakPoint">
                                                     <v-data-table
-                                                        :headers="suratJalanNewHeader"
-                                                        :items="surat.barangs"
+                                                        :headers="deliveryOrderNewHeaders"
+                                                        :items="deliveryOrder.items"
                                                         :hide-default-footer="true"
                                                         :disable-filtering="true"
                                                         :disable-pagination="true"
                                                         :disable-sort="true"
                                                         no-data-text="Belum ada Barang yang ditambah"
+                                                        hover=""
                                                     >
                                                         <template v-slot:body.append>
                                                             <tr>
-                                                                <td><v-text-field color="accent" id="focusGained" v-on:keyup.enter="addSuratJalanNewItem" outlined dense v-model="suratJalanNewItem.id"/></td>
-                                                                <td><v-text-field color="accent" v-on:keyup.enter="addSuratJalanNewItem" outlined dense v-model="suratJalanNewItem.nama"/></td>
-                                                                <td><v-text-field color="accent" v-on:keyup.enter="addSuratJalanNewItem" outlined dense v-model="suratJalanNewItem.jumlah"/></td>
+                                                                <td>
+                                                                    <v-autocomplete
+                                                                        color="accent"
+                                                                        id="focusGained"
+                                                                        v-on:keyup.enter="focusChange"
+                                                                        dense
+                                                                        v-model="deliveryOrderNewItem.productId"
+                                                                        chips
+                                                                        :items="products"
+                                                                        :clearable="true"
+                                                                        :auto-select-first="true"
+                                                                        item-color="blue"
+                                                                        :search-input.sync="searchId"
+                                                                        @click:clear="deliveryOrderNewItem.productName=null"
+                                                                        @change="onChangeSearchId"
+                                                                        item-text="id"
+                                                                        item-value="id"
+                                                                        :readonly="deliveryOrderNewItem.productId!=null"
+                                                                    >
+                                                                        <template v-slot:selection="data">
+                                                                            <v-chip color="transparent" class="pa-0">
+                                                                                {{data.item.id}}
+                                                                            </v-chip>
+                                                                        </template>
+                                                                    </v-autocomplete>
+                                                                </td>
+                                                                <td>
+                                                                    <v-autocomplete
+                                                                        color="accent"
+                                                                        v-on:keyup.enter="focusChange"
+                                                                        dense
+                                                                        v-model="deliveryOrderNewItem.productName"
+                                                                        chips
+                                                                        :items="products"
+                                                                        :clearable="true"
+                                                                        :auto-select-first="true"
+                                                                        item-color="blue"
+                                                                        :search-input.sync="searchName"
+                                                                        @click:clear="deliveryOrderNewItem.productId=null"
+                                                                        @change="onChangeSearchName"
+                                                                        item-text="name"
+                                                                        item-value="name"
+                                                                        :readonly="deliveryOrderNewItem.productName!=null"
+                                                                    >
+                                                                        <template v-slot:selection="data">
+                                                                            <v-chip color="transparent" class="pa-0">
+                                                                                {{data.item.name}}
+                                                                            </v-chip>
+                                                                        </template>
+                                                                    </v-autocomplete>
+                                                                </td>
+                                                                <td><v-text-field id="focusGainedAmount" color="accent" v-on:keyup.enter="addSuratJalanNewItem" v-model="deliveryOrderNewItem.amount"/></td>
                                                             </tr>
                                                         </template>
                                                         <template v-slot:item.actions="{ item }">
@@ -527,8 +577,8 @@
                                                 <!-- Mobile view -->
                                                 <v-col cols="12" class="mb-4 mt-n10" v-else>
                                                     <v-data-table
-                                                        :headers="suratJalanNewHeader"
-                                                        :items="surat.barangs"
+                                                        :headers="deliveryOrderNewHeaders"
+                                                        :items="deliveryOrder.items"
                                                         :hide-default-footer="true"
                                                         :disable-filtering="true"
                                                         :disable-pagination="true"
@@ -550,13 +600,13 @@
                                                                             Tambah Barang
                                                                         </v-col>
                                                                         <v-col cols="12">
-                                                                            <v-text-field class="mb-n4" color="accent" label="ID Barang" outlined dense v-model="suratJalanNewItem.id"/>
+                                                                            <v-text-field class="mb-n4" color="accent" label="ID Barang" outlined dense v-model="deliveryOrderNewItem.productId"/>
                                                                         </v-col>
                                                                         <v-col cols="12" class="mt-n4">
-                                                                            <v-text-field class="mb-n4" color="accent" label="Nama Barang" outlined dense v-model="suratJalanNewItem.nama"/>
+                                                                            <v-text-field class="mb-n4" color="accent" label="Nama Barang" outlined dense v-model="deliveryOrderNewItem.productName"/>
                                                                         </v-col>
                                                                         <v-col cols="9" class="mt-n4 mr-n3">
-                                                                            <v-text-field class="mb-n4" color="accent" label="Jumlah" outlined dense v-model="suratJalanNewItem.jumlah"/>
+                                                                            <v-text-field class="mb-n4" color="accent" label="Jumlah" outlined dense v-model="deliveryOrderNewItem.amount"/>
                                                                         </v-col>
                                                                         <v-col cols="3" class="mt-n4">
                                                                             <v-btn color="green" dark @click="addSuratJalanNewItem"><v-icon>mdi-plus</v-icon></v-btn>
@@ -569,11 +619,11 @@
                                                             <v-card color="grey lighten-2" class="mt-1 mb-3 mx-2">
                                                                 <div class="d-flex flex-no-wrap justify-space-between align-center">
                                                                     <div>
-                                                                        <v-card-title class="body-2">{{item.nama}}</v-card-title>
-                                                                        <v-card-subtitle>{{item.id}}</v-card-subtitle>
+                                                                        <v-card-title class="body-2">{{item.productName}}</v-card-title>
+                                                                        <v-card-subtitle>{{item.productId}}</v-card-subtitle>
                                                                     </div>
                                                                     <div>
-                                                                        <v-card-subtitle>{{item.jumlah}}</v-card-subtitle>
+                                                                        <v-card-subtitle>{{item.amount}}</v-card-subtitle>
                                                                     </div>
                                                                 </div>
                                                             </v-card>
@@ -606,70 +656,50 @@
 
 <script>
 
+import api from "@/api.js"
 import moment from 'moment/src/moment'
+import _ from 'lodash'
 
 export default {
     name: 'SuratJalan',
-
+    mounted() {
+        this.get()
+    },
     data() {
         return {
             tab:'',
-            /* -------------------- SURAT JALAN -------------------- */
-            // List & Details
-            // listSuratJalanHeader on computed
-            searchSuratJalan:'',
             advanceSearch: {
-                nomor:'',
-                tanggal: '',
-                nama:'',
+                referenceNumber:'',
+                date: '',
+                name:'',
                 status:''
             },
-            listSuratJalans:[
-                {
-                    id:1,
-                    nomor:'xxx',
-                    nama:'Pemesanana dari x untuk y',
-                    tanggal: '2020-04-02',
-                    namaPenerima:'Yoga',
-                    alamat:'Yogya',
-                    barangs:[
-                    ],
-                    status:'Dikirim',
-                    keterangan:''
-                },
-                {
-                    id:2,
-                    nomor:'yxx',
-                    nama:'Pemesanana dari y untuk x',
-                    tanggal:'2020-04-02',
-                    namaPenerima:'Yoga',
-                    alamat:'Yogya',
-                    barangs:[],
-                    status:'Belum Diproses',
-                    keterangan:''
-                }
-            ],
-            surat: {
+            products:[],
+            suratJalans:[],
+            deliveryOrders:[],
+            deliveryOrder: {
                 id:null,
-                nomor:'',
-                nama:'',
-                tanggal: new Date().toISOString().substr(0, 10),
-                namaPenerima:'',
-                alamat:'',
-                barangs:[],
+                referenceNumber:'',
+                name:'',
+                date: new Date().toISOString().substr(0, 10),
+                receiverName:'',
+                address:'',
+                items:[],
                 status:'',
-                keterangan:''
+                description:'',
+                type:''
             },
-            suratDefault: {
+            deliveryOrderDefault: {
                 id:null,
-                nomor:'',
-                nama:'',
-                tanggal: new Date().toISOString().substr(0, 10),
-                namaPenerima:'',
-                alamat:'',
-                barangs:[],
+                referenceNumber:'',
+                name:'',
+                date: new Date().toISOString().substr(0, 10),
+                receiverName:'',
+                address:'',
+                items:[],
                 status:'',
-                keterangan:''
+                description:'',
+                type:''
             },
             counter:0,
             status: [
@@ -678,46 +708,64 @@ export default {
                 {id:3, name:'Selesai', color:'green'},
                 {id:4, name:'Batal', color:'red'}
             ],
-            suratJalanEditToggle: false,
-            suratJalanNewHeader: [
-                {text:'ID Barang', value:'id'},
-                {text:'Nama Barang', value:'nama'},
-                {text:'Jumlah', value:'jumlah'},
+            deliveryOrderEditToggle: false,
+            deliveryOrderNewHeaders: [
+                {text:'ID Barang', value:'productId', width:'30%'},
+                {text:'Nama Barang', value:'productName', width:'40%'},
+                {text:'Jumlah', value:'amount', width:'20%'},
                 {value:'actions'}
             ],
-            // object of Item in surat jalan before pushing it into surat.barangs
-            suratJalanNewItem: {
-                id:'',
-                nama:'',
-                jumlah:null
+            // object of Item in surat jalan before pushing it into deliveryOrder.items
+            deliveryOrderNewItem: {
+                productId:null,
+                productName:null,
+                amount:null
             },
-            suratJalanNewItemDefault: {
-                id:'',
-                nama:'',
-                jumlah:null
+            deliveryOrderNewItemDefault: {
+                productId:null,
+                productName:null,
+                amount:null
             },
             // Proses Surat Jalan
-            suratJalanProsesHeader: [
-                {text:'ID Barang', value:'id'},
-                {text:'Nama Barang', value:'nama'},
-                {text:'Jumlah', value:'jumlah'},
+            deliveryOrderProcessHeader: [
+                {text:'ID Barang', value:'productId'},
+                {text:'Nama Barang', value:'productName'},
+                {text:'Jumlah', value:'amount'},
             ],
             // Proses Muat ditampung disini
-            selectedItemsForSuratJalan:[],
+            selectedItemsForDeliveryOrder:[],
             // --
-            selectedIndexSuratJalan:-1,
+            selectedIndex:-1,
             // PopUp Var
             popUpNewSuratJalan: false,
             popUpDetailSuratJalan: false,
             popUpProsesSuratJalan: false,
             showAdvanceSearchOption: false,
             showAdvancedatePickerMenuAdd: false,
+            searchId:'',
+            searchName:'',
             /* --------------------             -------------------- */
             /* -------------------- DO -------------------- */
             /* --------------------    -------------------- */
         }
     },
     methods: {
+        get() {
+            api.getAllDeliveryOrder()
+                .then(deliveryOrders => {
+                    deliveryOrders.forEach(deliveryOrder => {
+                        if(deliveryOrder.type == 1) {
+                            this.suratJalans.push(deliveryOrder)
+                        } else {
+                            this.deliveryOrders.push(deliveryOrder)
+                        }
+                    });
+                })
+            api.getAllProducts()
+                .then(products => {
+                    this.products = products
+                })
+        },
         /* -------------------- SURAT JALAN -------------------- */
         // Advance Search
         showAdvanceSearch() {
@@ -726,34 +774,34 @@ export default {
             } else {
                 if(this.showAdvanceSearchOption) {
                     this.showAdvanceSearchOption = false
-                    // this.advanceSearch.nama = ''
-                    // this.advanceSearch.tanggal = ''
+                    // this.advanceSearch.name = ''
+                    // this.advanceSearch.date = ''
                     // this.advanceSearch.status = ''
                 }
             }
         },
         clearAllAdvanceSearch() {
-            this.advanceSearch.nama = ''
-            this.advanceSearch.tanggal = ''
+            this.advanceSearch.name = ''
+            this.advanceSearch.date = ''
             this.advanceSearch.status = ''
         },
         advanceSearchNomor(value) {
-            if(!this.advanceSearch.nomor) {
+            if(!this.advanceSearch.referenceNumber) {
                 return true
             }
-            return value.toLowerCase().includes(this.advanceSearch.nomor.toLowerCase())
+            return value.toLowerCase().includes(this.advanceSearch.referenceNumber.toLowerCase())
         },
         advanceSearchTanggal(value) {
-            if(!this.advanceSearch.tanggal) {
+            if(!this.advanceSearch.date) {
                 return true
             }
-            return value === this.advanceSearch.tanggal
+            return value === this.advanceSearch.date
         },
         advanceSearchNama(value) {
-            if(!this.advanceSearch.nama) {
+            if(!this.advanceSearch.name) {
                 return true
             }
-            return value.toLowerCase().includes(this.advanceSearch.nama.toLowerCase())
+            return value.toLowerCase().includes(this.advanceSearch.name.toLowerCase())
         },
         advanceSearchStatus(value) {
             if(!this.advanceSearch.status) {
@@ -771,56 +819,67 @@ export default {
         },
         // Save New Surat Jalan
         saveNewSuratJalan() {
-            this.listSuratJalans.push(this.surat)
-            this.surat.status = 'Belum Diproses'
-            this.surat = Object.assign({},this.suratDefault)
-            this.selectedIndexSuratJalan = -1
+            this.suratJalans.push(this.deliveryOrder)
+            this.deliveryOrder.status = 'Belum Diproses'
+            this.deliveryOrder = Object.assign({},this.deliveryOrderDefault)
+            this.selectedIndex = -1
             this.popUpNewSuratJalan = false
         },
         // Detail Surat Jalan
         detailSuratJalan(item) {
-            this.selectedIndexSuratJalan = this.listSuratJalans.indexOf(item)
-            this.surat = Object.assign({},item)
+            this.selectedIndex = this.suratJalans.indexOf(item)
+            this.deliveryOrder = Object.assign({},item)
             this.popUpDetailSuratJalan = true
         },
         close() {
             // Surat Jalan
             if(this.popUpNewSuratJalan) {
                 this.popUpNewSuratJalan = false
-                this.suratJalanNewItem = Object.assign({},this.suratJalanNewItemDefault)
-                this.surat = Object.assign({},this.suratDefault)
+                this.deliveryOrderNewItem = Object.assign({},this.deliveryOrderNewItemDefault)
+                this.deliveryOrder = Object.assign({},this.deliveryOrderDefault)
             } else {
                 if(this.popUpDetailSuratJalan) {
-                    if(this.suratJalanEditToggle) {
-                        this.suratJalanEditToggle = false
+                    if(this.deliveryOrderEditToggle) {
+                        this.deliveryOrderEditToggle = false
                         for(let i=0; i<this.counter; i++) {
-                            this.surat.barangs.pop()
+                            this.deliveryOrder.items.pop()
                         }
                         this.counter = 0
-                        this.suratJalanNewItem = Object.assign({},this.suratJalanNewItemDefault)
+                        this.deliveryOrderNewItem = Object.assign({},this.deliveryOrderNewItemDefault)
                     }
                     this.popUpDetailSuratJalan = false
-                    this.surat = Object.assign({},this.suratDefault)
-                    this.selectedIndexSuratJalan = -1
+                    this.deliveryOrder = Object.assign({},this.deliveryOrderDefault)
+                    this.selectedIndex = -1
                 } else {
                     if(this.popUpProsesSuratJalan) {
                         this.popUpProsesSuratJalan = false
-                        this.surat = Object.assign({},this.suratDefault)
-                        this.selectedIndexSuratJalan = -1
+                        this.deliveryOrder = Object.assign({},this.deliveryOrderDefault)
+                        this.selectedIndex = -1
                     }
                 }
             }
         },
         addSuratJalanNewItem() {
             this.counter++
-            this.surat.barangs.push(this.suratJalanNewItem)
-            this.suratJalanNewItem = Object.assign({},this.suratJalanNewItemDefault)
+            this.deliveryOrder.items.push(this.deliveryOrderNewItem)
+            this.deliveryOrderNewItem = Object.assign({},this.deliveryOrderNewItemDefault)
             document.getElementById("focusGained").focus()
+        },
+        focusChange() {
+            document.getElementById("focusGainedAmount").focus()
+        },
+        onChangeSearchId() {
+            this.searchId = ''
+            this.deliveryOrderNewItem.productName = _.find(this.products,['id', this.deliveryOrderNewItem.productId]).name
+        },
+        onChangeSearchName() {
+            this.searchName = ''
+            this.deliveryOrderNewItem.productId = _.find(this.products,['name',this.deliveryOrderNewItem.productName]).id
         },
         // Proses Surat jalan
         prosesSuratJalan(item) {
-            this.selectedIndexSuratJalan = this.listSuratJalans.indexOf(item)
-            this.surat = Object.assign({},item)
+            this.selectedIndex = this.suratJalans.indexOf(item)
+            this.deliveryOrder = Object.assign({},item)
             this.popUpProsesSuratJalan = true
         }
         /* --------------------             -------------------- */
@@ -830,14 +889,14 @@ export default {
 
     computed: {
         formatDate() {
-            return this.advanceSearch.tanggal ? moment(this.advanceSearch.tanggal).format('DD MMMM YYYY') : ''
+            return this.advanceSearch.date ? moment(this.advanceSearch.date).format('DD MMMM YYYY') : ''
         },
         listSuratJalanHeader() {
             return [
-                {text:'Nomor Surat Jalan', value:'nomor',filter: this.advanceSearchNomor},
-                {text:'Tanggal', value:'tanggal',filter: this.advanceSearchTanggal},
-                {text:'Nama', value:'nama',filter: this.advanceSearchNama},
-                {text:'Keterangan', value:'keterangan'},
+                {text:'Nomor Surat Jalan', value:'referenceNumber',filter: this.advanceSearchNomor},
+                {text:'Tanggal', value:'date',filter: this.advanceSearchTanggal},
+                {text:'Nama', value:'name',filter: this.advanceSearchNama},
+                {text:'Keterangan', value:'description'},
                 {text:'Status', value:'status',filter: this.advanceSearchStatus},
                 {text:'', value:'actions',width:'10%'}
             ]
@@ -850,7 +909,7 @@ export default {
                 return false
             }
         }
-    }
+    },
 }
 </script>
 

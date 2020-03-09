@@ -10,6 +10,7 @@ const categoryTable = 'category'
 const unitTable = 'unit'
 const tagTable = 'tag'
 const productTagTable = 'product_tag'
+const deliveryOrderTable = 'delivery_order'
 const insertSuccessMessage = 'Berhasil ditambahkan'
 const updateSuccessMessage = 'Berhasil diperbarui'
 const deleteSuccessMessage = 'Berhasil dihapus'
@@ -313,11 +314,30 @@ const api = {
                     reject(error)
                 })
         })
+    },
+
+    /* ================================================================================================================================================= */
+    /* ================================================================================================================================================= */
+
+    /* ================================================================================================================================================= */
+    /* Delivery Order */
+    /* ================================================================================================================================================= */
+
+    // Delivery Order
+    getAllDeliveryOrder() {
+        return new Promise((resolve, reject) => {
+            axios.get(deliveryOrderTable)
+            .then(response => {
+                resolve(response.data);
+            })
+            .catch(error => {
+                if(error.response.status == 500) reject(serverErrorMessage)
+            })
+        })
     }
 
     /* ================================================================================================================================================= */
     /* ================================================================================================================================================= */
-    
 }
 
 export default api

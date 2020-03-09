@@ -10,7 +10,7 @@ class User_task_model extends CI_Model
         $this->load->model('task_model');
 
         foreach ($data as $task_id) {
-            if($this->task_model->is_not_exists($task_id)) return true;
+        
             $this->db->select('user_id','task_id');
             $check = $this->db->get_where($this::TABLE_NAME, array('user_id'=>$user_id, 'task_id'=>$task_id));
             if ($check->num_rows() == 0) {

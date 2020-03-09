@@ -86,7 +86,9 @@
                 @click:row="details"
                 :mobile-breakpoint="1"
                 :disable-sort="true"
-                :hide-default-footer="true"
+                :footer-props="{
+                    'items-per-page-options': [10, 50, 100, -1]
+                }"
                 :loading="loadingListDivisi"
                 no-data-text="Belum ada Divisi yang terdaftar"
                 no-results-text="Divisi tidak ditemukan"

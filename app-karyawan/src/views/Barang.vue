@@ -568,14 +568,36 @@
                     :headers="productHeaders"
                     :items="products"
                     @click:row="details"
-                    :hide-default-footer="true"
+                    :footer-props="{
+                        'items-per-page-options': [10, 50, 100, -1]
+                    }"
                     item-key="nama"
                     no-data-text="Data Barang Kosong"
                     no-results-text="Data Barang Tidak Ditemukan"
                     class="font-regular font-weight-light"
-                    style="cursor:pointer; background-color: #F5F5F5"
+                    style="cursor:pointer;"
                     
                 >
+                    <template v-slot:top="{ pagination, options, updateOptions }">
+                        <div>
+                            <v-data-footer
+                                :pagination="pagination" 
+                                :options="options"
+                                @update:options="updateOptions"
+                                items-per-page-text="$vuetify.dataTable.itemsPerPageText"
+                            />
+                        </div>
+                    </template>
+                    <template v-slot:footer="{ pagination, options, updateOptions }">
+                        <div>
+                            <v-data-footer
+                                :pagination="pagination" 
+                                :options="options"
+                                @update:options="updateOptions"
+                                items-per-page-text="$vuetify.dataTable.itemsPerPageText"
+                            />
+                        </div>
+                    </template>
                     <template v-slot:item.actions="{ item }">
                         <v-icon class="mr-2" @click.stop="editProduct(item)">mdi-pencil</v-icon>
                         <v-icon @click.stop="deleteProduct(item)">mdi-delete</v-icon>
@@ -1470,7 +1492,7 @@ export default {
             this.selectedIndex = this.products.indexOf(item)
             this.product = Object.assign({},item)
             this.categoryName = _.find(this.categories,['id', this.product.categoryId]).name
-            this.unitName = _.find(this.units,['id', this.product.unitId]).name
+            this.unitName = _.find(this.units,['id', this.product.unitId]).abbreviation
             this.popupDetails = true
             this.productImageSelected = this.product.images[0]
         },
