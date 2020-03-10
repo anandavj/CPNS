@@ -148,6 +148,14 @@
                                 </div>
                             </v-container>
                         </v-card-actions>
+                        <div v-if="loading">
+                            <v-progress-linear
+                                indeterminate
+                                height="8"
+                                color="yellow darken-2"
+                                >
+                            </v-progress-linear>
+                        </div>
                     </v-card>
                 </v-dialog>
             </v-container>
@@ -539,7 +547,7 @@
                                 <v-btn class="mt-n5" color="red darken-1" text @click="close">Tidak</v-btn>
                                 <v-btn class="mt-n5" color="blue darken-1" text @click="deleteKaryawan">Ya</v-btn>
                             </v-row>
-                            <div v-if="loadingDelete">
+                            <div v-if="loading">
                                 <v-progress-linear
                                     indeterminate
                                     height="8"
@@ -659,11 +667,11 @@ export default {
             addressRules: [v => !!v || 'address Harus Diisi'],
             telephoneRules: [
                 v => !!v || 'Nomor HP Harus Diisi',
-                v => (v && v.length >= 8) || 'Nomor HP Tidak Valid',
+                // v => (v && v.length >= 8) || 'Nomor HP Tidak Valid',
             ],
             passwordRules: [
                 v => !!v || 'Password Harus Diisi',
-                v => v.length >= 8 || 'Minimal 8 Karakter',
+                // v => v.length >= 8 || 'Minimal 8 Karakter',
             ],
             // -----
             editedIndex: null       
@@ -731,6 +739,7 @@ export default {
             this.popUpEdit = true
         },
         deleteKaryawan(){
+            this.loading = true
             api.deleteUser(this.karyawan).then(response => {
                 this.snackbarColor = 'success'
                 this.snackbarMessage = response
@@ -738,6 +747,7 @@ export default {
                 this.snackbarColor = 'error'
                 this.snackbarMessage = error
             }).finally(() => {
+                this.loading = false
                 this.close()
                 this.snackbar = true
                 this.get()
