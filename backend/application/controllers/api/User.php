@@ -23,6 +23,7 @@ class User extends REST_Controller
     {
         $user_task_group_id = $this->post(Schema::USER_TASK_GROUP_ID);
         $name = $this->post('name');
+        $email = $this->post('email');
         $place_of_birth = $this->post('placeOfBirth');
         $date_of_birth = $this->post('dateOfBirth');
         $religion = $this->post('religion');
@@ -37,6 +38,7 @@ class User extends REST_Controller
             $required_parameters = [];
             if (!isset($user_task_group_id)) array_push($required_parameters, 'userTaskGroupId');
             if (!isset($name)) array_push($required_parameters, 'name');
+            if (!isset($name)) array_push($required_parameters, 'email');
             if (!isset($place_of_birth)) array_push($required_parameters, 'placeOfBirth');
             if (!isset($date_of_birth)) array_push($required_parameters, 'dateOfBirth');
             if (!isset($religion)) array_push($required_parameters, 'religion');
@@ -67,7 +69,7 @@ class User extends REST_Controller
         }
 
 
-        if ($this->user_model->insert_user($user_task_group_id, $name, $place_of_birth, $date_of_birth, 
+        if ($this->user_model->insert_user($user_task_group_id, $name, $email, $place_of_birth, $date_of_birth, 
         $religion, $status, $telephone, $address, $uid)) {
             $insert_id = $this->db->insert_id();
             // $tasks = $this->group_task_model->get_group_task_where($user_task_group_id);
