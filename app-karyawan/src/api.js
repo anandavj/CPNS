@@ -346,6 +346,16 @@ const api = {
                 if(error.response.status == 500) reject(serverErrorMessage)
             })
         })
+    },
+    addDeliveryOrder(deliveryOrder) {
+        return new Promise( (resolve, reject) => {
+            axios.post(deliveryOrderTable, deliveryOrder)
+                .then(() => {
+                    resolve(insertSuccessMessage)
+                }) .catch(error => {
+                    if(error.response.status == 500) reject(serverErrorMessage)
+                })
+        })
     }
 
     /* ================================================================================================================================================= */
