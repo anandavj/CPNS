@@ -49,7 +49,7 @@ class delivery_order extends REST_Controller
             return;
         }
 
-        if ($insert_id = $this->delivery_order_model->insert_delivery_order($name, $receiver_name, $reference_number, $date, $address, $description, $status)) {
+        if ($insert_id = $this->delivery_order_model->insert_delivery_order($name, $receiver_name, $reference_number, $date, $address, $description, $status, $type)) {
             if ($this->product_delivery_order_model->insert_product_delivery_order($insert_id, $items)) {
                 $this->response(
                     array(
@@ -88,7 +88,7 @@ class delivery_order extends REST_Controller
             $index = 0;
             $datas = $this->delivery_order_model->get_all_delivery_order();
             foreach($datas as $data){
-                $temp = array_merge($datas[$index], array('products' => $this->product_delivery_order_model->get_product_delivery_order_where($data['id'])));
+                $temp = array_merge($datas[$index], array('items' => $this->product_delivery_order_model->get_product_delivery_order_where($data['id'])));
                 array_push($result, $temp);
                 $index++;
             }
