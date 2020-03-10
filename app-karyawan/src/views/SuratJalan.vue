@@ -188,7 +188,7 @@
                                         </div>
                                         <div class="d-flex flex-no-wrap justify-space-between mt-n4">
                                             <v-card-subtitle>{{ item.status }}</v-card-subtitle>
-                                            <v-card-subtitle>{{ formatDateList(item.tanggal) }}</v-card-subtitle>
+                                            <v-card-subtitle>{{ formatDateList(item.date) }}</v-card-subtitle>
                                         </div>
                                     </v-card>
                                 </template>
@@ -226,8 +226,8 @@
                                 class="font-regular font-weight-light"
                                 style="cursor:pointer"
                             >
-                                <template v-slot:item.tanggal="{ item }">
-                                    <span>{{ formatDateList(item.tanggal) }}</span>
+                                <template v-slot:item.date="{ item }">
+                                    <span>{{ formatDateList(item.date) }}</span>
                                 </template>
                                 <template v-slot:item.actions="{ item }">
                                     <v-btn dense color="white--text green" :disabled="item.status != 'Belum Diproses'" @click.stop="prosesSuratJalan(item)">Muat</v-btn>
@@ -346,10 +346,13 @@
                                                     :disable-sort="true"
                                                     no-data-text="Belum ada Barang yang ditambah"
                                                 >
+                                                    <template v-slot:item.name="{ item }">
+                                                        {{productNameWithSpec(item)}}
+                                                    </template>
                                                     <template v-slot:body.append v-if="deliveryOrderEditToggle">
                                                         <tr>
                                                             <td><v-text-field color="accent" id="focusGained" v-on:keyup.enter="addSuratJalanNewItem" outlined dense v-model="deliveryOrderNewItem.productId"/></td>
-                                                            <td><v-text-field color="accent" v-on:keyup.enter="addSuratJalanNewItem" outlined dense v-model="deliveryOrderNewItem.productName"/></td>
+                                                            <td><v-text-field color="accent" v-on:keyup.enter="addSuratJalanNewItem" outlined dense v-model="deliveryOrderNewItem.name"/></td>
                                                             <td><v-text-field color="accent" v-on:keyup.enter="addSuratJalanNewItem" outlined dense v-model="deliveryOrderNewItem.amount"/></td>
                                                         </tr>
                                                     </template>
@@ -384,7 +387,7 @@
                                                                         <v-text-field class="mb-n4" color="accent" label="ID Barang" outlined dense v-model="deliveryOrderNewItem.productId"/>
                                                                     </v-col>
                                                                     <v-col cols="12" class="mt-n4">
-                                                                        <v-text-field class="mb-n4" color="accent" label="Nama Barang" outlined dense v-model="deliveryOrderNewItem.productName"/>
+                                                                        <v-text-field class="mb-n4" color="accent" label="Nama Barang" outlined dense v-model="deliveryOrderNewItem.name"/>
                                                                     </v-col>
                                                                     <v-col cols="9" class="mt-n4 mr-n3">
                                                                         <v-text-field class="mb-n4" color="accent" label="Jumlah" outlined dense v-model="deliveryOrderNewItem.amount"/>
@@ -426,7 +429,7 @@
                         </v-dialog>
                         <!--  -->
                         <!-- Add Surat Jalan -->
-                        <v-btn fab dark large color="primary" fixed right bottom @click="popUpNewSuratJalan = !popUpNewSuratJalan">
+                        <v-btn fab dark large color="primary" fixed right bottom @click="dialogSuratJalan">
                             <v-icon>mdi-plus</v-icon>
                         </v-btn>
                         <v-container class="my-n3">
@@ -527,7 +530,7 @@
                                                                         :auto-select-first="true"
                                                                         item-color="blue"
                                                                         :search-input.sync="searchId"
-                                                                        @click:clear="deliveryOrderNewItem.productName=null"
+                                                                        @click:clear="clearDeliveryOrderNewItem"
                                                                         @change="onChangeSearchId"
                                                                         item-text="id"
                                                                         item-value="id"
@@ -545,18 +548,18 @@
                                                                         color="accent"
                                                                         v-on:keyup.enter="focusChange"
                                                                         dense
-                                                                        v-model="deliveryOrderNewItem.productName"
+                                                                        v-model="deliveryOrderNewItem.name"
                                                                         chips
                                                                         :items="products"
                                                                         :clearable="true"
                                                                         :auto-select-first="true"
                                                                         item-color="blue"
                                                                         :search-input.sync="searchName"
-                                                                        @click:clear="deliveryOrderNewItem.productId=null"
+                                                                        @click:clear="clearDeliveryOrderNewItem"
                                                                         @change="onChangeSearchName"
                                                                         item-text="name"
                                                                         item-value="name"
-                                                                        :readonly="deliveryOrderNewItem.productName!=null"
+                                                                        :readonly="deliveryOrderNewItem.name!=null"
                                                                     >
                                                                         <template v-slot:selection="data">
                                                                             <v-chip color="transparent" class="pa-0">
@@ -569,7 +572,6 @@
                                                             </tr>
                                                         </template>
                                                         <template v-slot:item.actions="{ item }">
-                                                            <v-icon class="mr-2" @click.stop="editSuratJalanNew(item)">mdi-pencil</v-icon>
                                                             <v-icon @click.stop="deleteSuratJalanNew(item)">mdi-delete</v-icon>
                                                         </template>
                                                     </v-data-table>
@@ -603,7 +605,7 @@
                                                                             <v-text-field class="mb-n4" color="accent" label="ID Barang" outlined dense v-model="deliveryOrderNewItem.productId"/>
                                                                         </v-col>
                                                                         <v-col cols="12" class="mt-n4">
-                                                                            <v-text-field class="mb-n4" color="accent" label="Nama Barang" outlined dense v-model="deliveryOrderNewItem.productName"/>
+                                                                            <v-text-field class="mb-n4" color="accent" label="Nama Barang" outlined dense v-model="deliveryOrderNewItem.name"/>
                                                                         </v-col>
                                                                         <v-col cols="9" class="mt-n4 mr-n3">
                                                                             <v-text-field class="mb-n4" color="accent" label="Jumlah" outlined dense v-model="deliveryOrderNewItem.amount"/>
@@ -650,6 +652,21 @@
                     
                 </v-tabs-items>
             </v-card>
+            <v-snackbar
+                v-model="snackbar"
+                multi-line
+                v-bind:color="snackbarColor"
+            >
+                {{ snackbarMessage }}
+                <v-btn
+                    text
+                    @click="snackbar = false"
+                >
+                    <v-icon>
+                        mdi-close
+                    </v-icon>
+                </v-btn>
+            </v-snackbar>
         </div>
     </v-app>
 </template>
@@ -667,6 +684,9 @@ export default {
     },
     data() {
         return {
+            snackbar: false,
+            snackbarMessage: '',
+            snackbarColor: '',
             tab:'',
             advanceSearch: {
                 referenceNumber:'',
@@ -710,26 +730,26 @@ export default {
             ],
             deliveryOrderEditToggle: false,
             deliveryOrderNewHeaders: [
-                {text:'ID Barang', value:'productId', width:'30%'},
-                {text:'Nama Barang', value:'productName', width:'40%'},
+                {text:'ID Barang', value:'productId', width:'25%'},
+                {text:'Nama Barang', value:'name', width:'50%'},
                 {text:'Jumlah', value:'amount', width:'20%'},
                 {value:'actions'}
             ],
             // object of Item in surat jalan before pushing it into deliveryOrder.items
             deliveryOrderNewItem: {
                 productId:null,
-                productName:null,
+                name:null,
                 amount:null
             },
             deliveryOrderNewItemDefault: {
                 productId:null,
-                productName:null,
+                name:null,
                 amount:null
             },
             // Proses Surat Jalan
             deliveryOrderProcessHeader: [
                 {text:'ID Barang', value:'productId'},
-                {text:'Nama Barang', value:'productName'},
+                {text:'Nama Barang', value:'name'},
                 {text:'Jumlah', value:'amount'},
             ],
             // Proses Muat ditampung disini
@@ -764,6 +784,9 @@ export default {
             api.getAllProducts()
                 .then(products => {
                     this.products = products
+                    products.forEach(product => {
+                        if(product.specification!='undefined') product.name = product.name.concat(' || ',product.specification)
+                    });
                 })
         },
         /* -------------------- SURAT JALAN -------------------- */
@@ -817,19 +840,47 @@ export default {
         formatDateList(val) {
             return val ? moment(val).format('DD MMMM YYYY') : ''
         },
+        dialogSuratJalan() {
+            this.deliveryOrder.status = 'Belum Diproses'
+            this.popUpNewSuratJalan = !this.popUpNewSuratJalan
+            this.deliveryOrder.type = +1
+        },
         // Save New Surat Jalan
         saveNewSuratJalan() {
-            this.suratJalans.push(this.deliveryOrder)
-            this.deliveryOrder.status = 'Belum Diproses'
-            this.deliveryOrder = Object.assign({},this.deliveryOrderDefault)
-            this.selectedIndex = -1
-            this.popUpNewSuratJalan = false
+            api.addDeliveryOrder(this.deliveryOrder)
+                .then((response) => {
+                    this.snackbarColor = 'success'
+                    this.snackbarMessage = response
+                }) .catch(error => {
+                    this.snackbarColor = 'error'
+                    this.snackbarMessage = error
+                }) .finally(() => {
+                    this.snackbar = true
+                    this.suratJalans = []
+                    api.getAllDeliveryOrder()
+                        .then(deliveryOrders => {
+                            deliveryOrders.forEach(deliveryOrder => {
+                                if(deliveryOrder.type == 1) {
+                                    this.suratJalans.push(deliveryOrder)
+                                } else {
+                                    this.deliveryOrders.push(deliveryOrder)
+                                }
+                            });
+                            this.deliveryOrders = deliveryOrders
+                            this.deliveryOrder = Object.assign({},this.deliveryOrderDefault)
+                            this.selectedIndex = -1
+                            this.popUpNewSuratJalan = false
+                        })
+                })
         },
         // Detail Surat Jalan
         detailSuratJalan(item) {
             this.selectedIndex = this.suratJalans.indexOf(item)
             this.deliveryOrder = Object.assign({},item)
             this.popUpDetailSuratJalan = true
+        },
+        productNameWithSpec(item) {
+            return _.find(this.products,['id',item.id]).name
         },
         close() {
             // Surat Jalan
@@ -870,11 +921,16 @@ export default {
         },
         onChangeSearchId() {
             this.searchId = ''
-            this.deliveryOrderNewItem.productName = _.find(this.products,['id', this.deliveryOrderNewItem.productId]).name
+            this.deliveryOrderNewItem.name = _.find(this.products,['id', this.deliveryOrderNewItem.productId]).name
+            this.focusChange()
         },
         onChangeSearchName() {
             this.searchName = ''
-            this.deliveryOrderNewItem.productId = _.find(this.products,['name',this.deliveryOrderNewItem.productName]).id
+            this.deliveryOrderNewItem.productId = _.find(this.products,['name',this.deliveryOrderNewItem.name]).id
+            this.focusChange()
+        },
+        clearDeliveryOrderNewItem() {
+            this.deliveryOrderNewItem = Object.assign({},this.deliveryOrderNewItemDefault)
         },
         // Proses Surat jalan
         prosesSuratJalan(item) {
