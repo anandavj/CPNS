@@ -5,15 +5,23 @@ class Product_delivery_order_model extends CI_Model
 {
     private const TABLE_NAME = 'product_delivery_order';
 
-    public function insert_product_delivery_order($delivery_order_id, $product_id)
+    public function insert_product_delivery_order($delivery_order_id, $items)
     {
-        foreach ($product_id as $item) {
-            $result = $this->db->get_where($this::TABLE_NAME, "product_id='{$item}' 
+        /**
+         * items = array of item
+         * item = object{'id', 'amount'}
+         * 
+         */
+
+
+        foreach ($items as $item) {
+            $result = $this->db->get_where($this::TABLE_NAME, "product_id=".$item['productId']." 
                 AND delivery_order_id='{$delivery_order_id}'")->num_rows();
             if ($result == 0) {
                 $this->db->insert($this::TABLE_NAME, array(
                     'delivery_order_id' => $delivery_order_id,
-                    'product_id' => $item
+                    'product_id' => $item['productId'],
+                    'amount' => $item['amount']
                 ));
             }
             
@@ -36,7 +44,7 @@ class Product_delivery_order_model extends CI_Model
                     JOIN product
                     ON product_delivery_order.product_id = product.id
                     WHERE product_delivery_order.delivery_order_id = '{$delivery_order_id}' 
-                     ");
+                    ");
         // $this->db->select("product_delivery_order.id, product_id as productId, amount");
         // $this->db->from($this::TABLE_NAME);
         // $this->db->where("delivery_order_id = '{$delivery_order_id}'");
@@ -50,28 +58,36 @@ class Product_delivery_order_model extends CI_Model
         else return false;
     }
 
-    public function update_product_delivery_order($delivery_order_id, $product_id)
+    public function update_product_delivery_order($delivery_order_id, $items)
     {
-        $result = $this->db->get_where($this::TABLE_NAME, "delivery_order_id = '{$delivery_order_id}'")->result_array();
+        
+        $this->db->delete($this::TABLE_NAME, array(
+            'delivery_order_id' => $delivery_order_id,
+        ));
+        
+        $this->insert_product_delivery_order($delivery_order_id, $items);
 
-        $current_products = [];
-        foreach ($result as $row) {
-            array_push($current_products, $row['product_id']);
-        }
+        // $result = $this->db->get_where($this::TABLE_NAME, "delivery_order_id = '{$delivery_order_id}'")->result_array();
 
-        $delete_data = array_diff($current_products, $product_id);
-        $insert_data = array_diff($product_id, $current_products);
+        // $current_products = [];
+        // foreach ($result as $row) {
+        //     array_push($current_products, $row['product_id']);
+        // }
 
-        // return $insert_data;
+        // $ids = [];
+        // foreach($items as $item) array_push($ids, $item['id']);
+        // $delete_data = array_diff($current_products, $ids);
+        // $insert_ids = array_diff($ids, $current_products);
 
-        $this->insert_product_delivery_order($delivery_order_id, $insert_data);
 
-        foreach ($delete_data as $delivery_order) {
-            $this->db->delete($this::TABLE_NAME, array(
-                'delivery_order_id' => $delivery_order_id,
-                'product_id' => $delivery_order
-            ));
-        }
+
+        // $this->insert_product_delivery_order($delivery_order_id, $insert_data);
+        // foreach ($delete_data as $delivery_order) {
+        //     $this->db->delete($this::TABLE_NAME, array(
+        //         'delivery_order_id' => $delivery_order_id,
+        //         'product_id' => $delivery_order
+        //     ));
+        // }
         
         return $this->db->affected_rows();
 
