@@ -7,8 +7,8 @@ class Delivery_order_model extends CI_Model{
     public function insert_delivery_order($name, $receiver_name, $date, $reference_number, $address, $description, $status, $type){
         $this->db->insert($this::TABLE_NAME, array(
             'name' => $name,
-            'receiver_name' => $receiver_name,
             'date' => $date,
+            'receiver_name' => $receiver_name,
             'reference_number' => $reference_number,
             'address' => $address,
             'description' => $description,
@@ -44,8 +44,8 @@ class Delivery_order_model extends CI_Model{
         $result = $this->db->get_where($this::TABLE_NAME, array(
             'name' => $name,
             'receiver_name' => $receiver_name,
-            'date' => $date,
             'reference_number' => $reference_number,
+            'date' => $date,
             'address' => $address,
             'description' => $description,
             'status' => $status,       
@@ -57,8 +57,8 @@ class Delivery_order_model extends CI_Model{
         $this->db->update($this::TABLE_NAME, array(
             'name' => $name,
             'receiver_name' => $receiver_name,
-            'date' => $date,
             'reference_number' => $reference_number,
+            'date' => $date,
             'address' => $address,
             'description' => $description,
             'status' => $status,

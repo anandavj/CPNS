@@ -49,7 +49,7 @@ class delivery_order extends REST_Controller
             return;
         }
 
-        if ($insert_id = $this->delivery_order_model->insert_delivery_order($name, $receiver_name, $reference_number, $date, $address, $description, $status, $type)) {
+        if ($insert_id = $this->delivery_order_model->insert_delivery_order($name, $receiver_name,  $date, $reference_number, $address, $description, $status, $type)) {
             if ($this->product_delivery_order_model->insert_product_delivery_order($insert_id, $items)) {
                 $this->response(
                     array(
