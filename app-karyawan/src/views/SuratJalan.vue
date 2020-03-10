@@ -168,7 +168,9 @@
                                 :headers="listSuratJalanHeader"
                                 :items="suratJalans"
                                 item-key="nomor"
-                                :hide-default-footer="true"
+                                :footer-props="{
+                                    'items-per-page-options': [10, 50, 100, -1]
+                                }"
                                 @click:row="detailSuratJalan"
                                 class="font-regular font-weight-light"
                                 style="cursor:pointer"
@@ -221,7 +223,9 @@
                                 :headers="listSuratJalanHeader"
                                 :items="suratJalans"
                                 item-key="nomor"
-                                :hide-default-footer="true"
+                                :footer-props="{
+                                    'items-per-page-options': [10, 50, 100, -1]
+                                }"
                                 @click:row="detailSuratJalan"
                                 class="font-regular font-weight-light"
                                 style="cursor:pointer"
@@ -253,7 +257,11 @@
                                             :mobile-breakpoint="1"
                                             :hide-default-footer="true"
                                             v-model="selectedItemsForDeliveryOrder"
-                                        />
+                                        >
+                                            <template v-slot:item.name="{ item }">
+                                                {{productNameWithSpec(item)}}
+                                            </template>
+                                        </v-data-table>
                                     </v-card-text>
                                 </v-card>
                             </v-dialog>
@@ -521,7 +529,6 @@
                                                                     <v-autocomplete
                                                                         color="accent"
                                                                         id="focusGained"
-                                                                        v-on:keyup.enter="focusChange"
                                                                         dense
                                                                         v-model="deliveryOrderNewItem.productId"
                                                                         chips
@@ -546,7 +553,6 @@
                                                                 <td>
                                                                     <v-autocomplete
                                                                         color="accent"
-                                                                        v-on:keyup.enter="focusChange"
                                                                         dense
                                                                         v-model="deliveryOrderNewItem.name"
                                                                         chips
@@ -568,7 +574,7 @@
                                                                         </template>
                                                                     </v-autocomplete>
                                                                 </td>
-                                                                <td><v-text-field id="focusGainedAmount" color="accent" v-on:keyup.enter="addSuratJalanNewItem" v-model="deliveryOrderNewItem.amount"/></td>
+                                                                <td><v-text-field id="focusGainedAmount" color="accent" v-on:keydown.enter="addSuratJalanNewItem" v-model="deliveryOrderNewItem.amount"/></td>
                                                             </tr>
                                                         </template>
                                                         <template v-slot:item.actions="{ item }">
@@ -937,7 +943,12 @@ export default {
             this.selectedIndex = this.suratJalans.indexOf(item)
             this.deliveryOrder = Object.assign({},item)
             this.popUpProsesSuratJalan = true
-        }
+        },
+        // changeStatus() {
+        //     if(deliveryOrder.status == 'Belum Diproses') {
+
+        //     }
+        // }
         /* --------------------             -------------------- */
         /* -------------------- DO -------------------- */
         /* --------------------    -------------------- */

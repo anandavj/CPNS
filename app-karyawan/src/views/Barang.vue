@@ -574,30 +574,10 @@
                     item-key="nama"
                     no-data-text="Data Barang Kosong"
                     no-results-text="Data Barang Tidak Ditemukan"
-                    class="font-regular font-weight-light"
+                    class="font-regular font-weight-light mb-12 pb-4"
                     style="cursor:pointer;"
                     
                 >
-                    <template v-slot:top="{ pagination, options, updateOptions }">
-                        <div>
-                            <v-data-footer
-                                :pagination="pagination" 
-                                :options="options"
-                                @update:options="updateOptions"
-                                items-per-page-text="$vuetify.dataTable.itemsPerPageText"
-                            />
-                        </div>
-                    </template>
-                    <template v-slot:footer="{ pagination, options, updateOptions }">
-                        <div>
-                            <v-data-footer
-                                :pagination="pagination" 
-                                :options="options"
-                                @update:options="updateOptions"
-                                items-per-page-text="$vuetify.dataTable.itemsPerPageText"
-                            />
-                        </div>
-                    </template>
                     <template v-slot:item.actions="{ item }">
                         <v-icon class="mr-2" @click.stop="editProduct(item)">mdi-pencil</v-icon>
                         <v-icon @click.stop="deleteProduct(item)">mdi-delete</v-icon>
