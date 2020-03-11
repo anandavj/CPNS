@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.2
+-- version 5.0.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 09, 2020 at 09:07 AM
--- Server version: 10.4.10-MariaDB
--- PHP Version: 7.3.12
+-- Generation Time: Mar 11, 2020 at 12:11 PM
+-- Server version: 10.4.11-MariaDB
+-- PHP Version: 7.4.1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -54,7 +54,7 @@ CREATE TABLE `delivery_order` (
   `address` varchar(100) NOT NULL,
   `description` text NOT NULL,
   `date` date NOT NULL,
-  `status` varchar(10) NOT NULL,
+  `status` varchar(20) NOT NULL,
   `type` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -63,16 +63,8 @@ CREATE TABLE `delivery_order` (
 --
 
 INSERT INTO `delivery_order` (`id`, `name`, `reference_number`, `receiver_name`, `address`, `description`, `date`, `status`, `type`) VALUES
-(1, 'pengiriman 999', '2020-02-02', 'Asrap', 'Tembalang', 'pengiriman ke x', '2010-10-10', 'ongoing', 0),
-(2, 'pengiriman 10', '2020-02-02', 'Asrap', 'Tembalang', 'pengiriman ke x', '2010-10-10', 'ongoing', 0),
-(3, 'pengiriman 10', '2020-02-02', 'Asrap', 'Tembalang', 'pengiriman ke x', '2010-10-10', 'ongoing', 0),
-(4, 'pengiriman 10', '2020-02-02', 'Asrap', 'Tembalang', 'pengiriman ke x', '2010-10-10', 'ongoing', 0),
-(5, 'pengiriman 10', '2020-02-02', 'Asrap', 'Tembalang', 'pengiriman ke x', '2010-10-10', 'ongoing', 0),
-(6, 'pengiriman 10', '2020-02-02', 'Asrap', 'Tembalang', 'pengiriman ke x', '2010-10-10', 'ongoing', 0),
-(7, 'pengiriman 10', '2020-02-02', 'Asrap', 'Tembalang', 'pengiriman ke x', '2010-10-10', 'ongoing', 0),
-(8, 'pengiriman 10', '2020-02-02', 'Asrap', 'Tembalang', 'pengiriman ke x', '2010-10-10', 'ongoing', 0),
-(9, 'pengiriman 10', '2020-02-02', 'Asrap', 'Tembalang', 'pengiriman ke x', '2010-10-10', 'ongoing', 0),
-(10, 'pengiriman 10', '2020-02-02', 'Asrap', 'Tembalang', 'pengiriman ke x', '2010-10-10', 'ongoing', 0);
+(21, 'Pengiriman ke x', '2020-03-10', 'Ananda', 'Lab A', 'tidak ada', '2020-03-10', 'Belum Diproses', 1),
+(24, 'a', 'a', 'a', 'a', 'a', '2020-03-11', 'Belum Diproses', 1);
 
 -- --------------------------------------------------------
 
@@ -878,15 +870,18 @@ INSERT INTO `product` (`id`, `product_code`, `name`, `specification`, `category_
 CREATE TABLE `product_delivery_order` (
   `id` int(11) NOT NULL,
   `delivery_order_id` int(11) NOT NULL,
-  `product_id` int(11) NOT NULL
+  `product_id` int(11) NOT NULL,
+  `amount` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `product_delivery_order`
 --
 
-INSERT INTO `product_delivery_order` (`id`, `delivery_order_id`, `product_id`) VALUES
-(4, 1, 12);
+INSERT INTO `product_delivery_order` (`id`, `delivery_order_id`, `product_id`, `amount`) VALUES
+(8, 21, 100, 100),
+(9, 21, 231, 120),
+(14, 24, 100, 22);
 
 -- --------------------------------------------------------
 
@@ -1285,7 +1280,7 @@ ALTER TABLE `category`
 -- AUTO_INCREMENT for table `delivery_order`
 --
 ALTER TABLE `delivery_order`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `group_task`
@@ -1315,7 +1310,7 @@ ALTER TABLE `product`
 -- AUTO_INCREMENT for table `product_delivery_order`
 --
 ALTER TABLE `product_delivery_order`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `product_image`
