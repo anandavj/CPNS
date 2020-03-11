@@ -38,7 +38,7 @@ class Delivery_order_model extends CI_Model{
         else return false;
     }
 
-    public function update_delivery_order($id, $name, $receiver_name, $date, $reference_number, $address, $description, $status, $type){
+    public function update_delivery_order($id, $name, $receiver_name, $reference_number, $date, $address, $description, $status, $type){
         // Check apakah tidak merubah apa-apa?
         // kenapa perlu? karena jika update tidak ada perubahan affected_rows() return 0
         $result = $this->db->get_where($this::TABLE_NAME, array(
