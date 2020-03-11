@@ -179,8 +179,8 @@
                                     <v-card @click.stop="detailSuratJalan(item)" class="mt-1 mb-3 mx-2 pa-2" color="grey lighten-2" outlined>
                                         <div class="d-flex flex-no-wrap justify-space-between mt-n4">
                                             <div>
-                                                <v-card-title class="body-2">{{ item.nama }}</v-card-title>
-                                                <v-card-subtitle>{{ item.nomor }}</v-card-subtitle>
+                                                <v-card-title class="body-2">{{ item.name }}</v-card-title>
+                                                <v-card-subtitle>{{ item.referenceNumber }}</v-card-subtitle>
                                             </div>
                                             <div>
                                                 <v-btn @click.stop="prosesSuratJalan(item)" :disabled="item.status != 'Belum Diproses'" dense color="white--text green" small :dark="item.status == 'Belum Diproses'" fab class="my-5 mx-1">
@@ -195,6 +195,7 @@
                                     </v-card>
                                 </template>
                             </v-data-table>
+                            <!-- Proses Surat Jalan -->
                             <v-dialog v-model="popUpProsesSuratJalan" fullscreen hide-overlay transition="dialog-bottom-transition">
                                 <v-card>
                                     <v-toolbar dense flat>
@@ -211,8 +212,20 @@
                                             :mobile-breakpoint="1"
                                             :hide-default-footer="true"
                                             v-model="selectedItemsForDeliveryOrder"
-                                        />
+                                        >
+                                            <template v-slot:item.name="{ item }">
+                                                {{productNameWithSpec(item)}}
+                                            </template>
+                                        </v-data-table>
                                     </v-card-text>
+                                    <v-card-actions>
+                                        <v-container>
+                                            <v-row justify="center">
+                                                <v-btn color="red darken-1" text @click="close">Close</v-btn>
+                                                <v-btn color="blue darken-1" :disabled="selectedItemsForDeliveryOrder.length != deliveryOrder.items.length" text @click="changeStatus">Save</v-btn>
+                                            </v-row>
+                                        </v-container>
+                                    </v-card-actions>
                                 </v-card>
                             </v-dialog>
                         </div>
@@ -263,6 +276,14 @@
                                             </template>
                                         </v-data-table>
                                     </v-card-text>
+                                    <v-card-actions>
+                                        <v-container>
+                                            <v-row justify="center">
+                                                <v-btn color="red darken-1" text @click="close">Close</v-btn>
+                                                <v-btn color="blue darken-1" :disabled="selectedItemsForDeliveryOrder.length != deliveryOrder.items.length" text @click="changeStatus">Save</v-btn>
+                                            </v-row>
+                                        </v-container>
+                                    </v-card-actions>
                                 </v-card>
                             </v-dialog>
                                 <!--  -->
@@ -359,10 +380,60 @@
                                                     </template>
                                                     <template v-slot:body.append v-if="deliveryOrderEditToggle">
                                                         <tr>
-                                                            <td><v-text-field color="accent" id="focusGained" v-on:keyup.enter="addSuratJalanNewItem" outlined dense v-model="deliveryOrderNewItem.productId"/></td>
-                                                            <td><v-text-field color="accent" v-on:keyup.enter="addSuratJalanNewItem" outlined dense v-model="deliveryOrderNewItem.name"/></td>
-                                                            <td><v-text-field color="accent" v-on:keyup.enter="addSuratJalanNewItem" outlined dense v-model="deliveryOrderNewItem.amount"/></td>
+                                                            <td>
+                                                                <v-autocomplete
+                                                                    color="accent"
+                                                                    id="focusGained"
+                                                                    dense
+                                                                    v-model="deliveryOrderNewItem.productId"
+                                                                    chips
+                                                                    :items="products"
+                                                                    :clearable="true"
+                                                                    :auto-select-first="true"
+                                                                    item-color="blue"
+                                                                    :search-input.sync="searchId"
+                                                                    @click:clear="clearDeliveryOrderNewItem"
+                                                                    @change="onChangeSearchId"
+                                                                    item-text="id"
+                                                                    item-value="id"
+                                                                    :readonly="deliveryOrderNewItem.productId!=null"
+                                                                >
+                                                                    <template v-slot:selection="data">
+                                                                        <v-chip color="transparent" class="pa-0">
+                                                                            {{data.item.id}}
+                                                                        </v-chip>
+                                                                    </template>
+                                                                </v-autocomplete>
+                                                            </td>
+                                                            <td>
+                                                                <v-autocomplete
+                                                                    color="accent"
+                                                                    dense
+                                                                    v-model="deliveryOrderNewItem.name"
+                                                                    chips
+                                                                    :items="products"
+                                                                    :clearable="true"
+                                                                    :auto-select-first="true"
+                                                                    item-color="blue"
+                                                                    :search-input.sync="searchName"
+                                                                    @click:clear="clearDeliveryOrderNewItem"
+                                                                    @change="onChangeSearchName"
+                                                                    item-text="name"
+                                                                    item-value="name"
+                                                                    :readonly="deliveryOrderNewItem.name!=null"
+                                                                >
+                                                                    <template v-slot:selection="data">
+                                                                        <v-chip color="transparent" class="pa-0">
+                                                                            {{data.item.name}}
+                                                                        </v-chip>
+                                                                    </template>
+                                                                </v-autocomplete>
+                                                            </td>
+                                                            <td><v-text-field id="focusGainedAmount" color="accent" v-on:keydown.enter="addSuratJalanNewItem" v-model="deliveryOrderNewItem.amount"/></td>
                                                         </tr>
+                                                    </template>
+                                                    <template v-slot:item.actions="{ item }">
+                                                        <v-icon @click.stop="deleteSuratJalanNew(item)">mdi-delete</v-icon>
                                                     </template>
                                                 </v-data-table>
                                             </v-col>
@@ -411,11 +482,11 @@
                                                         <v-card color="grey lighten-2">
                                                             <div class="d-flex flex-no-wrap justify-space-between align-center">
                                                                 <div>
-                                                                    <v-card-title class="body-2">{{item.nama}}</v-card-title>
+                                                                    <v-card-title class="body-2">{{item.name}}</v-card-title>
                                                                     <v-card-subtitle>{{item.id}}</v-card-subtitle>
                                                                 </div>
                                                                 <div>
-                                                                    <v-card-subtitle>{{item.jumlah}}</v-card-subtitle>
+                                                                    <v-card-subtitle>{{item.amount}}</v-card-subtitle>
                                                                 </div>
                                                             </div>
                                                         </v-card>
@@ -521,7 +592,6 @@
                                                         :disable-pagination="true"
                                                         :disable-sort="true"
                                                         no-data-text="Belum ada Barang yang ditambah"
-                                                        hover=""
                                                     >
                                                         <template v-slot:body.append>
                                                             <tr>
@@ -886,7 +956,7 @@ export default {
             this.popUpDetailSuratJalan = true
         },
         productNameWithSpec(item) {
-            return _.find(this.products,['id',item.id]).name
+            return _.find(this.products,['id',item.productId]).name
         },
         close() {
             // Surat Jalan
@@ -909,6 +979,7 @@ export default {
                     this.selectedIndex = -1
                 } else {
                     if(this.popUpProsesSuratJalan) {
+                        this.selectedItemsForDeliveryOrder = []
                         this.popUpProsesSuratJalan = false
                         this.deliveryOrder = Object.assign({},this.deliveryOrderDefault)
                         this.selectedIndex = -1
@@ -944,11 +1015,36 @@ export default {
             this.deliveryOrder = Object.assign({},item)
             this.popUpProsesSuratJalan = true
         },
-        // changeStatus() {
-        //     if(deliveryOrder.status == 'Belum Diproses') {
-
-        //     }
-        // }
+        changeStatus() {
+            if(this.deliveryOrder.status == 'Belum Diproses') {
+                this.deliveryOrder.status = 'Dikirim'
+                api.changeStatusToOnProcess(this.deliveryOrder)
+                    .then((response) => {
+                        this.snackbarColor = 'success'
+                        this.snackbarMessage = response
+                    }) .catch(error => {
+                        this.snackbarColor = 'error'
+                        this.snackbarMessage = error
+                    }) .finally(() => {
+                        this.snackbar = true
+                        this.suratJalans = []
+                        api.getAllDeliveryOrder()
+                            .then(deliveryOrders => {
+                                deliveryOrders.forEach(deliveryOrder => {
+                                    if(deliveryOrder.type == 1) {
+                                        this.suratJalans.push(deliveryOrder)
+                                    } else {
+                                        this.deliveryOrders.push(deliveryOrder)
+                                    }
+                                });
+                                this.deliveryOrders = deliveryOrders
+                                this.deliveryOrder = Object.assign({},this.deliveryOrderDefault)
+                                this.selectedIndex = -1
+                                this.popUpProsesSuratJalan = false
+                            })
+                    })
+            }
+        }
         /* --------------------             -------------------- */
         /* -------------------- DO -------------------- */
         /* --------------------    -------------------- */

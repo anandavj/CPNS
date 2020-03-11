@@ -356,6 +356,16 @@ const api = {
                     if(error.response.status == 500) reject(serverErrorMessage)
                 })
         })
+    },
+    changeStatusToOnProcess(deliveryOrder) {
+        return new Promise( (resolve, reject) => {
+            axios.put(deliveryOrderTable, deliveryOrder)
+                .then(() => {
+                    resolve(updateSuccessMessage)
+                }) .catch(error => {
+                    if(error.response.status == 500) reject(serverErrorMessage)
+                })
+        } )
     }
 
     /* ================================================================================================================================================= */
