@@ -10,6 +10,8 @@ use Kreait\Firebase\Factory;
 class User extends REST_Controller
 {
 
+    private $firebase_auth;
+
     public function __construct()
     {
         parent::__construct();
@@ -17,6 +19,7 @@ class User extends REST_Controller
         $this->load->model('user_task_group_model');
         $this->load->model('user_task_model');
         $this->load->model('group_task_model');
+        $this->firebase_auth = (new Factory)->withServiceAccount(FCPATH. 'firebase-adminsdk.json')->createAuth();
     }
 
     public function index_post()
@@ -69,15 +72,12 @@ class User extends REST_Controller
             return;
         }
 
-
-        
-        $auth = (new Factory)->withServiceAccount(FCPATH. 'firebase-adminsdk.json')->createAuth();
         $userProperties = [
             'email' => $email,
             'password' => $password,
         ];
         try { 
-            $result = $auth->createUser($userProperties);
+            $result = $this->firebase_auth->createUser($userProperties);
             
             if ($this->user_model->insert_user($user_task_group_id, $name, $email, $place_of_birth, $date_of_birth, 
             $religion, $status, $telephone, $address, $result->uid)) {
@@ -118,7 +118,13 @@ class User extends REST_Controller
                 );
             }
         }catch (Exception $e) {
-            var_dump($e->getMessage());
+            $this->response(
+                array(
+                    'status' => FALSE,
+                    'message' => $this::INSERT_FAILED_MESSAGE . " Details: create user task failed"
+                ),
+                REST_Controller::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
     }
 
@@ -155,6 +161,7 @@ class User extends REST_Controller
         $password = $this->put('password');
         $phone = $this->put('phone');
         $address = $this->put('address');
+        $uid = $this->put('uid');
         $place_of_birth = $this->put('placeOfBirth');
         $religion = $this->put('religion');
         $status = $this->put('status');
@@ -219,42 +226,59 @@ class User extends REST_Controller
         if (isset($status)) {
             $datas = array_merge($datas, array('status' => $status ));
         }
-        
-        if ($this->user_model->update_user($id, $datas)) {
-            if ($update_user_task) {
-                $result = $this->group_task_model->get_group_task_where($user_task_group_id);
-                $tasks = [];
-                foreach ($result as $row) {
-                    array_push($tasks, $row['task_id']);
-                }
-            }
 
-            if(isset($tasks)){
-                if (!$this->user_task_model->update_user_task($id, $tasks)){
-                    $this->response(
-                        array(
-                            'status' => FALSE,
-                            'message' => $this::UPDATE_FAILED_MESSAGE." Failed to update user_task"
-                        ),
-                        REST_Controller::HTTP_BAD_REQUEST
-                    );
-                    return;
-                }
-      
-            }
+        $userProperties = [
+            'email' => $email,
+            'password' => $password,
+        ];
+        try{
+            //update firebase auth
+            $this->firebase_auth->updateUser($uid, $userProperties);
 
-            $this->response(
-                array(
-                    'status' => TRUE,
-                    'message' => $this::UPDATE_SUCCESS_MESSSAGE
-                ),
-                REST_Controller::HTTP_OK
-            );
-        } else {
+            if ($this->user_model->update_user($id, $datas)) {
+                if ($update_user_task) {
+                    $result = $this->group_task_model->get_group_task_where($user_task_group_id);
+                    $tasks = [];
+                    foreach ($result as $row) {
+                        array_push($tasks, $row['task_id']);
+                    }
+                }
+    
+                if(isset($tasks)){
+                    if (!$this->user_task_model->update_user_task($id, $tasks)){
+                        $this->response(
+                            array(
+                                'status' => FALSE,
+                                'message' => $this::UPDATE_FAILED_MESSAGE." Failed to update user_task"
+                            ),
+                            REST_Controller::HTTP_BAD_REQUEST
+                        );
+                        return;
+                    }
+          
+                }
+    
+                $this->response(
+                    array(
+                        'status' => TRUE,
+                        'message' => $this::UPDATE_SUCCESS_MESSSAGE
+                    ),
+                    REST_Controller::HTTP_OK
+                );
+            } else {
+                $this->response(
+                    array(
+                        'status' => FALSE,
+                        'message' => $this::UPDATE_FAILED_MESSAGE
+                    ),
+                    REST_Controller::HTTP_INTERNAL_SERVER_ERROR
+                );
+            }
+        }catch(Exception $e){
             $this->response(
                 array(
                     'status' => FALSE,
-                    'message' => $this::UPDATE_FAILED_MESSAGE
+                    'message' => $this::UPDATE_FAILED_MESSAGE . " Details: update user task failed"
                 ),
                 REST_Controller::HTTP_INTERNAL_SERVER_ERROR
             );

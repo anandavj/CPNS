@@ -63,11 +63,12 @@
         </v-card>
       </v-dialog>
     </v-navigation-drawer>
-    <div style="background-color: #F5F5F5">
+    <div v-if="this.$route.meta.drawer" style="background-color: #F5F5F5">
       <v-content style="background-color: #F5F5F5" app class="mx-4 my-4 mx-md-10 my-md-n5">
         <router-view style="background-color: #F5F5F5"></router-view>
       </v-content>
     </div>
+    <router-view v-else style="background-color: #F5F5F5"></router-view>
   </v-app>
 </template>
 
@@ -79,6 +80,7 @@ export default {
   name: 'App',
 
   mounted() {
+    
   },
 
   components: {

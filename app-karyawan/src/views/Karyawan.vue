@@ -295,19 +295,32 @@
                     <v-form ref="form">
                         <v-card-text>
                             <v-row>
+                                <v-col cols="12">
+                                    <v-text-field color="accent" label="Nama" v-model="karyawan.name" :rules="nameRules"/>
+                                </v-col>
                                 <v-col cols="6">
                                     <v-text-field color="accent" label="Email" v-model="karyawan.email" :rules="emailRules"/>
                                 </v-col>
                                 <v-col cols="6">
-                                    <v-text-field color="accent" label="Nama" v-model="karyawan.name" :rules="nameRules"/>
+                                    <v-text-field 
+                                        color="accent"
+                                        :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                                        :rules="passwordRules"
+                                        :type="showPassword ? 'text' : 'password'"
+                                        v-model="karyawan.password"
+                                        label="Password"
+                                        hint="Minimal 8 Karakter"
+                                        class="input-group--focused"
+                                        @click:append="showPassword = !showPassword"
+                                    />
                                 </v-col>
                                 <v-col cols="6">
                                     <v-text-field color="accent" label="Tempat Lahir" v-model="karyawan.placeOfBirth" :rules="placeOfBirthRules"/>
                                 </v-col>
                                 <v-col cols="6">
                                     <v-menu
-                                        ref="datePickerMenu"
-                                        v-model="datePickerMenu"
+                                        ref="datePickerMenuAdd"
+                                        v-model="datePickerMenuAdd"
                                         :close-on-content-click="false"
                                         :return-value.sync="karyawan.dateOfBirth"
                                         transition="scale-transition"
@@ -326,10 +339,10 @@
                                         </template>
                                         <v-date-picker v-model="karyawan.dateOfBirth" no-title scrollable>
                                             <v-spacer></v-spacer>
-                                            <v-btn text color="primary" @click="datePickerMenu = false">Cancel</v-btn>
-                                            <v-btn text color="primary" @click="$refs.datePickerMenu.save(karyawan.dateOfBirth)">OK</v-btn>
+                                            <v-btn text color="primary" @click="datePickerMenuAdd = false">Cancel</v-btn>
+                                            <v-btn text color="primary" @click="$refs.datePickerMenuAdd.save(karyawan.dateOfBirth)">OK</v-btn>
                                         </v-date-picker>
-                                        </v-menu>
+                                    </v-menu>
                                 </v-col>
                                 <v-col cols="6">
                                     <v-select
@@ -361,7 +374,7 @@
                                     label="Divisi"
                                     color="accent"
                                     v-model="karyawan.userTaskGroupId"
-                                    ></v-select>
+                                    v-on:change="selectuserTaskGroupId"></v-select>
                                 </v-col>
                                 <v-col cols="12">
                                     <div class="title mt-n1">Permission</div>
@@ -403,19 +416,32 @@
                     <v-form ref="form">
                         <v-card-text>
                             <v-row>
+                                <v-col cols="12">
+                                    <v-text-field color="accent" label="Nama" v-model="karyawan.name" :rules="nameRules"/>
+                                </v-col>
                                 <v-col cols="6">
                                     <v-text-field color="accent" label="Email" v-model="karyawan.email" :rules="emailRules"/>
                                 </v-col>
                                 <v-col cols="6">
-                                    <v-text-field color="accent" label="Nama" v-model="karyawan.name" :rules="nameRules"/>
+                                    <v-text-field 
+                                        color="accent"
+                                        :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                                        :rules="passwordRules"
+                                        :type="showPassword ? 'text' : 'password'"
+                                        v-model="karyawan.password"
+                                        label="Password"
+                                        hint="Minimal 8 Karakter"
+                                        class="input-group--focused"
+                                        @click:append="showPassword = !showPassword"
+                                    />
                                 </v-col>
                                 <v-col cols="6">
                                     <v-text-field color="accent" label="Tempat Lahir" v-model="karyawan.placeOfBirth" :rules="placeOfBirthRules"/>
                                 </v-col>
                                 <v-col cols="6">
                                     <v-menu
-                                        ref="datePickerMenu"
-                                        v-model="datePickerMenu"
+                                        ref="datePickerMenuAdd"
+                                        v-model="datePickerMenuAdd"
                                         :close-on-content-click="false"
                                         :return-value.sync="karyawan.dateOfBirth"
                                         transition="scale-transition"
@@ -424,20 +450,20 @@
                                         >
                                         <template v-slot:activator="{ on }">
                                             <v-text-field
-                                                color="accent"
-                                                v-model="karyawan.dateOfBirth"
-                                                label="Tanggal Lahir"
-                                                prepend-icon="mdi-calendar"
-                                                readonly
-                                                v-on="on"
+                                            color="accent"
+                                            v-model="karyawan.dateOfBirth"
+                                            label="Tanggal Lahir"
+                                            prepend-icon="mdi-calendar"
+                                            readonly
+                                            v-on="on"
                                             ></v-text-field>
                                         </template>
                                         <v-date-picker v-model="karyawan.dateOfBirth" no-title scrollable>
                                             <v-spacer></v-spacer>
-                                            <v-btn text color="primary" @click="datePickerMenu = false">Cancel</v-btn>
-                                            <v-btn text color="primary" @click="$refs.datePickerMenu.save(karyawan.dateOfBirth)">OK</v-btn>
+                                            <v-btn text color="primary" @click="datePickerMenuAdd = false">Cancel</v-btn>
+                                            <v-btn text color="primary" @click="$refs.datePickerMenuAdd.save(karyawan.dateOfBirth)">OK</v-btn>
                                         </v-date-picker>
-                                        </v-menu>
+                                    </v-menu>
                                 </v-col>
                                 <v-col cols="6">
                                     <v-select
@@ -469,7 +495,7 @@
                                     label="Divisi"
                                     color="accent"
                                     v-model="karyawan.userTaskGroupId"
-                                    ></v-select>
+                                    v-on:change="selectuserTaskGroupId"></v-select>
                                 </v-col>
                                 <v-col cols="12">
                                     <div class="title mt-n1">Permission</div>
