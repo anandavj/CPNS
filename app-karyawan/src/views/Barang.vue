@@ -22,10 +22,9 @@
                             <v-col cols="9">
                                 <v-autocomplete
                                     v-model="advanceSearch.category"
-                                    class="mb-n4"
                                     :items="categories"
                                     label="Kategori"
-                                    outlined
+                                    solo
                                     dense
                                     :clearable="true"
                                     color="accent"
@@ -33,17 +32,21 @@
                                     @change="categorySearchInput=''"
                                     item-text="name"
                                     item-value="id"
+                                    :persistent-hint="true"
+                                    hint="Kategori"
                                     :readonly="advanceSearch.category != null"
                                 />
                             </v-col>
                             <v-col cols="3">
                                 <v-text-field
                                     label="Min Stock"
-                                    outlined
+                                    solo
+                                    :persistent-hint="true"
+                                    hint="Stock Min"
                                     dense
                                     :clearable="true"
                                     v-model="advanceSearch.stock_down"
-                                    class="mb-n4 ml-3"
+                                    class="ml-3"
                                     color="accent"
                                 />
                             </v-col>
@@ -53,7 +56,9 @@
                                     class="mb-n4"
                                     :items="tags"
                                     label="Tag"
-                                    outlined
+                                    solo
+                                    :persistent-hint="true"
+                                    hint="Tag"
                                     dense
                                     :clearable="true"
                                     color="accent"
@@ -67,11 +72,13 @@
                             <v-col cols="3">
                                 <v-text-field
                                     label="Max Stock"
-                                    outlined
+                                    solo
+                                    :persistent-hint="true"
+                                    hint="Max Stock"
                                     dense
                                     :clearable="true"
                                     v-model="advanceSearch.stock_up"
-                                    class="mb-n4 ml-3"
+                                    class="ml-3"
                                     color="accent"
                                 />
                             </v-col>
@@ -85,10 +92,11 @@
                             <v-col cols="12">
                                 <v-autocomplete
                                     v-model="advanceSearch.category"
-                                    class="mb-n4"
                                     :items="categories"
                                     label="Kategori"
-                                    outlined
+                                    solo
+                                    :persistent-hint="true"
+                                    hint="Kategori"
                                     dense
                                     :clearable="true"
                                     color="accent"
@@ -102,10 +110,11 @@
                              <v-col cols="12">
                                 <v-autocomplete
                                     v-model="advanceSearch.tags"
-                                    class="mb-n4"
+                                    :persistent-hint="true"
+                                    hint="Tag"
                                     :items="tags"
                                     label="Tag"
-                                    outlined
+                                    solo
                                     dense
                                     :clearable="true"
                                     color="accent"
@@ -119,22 +128,25 @@
                             <v-col cols="6">
                                 <v-text-field
                                     label="Min Stock"
-                                    outlined
+                                    solo
+                                    :persistent-hint="true"
+                                    hint="Min Stock"
                                     dense
                                     :clearable="true"
                                     v-model="advanceSearch.stock_down"
-                                    class="mb-n4 mr-3"
+                                    class="mr-3"
                                     color="accent"
                                 />
                             </v-col>
                             <v-col cols="6">
                                 <v-text-field
                                     label="Max Stock"
-                                    outlined
+                                    solo
+                                    :persistent-hint="true"
+                                    hint="Max Stock"
                                     dense
                                     :clearable="true"
                                     v-model="advanceSearch.stock_up"
-                                    class="mb-n4"
                                     color="accent"
                                 />
                             </v-col>
