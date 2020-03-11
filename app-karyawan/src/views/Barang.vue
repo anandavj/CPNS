@@ -625,9 +625,9 @@
                 >
                     <template v-slot:item="{ item }">
                         <v-card @click.stop="details(item)" class="mt-1 mb-3 mx-2 pa-2" color="white" outlined>
+                            <v-card-title class="body-2 mt-n2">{{ item.name }}</v-card-title>
                             <div class="d-flex flex-no-wrap justify-space-between mt-n2 align-center">
                                 <div>
-                                    <v-card-title class="body-2">{{ item.name }}</v-card-title>
                                     <v-card-subtitle>{{item.stock}}</v-card-subtitle>
                                 </div>
                                 <div>
