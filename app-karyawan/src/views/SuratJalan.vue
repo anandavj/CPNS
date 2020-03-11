@@ -432,8 +432,8 @@
                                                             <td><v-text-field id="focusGainedAmount" color="accent" v-on:keydown.enter="addSuratJalanNewItem" v-model="deliveryOrderNewItem.amount"/></td>
                                                         </tr>
                                                     </template>
-                                                    <template v-slot:item.actions="{ item }">
-                                                        <v-icon @click.stop="deleteSuratJalanNew(item)">mdi-delete</v-icon>
+                                                    <template v-slot:item.actions="{ item }" v-if="deliveryOrderEditToggle">
+                                                        <v-icon @click.stop="deleteSuratJalanDetailsItem(item)">mdi-delete</v-icon>
                                                     </template>
                                                 </v-data-table>
                                             </v-col>
@@ -463,13 +463,56 @@
                                                                         Tambah Barang
                                                                     </v-col>
                                                                     <v-col cols="12">
-                                                                        <v-text-field class="mb-n4" color="accent" label="ID Barang" outlined dense v-model="deliveryOrderNewItem.productId"/>
+                                                                        <v-autocomplete
+                                                                            color="accent"
+                                                                            id="focusGained"
+                                                                            dense
+                                                                            v-model="deliveryOrderNewItem.productId"
+                                                                            chips
+                                                                            :items="products"
+                                                                            :clearable="true"
+                                                                            :auto-select-first="true"
+                                                                            item-color="blue"
+                                                                            :search-input.sync="searchId"
+                                                                            @click:clear="clearDeliveryOrderNewItem"
+                                                                            @change="onChangeSearchId"
+                                                                            item-text="id"
+                                                                            item-value="id"
+                                                                            :readonly="deliveryOrderNewItem.productId!=null"
+                                                                        >
+                                                                            <template v-slot:selection="data">
+                                                                                <v-chip color="transparent" class="pa-0">
+                                                                                    {{data.item.id}}
+                                                                                </v-chip>
+                                                                            </template>
+                                                                        </v-autocomplete>
                                                                     </v-col>
                                                                     <v-col cols="12" class="mt-n4">
-                                                                        <v-text-field class="mb-n4" color="accent" label="Nama Barang" outlined dense v-model="deliveryOrderNewItem.name"/>
+                                                                        <v-autocomplete
+                                                                            color="accent"
+                                                                            dense
+                                                                            v-model="deliveryOrderNewItem.name"
+                                                                            chips
+                                                                            :items="products"
+                                                                            :clearable="true"
+                                                                            :auto-select-first="true"
+                                                                            item-color="blue"
+                                                                            :search-input.sync="searchName"
+                                                                            @click:clear="clearDeliveryOrderNewItem"
+                                                                            @change="onChangeSearchName"
+                                                                            item-text="name"
+                                                                            item-value="name"
+                                                                            :readonly="deliveryOrderNewItem.name!=null"
+                                                                        >
+                                                                            <template v-slot:selection="data">
+                                                                                <v-chip color="transparent" class="pa-0">
+                                                                                    {{data.item.name}}
+                                                                                </v-chip>
+                                                                            </template>
+                                                                        </v-autocomplete>
                                                                     </v-col>
                                                                     <v-col cols="9" class="mt-n4 mr-n3">
-                                                                        <v-text-field class="mb-n4" color="accent" label="Jumlah" outlined dense v-model="deliveryOrderNewItem.amount"/>
+                                                                        <v-text-field id="focusGainedAmount" color="accent" v-on:keydown.enter="addSuratJalanNewItem" v-model="deliveryOrderNewItem.amount"/>
                                                                     </v-col>
                                                                     <v-col cols="3" class="mt-n4">
                                                                         <v-btn color="green" dark @click="addSuratJalanNewItem"><v-icon>mdi-plus</v-icon></v-btn>
@@ -648,7 +691,7 @@
                                                             </tr>
                                                         </template>
                                                         <template v-slot:item.actions="{ item }">
-                                                            <v-icon @click.stop="deleteSuratJalanNew(item)">mdi-delete</v-icon>
+                                                            <v-icon @click.stop="deleteSuratJalanNewItem(item)">mdi-delete</v-icon>
                                                         </template>
                                                     </v-data-table>
                                                 </v-col>
@@ -678,13 +721,56 @@
                                                                             Tambah Barang
                                                                         </v-col>
                                                                         <v-col cols="12">
-                                                                            <v-text-field class="mb-n4" color="accent" label="ID Barang" outlined dense v-model="deliveryOrderNewItem.productId"/>
+                                                                            <v-autocomplete
+                                                                                color="accent"
+                                                                                id="focusGained"
+                                                                                dense
+                                                                                v-model="deliveryOrderNewItem.productId"
+                                                                                chips
+                                                                                :items="products"
+                                                                                :clearable="true"
+                                                                                :auto-select-first="true"
+                                                                                item-color="blue"
+                                                                                :search-input.sync="searchId"
+                                                                                @click:clear="clearDeliveryOrderNewItem"
+                                                                                @change="onChangeSearchId"
+                                                                                item-text="id"
+                                                                                item-value="id"
+                                                                                :readonly="deliveryOrderNewItem.productId!=null"
+                                                                            >
+                                                                                <template v-slot:selection="data">
+                                                                                    <v-chip color="transparent" class="pa-0">
+                                                                                        {{data.item.id}}
+                                                                                    </v-chip>
+                                                                                </template>
+                                                                            </v-autocomplete>
                                                                         </v-col>
                                                                         <v-col cols="12" class="mt-n4">
-                                                                            <v-text-field class="mb-n4" color="accent" label="Nama Barang" outlined dense v-model="deliveryOrderNewItem.name"/>
+                                                                            <v-autocomplete
+                                                                                color="accent"
+                                                                                dense
+                                                                                v-model="deliveryOrderNewItem.name"
+                                                                                chips
+                                                                                :items="products"
+                                                                                :clearable="true"
+                                                                                :auto-select-first="true"
+                                                                                item-color="blue"
+                                                                                :search-input.sync="searchName"
+                                                                                @click:clear="clearDeliveryOrderNewItem"
+                                                                                @change="onChangeSearchName"
+                                                                                item-text="name"
+                                                                                item-value="name"
+                                                                                :readonly="deliveryOrderNewItem.name!=null"
+                                                                            >
+                                                                                <template v-slot:selection="data">
+                                                                                    <v-chip color="transparent" class="pa-0">
+                                                                                        {{data.item.name}}
+                                                                                    </v-chip>
+                                                                                </template>
+                                                                            </v-autocomplete>
                                                                         </v-col>
                                                                         <v-col cols="9" class="mt-n4 mr-n3">
-                                                                            <v-text-field class="mb-n4" color="accent" label="Jumlah" outlined dense v-model="deliveryOrderNewItem.amount"/>
+                                                                            <v-text-field id="focusGainedAmount" color="accent" v-on:keydown.enter="addSuratJalanNewItem" v-model="deliveryOrderNewItem.amount"/>
                                                                         </v-col>
                                                                         <v-col cols="3" class="mt-n4">
                                                                             <v-btn color="green" dark @click="addSuratJalanNewItem"><v-icon>mdi-plus</v-icon></v-btn>
@@ -697,7 +783,7 @@
                                                             <v-card color="grey lighten-2" class="mt-1 mb-3 mx-2">
                                                                 <div class="d-flex flex-no-wrap justify-space-between align-center">
                                                                     <div>
-                                                                        <v-card-title class="body-2">{{item.productName}}</v-card-title>
+                                                                        <v-card-title class="body-2">{{item.name}}</v-card-title>
                                                                         <v-card-subtitle>{{item.productId}}</v-card-subtitle>
                                                                     </div>
                                                                     <div>
@@ -830,6 +916,9 @@ export default {
             ],
             // Proses Muat ditampung disini
             selectedItemsForDeliveryOrder:[],
+            tempOut:[],
+            tempIn:[],
+            temp:[],
             // --
             selectedIndex:-1,
             // PopUp Var
@@ -953,6 +1042,7 @@ export default {
         detailSuratJalan(item) {
             this.selectedIndex = this.suratJalans.indexOf(item)
             this.deliveryOrder = Object.assign({},item)
+            this.temp = Object.assign({},item)
             this.popUpDetailSuratJalan = true
         },
         productNameWithSpec(item) {
@@ -968,10 +1058,16 @@ export default {
                 if(this.popUpDetailSuratJalan) {
                     if(this.deliveryOrderEditToggle) {
                         this.deliveryOrderEditToggle = false
-                        for(let i=0; i<this.counter; i++) {
-                            this.deliveryOrder.items.pop()
-                        }
-                        this.counter = 0
+                        this.deliveryOrder = Object.assign({},this.temp)
+                        this.tempOut.forEach(el => {
+                            this.deliveryOrder.items.push(el)
+                        })
+                        this.tempIn.forEach(el => {
+                            const idx = this.deliveryOrder.items.indexOf(el)
+                            this.deliveryOrder.items.splice(idx, 1)
+                        })
+                        this.tempOut = []
+                        this.tempIn = []
                         this.deliveryOrderNewItem = Object.assign({},this.deliveryOrderNewItemDefault)
                     }
                     this.popUpDetailSuratJalan = false
@@ -988,7 +1084,7 @@ export default {
             }
         },
         addSuratJalanNewItem() {
-            this.counter++
+            this.tempIn.push(this.deliveryOrderNewItem)
             this.deliveryOrder.items.push(this.deliveryOrderNewItem)
             this.deliveryOrderNewItem = Object.assign({},this.deliveryOrderNewItemDefault)
             document.getElementById("focusGained").focus()
@@ -1008,6 +1104,15 @@ export default {
         },
         clearDeliveryOrderNewItem() {
             this.deliveryOrderNewItem = Object.assign({},this.deliveryOrderNewItemDefault)
+        },
+        deleteSuratJalanNewItem(item) {
+            const idx = this.deliveryOrder.items.indexOf(item)
+            this.deliveryOrder.items.splice(idx, 1)
+        },
+        deleteSuratJalanDetailsItem(item) {
+            const idx = this.deliveryOrder.items.indexOf(item)
+            this.tempOut.push(item)
+            this.deliveryOrder.items.splice(idx, 1)
         },
         // Proses Surat jalan
         prosesSuratJalan(item) {
