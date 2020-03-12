@@ -33,7 +33,7 @@ class Product extends REST_Controller
         $bottom_price = $this->post('bottomPrice');
         $tags = $this->post('tags');
         $images = $this->post('images');
-
+        $min_stock = $this->post('minStock');
 
 
         $product_code = $this->post('productCode');
@@ -41,7 +41,7 @@ class Product extends REST_Controller
 
 
         if (
-            !isset($name) || !isset($category_id) || !isset($specification) || !isset($unit_id) || !isset($open_price) || !isset($bottom_price) || !isset($tags) || !isset($images) || !isset($product_code) || !isset($retail_id) 
+            !isset($name) || !isset($category_id) || !isset($specification) || !isset($unit_id) || !isset($open_price) || !isset($bottom_price) || !isset($tags) || !isset($images) || !isset($product_code) || !isset($retail_id) || !isset($min_stock)
         ) {
             $required_parameters = [];
             if (!isset($name)) array_push($required_parameters, 'name');
@@ -54,6 +54,7 @@ class Product extends REST_Controller
             if (!isset($images)) array_push($required_parameters, 'images');
             if (!isset($product_code)) array_push($required_parameters, 'productCode');
             if (!isset($retail_id)) array_push($required_parameters, 'retailId');
+            if (!isset($min_stock)) array_push($required_parameters, 'minStock');
             $this->response(
                 array(
                     'status' => FALSE,
@@ -121,7 +122,7 @@ class Product extends REST_Controller
         }
 
 
-        if ($product_id = $this->product_model->insert_product($product_code, $name, $category_id, $specification, $description, $stock, $unit_id, $open_price, $bottom_price, $retail_id)) {
+        if ($product_id = $this->product_model->insert_product($product_code, $name, $category_id, $specification, $description, $stock, $unit_id, $open_price, $bottom_price, $retail_id, $min_stock)) {
          
             
             
@@ -205,6 +206,7 @@ class Product extends REST_Controller
         $images = $this->put('images');
         $product_code = $this->put('productCode');
         $retail_id = $this->put('retailId');
+        $min_stock = $this->put('minStock');
 
         $datas = array();
         
@@ -286,6 +288,11 @@ class Product extends REST_Controller
         }
         if(isset($retail_id)){
             $datas = array_merge($datas, array('retail_id' => $retail_id));
+        }
+        if(isset($min_stock)){
+            $datas = array_merge($datas, array('min_stock' => $min_stock));
+        }else{
+            $datas = array_merge($datas, array('min_stock' => 0));
         }
 
     

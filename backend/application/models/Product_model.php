@@ -18,7 +18,7 @@ class Product_model extends CI_Model{
         return $this->db->affected_rows();
     }
 
-    public function insert_product($product_code, $name, $category_id, $specification, $description, $stock, $unit_id, $open_price, $bottom_price, $retail_id){
+    public function insert_product($product_code, $name, $category_id, $specification, $description, $stock, $unit_id, $open_price, $bottom_price, $retail_id, $min_stock){
         
         if(!isset($stock)){
             $stock = 0;
@@ -34,19 +34,20 @@ class Product_model extends CI_Model{
             'unit_id' => $unit_id,
             'open_price' => $open_price,
             'bottom_price' => $bottom_price,
-            'retail_id' => $retail_id
+            'retail_id' => $retail_id,
+            'min_stock' => $min_stock
         ));
         return $this->db->insert_id();
     }
 
     public function get_all_product(){
-        $this->db->select('id, product_code as productCode, name, category_id as categoryId, specification, description, unit_id as unitId, open_price as openPrice, bottom_price as bottomPrice, stock, retail_id as retailId');
+        $this->db->select('id, product_code as productCode, name, category_id as categoryId, specification, description, unit_id as unitId, open_price as openPrice, bottom_price as bottomPrice, stock, min_stock as minStock, retail_id as retailId');
         $this->db->from($this::TABLE_NAME);
         return $this->db->get()->result_array();
     }
 
     public function get_product_where($id){
-        $this->db->select('id, product_code as productCode, name, category_id as categoryId, specification, description, unit_id as unitId, open_price as openPrice, bottom_price as bottomPrice, stock, retail_id as retailId');
+        $this->db->select('id, product_code as productCode, name, category_id as categoryId, specification, description, unit_id as unitId, open_price as openPrice, bottom_price as bottomPrice, stock, min_stock as minStock, retail_id as retailId');
         $this->db->from($this::TABLE_NAME);
         $this->db->where("id='{$id}'");
         return $this->db->get()->result_array();
