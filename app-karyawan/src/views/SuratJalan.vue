@@ -1893,7 +1893,6 @@ export default {
                                     this.deliveryOrders.push(deliveryOrder)
                                 }
                             });
-                            this.deliveryOrders = deliveryOrders
                             this.deliveryOrder = Object.assign({},this.deliveryOrderDefault)
                             this.selectedIndex = -1
                             this.popUpNewSuratJalan = false
@@ -1921,10 +1920,9 @@ export default {
                                     this.deliveryOrders.push(deliveryOrder)
                                 }
                             });
-                            this.deliveryOrders = deliveryOrders
                             this.deliveryOrder = Object.assign({},this.deliveryOrderDefault)
                             this.selectedIndex = -1
-                            this.popUpNewSuratJalan = false
+                            this.popUpNewDO = false
                         })
                 })
         },
