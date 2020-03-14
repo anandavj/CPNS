@@ -616,7 +616,6 @@
                     :headers="productHeaders"
                     :items="products"
                     @click:row="details"
-                    :hide-default-footer="true"
                     item-key="nama"
                     no-data-text="Data Barang Kosong"
                     no-results-text="Data Barang Tidak Ditemukan"
@@ -625,25 +624,40 @@
                 >
                     <template v-slot:item="{ item }">
                         <v-card @click.stop="details(item)" class="mt-1 mb-3 mx-2 pa-2" color="white" outlined>
-                            <v-card-title class="body-2 mt-n2">{{ item.name }}</v-card-title>
-                            <div class="d-flex flex-no-wrap justify-space-between mt-n2 align-center">
+                            <div class="d-flex flex-no-wrap justify-space-between align-center">
+                                <div>
+                                    <v-card-title class="body-2 mt-n2">{{ item.name }}</v-card-title>
+                                </div>
+                                <div class="mt-n2 mr-n2">
+                                    <v-menu
+                                        :close-on-click="true"
+                                        :close-on-content-click="true"
+                                        :offset-y="true"
+                                    >
+                                        <template v-slot:activator="{ on }">
+                                            <v-card-actions><v-icon v-on="on">mdi-dots-vertical</v-icon></v-card-actions>
+                                        </template>
+                                        <v-list>
+                                            <v-list-item @click.stop="quickEdit(item)">
+                                                <v-list-item-title>Edit Harga</v-list-item-title>
+                                            </v-list-item>
+                                            <v-list-item @click.stop="editProduct(item)">
+                                                <v-list-item-title>Edit Produk</v-list-item-title>
+                                            </v-list-item>
+                                            <v-list-item @click.stop="deleteProduct(item)">
+                                                <v-list-item-title>Hapus Produk</v-list-item-title>
+                                            </v-list-item>
+                                        </v-list>
+                                    </v-menu>
+                                </div>
+                            </div>
+                            <div class="d-flex flex-no-wrap justify-space-between align-center">
                                 <div>
                                     <v-card-subtitle>{{item.stock}}</v-card-subtitle>
                                 </div>
                                 <div>
                                     <v-card-subtitle>Rp{{item.openPrice}}</v-card-subtitle>
                                 </div>
-                            </div>
-                            <div class="d-flex flex-no-wrap justify-space-between mt-n2 ml-4 mr-4">
-                                <v-btn @click.stop="quickEdit(item)" dense color="green darken-3" outlined small width="48%" class="caption">
-                                    Edit Harga
-                                </v-btn>
-                                <v-btn @click.stop="editProduct(item)" dense color="white--text yellow darken-3" small width="22%">
-                                    <v-icon>mdi-pencil</v-icon>
-                                </v-btn>
-                                <v-btn @click.stop="deleteProduct(item)" dense color="white--text red" small width="22%">
-                                    <v-icon>mdi-delete</v-icon>
-                                </v-btn>
                             </div>
                         </v-card>
                     </template>
