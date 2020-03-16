@@ -533,7 +533,46 @@
             <!-- *************************************************************************************************************** -->
             <!-- Quick Edit Open Price -->
             <!-- *************************************************************************************************************** -->
-            <v-switch v-if="!popUpBreakPoint" value v-model="editToggle" class="pa-0 mb-0 mt-5" label="Edit Harga"></v-switch>
+            <v-row justify="space-between" align="center" class="ma-0">
+                <div>
+                    <v-switch v-if="!popUpBreakPoint" value v-model="editToggle" class="pa-0 mb-0 mt-5" label="Edit Harga"></v-switch>
+                </div>
+                <div v-if="totalStocklowerThanMinStock>0">
+                    <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                            <v-btn @click="findStocklowerThanMinStock" text color="red" v-on="on">{{totalStocklowerThanMinStock}}<span class="ml-1">produk krisis stock</span><v-icon class="ml-2">mdi-alert-rhombus</v-icon></v-btn>
+                        </template>
+                        <span>Tampilkan</span>
+                    </v-tooltip>
+                </div>
+            </v-row>
+            <v-dialog v-model="findStocklowerThanMinStockDialog">
+                <v-card min-height="700px">
+                    <v-data-table
+                        :headers="productsUnderHeaders"
+                        :items="productsUnder"
+                        :mobile-breakpoint="1"
+                        :disable-sort="true"
+                        :search="productsUnderSearch"
+                    >
+                        <template v-slot:top>
+                            <v-col cols="12">
+                                <v-text-field
+                                    placeholder="Cari Barang"
+                                    :solo='true'
+                                    :clearable='true'
+                                    append-icon="mdi-magnify"
+                                    class="font-regular font-weight-light mb-n4"
+                                    v-model="productsUnderSearch"
+                                />
+                            </v-col>
+                        </template>
+                        <template v-slot:item.name="{item}">
+                            ({{item.id}}) - {{item.name}}
+                        </template>
+                    </v-data-table>
+                </v-card>
+            </v-dialog>
             <v-dialog v-model="popUpQuickEdit" persistent max-width='350px'>
                 <v-card>
                     <v-toolbar dense flat>
@@ -616,10 +655,13 @@
                     :headers="productHeaders"
                     :items="products"
                     @click:row="details"
+                    :footer-props="{
+                        'items-per-page-options': [10, 50, 100, -1]
+                    }"
                     item-key="nama"
                     no-data-text="Data Barang Kosong"
                     no-results-text="Data Barang Tidak Ditemukan"
-                    class="font-regular font-weight-light mt-n4"
+                    class="font-regular font-weight-light mt-n4 mb-12 pb-4"
                     style="cursor:pointer; background-color: #F5F5F5"
                 >
                     <template v-slot:item="{ item }">
@@ -1284,6 +1326,7 @@ export default {
             snackbar: false,
             snackbarMessage: '',
             snackbarColor: '',
+            productsUnderSearch: '',
             advanceSearch: {
                 name:'',
                 stock_down:null,
@@ -1292,6 +1335,7 @@ export default {
                 tags:null
             },
             products: [],
+            productsUnder: [],
             product: {
                 id:null,
                 name:'',
@@ -1367,7 +1411,9 @@ export default {
             popUpNewUnit: false,
             popUpNewTag: false,
             showAdvanceSearchOption: false,
+            findStocklowerThanMinStockDialog: false,
             selectedIndex: -1,
+            totalStocklowerThanMinStock: 0,
             rules: {
                 productName: [
                     v => !!v || 'Nama Produk Harus Diisi'
@@ -1418,16 +1464,12 @@ export default {
             api.getAllProducts()
                 .then(products => {
                     this.products = products
-                    // products.forEach(product => {
-                    //     api.getTagByProductId(product.id)
-                    //         .then(tags => {
-                    //             let productTags = []
-                    //             tags.forEach(tag => {
-                    //                 productTags.push(tag.tagId)
-                    //             })
-                    //             product.tags = productTags
-                    //         })
-                    // })
+                    products.forEach(product => {
+                        if(+product.minStock > +product.stock) {
+                            this.totalStocklowerThanMinStock++
+                            this.productsUnder.push(product)
+                        }
+                    })
                 })
             api.getAllCategory()
                 .then(categories => {
@@ -1441,6 +1483,9 @@ export default {
                 .then(tags => {
                     this.tags = tags
                 })
+        },
+        findStocklowerThanMinStock() { 
+            this.findStocklowerThanMinStockDialog = true
         },
         // Advance Search
         showAdvanceSearch() {
@@ -1749,6 +1794,12 @@ export default {
                 {value:'actions',width:'10%'},
                 {value:'categoryId', align: ' d-none', filter:this.advanceSearchCategory},
                 {value:'tags', align: ' d-none', filter:this.advanceSearchTags},
+            ]
+        },
+        productsUnderHeaders() {
+            return [
+                {text:'(ID Product) Nama', value:'name', width:'90%'},
+                {text:'Stock', value:'stock'},
             ]
         },
         //view Breakpoint
