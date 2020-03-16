@@ -2076,7 +2076,6 @@ export default {
                                             this.deliveryOrders.push(deliveryOrder)
                                         }
                                     });
-                                    this.deliveryOrders = deliveryOrders
                                     this.deliveryOrder = Object.assign({},this.deliveryOrderDefault)
                                     this.selectedIndex = -1
                                     this.popUpProsesSuratJalan = false
@@ -2087,6 +2086,13 @@ export default {
                 if(this.deliveryOrder.status == 'Belum Diproses') {
                     this.deliveryOrder.status = 'Selesai'
                     api.changeStatusToOnProcess(this.deliveryOrder)
+                        .then(() => {
+                            this.deliveryOrder.items.forEach(item => {
+                                let product = _.find(this.products,['id',item.productId])
+                                product.stock = +product.stock + +item.amount
+                                api.updateProduct(product)
+                            });
+                        })
                         .then((response) => {
                             this.snackbarColor = 'success'
                             this.snackbarMessage = response
@@ -2106,7 +2112,6 @@ export default {
                                             this.deliveryOrders.push(deliveryOrder)
                                         }
                                     });
-                                    this.deliveryOrders = deliveryOrders
                                     this.deliveryOrder = Object.assign({},this.deliveryOrderDefault)
                                     this.selectedIndex = -1
                                     this.popUpProsesDO = false
