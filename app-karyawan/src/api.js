@@ -366,7 +366,22 @@ const api = {
                     if(error.response.status == 500) reject(serverErrorMessage)
                 })
         } )
-    }
+    },
+    updateProductStock(product) {
+        return new Promise( (resolve, reject) => {
+            let data = {
+                id: product.id,
+                stock: product.stock
+            }
+
+            axios.put(productTable, data)
+                .then(() => {
+                    resolve(updateSuccessMessage)
+                }) .catch(error => {
+                    if(error.response.status == 500) reject(serverErrorMessage)
+                })
+        } )
+    },
 
     /* ================================================================================================================================================= */
     /* ================================================================================================================================================= */

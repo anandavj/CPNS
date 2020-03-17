@@ -306,20 +306,20 @@
                                                     </v-col>
                                                     <!-- Tanggal -->
                                                     <v-col cols="5" v-if="popUpBreakPoint">
-                                                        <v-text-field v-model="deliveryOrder.date" dense color="accent" outlined filled disabled label="Tanggal"/>
+                                                        <v-text-field v-model="formatDateDetails" dense color="accent" outlined filled disabled label="Tanggal"/>
                                                     </v-col>
                                                     <v-col cols="3" v-else>
-                                                        <v-text-field v-model="deliveryOrder.date" dense color="accent" outlined filled disabled label="Tanggal"/>
+                                                        <v-text-field v-model="formatDateDetails" dense color="accent" outlined filled disabled label="Tanggal"/>
                                                     </v-col>
                                                     <!--  -->
                                                 </v-row>
                                                 <v-row justify="end" v-else>
                                                     <!-- Tanggal -->
                                                     <v-col cols="5" v-if="popUpBreakPoint">
-                                                        <v-text-field v-model="deliveryOrder.date" dense color="accent" outlined filled disabled label="Tanggal"/>
+                                                        <v-text-field v-model="formatDateDetails" dense color="accent" outlined filled disabled label="Tanggal"/>
                                                     </v-col>
                                                     <v-col cols="3" v-else>
-                                                        <v-text-field v-model="deliveryOrder.date" dense color="accent" outlined filled disabled label="Tanggal"/>
+                                                        <v-text-field v-model="formatDateDetails" dense color="accent" outlined filled disabled label="Tanggal"/>
                                                     </v-col>
                                                     <!--  -->
                                                 </v-row>
@@ -461,7 +461,7 @@
                                                     <template v-slot:body.prepend="{ headers }">
                                                         <tr>
                                                             <td :colspan="headers.length" class="text-center">
-                                                                Daftar Barang
+                                                                Daftar Barang <!-- <v-icon color="red">mdi-alert-rhombus</v-icon> -->
                                                             </td>
                                                         </tr>
                                                     </template>
@@ -536,10 +536,11 @@
                                                             <div class="d-flex flex-no-wrap justify-space-between align-center">
                                                                 <div>
                                                                     <v-card-title class="body-2">{{item.name}}</v-card-title>
-                                                                    <v-card-subtitle>{{item.id}}</v-card-subtitle>
+                                                                    <v-card-subtitle>{{item.productId}}</v-card-subtitle>
                                                                 </div>
                                                                 <div>
-                                                                    <v-card-subtitle>{{item.amount}}</v-card-subtitle>
+                                                                    <v-card-subtitle v-if="checkStock(item)"><v-icon color="red">mdi-alert-rhombus</v-icon><span class="red--text">{{item.amount}}</span></v-card-subtitle>
+                                                                    <v-card-subtitle v-else>{{item.amount}}</v-card-subtitle>
                                                                 </div>
                                                                 <div v-if="deliveryOrderEditToggle">
                                                                     <v-card-actions class="ml-n4"><v-icon @click.stop="deleteSuratJalanDetailsItem(item)">mdi-delete</v-icon></v-card-actions>
@@ -581,10 +582,10 @@
                                                     <v-row justify="end">
                                                         <!-- Tanggal -->
                                                         <v-col cols="5" v-if="popUpBreakPoint">
-                                                            <v-text-field v-model="deliveryOrder.date" dense color="accent" outlined filled disabled label="Tanggal"/>
+                                                            <v-text-field v-model="formatDateDetails" dense color="accent" outlined filled disabled label="Tanggal"/>
                                                         </v-col>
                                                         <v-col cols="3" v-else>
-                                                            <v-text-field v-model="deliveryOrder.date" dense color="accent" outlined filled disabled label="Tanggal"/>
+                                                            <v-text-field v-model="formatDateDetails" dense color="accent" outlined filled disabled label="Tanggal"/>
                                                         </v-col>
                                                     </v-row>
                                                 </v-col>
@@ -1112,20 +1113,20 @@
                                                     </v-col>
                                                     <!-- Tanggal -->
                                                     <v-col cols="5" v-if="popUpBreakPoint">
-                                                        <v-text-field v-model="deliveryOrder.date" dense color="accent" outlined filled disabled label="Tanggal"/>
+                                                        <v-text-field v-model="formatDateDetails" dense color="accent" outlined filled disabled label="Tanggal"/>
                                                     </v-col>
                                                     <v-col cols="3" v-else>
-                                                        <v-text-field v-model="deliveryOrder.date" dense color="accent" outlined filled disabled label="Tanggal"/>
+                                                        <v-text-field v-model="formatDateDetails" dense color="accent" outlined filled disabled label="Tanggal"/>
                                                     </v-col>
                                                     <!--  -->
                                                 </v-row>
                                                 <v-row justify="end" v-else>
                                                     <!-- Tanggal -->
                                                     <v-col cols="5" v-if="popUpBreakPoint">
-                                                        <v-text-field v-model="deliveryOrder.date" dense color="accent" outlined filled disabled label="Tanggal"/>
+                                                        <v-text-field v-model="formatDateDetails" dense color="accent" outlined filled disabled label="Tanggal"/>
                                                     </v-col>
                                                     <v-col cols="3" v-else>
-                                                        <v-text-field v-model="deliveryOrder.date" dense color="accent" outlined filled disabled label="Tanggal"/>
+                                                        <v-text-field v-model="formatDateDetails" dense color="accent" outlined filled disabled label="Tanggal"/>
                                                     </v-col>
                                                     <!--  -->
                                                 </v-row>
@@ -1387,10 +1388,10 @@
                                                     <v-row justify="end">
                                                         <!-- Tanggal -->
                                                         <v-col cols="5" v-if="popUpBreakPoint">
-                                                            <v-text-field v-model="deliveryOrder.date" dense color="accent" outlined filled disabled label="Tanggal"/>
+                                                            <v-text-field v-model="formatDateDetails" dense color="accent" outlined filled disabled label="Tanggal"/>
                                                         </v-col>
                                                         <v-col cols="3" v-else>
-                                                            <v-text-field v-model="deliveryOrder.date" dense color="accent" outlined filled disabled label="Tanggal"/>
+                                                            <v-text-field v-model="formatDateDetails" dense color="accent" outlined filled disabled label="Tanggal"/>
                                                         </v-col>
                                                     </v-row>
                                                 </v-col>
@@ -2090,8 +2091,9 @@ export default {
                             this.deliveryOrder.items.forEach(item => {
                                 let product = _.find(this.products,['id',item.productId])
                                 product.stock = +product.stock + +item.amount
-                                api.updateProduct(product)
+                                api.updateProductStock(product)
                             });
+                            this.selectedItemsForDeliveryOrder = []
                         })
                         .then((response) => {
                             this.snackbarColor = 'success'
@@ -2119,7 +2121,10 @@ export default {
                         })
                 }
             }
-        }
+        },
+        checkStock(item) {
+            if(+item.stock < +item.amount) return true
+        },
         /* --------------------             -------------------- */
         /* -------------------- DO -------------------- */
         /* --------------------    -------------------- */
@@ -2128,6 +2133,9 @@ export default {
     computed: {
         formatDate() {
             return this.advanceSearch.date ? moment(this.advanceSearch.date).format('DD/MM/YYYY') : ''
+        },
+        formatDateDetails() {
+            return this.deliveryOrder.date ? moment(this.deliveryOrder.date).format('DD/MM/YYYY') : ''
         },
         formatDateDO() {
             return this.advanceSearchDO.date ? moment(this.advanceSearchDO.date).format('DD/MM/YYYY') : ''
