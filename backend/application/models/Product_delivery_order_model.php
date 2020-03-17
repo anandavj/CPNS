@@ -39,7 +39,7 @@ class Product_delivery_order_model extends CI_Model
     public function get_product_delivery_order_where($delivery_order_id)
     {   
         
-        $res = $this->db->query("SELECT product_delivery_order.id, product_id AS productId, name, amount 
+        $res = $this->db->query("SELECT product_delivery_order.id, product_id AS productId, name, amount, stock 
                     FROM product_delivery_order
                     JOIN product
                     ON product_delivery_order.product_id = product.id
