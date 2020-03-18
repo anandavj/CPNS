@@ -65,6 +65,10 @@
 import firebase from 'firebase'
 
 export default {
+    mounted(){
+        console.log(firebase.auth().currentUser)
+        if (firebase.auth().currentUser != null) this.$router.push('/')
+    },
     name: 'Login',
     data() {
         return {
@@ -86,11 +90,11 @@ export default {
         signIn() {
             this.loading = true
             firebase.auth().signInWithEmailAndPassword(this.email,this.password)
-                .then( () => {
+                .then(() => {
                     this.$router.push('/')
                     this.loading = false
                 })
-                .catch( (err) => {
+                .catch((err) => {
                     this.errLogin= true
                     this.errLoginMsg = err
                     this.loading = false
