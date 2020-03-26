@@ -93,7 +93,8 @@ class Excel_import extends REST_Controller
                     if(!isset($stock)) $stock = 0;
                     if(!isset($retail_id)) $retail_id = "undefined";
 
-                    
+
+
                     if(!$this->category_model->is_name_exists($category)){
                         $category_id = $this->category_model->insert_category($category);
                     }
