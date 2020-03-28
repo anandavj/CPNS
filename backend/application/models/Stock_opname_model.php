@@ -20,14 +20,14 @@ class Stock_opname_model extends CI_Model
 
     public function get_all_stock_opname()
     {
-        $this->db->select('id, opname_number as opnameNumber, date_start as dateStart, date_finish as dateFinish, status as opnameStatus, description');
+        $this->db->select('id, opname_number as opnameNumber, date_start as dateStart, date_finish as dateFinish, status, description');
         $this->db->from($this::TABLE_NAME);
         return $this->db->get()->result_array();
     }
 
     public function get_stock_opname_where($id)
     {
-        $this->db->select('id, opname_number as opnameNumber, date_start as dateStart, date_finish as dateFinish, status as opnameStatus, description');
+        $this->db->select('id, opname_number as opnameNumber, date_start as dateStart, date_finish as dateFinish, status, description');
         $this->db->from($this::TABLE_NAME);
         $this->db->where("id = '{$id}'");
         return $this->db->get()->result_array();
