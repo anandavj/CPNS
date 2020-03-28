@@ -15,7 +15,7 @@ class Stock_opname_model extends CI_Model
             'description' => $description
         ));
 
-        return $this->db->affected_rows();
+        return $this->db->insert_id();
     }
 
     public function get_all_stock_opname()

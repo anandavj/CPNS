@@ -22,17 +22,18 @@ class Stock_opname extends REST_Controller {
         $date_finish = $this->post('dateFinish');
         $status = $this->post('status');
         $description = $this->post('description');
+        $products = $this->post('products');
 
-        if(!isset($description)) $description = ' ';
+        if(!isset($description)) $description = 'undefined';
 
-        if(!isset($opname_number) || !isset($description) || !isset($date_start) || !isset($date_finish) || !isset($status)){
+        if(!isset($opname_number) || !isset($description) || !isset($date_start) || !isset($date_finish) || !isset($status) || !isset($products)){
             $required_parameters = [];
             if(!isset($opname_number)) array_push($required_parameters, 'opnameNumber');
             if(!isset($description)) array_push($required_parameters, 'description');
             if(!isset($date_start)) array_push($required_parameters, 'dateStart');
             if(!isset($date_finish)) array_push($required_parameters, 'dateFinish');
             if(!isset($status)) array_push($required_parameters, 'status');
-
+            if(!isset($products)) array_push($required_parameters, 'products: array of objects(productId, realStock, status, description(optional) )');
             $this->response(
                 array(
                     'status' => FALSE,
@@ -43,7 +44,11 @@ class Stock_opname extends REST_Controller {
 
         };
 
-        if($this->stock_opname_model->insert_stock_opname($opname_number, $date_start, $date_finish, $status, $description)){
+        if($opname_id = $this->stock_opname_model->insert_stock_opname($opname_number, $date_start, $date_finish, $status, $description)){
+            foreach($products as $product){
+                if(!isset($product['description'])) $product['description'] = 'undefined';
+                $this->product_stock_opname_model->insert_product_stock_opname($opname_id, $product['productId'], null, $product['realStock'], null, null, $product['status'], $product['description']);
+            }
             $this->response(
                 array(
                     'status' => TRUE,
@@ -58,6 +63,8 @@ class Stock_opname extends REST_Controller {
                 ),REST_Controller::HTTP_INTERNAL_SERVER_ERROR
             );
         }
+
+
     }
 
     public function index_get(){
