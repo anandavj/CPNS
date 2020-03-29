@@ -77,7 +77,8 @@ class Stock_opname extends REST_Controller {
             foreach($products as $product){
                 array_push($temp, 
                     array(
-                        'productOpnameId' => $product['productId'],
+                        'id' => $product['id'],
+                        'productId' => $product['productId'],
                         'productName' => $product['productName'],
                         'realStock' => $product['realStock'],
                         'opnameStock' => $product['opnameStock'],
@@ -98,7 +99,8 @@ class Stock_opname extends REST_Controller {
                 foreach($products as $product){
                     array_push($temp, 
                         array(
-                            'productOpnameId' => $product['productId'],
+                            'id' => $product['id'],
+                            'productId' => $product['productId'],
                             'productName' => $product['productName'],
                             'realStock' => $product['realStock'],
                             'opnameStock' => $product['opnameStock'],
