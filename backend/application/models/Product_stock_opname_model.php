@@ -44,6 +44,7 @@ class product_stock_opname_model extends CI_Model
         $this->db->from($this::TABLE_NAME);
         $this->db->join('product', 'product.id = product_stock_opname.product_id');
         $this->db->where($this::TABLE_NAME . ".opname_id='{$opname_id}'");
+        $this->db->ORDER_BY('opname_stock', 'ASC');
         return $this->db->get()->result_array();
         
     }
