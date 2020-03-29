@@ -2054,7 +2054,7 @@ export default {
             this.popUpProsesDO = true
         },
         changeStatus() {
-            if(this.tab == 'suratJalan') {
+            if(this.tab == 'SuratJalan') {
                 if(this.deliveryOrder.status == 'Belum Diproses') {
                     this.deliveryOrder.status = 'Dikirim'
                     api.changeStatusToOnProcess(this.deliveryOrder)
@@ -2079,6 +2079,7 @@ export default {
                                     });
                                     this.deliveryOrder = Object.assign({},this.deliveryOrderDefault)
                                     this.selectedIndex = -1
+                                    this.selectedItemsForDeliveryOrder = 0
                                     this.popUpProsesSuratJalan = false
                                 })
                         })
@@ -2116,6 +2117,7 @@ export default {
                                     });
                                     this.deliveryOrder = Object.assign({},this.deliveryOrderDefault)
                                     this.selectedIndex = -1
+                                    this.selectedItemsForDeliveryOrder = 0
                                     this.popUpProsesDO = false
                                 })
                         })
