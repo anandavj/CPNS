@@ -10,6 +10,8 @@ const categoryTable = 'category'
 const unitTable = 'unit'
 const tagTable = 'tag'
 const productTagTable = 'product_tag'
+const stockOpnameTable = 'stock_opname'
+const productStockOpnameTable = 'product_stock_opname'
 const deliveryOrderTable = 'delivery_order'
 const insertSuccessMessage = 'Berhasil ditambahkan'
 const updateSuccessMessage = 'Berhasil diperbarui'
@@ -383,6 +385,64 @@ const api = {
         } )
     },
 
+    /* ================================================================================================================================================= */
+    /* ================================================================================================================================================= */
+
+    /* ================================================================================================================================================= */
+    /* Stock Opname */
+    /* ================================================================================================================================================= */
+    getAllStockOpname() {
+        return new Promise( (resolve, reject) => {
+            axios.get(stockOpnameTable)
+                .then((response) => {
+                    resolve(response.data)
+                }) .catch(error => {
+                    if(error.response.status == 500) reject(serverErrorMessage)
+                })
+        })
+    },
+    addStockOpname(stockOpname) {
+        return new Promise( (resolve, reject) => {
+            axios.post(stockOpnameTable, stockOpname)
+                .then(() => {
+                    resolve(insertSuccessMessage)
+                }) .catch(error => {
+                    if(error.response.status == 500) reject(serverErrorMessage)
+                })
+        } )
+    },
+    updateStockOpname(stockOpname) {
+        return new Promise( (resolve, reject) => {
+            axios.put(stockOpnameTable, stockOpname)
+                .then(() => {
+                    resolve(insertSuccessMessage)
+                }) .catch(error => {
+                    if(error.response.status == 500) reject(serverErrorMessage)
+                })
+        } )
+    },
+    updateProductStockOpname(productOpname) {
+        return new Promise( (resolve, reject) => {
+            let data = {
+                id:productOpname.id,
+                inspectorId:productOpname.inspectorId,
+                opnameStock:productOpname.opnameStock,
+                opnameDate:productOpname.opnameDate,
+                status:'Selesai',
+                description:productOpname.description,
+                opnameId:productOpname.opnameId,
+                realStock:productOpname.realStock,
+                productId:productOpname.productId
+            }
+
+            axios.put(productStockOpnameTable, data)
+                .then(() => {
+                    resolve(updateSuccessMessage)
+                }) .catch(error => {
+                    if(error.response.status == 500) reject(serverErrorMessage)
+                })
+        } )
+    },
     /* ================================================================================================================================================= */
     /* ================================================================================================================================================= */
 }
