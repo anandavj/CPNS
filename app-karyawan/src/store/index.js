@@ -8,9 +8,13 @@ export default new Vuex.Store({
     insertSuccessMessage: 'Berhasil ditambahkan',
     updateSuccessMessage: 'Berhasil ditambahkan',
     deleteSuccessMessage: 'Berhasil ditambahkan',
-    serverErrorMessage: 'Terjadi kesalahan pada server'
+    serverErrorMessage: 'Terjadi kesalahan pada server',
+    karyawan: []
   },
   mutations: {
+    setKaryawan(state, value){
+      state.karyawan = value
+    }
   },
   actions: {
   },

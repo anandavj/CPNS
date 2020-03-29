@@ -37,6 +37,14 @@ class User_model extends CI_Model{
         return $this->db->get()->result_array();
     }
 
+    public function get_user_where_uid($uid){
+        $this->db->select('id, user_task_group_id as '.Schema::USER_TASK_GROUP_ID.', name,
+        telephone, address, uid');
+        $this->db->from('user');
+        $this->db->where("uid='{$uid}'");
+        return $this->db->get()->unbuffered_row('array');
+    }
+
     public function get_by_user_task_group_id($user_task_group_id){
         return $this->db->get_where($this::TABLE_NAME, "user_task_group_id='{$user_task_group_id}'")->result_array();
     }

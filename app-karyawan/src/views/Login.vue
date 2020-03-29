@@ -66,8 +66,9 @@ import firebase from 'firebase'
 
 export default {
     mounted(){
-        console.log(firebase.auth().currentUser)
-        if (firebase.auth().currentUser != null) this.$router.push('/')
+        firebase.auth().onAuthStateChanged(function(user) {
+            if (user) this.$router.push('/')
+        });
     },
     name: 'Login',
     data() {

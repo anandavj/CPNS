@@ -131,6 +131,7 @@ class User extends REST_Controller
     public function index_get()
     {
         $id = $this->get('id');
+        $uid = $this->get('uid');
 
         if (isset($id)){
             $result = $this->user_model->get_user_where($id);
@@ -138,9 +139,13 @@ class User extends REST_Controller
             $result = array_merge($result[0], array('taskId' => $user_task));
 
             // $this->response($result, REST_Controller::HTTP_OK);
-        }
-        
-        else {
+        }else if (isset($uid)){
+            $result = $this->user_model->get_user_where_uid($uid);
+            $user_task = $this->user_task_model->get_user_task_where($result['id']);
+            $user_task_group = $this->user_task_group_model->get_user_task_group_where($result['userTaskGroupId'])[0]['name'];
+            $result = array_merge($result, array('taskId' => $user_task));
+            $result = array_merge($result, array('userTaskGroup' => $user_task_group));
+        }else {
             $index = 0;
             $result = $this->user_model->get_all_user();
             foreach($result as $row){

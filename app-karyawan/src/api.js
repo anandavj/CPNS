@@ -105,6 +105,16 @@ const api = {
             })
         })
     },
+    getAllUserWhereUID(uid){
+        return new Promise((resolve, reject) => {
+            axios.get(userTable, {params: {uid: uid}}).then(response => {
+                resolve(response.data)
+            })
+            .catch(error => {
+                if(error.response.status == 500) reject(serverErrorMessage)
+            })
+        })
+    },
     updateUser(karyawan){
         return new Promise((resolve, reject) => {
             axios.put(userTable, karyawan).then(() => {

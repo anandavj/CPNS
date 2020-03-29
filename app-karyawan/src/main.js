@@ -5,7 +5,8 @@ import router from './router'
 import store from './store'
 import vuetify from './plugins/vuetify';
 import firebase from'firebase';
-import axios from 'axios';
+import axios from 'axios'
+import api from '@/api.js'
 
 Vue.config.productionTip = false
 axios.defaults.baseURL = 'http://localhost:8000/backend/api/'
@@ -21,6 +22,26 @@ const config = {
 }
 
 firebase.initializeApp(config)
+
+router.beforeEach((to, from, next) => {
+  if(to.name != "Login"){
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        next()
+        api.getAllUserWhereUID(user.uid).then(response => {
+          next()
+          store.commit('setKaryawan', response)
+        }).catch(() => {
+          firebase.auth().signOut()
+          next({ name: 'Login' })
+        })
+      }else next({ name: 'Login' })
+    });
+  }else{
+    next()
+  }
+})
+
 
 new Vue({
   router,
