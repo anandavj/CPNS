@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Delivery_order_model extends CI_Model{
 
-    private const TABLE_NAME = 'delivery_order';
+    const TABLE_NAME = 'delivery_order';
     public function insert_delivery_order($name, $receiver_name, $date, $reference_number, $address, $description, $status, $type){
         $this->db->insert($this::TABLE_NAME, array(
             'name' => $name,

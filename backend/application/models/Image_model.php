@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Image_model extends CI_Model{
 
-    private const TABLE_NAME = 'image';
+    const TABLE_NAME = 'image';
     public function insert_image($category_id, $image){
         $this->db->insert($this::TABLE_NAME, array(
             'category_id' => $category_id,

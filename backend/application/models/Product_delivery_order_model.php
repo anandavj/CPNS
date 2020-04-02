@@ -3,7 +3,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Product_delivery_order_model extends CI_Model
 {
-    private const TABLE_NAME = 'product_delivery_order';
+    const TABLE_NAME = 'product_delivery_order';
 
     public function insert_product_delivery_order($delivery_order_id, $items)
     {

@@ -4,7 +4,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Unit_model extends CI_Model
 {
 
-    private const TABLE_NAME = 'unit';
+    const TABLE_NAME = 'unit';
     public function insert_unit($name, $abbreviation, $description)
     {
         if(!isset($description)) $description = '';

@@ -3,7 +3,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class product_variant_model extends CI_Model
 {
-    private const TABLE_NAME = 'product_variant';
+    const TABLE_NAME = 'product_variant';
 
     public function insert_product_variant($product_id, $size)
     {

@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Stock_record_model extends CI_Model{
 
-    private const TABLE_NAME = 'stock_record';
+    const TABLE_NAME = 'stock_record';
     public function insert_stock_record($broker, $order_item, $order_date, $order_number, $quantity_in,
     $quantity_out, $order_status, $seller){
         $this->db->insert($this::TABLE_NAME, array(

@@ -1,7 +1,7 @@
 <?php
 class Excel_import_model extends CI_Model
 {
-    private const TABLE_NAME = 'product';
+    const TABLE_NAME = 'product';
     function select()
     {
         $query = $this->db->get($this::TABLE_NAME);

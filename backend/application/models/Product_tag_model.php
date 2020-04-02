@@ -3,7 +3,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Product_tag_model extends CI_Model
 {
-    private const TABLE_NAME = 'product_tag';
+    const TABLE_NAME = 'product_tag';
 
     public function insert_product_tag($product_id, $tag_id)
     {

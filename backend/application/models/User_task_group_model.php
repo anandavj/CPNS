@@ -2,7 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class User_task_group_model extends CI_Model{
-    private const TABLE_NAME = 'user_task_group';
+    const TABLE_NAME = 'user_task_group';
 
     public function insert_user_task_group($name){
         $this->db->insert($this::TABLE_NAME, array(

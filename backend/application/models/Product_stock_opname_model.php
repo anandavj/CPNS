@@ -3,7 +3,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class product_stock_opname_model extends CI_Model
 {
-    private const TABLE_NAME = 'product_stock_opname';
+    const TABLE_NAME = 'product_stock_opname';
 
     public function insert_product_stock_opname($opname_id, $product_id, $inspector_id, $real_stock, $opname_stock, $opname_date, $status, $description)
     {

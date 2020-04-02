@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Order_status_model extends CI_Model{
 
-    private const TABLE_NAME = 'order_status';
+    const TABLE_NAME = 'order_status';
     public function insert_order_status($status){
         $this->db->insert($this::TABLE_NAME, array(
             'status' => $status

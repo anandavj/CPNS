@@ -4,7 +4,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Tag_model extends CI_Model
 {
 
-    private const TABLE_NAME = 'tag';
+    const TABLE_NAME = 'tag';
     public function insert_tag($name)
     {
         if(!isset($description)) $description = '';

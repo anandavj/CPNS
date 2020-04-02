@@ -4,7 +4,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Stock_opname_model extends CI_Model
 {
 
-    private const TABLE_NAME = 'stock_opname';
+    const TABLE_NAME = 'stock_opname';
     public function insert_stock_opname($opname_number, $date_start, $date_finish, $status, $description)
     {
         $this->db->insert($this::TABLE_NAME, array(

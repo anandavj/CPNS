@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Category_model extends CI_Model{
 
-    private const TABLE_NAME = 'category';
+    const TABLE_NAME = 'category';
     public function insert_category($name){
         $this->db->insert($this::TABLE_NAME, array(
             'name' => $name

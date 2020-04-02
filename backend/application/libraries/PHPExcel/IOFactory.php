@@ -75,7 +75,7 @@ class PHPExcel_IOFactory
 	);
 
     /**
-     *	Private constructor for PHPExcel_IOFactory
+     *	constructor for PHPExcel_IOFactory
      */
     private function __construct() { }
 

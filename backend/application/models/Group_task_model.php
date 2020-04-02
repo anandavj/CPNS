@@ -3,7 +3,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Group_task_model extends CI_Model
 {
-    private const TABLE_NAME = 'group_task';
+    const TABLE_NAME = 'group_task';
 
     public function insert_group_task($user_task_group_id, $task_id)
     {

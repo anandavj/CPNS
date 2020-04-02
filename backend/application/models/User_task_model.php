@@ -3,7 +3,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class User_task_model extends CI_Model
 {
-    private const TABLE_NAME = 'user_task';
+    const TABLE_NAME = 'user_task';
     
     public function insert_user_task($user_id, $data)
     {

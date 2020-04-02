@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Product_model extends CI_Model{
 
-    private const TABLE_NAME = 'product';
+    const TABLE_NAME = 'product';
     
     
     public function insert_product_import($datas){

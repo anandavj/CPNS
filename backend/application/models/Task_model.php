@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Task_model extends CI_Model{
 
-    private const TABLE_NAME = 'task';
+    const TABLE_NAME = 'task';
     public function insert_task($action, $label, $modul){
         $this->db->insert($this::TABLE_NAME, array(
             'action' => $action,

@@ -4,7 +4,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class warehouse_product_model extends CI_Model
 {
 
-    private const TABLE_NAME = 'warehouse_product';
+    const TABLE_NAME = 'warehouse_product';
     public function insert_warehouse_product($warehouse_id, $product_id)
     {
         $this->db->insert($this::TABLE_NAME, array(
