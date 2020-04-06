@@ -89,7 +89,7 @@ export default {
   data() {
     return {
       menus: [
-        {name:'Dashboard',route:'/',icon:'mdi-home-variant-outline'},
+        // {name:'Dashboard',route:'/',icon:'mdi-home-variant-outline'},
         {name:'List Karyawan',route:'/karyawan',icon:'mdi-account-group'},
         {name:'Daftar Barang',route:'/daftarBarang',icon:'mdi-cube-outline'},
         {name:'Surat Jalan',route:'/suratJalan',icon:'mdi-ballot-recount-outline'},

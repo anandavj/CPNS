@@ -183,8 +183,11 @@
                                                 <v-card-subtitle>{{ item.referenceNumber }}</v-card-subtitle>
                                             </div>
                                             <div>
-                                                <v-btn @click.stop="prosesSuratJalan(item)" :disabled="item.status != 'Belum Diproses'" dense color="white--text green" small :dark="item.status == 'Belum Diproses'" fab class="my-5 mx-1">
+                                                <v-btn @click.stop="prosesSuratJalan(item)" v-if="item.status == 'Belum Diproses'" dense color="white--text green" small fab class="my-5 mx-1">
                                                     <v-icon>mdi-truck-fast</v-icon>
+                                                </v-btn>
+                                                <v-btn @click.stop="finishing(item)" v-if="item.status == 'Dikirim'" dense color="white--text green" small fab class="my-5 mx-1">
+                                                    <v-icon>mdi-truck-check</v-icon>
                                                 </v-btn>
                                             </div>
                                         </div>
@@ -247,7 +250,8 @@
                                     <span>{{ formatDateList(item.date) }}</span>
                                 </template>
                                 <template v-slot:item.actions="{ item }">
-                                    <v-btn dense color="white--text green" :disabled="item.status != 'Belum Diproses'" @click.stop="prosesSuratJalan(item)">Muat</v-btn>
+                                    <v-btn dense color="white--text green" v-if="item.status == 'Belum Diproses'" @click.stop="prosesSuratJalan(item)">Muat</v-btn>
+                                    <v-btn dense color="white--text green" v-if="item.status == 'Dikirim'" @click.stop="finishing(item)">Selesai</v-btn>
                                 </template>
                             </v-data-table>
                             <!-- Pop Up Proses Surat Jalan -->
@@ -281,6 +285,20 @@
                                             <v-row justify="center">
                                                 <v-btn color="red darken-1" text @click="close">Close</v-btn>
                                                 <v-btn color="blue darken-1" :disabled="selectedItemsForDeliveryOrder.length != deliveryOrder.items.length" text @click="changeStatus">Save</v-btn>
+                                            </v-row>
+                                        </v-container>
+                                    </v-card-actions>
+                                </v-card>
+                            </v-dialog>
+                            <v-dialog v-model = "popUpconfirmFinishing" persistent max-width="700px">
+                                <v-card>
+                                <v-card-title>Confirmation</v-card-title>
+                                    <v-card-text>Apakah Anda Yakin Ingin Menyelesaikan Order ini?</v-card-text>
+                                    <v-card-actions>
+                                        <v-container>
+                                            <v-row justify="center">
+                                                <v-btn class="mt-n5" color="red darken-1" text @click="close">Tidak</v-btn>
+                                                <v-btn class="mt-n5" color="blue darken-1" text @click="changeStatus(deliveryOrder)">Ya</v-btn>
                                             </v-row>
                                         </v-container>
                                     </v-card-actions>
@@ -1747,6 +1765,7 @@ export default {
             popUpProsesSuratJalan: false,
             showAdvanceSearchOption: false,
             showAdvancedatePickerMenuAdd: false,
+            popUpconfirmFinishing: false,
             searchId:'',
             searchName:'',
             /* --------------------             -------------------- */
@@ -2004,6 +2023,13 @@ export default {
                                     this.popUpProsesDO = false
                                     this.deliveryOrder = Object.assign({},this.deliveryOrderDefault)
                                     this.selectedIndex = -1
+                                } else {
+                                    if(this.popUpconfirmFinishing) {
+                                        this.selectedItemsForDeliveryOrder = []
+                                        this.popUpconfirmFinishing = false
+                                        this.deliveryOrder = Object.assign({},this.deliveryOrderDefault)
+                                        this.selectedIndex = -1
+                                    }
                                 }
                             }
                         }
@@ -2048,6 +2074,11 @@ export default {
             this.deliveryOrder = Object.assign({},item)
             this.popUpProsesSuratJalan = true
         },
+        finishing(item) {
+            this.selectedIndex = this.suratJalans.indexOf(item)
+            this.deliveryOrder = Object.assign({},item)
+            this.popUpconfirmFinishing = true
+        },
         prosesDO(item) {
             this.selectedIndex = this.deliveryOrders.indexOf(item)
             this.deliveryOrder = Object.assign({},item)
@@ -2083,12 +2114,58 @@ export default {
                                     this.popUpProsesSuratJalan = false
                                 })
                         })
+                } else {
+                    if(this.deliveryOrder.status == 'Dikirim') {
+                        this.deliveryOrder.status = 'Selesai'
+                        api.changeStatusToOnProcess(this.deliveryOrder)
+                            
+                            .then((response) => {
+                                this.snackbarColor = 'success'
+                                this.snackbarMessage = response
+                            }) .catch(error => {
+                                this.snackbarColor = 'error'
+                                this.snackbarMessage = error
+                            })
+                            .then(() => {
+                                this.deliveryOrder.items.forEach(item => {
+                                    let product = _.find(this.products,['id',item.productId])
+                                    product.stock = +product.stock - +item.amount
+                                    api.updateProductStock(product)
+                                });
+                                this.selectedItemsForDeliveryOrder = []
+                            }) .finally(() => {
+                                this.snackbar = true
+                                this.suratJalans = []
+                                this.deliveryOrders = []
+                                api.getAllDeliveryOrder()
+                                    .then(deliveryOrders => {
+                                        deliveryOrders.forEach(deliveryOrder => {
+                                            if(deliveryOrder.type == 1) {
+                                                this.suratJalans.push(deliveryOrder)
+                                            } else {
+                                                this.deliveryOrders.push(deliveryOrder)
+                                            }
+                                        });
+                                        this.deliveryOrder = Object.assign({},this.deliveryOrderDefault)
+                                        this.selectedIndex = -1
+                                        this.selectedItemsForDeliveryOrder = 0
+                                        this.popUpProsesSuratJalan = false
+                                        this.close()
+                                    })
+                            })
+                    }
                 }
             } else {
                 if(this.deliveryOrder.status == 'Belum Diproses') {
                     this.deliveryOrder.status = 'Selesai'
                     api.changeStatusToOnProcess(this.deliveryOrder)
-                        .then(() => {
+                        .then((response) => {
+                            this.snackbarColor = 'success'
+                            this.snackbarMessage = response
+                        }) .catch(error => {
+                            this.snackbarColor = 'error'
+                            this.snackbarMessage = error
+                        }) .then(() => {
                             this.deliveryOrder.items.forEach(item => {
                                 let product = _.find(this.products,['id',item.productId])
                                 product.stock = +product.stock + +item.amount
@@ -2096,13 +2173,7 @@ export default {
                             });
                             this.selectedItemsForDeliveryOrder = []
                         })
-                        .then((response) => {
-                            this.snackbarColor = 'success'
-                            this.snackbarMessage = response
-                        }) .catch(error => {
-                            this.snackbarColor = 'error'
-                            this.snackbarMessage = error
-                        }) .finally(() => {
+                        .finally(() => {
                             this.snackbar = true
                             this.suratJalans = []
                             this.deliveryOrders = []
