@@ -12,6 +12,24 @@
             :fileValidateTypeDetectType="detectorFunction"
             fileValidateTypeLabelExpectedTypes="Hanya menerima format XLS dan XLSX"
         />
+        <v-card v-if="myFiles.length!=0" outlined color="transparent" class='text-center'>
+            <v-btn @click="process" width="7%" height="50px"></v-btn>
+        </v-card>
+        <v-snackbar
+            v-model="snackbar"
+            multi-line
+            v-bind:color="snackbarColor"
+        >
+            {{ snackbarMessage }}
+            <v-btn
+                text
+                @click="snackbar = false"
+            >
+                <v-icon>
+                    mdi-close
+                </v-icon>
+            </v-btn>
+        </v-snackbar>
     </v-app>
 </template>
 
@@ -19,6 +37,7 @@
 import vueFilePond from 'vue-filepond'
 import 'filepond/dist/filepond.min.css'
 import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type'
+import api from "@/api.js"
 
 const FilePond = vueFilePond(
     FilePondPluginFileValidateType,
@@ -26,8 +45,13 @@ const FilePond = vueFilePond(
 
 export default {
     name:'ImportBarang',
-    data: function() {
-      return { myFiles: [] }
+    data() {
+        return {
+            myFiles: [],
+            snackbar: false,
+            snackbarMessage: '',
+            snackbarColor: '',
+        }
     },
     components: {
       FilePond
@@ -56,6 +80,20 @@ export default {
                 resolve(type);
             })
         },
+
+        process() {
+            api.importExcel(this.myFiles[0])
+                .then((response) => {
+                    this.snackbarColor = 'success'
+                    this.snackbarMessage = response
+                }) .catch(error => {
+                    this.snackbarColor = 'error'
+                    this.snackbarMessage = error
+                }) .finally(() => {
+                    this.snackbar = true
+                    this.myFiles = []
+                })
+        }
     }
 }
 </script>

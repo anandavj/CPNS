@@ -13,6 +13,7 @@ const productTagTable = 'product_tag'
 const stockOpnameTable = 'stock_opname'
 const productStockOpnameTable = 'product_stock_opname'
 const deliveryOrderTable = 'delivery_order'
+const excel = 'excel_import'
 const insertSuccessMessage = 'Berhasil ditambahkan'
 const updateSuccessMessage = 'Berhasil diperbarui'
 const deleteSuccessMessage = 'Berhasil dihapus'
@@ -455,6 +456,25 @@ const api = {
     },
     /* ================================================================================================================================================= */
     /* ================================================================================================================================================= */
+
+    /* ================================================================================================================================================= */
+    /* Import */
+    /* ================================================================================================================================================= */
+    importExcel(file) {
+        return new Promise( (resolve, reject) => {
+            const dataOne = new FormData()
+            dataOne.append('file',file)
+            axios.post(excel,dataOne,{headers: {'Content-Type': 'multipart/form-data'}})
+                .then(() => {
+                    resolve(insertSuccessMessage)
+                }) .catch(error => {
+                    if(error.response.status == 500) reject(serverErrorMessage)
+                })
+        } )
+    }
+    /* ================================================================================================================================================= */
+    /* ================================================================================================================================================= */
+
 }
 
 export default api
