@@ -164,7 +164,7 @@
             <!-- *************************************************************************************************************** -->
             <!-- Add Barang -->
             <!-- *************************************************************************************************************** -->
-            <v-btn fab dark large color="primary" fixed right bottom @click="popUpNew = !popUpNew">
+            <v-btn v-if="create_barang" fab dark large color="primary" fixed right bottom @click="popUpNew = !popUpNew">
                 <v-icon dark>mdi-plus</v-icon>
             </v-btn>
             <v-container class="my-n3">
@@ -534,7 +534,7 @@
             <!-- Quick Edit Open Price -->
             <!-- *************************************************************************************************************** -->
             <v-row justify="space-between" align="center" class="ma-0">
-                <div>
+                <div v-if="update_open_price">
                     <v-switch v-if="!popUpBreakPoint" value v-model="editToggle" class="pa-0 mb-0 mt-5" label="Edit Harga"></v-switch>
                 </div>
                 <div v-if="totalStocklowerThanMinStock>0">
@@ -630,8 +630,8 @@
                     
                 >
                     <template v-slot:item.actions="{ item }">
-                        <v-icon class="mr-2" @click.stop="editProduct(item)">mdi-pencil</v-icon>
-                        <v-icon @click.stop="deleteProduct(item)">mdi-delete</v-icon>
+                        <v-icon v-if="update_barang" class="mr-2" @click.stop="editProduct(item)">mdi-pencil</v-icon>
+                        <v-icon v-if="delete_barang" @click.stop="deleteProduct(item)">mdi-delete</v-icon>
                     </template>
                     <template v-slot:item.openPrice="{ item }">
                         <template v-if="editToggle">
@@ -680,13 +680,13 @@
                                             <v-card-actions><v-icon v-on="on">mdi-dots-vertical</v-icon></v-card-actions>
                                         </template>
                                         <v-list>
-                                            <v-list-item @click.stop="quickEdit(item)">
+                                            <v-list-item v-if="update_open_price" @click.stop="quickEdit(item)">
                                                 <v-list-item-title>Edit Harga</v-list-item-title>
                                             </v-list-item>
-                                            <v-list-item @click.stop="editProduct(item)">
+                                            <v-list-item v-if="update_barang" @click.stop="editProduct(item)">
                                                 <v-list-item-title>Edit Produk</v-list-item-title>
                                             </v-list-item>
-                                            <v-list-item @click.stop="deleteProduct(item)">
+                                            <v-list-item v-if="delete_barang" @click.stop="deleteProduct(item)">
                                                 <v-list-item-title>Hapus Produk</v-list-item-title>
                                             </v-list-item>
                                         </v-list>
@@ -1323,6 +1323,10 @@ export default {
     },
     data() {
         return {
+            create_barang: _.indexOf(JSON.parse(localStorage.getItem('tasks')), 'create_barang') >= 0,
+            update_barang: _.indexOf(JSON.parse(localStorage.getItem('tasks')), 'update_barang') >= 0,
+            delete_barang: _.indexOf(JSON.parse(localStorage.getItem('tasks')), 'delete_barang') >= 0,
+            update_open_price: _.indexOf(JSON.parse(localStorage.getItem('tasks')), 'update_open_price') >= 0,
             snackbar: false,
             snackbarMessage: '',
             snackbarColor: '',

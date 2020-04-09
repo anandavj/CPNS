@@ -18,7 +18,7 @@
             <!-- *************************************************************************************************************** -->
             <!-- Add Stock Opname -->
             <!-- *************************************************************************************************************** -->
-            <v-btn fab dark large color="primary" fixed right bottom @click="newStockOpnameDialog = !newStockOpnameDialog"><v-icon dark>mdi-plus</v-icon></v-btn>
+            <v-btn v-if="create_stock_opname" fab dark large color="primary" fixed right bottom @click="newStockOpnameDialog = !newStockOpnameDialog"><v-icon dark>mdi-plus</v-icon></v-btn>
             <v-container class="my-n3">
                 <v-dialog v-model="newStockOpnameDialog" fullscreen hide-overlay transition="dialog-bottom-transition">
                     <v-card>
@@ -515,7 +515,7 @@
                             </v-row>
                         </v-card-text>
                     </v-form>
-                    <v-card-actions v-if="stockOpname.status != 'Selesai'">
+                    <v-card-actions v-if="stockOpname.status != 'Selesai' && count_stock_opname">
                         <v-container>
                             <v-row justify="center">
                                 <v-btn color="red darken-1" text @click="close">Batal</v-btn>
@@ -642,6 +642,8 @@ export default {
     data() {
         return {
             // Search goes here
+            create_stock_opname: _.indexOf(JSON.parse(localStorage.getItem('tasks')), 'create_stock_opname') >= 0,
+            count_stock_opname: _.indexOf(JSON.parse(localStorage.getItem('tasks')), 'count_stock_opname') >= 0,
             searchStockOpnameNumber: '',
             newProductSearchId:'',
             newProductSearchName:'',

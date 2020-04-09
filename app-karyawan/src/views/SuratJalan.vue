@@ -183,10 +183,10 @@
                                                 <v-card-subtitle>{{ item.referenceNumber }}</v-card-subtitle>
                                             </div>
                                             <div>
-                                                <v-btn @click.stop="prosesSuratJalan(item)" v-if="item.status == 'Belum Diproses'" dense color="white--text green" small fab class="my-5 mx-1">
+                                                <v-btn @click.stop="prosesSuratJalan(item)" v-if="item.status == 'Belum Diproses' && process_surat_jalan_dikirim" dense color="white--text green" small fab class="my-5 mx-1">
                                                     <v-icon>mdi-truck-fast</v-icon>
                                                 </v-btn>
-                                                <v-btn @click.stop="finishing(item)" v-if="item.status == 'Dikirim'" dense color="white--text green" small fab class="my-5 mx-1">
+                                                <v-btn @click.stop="finishing(item)" v-if="item.status == 'Dikirim' && process_surat_jalan_selesai" dense color="white--text green" small fab class="my-5 mx-1">
                                                     <v-icon>mdi-truck-check</v-icon>
                                                 </v-btn>
                                             </div>
@@ -250,8 +250,8 @@
                                     <span>{{ formatDateList(item.date) }}</span>
                                 </template>
                                 <template v-slot:item.actions="{ item }">
-                                    <v-btn dense color="white--text green" v-if="item.status == 'Belum Diproses'" @click.stop="prosesSuratJalan(item)">Muat</v-btn>
-                                    <v-btn dense color="white--text green" v-if="item.status == 'Dikirim'" @click.stop="finishing(item)">Selesai</v-btn>
+                                    <v-btn dense color="white--text green" v-if="item.status == 'Belum Diproses' && process_surat_jalan_dikirim" @click.stop="prosesSuratJalan(item)">Muat</v-btn>
+                                    <v-btn dense color="white--text green" v-if="item.status == 'Dikirim' && process_surat_jalan_selesai" @click.stop="finishing(item)">Selesai</v-btn>
                                 </template>
                             </v-data-table>
                             <!-- Pop Up Proses Surat Jalan -->
@@ -583,7 +583,7 @@
                         </v-dialog>
                         <!--  -->
                         <!-- Add Surat Jalan -->
-                        <v-btn fab dark large color="primary" fixed right bottom @click="dialogSuratJalan">
+                        <v-btn v-if="create_surat_jalan" fab dark large color="primary" fixed right bottom @click="dialogSuratJalan">
                             <v-icon>mdi-plus</v-icon>
                         </v-btn>
                         <v-container class="my-n3">
@@ -1046,7 +1046,7 @@
                                     <v-card-actions>
                                         <v-container>
                                             <v-row justify="center">
-                                                <v-btn color="red darken-1" text @click="close">Close</v-btn>
+                                                <v-btn v-if="process_delivery_order" color="red darken-1" text @click="close">Close</v-btn>
                                                 <v-btn color="blue darken-1" :disabled="selectedItemsForDeliveryOrder.length != deliveryOrder.items.length" text @click="changeStatus">Save</v-btn>
                                             </v-row>
                                         </v-container>
@@ -1104,7 +1104,7 @@
                                     <v-card-actions>
                                         <v-container>
                                             <v-row justify="center">
-                                                <v-btn color="red darken-1" text @click="close">Close</v-btn>
+                                                <v-btn v-if="process_delivery_order" color="red darken-1" text @click="close">Close</v-btn>
                                                 <v-btn color="blue darken-1" :disabled="selectedItemsForDeliveryOrder.length != deliveryOrder.items.length" text @click="changeStatus">Save</v-btn>
                                             </v-row>
                                         </v-container>
@@ -1389,7 +1389,7 @@
                         </v-dialog>
                         <!--  -->
                         <!-- Add DO -->
-                        <v-btn fab dark large color="primary" fixed right bottom @click="dialogDO">
+                        <v-btn v-if="create_delivery_order" fab dark large color="primary" fixed right bottom @click="dialogDO">
                             <v-icon>mdi-plus</v-icon>
                         </v-btn>
                         <v-container class="my-n3">
@@ -1681,6 +1681,11 @@ export default {
     },
     data() {
         return {
+            create_surat_jalan: _.indexOf(JSON.parse(localStorage.getItem('tasks')), 'create_surat_jalan') >= 0,
+            create_delivery_order: _.indexOf(JSON.parse(localStorage.getItem('tasks')), 'create_delivery_order') >= 0,
+            process_surat_jalan_dikirim: _.indexOf(JSON.parse(localStorage.getItem('tasks')), 'process_surat_jalan_dikirim') >= 0,
+            process_surat_jalan_selesai: _.indexOf(JSON.parse(localStorage.getItem('tasks')), 'process_surat_jalan_selesai') >= 0,
+            process_delivery_order: _.indexOf(JSON.parse(localStorage.getItem('tasks')), 'process_delivery_order') >= 0,
             snackbar: false,
             snackbarMessage: '',
             snackbarColor: '',

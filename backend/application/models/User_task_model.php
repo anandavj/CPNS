@@ -41,6 +41,18 @@ class User_task_model extends CI_Model
         return $result;
     }
 
+    public function get_user_tasks_where($id)
+    {
+        $this->db->select('task.action');
+        $this->db->from($this::TABLE_NAME);
+        $this->db->join('task', 'user_task.task_id=task.id');
+        $this->db->where("user_id='{$id}'");
+        $res = $this->db->get()->result_array();
+        $result = [];
+        foreach($res as $row) array_push($result, $row['action']);
+        return $result;
+    }
+
     public function is_not_exists($user_id)
     {
         if ($this->db->get_where($this::TABLE_NAME, "user_id='{$user_id}'")->num_rows() == 0) return true;

@@ -18,7 +18,7 @@
             <!-- *************************************************************************************************************** -->
             <!-- Add Karyawan -->
             <!-- *************************************************************************************************************** -->
-            <v-btn fab dark large color="primary" fixed right bottom @click="popUpNew = !popUpNew">
+            <v-btn v-if="create_karyawan" fab dark large color="primary" fixed right bottom @click="popUpNew = !popUpNew">
                 <v-icon dark>mdi-plus</v-icon>
             </v-btn>
             <v-container class="my-n7">
@@ -183,8 +183,8 @@
                 style="cursor:pointer"
             >
                 <template v-slot:item.actions="{ item }">
-                    <v-icon class="mr-2" @click.stop="editKaryawan(item)">mdi-pencil</v-icon>
-                    <v-icon class="mr-2" @click.stop="confirmDelete(item)">mdi-delete</v-icon>
+                    <v-icon v-if="update_karyawan" class="mr-2" @click.stop="editKaryawan(item)">mdi-pencil</v-icon>
+                    <v-icon v-if="delete_karyawan" class="mr-2" @click.stop="confirmDelete(item)">mdi-delete</v-icon>
                 </template>
             </v-data-table>
             <!-- *************************************************************************************************************** -->
@@ -608,13 +608,17 @@
 
 <script>
 import api from '@/api.js'
+import _ from 'lodash'
 export default {
     name: 'Karyawan',
-    mounted() {
+    created() {
         this.get()
     },
     data() {
         return {
+            create_karyawan: _.indexOf(JSON.parse(localStorage.getItem('tasks')), 'create_karyawan') >= 0,
+            update_karyawan: _.indexOf(JSON.parse(localStorage.getItem('tasks')), 'update_karyawan') >= 0,
+            delete_karyawan: _.indexOf(JSON.parse(localStorage.getItem('tasks')), 'delete_karyawan') >= 0,
             karyawans: [
                 // {id:1, email:'ananda@gmail.com', password:'coreofthecore', name:'Mahendra Fajar', userTaskGroupId:'Gudang', placeOfBirth:'Denpasar', dateOfBirth:'1999-04-27', religion:'Islam', status:'Belum Menikah', address:'Jalan', telephone:'08180', tasks: []},
                 // {id:2, email:'ananda@gmail.com', password:'coreofthecore', name:'Ananda Vijaya', userTaskGroupId:'Gudang', placeOfBirth:'Denpasar', dateOfBirth:'1999-04-27', religion:'Islam', status:'Belum Menikah', address:'Jalan', telephone:'08180', tasks: []},
