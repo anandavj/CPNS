@@ -37,6 +37,14 @@ const routes = [
     }
   },
   {
+    path: '/searchBarang',
+    name: 'BarangSearch',
+    component: () => import('../views/BarangSearch.vue'),
+    meta: {
+      drawer: true
+    }
+  },
+  {
     path: '/suratJalan',
     name: 'SuratJalan',
     component: () => import('../views/SuratJalan.vue'),
@@ -105,7 +113,7 @@ const routes = [
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
-  routes
+  routes,
 })
 
 export default router
