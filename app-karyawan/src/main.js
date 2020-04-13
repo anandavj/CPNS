@@ -9,7 +9,7 @@ import axios from 'axios'
 import api from '@/api.js'
 
 Vue.config.productionTip = false
-axios.defaults.baseURL = 'http://localhost:8000/backend/api/'
+axios.defaults.baseURL = 'http://cpns.palugada.biz.id/backend/api'
 
 const config = {
   apiKey: "AIzaSyAGXPPSZkTQC0Qq5zoFmoDe3AdvbPBHYKE",
