@@ -639,11 +639,11 @@
                             @click.stop="quickEdit(item)" 
                             class="blue--text pa-0 font-weight-light"
                             >
-                                {{ item.openPrice }}
+                                {{ changeCurr(item.openPrice) }}
                             </v-btn>
                         </template>
                         <template v-else>
-                            <v-layout justify-center >{{item.openPrice}}</v-layout>
+                            <v-layout justify-center >{{ changeCurr(item.openPrice) }}</v-layout>
                         </template>
                     </template>
                 </v-data-table>
@@ -697,7 +697,7 @@
                                     <v-card-subtitle>{{item.stock}}</v-card-subtitle>
                                 </div>
                                 <div>
-                                    <v-card-subtitle>Rp{{item.openPrice}}</v-card-subtitle>
+                                    <v-card-subtitle>Rp{{ changeCurr(item.openPrice) }}</v-card-subtitle>
                                 </div>
                             </div>
                         </v-card>
@@ -771,12 +771,12 @@
                                 <tr>
                                     <td>Open Price</td>
                                     <td width="25%" align="end">:</td>
-                                    <td>{{product.openPrice}}</td>
+                                    <td>{{ changeCurr(product.openPrice) }}</td>
                                 </tr>
                                 <tr>
                                     <td>Bottom Price</td>
                                     <td width="25%" align="end">:</td>
-                                    <td>{{product.bottomPrice}}</td>
+                                    <td>{{ changeCurr(product.bottomPrice) }}</td>
                                 </tr>
                                 <tr>
                                     <td>Stock</td>
@@ -862,12 +862,12 @@
                                             <tr>
                                                 <td>Open Price</td>
                                                 <td width="25%" align="end">:</td>
-                                                <td>{{product.openPrice}}</td>
+                                                <td>{{ changeCurr(product.openPrice) }}</td>
                                             </tr>
                                             <tr>
                                                 <td>Bottom Price</td>
                                                 <td width="25%" align="end">:</td>
-                                                <td>{{product.bottomPrice}}</td>
+                                                <td>{{ changeCurr(product.bottomPrice) }}</td>
                                             </tr>
                                             <tr>
                                                 <td>Stock</td>
@@ -1785,6 +1785,10 @@ export default {
         },
         changePic(val) {
             this.productImageSelected = val
+        },
+        changeCurr(val) {
+            let temp = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'IDR' }).format(val)
+            return temp.slice(0, -3)
         }
     },
     
