@@ -141,12 +141,14 @@ class User extends REST_Controller
             // $this->response($result, REST_Controller::HTTP_OK);
         }else if (isset($uid)){
             $result = $this->user_model->get_user_where_uid($uid);
-            $user_task = $this->user_task_model->get_user_task_where($result['id']);
-            $tasks = $this->user_task_model->get_user_tasks_where($result['id']);
-            $user_task_group = $this->user_task_group_model->get_user_task_group_where($result['userTaskGroupId'])[0]['name'];
-            $result = array_merge($result, array('taskId' => $user_task));
-            $result = array_merge($result, array('tasks' => $tasks));
-            $result = array_merge($result, array('userTaskGroup' => $user_task_group));
+            if($result != NULL){
+                $user_task = $this->user_task_model->get_user_task_where($result['id']);
+                $tasks = $this->user_task_model->get_user_tasks_where($result['id']);
+                $user_task_group = $this->user_task_group_model->get_user_task_group_where($result['userTaskGroupId'])[0]['name'];
+                $result = array_merge($result, array('taskId' => $user_task));
+                $result = array_merge($result, array('tasks' => $tasks));
+                $result = array_merge($result, array('userTaskGroup' => $user_task_group));
+            }
         }else {
             $index = 0;
             $result = $this->user_model->get_all_user();

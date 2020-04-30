@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 12 Apr 2020 pada 13.40
+-- Waktu pembuatan: 30 Apr 2020 pada 02.08
 -- Versi server: 10.4.11-MariaDB
 -- Versi PHP: 7.4.3
 
@@ -83,11 +83,17 @@ CREATE TABLE `group_task` (
 --
 
 INSERT INTO `group_task` (`id`, `user_task_group_id`, `task_id`) VALUES
-(10, 3, 2),
-(12, 3, 1),
 (29, 19, 3),
 (30, 20, 3),
-(31, 20, 2);
+(31, 20, 2),
+(36, 21, 10),
+(37, 21, 12),
+(38, 21, 13),
+(39, 21, 9),
+(43, 23, 1),
+(44, 23, 2),
+(45, 23, 3),
+(46, 23, 15);
 
 -- --------------------------------------------------------
 
@@ -158,8 +164,7 @@ CREATE TABLE `product` (
 --
 
 INSERT INTO `product` (`id`, `product_code`, `name`, `specification`, `category_id`, `description`, `stock`, `unit_id`, `open_price`, `bottom_price`, `retail_id`, `min_stock`) VALUES
-(1, 'undefined', 'Smartruss Truecore C.75.100 ra', '9 m', 1, NULL, 0, 1, 276210, 0, 'undefined', 0),
-(2, 'undefined', 'Smartruss Truecore C.75.75 ra', '9 m', 1, NULL, 0, 1, 214830, 0, 'undefined', 0),
+(2, 'undefined', 'Smartruss Truecore C.75.75 ra', '9 m', 1, '', 0, 1, 214831, 0, 'undefined', 0),
 (3, 'undefined', 'Smartruss Truecore C.75.70 ra', '9 m', 1, NULL, 0, 1, 212850, 0, 'undefined', 0),
 (4, 'undefined', 'Smartruss Truecore C.75.60 ra', '9 m', 1, NULL, 0, 1, 186120, 0, 'undefined', 0),
 (5, 'undefined', 'Smartruss Truecore C.75.100 sa', '9 m', 1, NULL, 0, 1, 250470, 0, 'undefined', 0),
@@ -168,7 +173,6 @@ INSERT INTO `product` (`id`, `product_code`, `name`, `specification`, `category_
 (8, 'undefined', 'Smartruss Truecore C.75.60 sa', '9 m', 1, NULL, 0, 1, 169290, 0, 'undefined', 0),
 (9, 'undefined', 'Smartruss Truecore TS.40.045 (RENG)', '5.6 m', 1, NULL, 0, 1, 81180, 0, 'undefined', 0),
 (10, 'undefined', 'Smartruss Truecore TS.35.045 (RENG)', '5.6 m', 1, NULL, 0, 1, 62040, 0, 'undefined', 0),
-(11, 'undefined', 'Smartruss C.75.100 ra', '9 m', 1, NULL, 0, 1, 243540, 0, 'undefined', 0),
 (12, 'undefined', 'Smartruss C.75.75 ra', '9 m', 1, NULL, 0, 1, 187110, 0, 'undefined', 0),
 (13, 'undefined', 'Smartruss C.75.70 ra', '9 m', 1, NULL, 0, 1, 177210, 0, 'undefined', 0),
 (14, 'undefined', 'Smartruss C.75.60 ra', '9 m', 1, NULL, 0, 1, 156420, 0, 'undefined', 0),
@@ -656,10 +660,10 @@ INSERT INTO `product` (`id`, `product_code`, `name`, `specification`, `category_
 (496, 'undefined', 'NITOFLOR HARDTOP LIGHT GREY (25kg)', '25', 1, NULL, 0, 8, 378400, 0, 'undefined', 0),
 (497, 'undefined', 'NITOFLOR HARDTOP  NATURAL (25kg)', '25', 1, NULL, 0, 8, 114400, 0, 'undefined', 0),
 (498, 'undefined', 'NITOFLOR HARDTOP ORANGE (25kg)', '25', 1, NULL, 0, 8, 590700, 0, 'undefined', 0),
-(499, 'undefined', 'NITOFLOR HARDTOP RED (25kg)', '25', 1, NULL, 0, 8, 233200, 0, 'undefined', 0);
-INSERT INTO `product` (`id`, `product_code`, `name`, `specification`, `category_id`, `description`, `stock`, `unit_id`, `open_price`, `bottom_price`, `retail_id`, `min_stock`) VALUES
+(499, 'undefined', 'NITOFLOR HARDTOP RED (25kg)', '25', 1, NULL, 0, 8, 233200, 0, 'undefined', 0),
 (500, 'undefined', 'NITOFLOR HARDTOP SUPER GREEN (25kg)', '25', 1, NULL, 0, 8, 221100, 0, 'undefined', 0),
-(501, 'undefined', 'NITOFLOR HARDTOP SUPER GREY (25kg)', '25', 1, NULL, 0, 8, 540100, 0, 'undefined', 0),
+(501, 'undefined', 'NITOFLOR HARDTOP SUPER GREY (25kg)', '25', 1, NULL, 0, 8, 540100, 0, 'undefined', 0);
+INSERT INTO `product` (`id`, `product_code`, `name`, `specification`, `category_id`, `description`, `stock`, `unit_id`, `open_price`, `bottom_price`, `retail_id`, `min_stock`) VALUES
 (502, 'undefined', 'NITOFLOR HARDTOP WHITE (25kg)', '25', 1, NULL, 0, 8, 463100, 0, 'undefined', 0),
 (503, 'undefined', 'NITOFLOR HARDTOP YELLOW (25kg)', '25', 1, NULL, 0, 8, 353100, 0, 'undefined', 0),
 (504, 'undefined', 'NITOFLOR LITHURIN M (20L)', '25', 1, NULL, 0, 8, 1615900, 0, 'undefined', 0),
@@ -901,7 +905,6 @@ CREATE TABLE `product_image` (
 --
 
 INSERT INTO `product_image` (`id`, `product_id`, `image_id`) VALUES
-(18, 1, 3),
 (44, 22, 3),
 (47, 25, 3),
 (49, 30, 3),
@@ -926,18 +929,6 @@ CREATE TABLE `product_stock_opname` (
   `status` varchar(20) NOT NULL,
   `description` varchar(150) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data untuk tabel `product_stock_opname`
---
-
-INSERT INTO `product_stock_opname` (`id`, `opname_id`, `product_id`, `inspector_id`, `real_stock`, `opname_stock`, `opname_date`, `status`, `description`) VALUES
-(1, 1, 40, NULL, 1000, 900, NULL, 'belum diperiksa', 'booooi'),
-(3, 1, 40, NULL, 1000, NULL, NULL, 'belum diperiksa', 'booooi'),
-(4, 1, 40, NULL, 1000, NULL, NULL, 'belum diperiksa', 'booooi'),
-(5, 1, 40, NULL, 1000, NULL, NULL, 'belum diperiksa', 'booooi'),
-(6, 1, 40, NULL, 1000, NULL, NULL, 'belum diperiksa', 'booooi'),
-(7, 1, 40, NULL, 1000, NULL, NULL, 'belum diperiksa', 'booooi');
 
 -- --------------------------------------------------------
 
@@ -976,15 +967,6 @@ CREATE TABLE `stock_opname` (
   `status` varchar(20) NOT NULL,
   `description` varchar(150) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data untuk tabel `stock_opname`
---
-
-INSERT INTO `stock_opname` (`id`, `opname_number`, `date_start`, `date_finish`, `status`, `description`) VALUES
-(1, 'xxx233', '2020-12-20', '2020-12-30', 'ongoing', 'booooii'),
-(3, 'xxx23913', '2020-12-20', '2020-12-30', 'ongoing', ' '),
-(4, 'xxx23913', '2020-12-20', '2020-12-30', 'ongoing', ' ');
 
 -- --------------------------------------------------------
 
@@ -1055,7 +1037,8 @@ INSERT INTO `task` (`id`, `modul`, `action`, `label`) VALUES
 (11, 'Surat Jalan', 'create_delivery_order', 'Tambah Delivery Order'),
 (12, 'Surat Jalan', 'process_surat_jalan_dikirim', 'Proses Surat Jalan Dikirim'),
 (13, 'Surat Jalan', 'process_surat_jalan_selesai', 'Proses Surat Jalan Selesai'),
-(14, 'Surat Jalan', 'process_delivery_order', 'Proses Delivery Order');
+(14, 'Surat Jalan', 'process_delivery_order', 'Proses Delivery Order'),
+(15, 'Karyawan', 'edit_tasks', 'Ubah Permission');
 
 -- --------------------------------------------------------
 
@@ -1116,9 +1099,11 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `user_task_group_id`, `name`, `email`, `telephone`, `address`, `uid`, `place_of_birth`, `date_of_birth`, `religion`, `status`) VALUES
-(6, 3, 'Mahendra', 'mahendra@gmail.com', '082153027575', 'Alamat', '0QU1Zx9MgqQDhnITH0B0uOPXB6l2', 'Sampit', '2020-03-19', 'Islam', 'Belum Menikah'),
-(7, 3, 'kemal', 'kemalkntl@gmail.com', '08', 'alamat', 'YjJmdUrw4vhXHsxo23ykXFm8BeF2', 'kuningan', '2020-03-19', 'Islam', 'Belum Menikah'),
-(8, 20, 'nanda', 'nandakntl@gmail.com', '00', 'alamat', 'iiGZ9M4MHZPbTDeSOpEQSvnd2Eu1', 'bali, yogya katanya, aslinya fak fak', '2020-03-19', 'Islam', 'Menikah');
+(6, 23, 'Mahendra', 'mahendra@gmail.com', '082153027575', 'Alamat', '0QU1Zx9MgqQDhnITH0B0uOPXB6l2', 'Sampit', '2020-03-19', 'Islam', 'Belum Menikah'),
+(7, NULL, 'kemal', 'kemal@gmail.com', '08', 'alamat', 'YjJmdUrw4vhXHsxo23ykXFm8BeF2', 'kuningan', '2020-03-19', 'Islam', 'Belum Menikah'),
+(8, 20, 'nanda', 'ananda@gmail.com', '00', 'alamat', 'yd9Scoz8CVUBYaseXkJd927Zpnw1', 'Bali', '2020-03-19', 'Islam', 'Menikah'),
+(9, NULL, 'coba1', 'coba@gmail.com', '-1', 'asda', 'iRVgr5kQEPh6wcSxGiwwE1amT5s2', 'sampit', '2020-04-13', 'Islam', 'Belum Menikah'),
+(11, 19, 'Muarifin', 'muarifin@gmail.com', '459865874', 'kota semarang ', 'h8c8nu3VcVT6s3TVDF9H5ZmN70J3', 'kota semarang ', '0000-00-00', 'Islam', 'Belum Menikah');
 
 -- --------------------------------------------------------
 
@@ -1137,12 +1122,38 @@ CREATE TABLE `user_task` (
 --
 
 INSERT INTO `user_task` (`id`, `user_id`, `task_id`) VALUES
-(22, 6, 1),
-(23, 6, 2),
-(24, 7, 1),
-(25, 7, 2),
 (26, 8, 2),
-(27, 8, 3);
+(27, 8, 3),
+(28, 8, 1),
+(29, 8, 4),
+(30, 8, 5),
+(31, 8, 6),
+(33, 8, 7),
+(34, 8, 8),
+(35, 8, 9),
+(36, 8, 10),
+(37, 8, 11),
+(38, 8, 12),
+(39, 8, 13),
+(40, 8, 14),
+(55, 11, 10),
+(56, 11, 12),
+(57, 11, 13),
+(58, 11, 9),
+(60, 6, 1),
+(61, 6, 2),
+(62, 6, 3),
+(63, 6, 4),
+(64, 6, 5),
+(65, 6, 6),
+(66, 6, 7),
+(67, 6, 8),
+(68, 6, 9),
+(69, 6, 10),
+(70, 6, 11),
+(71, 6, 12),
+(72, 6, 13),
+(73, 6, 14);
 
 -- --------------------------------------------------------
 
@@ -1160,9 +1171,10 @@ CREATE TABLE `user_task_group` (
 --
 
 INSERT INTO `user_task_group` (`id`, `name`) VALUES
-(3, 'shinobi'),
-(19, 'bikini bottoms'),
-(20, 'tembalang');
+(19, 'group 2'),
+(20, 'group 3'),
+(21, 'Marketing'),
+(23, 'Admin');
 
 -- --------------------------------------------------------
 
@@ -1365,7 +1377,7 @@ ALTER TABLE `delivery_order`
 -- AUTO_INCREMENT untuk tabel `group_task`
 --
 ALTER TABLE `group_task`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
 
 --
 -- AUTO_INCREMENT untuk tabel `image`
@@ -1407,7 +1419,7 @@ ALTER TABLE `product_stock_opname`
 -- AUTO_INCREMENT untuk tabel `product_tag`
 --
 ALTER TABLE `product_tag`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT untuk tabel `stock_opname`
@@ -1431,7 +1443,7 @@ ALTER TABLE `tag`
 -- AUTO_INCREMENT untuk tabel `task`
 --
 ALTER TABLE `task`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT untuk tabel `unit`
@@ -1443,19 +1455,19 @@ ALTER TABLE `unit`
 -- AUTO_INCREMENT untuk tabel `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT untuk tabel `user_task`
 --
 ALTER TABLE `user_task`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=75;
 
 --
 -- AUTO_INCREMENT untuk tabel `user_task_group`
 --
 ALTER TABLE `user_task_group`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT untuk tabel `warehouse`

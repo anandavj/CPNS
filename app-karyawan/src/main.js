@@ -9,7 +9,8 @@ import axios from 'axios'
 import api from '@/api.js'
 
 Vue.config.productionTip = false
-axios.defaults.baseURL = 'http://localhost:8000/backend/api/'
+axios.defaults.baseURL = 'https://cpns.palugada.biz.id/backend/api/'
+// axios.defaults.baseURL = 'http://localhost:8000/backend/api/'
 
 const config = {
   apiKey: "AIzaSyAGXPPSZkTQC0Qq5zoFmoDe3AdvbPBHYKE",
@@ -27,11 +28,14 @@ router.beforeEach((to, from, next) => {
   if(to.name != "Login"){
     firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
-        next()
         api.getAllUserWhereUID(user.uid).then(response => {
-          store.commit('setKaryawan', response)
-          localStorage.setItem('tasks', JSON.stringify(response.tasks))
-          next()
+          if(response.length == 0){
+            firebase.auth().signOut()
+          }else{
+            store.commit('setKaryawan', response)
+            localStorage.setItem('tasks', JSON.stringify(response.tasks))
+            next()
+          }
         }).catch(() => {
           firebase.auth().signOut()
           next({ name: 'Login' })

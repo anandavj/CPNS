@@ -42,7 +42,9 @@ class User_model extends CI_Model{
         telephone, address, uid');
         $this->db->from('user');
         $this->db->where("uid='{$uid}'");
-        return $this->db->get()->unbuffered_row('array');
+        $result = $this->db->get();
+        if($result->num_rows() > 0) return $result->unbuffered_row('array');
+        else return array();
     }
 
     public function get_by_user_task_group_id($user_task_group_id){

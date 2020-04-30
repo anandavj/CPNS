@@ -112,7 +112,7 @@
                                         v-model="karyawan.userTaskGroupId"
                                         v-on:change="selectuserTaskGroupId"></v-select>
                                     </v-col>
-                                    <v-col cols="12">
+                                    <v-col cols="12" v-if="edit_tasks">
                                         <div class="title mt-n1">Permission</div>
                                         <v-expansion-panels accordion class="elevation-0" :multiple="true" v-model="panel">
                                             <v-expansion-panel v-for="(permission,index) in tasks" :key="index">
@@ -376,7 +376,7 @@
                                     v-model="karyawan.userTaskGroupId"
                                     v-on:change="selectuserTaskGroupId"></v-select>
                                 </v-col>
-                                <v-col cols="12">
+                                <v-col cols="12" v-if="edit_tasks">
                                     <div class="title mt-n1">Permission</div>
                                     <v-expansion-panels accordion class="elevation-0" :multiple="true" v-model="panel">
                                         <v-expansion-panel v-for="(permission,index) in tasks" :key="index">
@@ -497,7 +497,7 @@
                                     v-model="karyawan.userTaskGroupId"
                                     v-on:change="selectuserTaskGroupId"></v-select>
                                 </v-col>
-                                <v-col cols="12">
+                                <v-col cols="12" v-if="edit_tasks">
                                     <div class="title mt-n1">Permission</div>
                                     <v-expansion-panels accordion class="elevation-0" :multiple="true" v-model="panel">
                                         <v-expansion-panel v-for="(permission,index) in tasks" :key="index">
@@ -619,6 +619,7 @@ export default {
             create_karyawan: _.indexOf(JSON.parse(localStorage.getItem('tasks')), 'create_karyawan') >= 0,
             update_karyawan: _.indexOf(JSON.parse(localStorage.getItem('tasks')), 'update_karyawan') >= 0,
             delete_karyawan: _.indexOf(JSON.parse(localStorage.getItem('tasks')), 'delete_karyawan') >= 0,
+            edit_tasks: _.indexOf(JSON.parse(localStorage.getItem('tasks')), 'edit_tasks') >= 0,
             karyawans: [
                 // {id:1, email:'ananda@gmail.com', password:'coreofthecore', name:'Mahendra Fajar', userTaskGroupId:'Gudang', placeOfBirth:'Denpasar', dateOfBirth:'1999-04-27', religion:'Islam', status:'Belum Menikah', address:'Jalan', telephone:'08180', tasks: []},
                 // {id:2, email:'ananda@gmail.com', password:'coreofthecore', name:'Ananda Vijaya', userTaskGroupId:'Gudang', placeOfBirth:'Denpasar', dateOfBirth:'1999-04-27', religion:'Islam', status:'Belum Menikah', address:'Jalan', telephone:'08180', tasks: []},
