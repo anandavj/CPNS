@@ -12,7 +12,8 @@
           <v-list-item-avatar size="60">
             <img src="https://image.flaticon.com/icons/svg/194/194938.svg" alt="">
           </v-list-item-avatar>
-          <v-list-item-content @click="goTo('Profil')">
+          <!-- <v-list-item-content @click="goTo('Profil')"> -->
+          <v-list-item-content>
             <v-list-item-title>{{ this.$store.state.karyawan.name }}</v-list-item-title>
             <v-list-item-subtitle>{{ this.$store.state.karyawan.userTaskGroup }}</v-list-item-subtitle>
           </v-list-item-content>
@@ -25,8 +26,9 @@
           :clearable='true'
           append-icon="mdi-magnify"
           class="font-regular font-weight-light mt-3 mb-n4 px-2"
-          v-model="searchBarang"
+          v-model="searchBarangComputed"
           id="focusGain"
+          @click:append="goTo('/searchBarang', 'Daftar Barang')"
       />
       <v-divider></v-divider>
       <v-list dense v-for="(menu,index) in menus" :key="index" class="mb-n4">
@@ -125,6 +127,17 @@ export default {
         .catch( (err) => {
           alert(err)
         })
+    }
+  },
+
+  computed: {
+    searchBarangComputed: {
+      get () {
+        return this.searchBarang
+      },
+      set (value) {
+        this.$store.commit('updateSearch', value)
+      }
     }
   }
 };

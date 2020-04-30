@@ -12,7 +12,7 @@
                         :clearable='true'
                         append-icon="mdi-magnify"
                         class="font-regular font-weight-light mb-n4"
-                        v-model="advanceSearch.name"
+                        v-model="searchBarangComputed"
                     />
                 </v-col>
                 <!-- PC / Laptop -->
@@ -622,7 +622,6 @@
                     :footer-props="{
                         'items-per-page-options': [10, 50, 100, -1]
                     }"
-                    item-key="nama"
                     no-data-text="Data Barang Kosong"
                     no-results-text="Data Barang Tidak Ditemukan"
                     class="font-regular font-weight-light mb-12 pb-4"
@@ -644,7 +643,7 @@
                             </v-btn>
                         </template>
                         <template v-else>
-                            <v-layout justify-center >{{changeCurr(item.openPrice)}}</v-layout>
+                            <v-layout justify-center >{{ changeCurr(item.openPrice) }}</v-layout>
                         </template>
                     </template>
                 </v-data-table>
@@ -698,7 +697,7 @@
                                     <v-card-subtitle>{{item.stock}}</v-card-subtitle>
                                 </div>
                                 <div>
-                                    <v-card-subtitle>Rp{{changeCurr(item.openPrice)}}</v-card-subtitle>
+                                    <v-card-subtitle>Rp{{ changeCurr(item.openPrice) }}</v-card-subtitle>
                                 </div>
                             </div>
                         </v-card>
@@ -772,12 +771,12 @@
                                 <tr>
                                     <td>Open Price</td>
                                     <td width="25%" align="end">:</td>
-                                    <td>{{changeCurr(product.openPrice)}}</td>
+                                    <td>{{ changeCurr(product.openPrice) }}</td>
                                 </tr>
                                 <tr>
                                     <td>Bottom Price</td>
                                     <td width="25%" align="end">:</td>
-                                    <td>{{changeCurr(product.bottomPrice)}}</td>
+                                    <td>{{ changeCurr(product.bottomPrice) }}</td>
                                 </tr>
                                 <tr>
                                     <td>Stock</td>
@@ -863,12 +862,12 @@
                                             <tr>
                                                 <td>Open Price</td>
                                                 <td width="25%" align="end">:</td>
-                                                <td>{{changeCurr(product.openPrice)}}</td>
+                                                <td>{{ changeCurr(product.openPrice) }}</td>
                                             </tr>
                                             <tr>
                                                 <td>Bottom Price</td>
                                                 <td width="25%" align="end">:</td>
-                                                <td>{{changeCurr(product.bottomPrice)}}</td>
+                                                <td>{{ changeCurr(product.bottomPrice) }}</td>
                                             </tr>
                                             <tr>
                                                 <td>Stock</td>
@@ -1317,7 +1316,7 @@ import api from "@/api.js"
 import _ from "lodash"
 
 export default {
-    name: 'Barang',
+    name: 'BarangSearch',
     mounted() {
         this.get()
     },
@@ -1332,7 +1331,7 @@ export default {
             snackbarColor: '',
             productsUnderSearch: '',
             advanceSearch: {
-                name:'',
+                name:'smar',
                 stock_down:null,
                 stock_up:null,
                 category:null,
@@ -1510,10 +1509,10 @@ export default {
 
         },
         advanceSearchName(val) {
-            if(!this.advanceSearch.name) {
+            if(!this.searchBarangComputed) {
                 return true
             }
-            return val.toLowerCase().includes(this.advanceSearch.name.toLowerCase())
+            return val.toLowerCase().includes(this.searchBarangComputed.toLowerCase())
         },
         advanceSearchTags(val) {
             if(!this.advanceSearch.tags) {
@@ -1818,6 +1817,14 @@ export default {
                 return false
             }
         },
+        searchBarangComputed: {
+            get () {
+                return this.$store.state.search.searchBarang
+            },
+            set (value) {
+                this.$store.commit('updateSearch', value)
+            }
+        }
     },
 
     watch: {

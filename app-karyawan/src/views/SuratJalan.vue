@@ -318,10 +318,11 @@
                                     <v-card-text>
                                         <v-row>
                                             <v-col cols="12" class="my-n8">
-                                                <v-row justify="space-between" v-if="deliveryOrder.status == 'Belum Diproses'">
-                                                    <v-col>
+                                                <!-- <v-row justify="space-between" v-if="deliveryOrder.status == 'Belum Diproses'"> -->
+                                                <v-row justify="end" v-if="deliveryOrder.status == 'Belum Diproses'">
+                                                    <!-- <v-col>
                                                         <v-switch :disabled="deliveryOrderEditToggle" value v-model="deliveryOrderEditToggle" class="pa-0 ma-0" label="Edit Surat Jalan"></v-switch>
-                                                    </v-col>
+                                                    </v-col> -->
                                                     <!-- Tanggal -->
                                                     <v-col cols="5" v-if="popUpBreakPoint">
                                                         <v-text-field v-model="formatDateDetails" dense color="accent" outlined filled disabled label="Tanggal"/>

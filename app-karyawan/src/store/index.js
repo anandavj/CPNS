@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import search from './modules/searchProduct'
 
 Vue.use(Vuex)
 
@@ -9,7 +10,7 @@ export default new Vuex.Store({
     updateSuccessMessage: 'Berhasil ditambahkan',
     deleteSuccessMessage: 'Berhasil ditambahkan',
     serverErrorMessage: 'Terjadi kesalahan pada server',
-    karyawan: []
+    karyawan: [],
   },
   mutations: {
     setKaryawan(state, value){
@@ -19,6 +20,6 @@ export default new Vuex.Store({
   actions: {
   },
   modules: {
-
+    search
   }
 })

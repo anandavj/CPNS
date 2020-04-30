@@ -67,7 +67,7 @@ import firebase from 'firebase'
 export default {
     mounted(){
         firebase.auth().onAuthStateChanged(function(user) {
-            if (user) this.$router.push('/')
+            if (user) this.$router.push('/daftarBarang')
         });
     },
     name: 'Login',
@@ -92,7 +92,7 @@ export default {
             this.loading = true
             firebase.auth().signInWithEmailAndPassword(this.email,this.password)
                 .then(() => {
-                    this.$router.push('/')
+                    this.$router.push('/daftarBarang')
                     this.loading = false
                 })
                 .catch((err) => {
