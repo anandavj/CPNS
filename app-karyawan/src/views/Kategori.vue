@@ -30,7 +30,7 @@
                         </v-toolbar>
                         <v-form ref="form">
                             <v-card-text>
-                                <v-text-field color="accent" v-model="category" label="Nama Kategori"></v-text-field>
+                                <v-text-field color="accent" v-model="category.name" :rules="rules.newCategory" label="Nama Kategori"></v-text-field>
                             </v-card-text>
                         </v-form>
                         <v-card-actions>
@@ -38,6 +38,41 @@
                                 <v-row justify="center">
                                     <v-btn class="my-n9" color="red darken-1" text @click="close">Batal</v-btn>
                                     <v-btn class="my-n9" color="blue darken-1" text @click="saveNewCategory">Save</v-btn>
+                                </v-row>
+                            </v-container>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
+                <v-dialog v-model="popUpEdit" persistent max-width="500px">
+                    <v-card>
+                        <v-toolbar dense flat>
+                            <span class="title font-weight-light">Edit Kategori</span>
+                            <v-btn absolute right icon @click="close"><v-icon>mdi-close</v-icon></v-btn>
+                        </v-toolbar>
+                        <v-form ref="form">
+                            <v-card-text>
+                                <v-text-field color="accent" v-model="category.name" :rules="rules.newCategory" label="Nama Kategori"></v-text-field>
+                            </v-card-text>
+                        </v-form>
+                        <v-card-actions>
+                            <v-container>
+                                <v-row justify="center">
+                                    <v-btn class="my-n9" color="red darken-1" text @click="close">Batal</v-btn>
+                                    <v-btn class="my-n9" color="blue darken-1" text @click="saveEditedCategory">Save</v-btn>
+                                </v-row>
+                            </v-container>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
+                <v-dialog v-model="popUpDelete" max-width="600">
+                    <v-card>
+                    <v-card-title>Confirmation</v-card-title>
+                        <v-card-text>Apakah Anda Yakin Ingin Menghapus {{category.name}}?</v-card-text>
+                        <v-card-actions>
+                            <v-container>
+                                <v-row justify="center">
+                                    <v-btn class="mt-n5" color="red darken-1" text @click="close">Tidak</v-btn>
+                                    <v-btn class="mt-n5" color="blue darken-1" text @click="confirmDelete">Ya</v-btn>
                                 </v-row>
                             </v-container>
                         </v-card-actions>
@@ -69,36 +104,77 @@
             </v-data-table>
             <!-- *************************************************************************************************************** -->
             <!-- *************************************************************************************************************** -->
+            <v-snackbar
+                v-model="snackbar"
+                multi-line
+                v-bind:color="snackbarColor"
+            >
+                {{ snackbarMessage }}
+                <v-btn
+                    text
+                    @click="snackbar = false"
+                >
+                    <v-icon>
+                        mdi-close
+                    </v-icon>
+                </v-btn>
+            </v-snackbar>
         </div>
     </v-app>
 </template>
 
 <script>
+import api from "@/api.js"
 export default {
     name:'Kategori',
-
+    mounted() {
+        this.get()
+    },
     data() {
         return {
             categories:[],
-            category:'',
+            category:{
+                id:null,
+                name:''
+            },
+            categoryDefault:{
+                id:null,
+                name:''
+            },
             searchCategory:'',
             popUpNew: false,
             popUpEdit: false,
             popUpConfirmSave: false,
             popUpDelete: false,
-            selectedIndex: -1
+            selectedIndex: -1,
+            snackbar: false,
+            snackbarMessage: '',
+            snackbarColor: '',
+            productsUnderSearch: '',
+            rules: {
+                newCategory: [
+                    v => !!v || 'Nama Kategori Tidak Valid'
+                ],
+            }
         }
     },
 
     methods: {
+        get() {
+            api.getAllCategory()
+                .then(categories => {
+                    this.categories = categories
+                })
+        },
         close() {
             if(this.popUpNew) {
                 this.popUpNew = false
-                this.category= ''
+                this.category= Object.assign({},this.categoryDefault)
             } else {
                 if(this.popUpEdit || this.popUpDelete) {
                     this.popUpEdit = false
-                    this.category = ''
+                    this.popUpDelete = false
+                    this.category= Object.assign({},this.categoryDefault)
                     this.selectedIndex = -1
                 }
             }
@@ -108,27 +184,72 @@ export default {
             this.category = Object.assign({},item)
             this.popUpEdit = true
         },
-        confirmSave() {
+        saveEditedCategory() {
             if(this.$refs.form.validate()) {
-                this.popUpEdit = false
-                this.popUpConfirmSave = true
+                api.updateCategory(this.category)
+                .then((response) => {
+                    this.snackbarColor = 'success'
+                    this.snackbarMessage = response
+                }) .catch(error => {
+                    this.snackbarColor = 'error'
+                    this.snackbarMessage = error
+                }) .finally(() => {
+                    this.snackbar = true
+                    api.getAllCategory()
+                        .then((categories) => {
+                            this.categories = categories
+                            this.close()
+                        })
+                })
             }
         },
-        saveEditedCategory() {
-
-        },
         saveNewCategory() {
-
+            if(this.$refs.form.validate()) {
+                api.addCategory(this.category.name)
+                .then((response) => {
+                    this.snackbarColor = 'success'
+                    this.snackbarMessage = response
+                }) .catch(error => {
+                    this.snackbarColor = 'error'
+                    this.snackbarMessage = error
+                }) .finally(() => {
+                    this.snackbar = true
+                    api.getAllCategory()
+                        .then((categories) => {
+                            this.categories = categories
+                            this.close()
+                        })
+                })
+            }
         },
-        deleteCategory() {
-            
+        deleteCategory(item) {
+            this.selectedIndex = this.categories.indexOf(item)
+            this.category = Object.assign({},item)
+            this.popUpDelete = true
+        },
+        confirmDelete() {
+            api.deleteCategory(this.category)
+                .then((response) => {
+                    this.snackbarColor = 'success'
+                    this.snackbarMessage = response
+                }) .catch(error => {
+                    this.snackbarColor = 'error'
+                    this.snackbarMessage = error
+                }) .finally(() => {
+                    this.snackbar = true
+                    api.getAllCategory()
+                        .then((categories) => {
+                            this.categories = categories
+                            this.close()
+                        })
+                })
         }
     },
 
     computed: {
         categoriesHeader() {
             return [
-                {text:'Nama', value:'nama'},
+                {text:'Nama', value:'name'},
                 {text:'', value:'actions'}
             ]
         }
