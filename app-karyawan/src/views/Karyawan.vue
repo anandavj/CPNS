@@ -319,8 +319,8 @@
                                 </v-col>
                                 <v-col cols="6">
                                     <v-menu
-                                        ref="datePickerMenuAdd"
-                                        v-model="datePickerMenuAdd"
+                                        ref="datePickerMenuEdit"
+                                        v-model="datePickerMenuEdit"
                                         :close-on-content-click="false"
                                         :return-value.sync="karyawan.dateOfBirth"
                                         transition="scale-transition"
@@ -339,8 +339,8 @@
                                         </template>
                                         <v-date-picker v-model="karyawan.dateOfBirth" no-title scrollable>
                                             <v-spacer></v-spacer>
-                                            <v-btn text color="primary" @click="datePickerMenuAdd = false">Cancel</v-btn>
-                                            <v-btn text color="primary" @click="$refs.datePickerMenuAdd.save(karyawan.dateOfBirth)">OK</v-btn>
+                                            <v-btn text color="primary" @click="datePickerMenuEdit = false">Cancel</v-btn>
+                                            <v-btn text color="primary" @click="$refs.datePickerMenuEdit.save(karyawan.dateOfBirth)">OK</v-btn>
                                         </v-date-picker>
                                     </v-menu>
                                 </v-col>
@@ -440,8 +440,8 @@
                                 </v-col>
                                 <v-col cols="6">
                                     <v-menu
-                                        ref="datePickerMenuAdd"
-                                        v-model="datePickerMenuAdd"
+                                        ref="datePickerMenuEdit"
+                                        v-model="datePickerMenuEdit"
                                         :close-on-content-click="false"
                                         :return-value.sync="karyawan.dateOfBirth"
                                         transition="scale-transition"
@@ -460,8 +460,8 @@
                                         </template>
                                         <v-date-picker v-model="karyawan.dateOfBirth" no-title scrollable>
                                             <v-spacer></v-spacer>
-                                            <v-btn text color="primary" @click="datePickerMenuAdd = false">Cancel</v-btn>
-                                            <v-btn text color="primary" @click="$refs.datePickerMenuAdd.save(karyawan.dateOfBirth)">OK</v-btn>
+                                            <v-btn text color="primary" @click="datePickerMenuEdit = false">Cancel</v-btn>
+                                            <v-btn text color="primary" @click="$refs.datePickerMenuEdit.save(karyawan.dateOfBirth)">OK</v-btn>
                                         </v-date-picker>
                                     </v-menu>
                                 </v-col>
@@ -679,6 +679,7 @@ export default {
             showPassword: false,
             popUpNew: false,
             datePickerMenuAdd: false,
+            datePickerMenuEdit: false,
             datePickerMenu: false,
             popupDetails: false,
             popUpEdit: false,

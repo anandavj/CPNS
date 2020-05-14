@@ -94,6 +94,7 @@ export default {
         // {name:'Dashboard',route:'/',icon:'mdi-home-variant-outline'},
         {name:'List Karyawan',route:'/karyawan',icon:'mdi-account-group'},
         {name:'Daftar Barang',route:'/daftarBarang',icon:'mdi-cube-outline'},
+        {name:'Kartu Stock',route:'/kartuStock',icon:'mdi-view-list'},
         {name:'Surat Jalan',route:'/suratJalan',icon:'mdi-ballot-recount-outline'},
         {name:'Stock Opname',route:'/stockOpname',icon:'mdi-clipboard-check-outline'},
         {name:'Kelola',route:'/kelola',icon:'mdi-settings-outline',children:[

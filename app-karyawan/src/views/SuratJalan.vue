@@ -183,7 +183,7 @@
                                                 <v-card-subtitle>{{ item.referenceNumber }}</v-card-subtitle>
                                             </div>
                                             <div>
-                                                <v-btn @click.stop="prosesSuratJalan(item)" v-if="item.status == 'Belum Diproses' && process_surat_jalan_dikirim" dense color="white--text green" small fab class="my-5 mx-1">
+                                                <v-btn :disabled="checkingItems(item)" @click.stop="prosesSuratJalan(item)" v-if="item.status == 'Belum Diproses' && process_surat_jalan_dikirim" dense color="white--text green" small fab class="my-5 mx-1">
                                                     <v-icon>mdi-truck-fast</v-icon>
                                                 </v-btn>
                                                 <v-btn @click.stop="finishing(item)" v-if="item.status == 'Dikirim' && process_surat_jalan_selesai" dense color="white--text green" small fab class="my-5 mx-1">
@@ -250,7 +250,7 @@
                                     <span>{{ formatDateList(item.date) }}</span>
                                 </template>
                                 <template v-slot:item.actions="{ item }">
-                                    <v-btn dense color="white--text green" v-if="item.status == 'Belum Diproses' && process_surat_jalan_dikirim" @click.stop="prosesSuratJalan(item)">Muat</v-btn>
+                                    <v-btn :disabled="checkingItems(item)" dense color="white--text green" v-if="item.status == 'Belum Diproses' && process_surat_jalan_dikirim" @click.stop="prosesSuratJalan(item)">Muat</v-btn>
                                     <v-btn dense color="white--text green" v-if="item.status == 'Dikirim' && process_surat_jalan_selesai" @click.stop="finishing(item)">Selesai</v-btn>
                                 </template>
                             </v-data-table>
@@ -460,6 +460,10 @@
                                                             </td>
                                                             <td><v-text-field id="focusGainedAmount" color="accent" v-on:keydown.enter="addSuratJalanNewItem" v-model="deliveryOrderNewItem.amount"/></td>
                                                         </tr>
+                                                    </template>
+                                                    <template v-slot:item.amount="{ item }">
+                                                        <span v-if="checkStock(item)"><span class="mr-1 red--text">{{item.amount}}</span><v-icon color="red">mdi-alert-rhombus</v-icon></span>
+                                                        <span v-else>{{item.amount}}</span>
                                                     </template>
                                                     <template v-slot:item.actions="{ item }" v-if="deliveryOrderEditToggle">
                                                         <v-icon @click.stop="deleteSuratJalanDetailsItem(item)">mdi-delete</v-icon>
@@ -2124,7 +2128,6 @@ export default {
                     if(this.deliveryOrder.status == 'Dikirim') {
                         this.deliveryOrder.status = 'Selesai'
                         api.changeStatusToOnProcess(this.deliveryOrder)
-                            
                             .then((response) => {
                                 this.snackbarColor = 'success'
                                 this.snackbarMessage = response
@@ -2139,7 +2142,22 @@ export default {
                                     api.updateProductStock(product)
                                 });
                                 this.selectedItemsForDeliveryOrder = []
-                            }) .finally(() => {
+                            }) 
+                            .then(() => {
+                                this.deliveryOrder.items.forEach(el => {
+                                    let data = {
+                                        orderItem : el.productId,
+                                        orderDate : this.deliveryOrder.date,
+                                        quantityOut : el.amount,
+                                        orderStatus : 'Keluar',
+                                        quantityIn : 0,
+                                        broker: 8,
+                                        seller:this.deliveryOrder.receiverName,
+                                        orderNumber: this.deliveryOrder.referenceNumber
+                                    }
+                                    api.addStockRecord(data)
+                                });
+                            }).finally(() => {
                                 this.snackbar = true
                                 this.suratJalans = []
                                 this.deliveryOrders = []
@@ -2179,7 +2197,21 @@ export default {
                             });
                             this.selectedItemsForDeliveryOrder = []
                         })
-                        .finally(() => {
+                        .then(() => {
+                            this.deliveryOrder.items.forEach(el => {
+                                let data = {
+                                    orderItem : el.productId,
+                                    orderDate : this.deliveryOrder.date,
+                                    quantityOut : 0,
+                                    orderStatus : 'Masuk',
+                                    quantityIn : el.amount,
+                                    broker: 8,
+                                    seller:this.deliveryOrder.receiverName,
+                                    orderNumber: this.deliveryOrder.referenceNumber
+                                }
+                                api.addStockRecord(data)
+                            });
+                        }) .finally(() => {
                             this.snackbar = true
                             this.suratJalans = []
                             this.deliveryOrders = []
@@ -2204,12 +2236,20 @@ export default {
         checkStock(item) {
             if(+item.stock < +item.amount) return true
         },
+        checkingItems(item) {
+            for(const el of item.items) {
+                if(+el.stock < +el.amount) {
+                    return true
+                }
+            } return false
+        },
         /* --------------------             -------------------- */
         /* -------------------- DO -------------------- */
         /* --------------------    -------------------- */
     },
 
     computed: {
+        
         formatDate() {
             return this.advanceSearch.date ? moment(this.advanceSearch.date).format('DD/MM/YYYY') : ''
         },

@@ -37,6 +37,14 @@ const routes = [
     }
   },
   {
+    path: '/kartuStock',
+    name: 'KartuStock',
+    component: () => import('../views/KartuStock.vue'),
+    meta: {
+      drawer: true
+    }
+  },
+  {
     path: '/searchBarang',
     name: 'BarangSearch',
     component: () => import('../views/BarangSearch.vue'),

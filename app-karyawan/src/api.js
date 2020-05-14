@@ -13,6 +13,7 @@ const productTagTable = 'product_tag'
 const stockOpnameTable = 'stock_opname'
 const productStockOpnameTable = 'product_stock_opname'
 const deliveryOrderTable = 'delivery_order'
+const stockRecordTable = 'stock_record'
 const excel = 'excel_import'
 const insertSuccessMessage = 'Berhasil ditambahkan'
 const updateSuccessMessage = 'Berhasil diperbarui'
@@ -396,6 +397,32 @@ const api = {
         } )
     },
 
+    /* ================================================================================================================================================= */
+    /* ================================================================================================================================================= */
+
+    /* ================================================================================================================================================= */
+    /* Stock Record */
+    /* ================================================================================================================================================= */
+    getAllStockRecord() {
+        return new Promise( (resolve, reject) => {
+            axios.get(stockRecordTable)
+                .then((response) => {
+                    resolve(response.data)
+                }) .catch(error => {
+                    if(error.response.status == 500) reject(serverErrorMessage)
+                })
+        })
+    },
+    addStockRecord(item) {   
+        return new Promise( (resolve, reject) => {
+            axios.post(stockRecordTable, item)
+                .then(() => {
+                    resolve(insertSuccessMessage)
+                }) .catch(error => {
+                    if(error.response.status == 500) reject(serverErrorMessage)
+                })
+        } )
+    },
     /* ================================================================================================================================================= */
     /* ================================================================================================================================================= */
 
