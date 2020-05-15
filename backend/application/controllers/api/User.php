@@ -168,13 +168,14 @@ class User extends REST_Controller
         $name = $this->put('name');
         $email = $this->put('email');
         $password = $this->put('password');
-        $phone = $this->put('phone');
+        $phone = $this->put('telephone');
         $address = $this->put('address');
         $uid = $this->put('uid');
         $place_of_birth = $this->put('placeOfBirth');
         $religion = $this->put('religion');
         $status = $this->put('status');
         $tasks = $this->put('taskId');
+        $date_of_birth = $this->put('dateOfBirth');
 
         if (!isset($id)) {
             $this->response(
@@ -234,6 +235,9 @@ class User extends REST_Controller
         }
         if (isset($status)) {
             $datas = array_merge($datas, array('status' => $status ));
+        }
+        if (isset($date_of_birth)) {
+            $datas = array_merge($datas, array('date_of_birth' => $date_of_birth ));
         }
 
         $userProperties = [
