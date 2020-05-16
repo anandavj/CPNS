@@ -290,22 +290,22 @@
                                     </v-card-actions>
                                 </v-card>
                             </v-dialog>
-                            <v-dialog v-model = "popUpconfirmFinishing" persistent max-width="700px">
-                                <v-card>
-                                <v-card-title>Confirmation</v-card-title>
-                                    <v-card-text>Apakah Anda Yakin Ingin Menyelesaikan Order ini?</v-card-text>
-                                    <v-card-actions>
-                                        <v-container>
-                                            <v-row justify="center">
-                                                <v-btn class="mt-n5" color="red darken-1" text @click="close">Tidak</v-btn>
-                                                <v-btn class="mt-n5" color="blue darken-1" text @click="changeStatus(deliveryOrder)">Ya</v-btn>
-                                            </v-row>
-                                        </v-container>
-                                    </v-card-actions>
-                                </v-card>
-                            </v-dialog>
                                 <!--  -->
                         </div>
+                        <v-dialog v-model = "popUpconfirmFinishing" persistent max-width="700px">
+                            <v-card>
+                            <v-card-title>Confirmation</v-card-title>
+                                <v-card-text>Apakah Anda Yakin Ingin Menyelesaikan Order ini?</v-card-text>
+                                <v-card-actions>
+                                    <v-container>
+                                        <v-row justify="center">
+                                            <v-btn class="mt-n5" color="red darken-1" text @click="close">Tidak</v-btn>
+                                            <v-btn class="mt-n5" color="blue darken-1" text @click="changeStatus(deliveryOrder)">Ya</v-btn>
+                                        </v-row>
+                                    </v-container>
+                                </v-card-actions>
+                            </v-card>
+                        </v-dialog>
                         <!--  -->
                         <!-- Pop Up Detail Surat -->
                         <v-dialog v-model="popUpDetailSuratJalan" fullscreen hide-overlay transition="dialog-bottom-transition">
@@ -2151,7 +2151,7 @@ export default {
                                         quantityOut : el.amount,
                                         orderStatus : 'Keluar',
                                         quantityIn : 0,
-                                        broker: 8,
+                                        broker: this.$store.state.karyawan.id,
                                         seller:this.deliveryOrder.receiverName,
                                         orderNumber: this.deliveryOrder.referenceNumber
                                     }
@@ -2205,7 +2205,7 @@ export default {
                                     quantityOut : 0,
                                     orderStatus : 'Masuk',
                                     quantityIn : el.amount,
-                                    broker: 8,
+                                    broker: this.$store.state.karyawan.id,
                                     seller:this.deliveryOrder.receiverName,
                                     orderNumber: this.deliveryOrder.referenceNumber
                                 }
