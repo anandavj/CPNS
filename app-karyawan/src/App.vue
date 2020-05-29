@@ -138,6 +138,9 @@ export default {
       if(_.indexOf(JSON.parse(localStorage.getItem('tasks')), 'access_kelola_barang') >= 0) {
         arr.push({name:'Kelola Barang',route:'/kelolaBarang',icon:'mdi-briefcase-check-outline', shown: _.indexOf(JSON.parse(localStorage.getItem('tasks')), 'access_kelola_barang') >= 0,})
       }
+      if(arr.length == 0) {
+        menuList.pop()
+      }
       return menuList
     },
     searchBarangComputed: {
