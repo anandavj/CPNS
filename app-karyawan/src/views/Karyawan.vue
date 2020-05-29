@@ -184,6 +184,7 @@
             >
                 <template v-slot:item.actions="{ item }">
                     <v-icon v-if="update_karyawan" class="mr-2" @click.stop="editKaryawan(item)">mdi-pencil</v-icon>
+                    <v-icon v-if="update_karyawan" class="mr-2" @click.stop="editPassword(item)">mdi-form-textbox-lock</v-icon>
                     <v-icon v-if="delete_karyawan" class="mr-2" @click.stop="confirmDelete(item)">mdi-delete</v-icon>
                 </template>
             </v-data-table>
@@ -283,6 +284,47 @@
             <!-- *************************************************************************************************************** -->
 
             <!-- *************************************************************************************************************** -->
+            <!-- Edit Password -->
+            <!-- *************************************************************************************************************** -->
+            <v-dialog v-model="popUpEditPassword" width="500px">
+                <v-card>
+                    <v-toolbar dense flat>
+                            <span class="title font-weight-light">Ubah Password</span>
+                            <v-btn absolute right icon @click="close"><v-icon>mdi-close</v-icon></v-btn>
+                    </v-toolbar>
+                    <v-form ref="form">
+                        <v-card-text>
+                            <v-row>
+                                <v-col cols='12'>
+                                    <v-text-field 
+                                        color="accent"
+                                        :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                                        :rules="passwordRules"
+                                        :type="showPassword ? 'text' : 'password'"
+                                        v-model="karyawan.password"
+                                        label="Password"
+                                        hint="Minimal 8 Karakter"
+                                        class="input-group--focused mt-n6"
+                                        @click:append="showPassword = !showPassword"
+                                    />
+                                </v-col>
+                            </v-row>
+                        </v-card-text>
+                    </v-form>
+                    <v-card-actions>
+                        <v-container>
+                            <v-row justify="center">
+                                <v-btn class="mt-n12" color="red darken-1" text @click="close">Close</v-btn>
+                                <v-btn class="mt-n12" color="blue darken-1" text @click="isiDisiniJarJanganLupav_if_form_validatenya">Save</v-btn>
+                            </v-row>
+                        </v-container>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+            <!-- *************************************************************************************************************** -->
+            <!-- *************************************************************************************************************** -->
+
+            <!-- *************************************************************************************************************** -->
             <!-- Edit Karyawan -->
             <!-- *************************************************************************************************************** -->
             <!-- Phone / other xs sm device will display fullscreen dialog -->
@@ -298,7 +340,7 @@
                                 <v-col cols="12">
                                     <v-text-field color="accent" label="Nama" v-model="karyawan.name" :rules="nameRules"/>
                                 </v-col>
-                                <v-col cols="6">
+                                <v-col cols="12">
                                     <v-text-field color="accent" label="Email" v-model="karyawan.email" :rules="emailRules"/>
                                 </v-col>
                                 <!-- <v-col cols="6">
@@ -419,7 +461,7 @@
                                 <v-col cols="12">
                                     <v-text-field color="accent" label="Nama" v-model="karyawan.name" :rules="nameRules"/>
                                 </v-col>
-                                <v-col cols="6">
+                                <v-col cols="12">
                                     <v-text-field color="accent" label="Email" v-model="karyawan.email" :rules="emailRules"/>
                                 </v-col>
                                 <!-- <v-col cols="6">
@@ -670,6 +712,7 @@ export default {
             listuserTaskGroupId:[],
             tempnameKaryawan:'',
             searchKaryawan:'',
+            newPassword: '',
             loadingList:true,
             loading: false,
             loadingConfirm: false,
@@ -685,6 +728,7 @@ export default {
             popUpEdit: false,
             popUpConfirmSave: false,
             popUpConfirmDelete: false,
+            popUpEditPassword: false,
             panel: false,
             selectedIndex: -1,
             // -----
@@ -703,7 +747,7 @@ export default {
             ],
             passwordRules: [
                 v => !!v || 'Password Harus Diisi',
-                // v => v.length >= 8 || 'Minimal 8 Karakter',
+                v => v.length >= 8 || 'Minimal 8 Karakter',
             ],
             // -----
             editedIndex: null       
@@ -744,6 +788,7 @@ export default {
             this.popUpEdit = false
             this.popUpNew = false
             this.popUpEdit = false
+            this.popUpEditPassword = false
             this.selectedIndex = -1
             this.karyawan = Object.assign({},this.karyawanDefault)
         },
@@ -769,6 +814,12 @@ export default {
             this.tempnameKaryawan = item.name
             this.karyawan = Object.assign({},item)
             this.popUpEdit = true
+        },
+        editPassword(item) {
+            this.selectedIndex = this.karyawans.indexOf(item)
+            this.tempnameKaryawan = item.name
+            this.karyawan = Object.assign({},item)
+            this.popUpEditPassword = true
         },
         deleteKaryawan(){
             this.loading = true
@@ -851,7 +902,7 @@ export default {
     watch: {
         popupDetails() {
             if(!this.popupDetails) {
-                this.karyawan = false
+                this.karyawan = Object.assign({},this.karyawanDefault)
             }
         }
     }
