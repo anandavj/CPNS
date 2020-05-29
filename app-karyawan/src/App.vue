@@ -92,18 +92,6 @@ export default {
 
   data() {
     return {
-      menus: [
-        // {name:'Dashboard',route:'/',icon:'mdi-home-variant-outline'},
-        {name:'List Karyawan',route:'/karyawan',icon:'mdi-account-group', shown: true},
-        {name:'Daftar Barang',route:'/daftarBarang',icon:'mdi-cube-outline', shown: true},
-        {name:'Kartu Stock',route:'/kartuStock',icon:'mdi-view-list', shown: _.indexOf(JSON.parse(localStorage.getItem('tasks')), 'access_kartu_stock') >= 0,},
-        {name:'Surat Jalan',route:'/suratJalan',icon:'mdi-ballot-recount-outline', shown: true},
-        {name:'Stock Opname',route:'/stockOpname',icon:'mdi-clipboard-check-outline', shown: true},
-        {name:'Kelola',route:'/kelola',icon:'mdi-settings-outline',shown: true, children:[
-          {name:'Kelola Karyawan',route:'/kelolaKaryawan',icon:'mdi-account-key-outline', shown: _.indexOf(JSON.parse(localStorage.getItem('tasks')), 'access_kelola_barang') >= 0},
-          {name:'Kelola Barang',route:'/kelolaBarang',icon:'mdi-briefcase-check-outline', shown: _.indexOf(JSON.parse(localStorage.getItem('tasks')), 'access_kelola_karyawan') >= 0,}
-        ]}
-      ],
       drawer: null,
       titleBar: 'Dashboard',
       logOutDialog: false,
@@ -134,6 +122,24 @@ export default {
   },
 
   computed: {
+    menus() { 
+      var arr = []
+      var menuList = [
+        {name:'List Karyawan',route:'/karyawan',icon:'mdi-account-group', shown: true},
+        {name:'Daftar Barang',route:'/daftarBarang',icon:'mdi-cube-outline', shown: true},
+        {name:'Kartu Stock',route:'/kartuStock',icon:'mdi-view-list', shown: _.indexOf(JSON.parse(localStorage.getItem('tasks')), 'access_kartu_stock') >= 0,},
+        {name:'Surat Jalan',route:'/suratJalan',icon:'mdi-ballot-recount-outline', shown: true},
+        {name:'Stock Opname',route:'/stockOpname',icon:'mdi-clipboard-check-outline', shown: true},
+        {name:'Kelola',route:'/kelola',icon:'mdi-settings-outline',shown: true, children:arr}
+      ]
+      if(_.indexOf(JSON.parse(localStorage.getItem('tasks')), 'access_manage_karyawan') >= 0) {
+        arr.push({name:'Kelola Karyawan',route:'/kelolaKaryawan',icon:'mdi-account-key-outline', shown: _.indexOf(JSON.parse(localStorage.getItem('tasks')), 'access_manage_karyawan') >= 0})
+      }
+      if(_.indexOf(JSON.parse(localStorage.getItem('tasks')), 'access_kelola_barang') >= 0) {
+        arr.push({name:'Kelola Barang',route:'/kelolaBarang',icon:'mdi-briefcase-check-outline', shown: _.indexOf(JSON.parse(localStorage.getItem('tasks')), 'access_kelola_barang') >= 0,})
+      }
+      return menuList
+    },
     searchBarangComputed: {
       get () {
         return this.searchBarang
