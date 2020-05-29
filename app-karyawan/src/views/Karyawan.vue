@@ -301,7 +301,7 @@
                                 <v-col cols="6">
                                     <v-text-field color="accent" label="Email" v-model="karyawan.email" :rules="emailRules"/>
                                 </v-col>
-                                <v-col cols="6">
+                                <!-- <v-col cols="6">
                                     <v-text-field 
                                         color="accent"
                                         :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
@@ -313,7 +313,7 @@
                                         class="input-group--focused"
                                         @click:append="showPassword = !showPassword"
                                     />
-                                </v-col>
+                                </v-col> -->
                                 <v-col cols="6">
                                     <v-text-field color="accent" label="Tempat Lahir" v-model="karyawan.placeOfBirth" :rules="placeOfBirthRules"/>
                                 </v-col>
@@ -422,7 +422,7 @@
                                 <v-col cols="6">
                                     <v-text-field color="accent" label="Email" v-model="karyawan.email" :rules="emailRules"/>
                                 </v-col>
-                                <v-col cols="6">
+                                <!-- <v-col cols="6">
                                     <v-text-field 
                                         color="accent"
                                         :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
@@ -434,7 +434,7 @@
                                         class="input-group--focused"
                                         @click:append="showPassword = !showPassword"
                                     />
-                                </v-col>
+                                </v-col> -->
                                 <v-col cols="6">
                                     <v-text-field color="accent" label="Tempat Lahir" v-model="karyawan.placeOfBirth" :rules="placeOfBirthRules"/>
                                 </v-col>

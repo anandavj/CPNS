@@ -167,7 +167,7 @@ class User extends REST_Controller
         $user_task_group_id = $this->put('userTaskGroupId');
         $name = $this->put('name');
         $email = $this->put('email');
-        $password = $this->put('password');
+        // $password = $this->put('password');
         $phone = $this->put('telephone');
         $address = $this->put('address');
         $uid = $this->put('uid');
@@ -240,13 +240,13 @@ class User extends REST_Controller
             $datas = array_merge($datas, array('date_of_birth' => $date_of_birth ));
         }
 
-        $userProperties = [
-            'email' => $email,
-            'password' => $password,
-        ];
-        try{
-            //update firebase auth
-            $this->firebase_auth->updateUser($uid, $userProperties);
+        // $userProperties = [
+        //     'email' => $email,
+        //     'password' => $password,
+        // ];
+        // try{
+        //     //update firebase auth
+        //     $this->firebase_auth->updateUser($uid, $userProperties);
 
             if ($this->user_model->update_user($id, $datas)) {
                 if ($update_user_task) {
@@ -287,15 +287,15 @@ class User extends REST_Controller
                     REST_Controller::HTTP_INTERNAL_SERVER_ERROR
                 );
             }
-        }catch(Exception $e){
-            $this->response(
-                array(
-                    'status' => FALSE,
-                    'message' => $this::UPDATE_FAILED_MESSAGE . " Details: update user task failed"
-                ),
-                REST_Controller::HTTP_INTERNAL_SERVER_ERROR
-            );
-        }
+        // }catch(Exception $e){
+        //     $this->response(
+        //         array(
+        //             'status' => FALSE,
+        //             'message' => $this::UPDATE_FAILED_MESSAGE . " Details: update user task failed"
+        //         ),
+        //         REST_Controller::HTTP_INTERNAL_SERVER_ERROR
+        //     );
+        // }
     }
 
     public function index_delete()

@@ -32,17 +32,19 @@
       />
       <v-divider></v-divider>
       <v-list dense v-for="(menu,index) in menus" :key="index" class="mb-n4">
-        <v-list-group :prepend-icon="menu.icon" no-action v-if="menu.children">
-          <template v-slot:activator><v-list-item-content><v-list-item-title>{{menu.name}}</v-list-item-title></v-list-item-content></template>
-          <v-list-item v-for="(child,idx) in menu.children" :key="idx" link class="caption" @click="goTo(child.route,child.name)">
-            <v-list-item-title>{{child.name}}</v-list-item-title>
-            <v-list-item-icon><v-icon>{{child.icon}}</v-icon></v-list-item-icon>
+        <div v-if="menu.shown">
+          <v-list-group :prepend-icon="menu.icon" no-action v-if="menu.children">
+            <template v-slot:activator><v-list-item-content><v-list-item-title>{{menu.name}}</v-list-item-title></v-list-item-content></template>
+            <v-list-item v-for="(child,idx) in menu.children" :key="idx" link class="caption" @click="goTo(child.route,child.name)">
+              <v-list-item-title>{{child.name}}</v-list-item-title>
+              <v-list-item-icon><v-icon>{{child.icon}}</v-icon></v-list-item-icon>
+            </v-list-item>
+          </v-list-group>
+          <v-list-item link v-else @click="goTo(menu.route,menu.name)">
+            <v-list-item-icon><v-icon>{{menu.icon}}</v-icon></v-list-item-icon>
+            <v-list-item-title>{{menu.name}}</v-list-item-title>
           </v-list-item>
-        </v-list-group>
-        <v-list-item link v-else  @click="goTo(menu.route,menu.name)">
-          <v-list-item-icon><v-icon>{{menu.icon}}</v-icon></v-list-item-icon>
-          <v-list-item-title>{{menu.name}}</v-list-item-title>
-        </v-list-item>
+        </div>
       </v-list>
       <v-list dense>
         <v-list-item link @click="logOutDialog = !logOutDialog">
@@ -76,13 +78,13 @@
 
 <script>
 import firebase from 'firebase'
-// import _ from 'lodash'
+import _ from 'lodash'
 
 export default {
   name: 'App',
 
   mounted() {
-    
+    // console.log(_.indexOf(JSON.parse(localStorage.getItem('tasks')), 'access_kartu_stock') >= 0)?
   },
 
   components: {
@@ -92,14 +94,14 @@ export default {
     return {
       menus: [
         // {name:'Dashboard',route:'/',icon:'mdi-home-variant-outline'},
-        {name:'List Karyawan',route:'/karyawan',icon:'mdi-account-group'},
-        {name:'Daftar Barang',route:'/daftarBarang',icon:'mdi-cube-outline'},
-        {name:'Kartu Stock',route:'/kartuStock',icon:'mdi-view-list'},
-        {name:'Surat Jalan',route:'/suratJalan',icon:'mdi-ballot-recount-outline'},
-        {name:'Stock Opname',route:'/stockOpname',icon:'mdi-clipboard-check-outline'},
-        {name:'Kelola',route:'/kelola',icon:'mdi-settings-outline',children:[
-          {name:'Kelola Karyawan',route:'/kelolaKaryawan',icon:'mdi-account-key-outline'},
-          {name:'Kelola Barang',route:'/kelolaBarang',icon:'mdi-briefcase-check-outline'}
+        {name:'List Karyawan',route:'/karyawan',icon:'mdi-account-group', shown: true},
+        {name:'Daftar Barang',route:'/daftarBarang',icon:'mdi-cube-outline', shown: true},
+        {name:'Kartu Stock',route:'/kartuStock',icon:'mdi-view-list', shown: _.indexOf(JSON.parse(localStorage.getItem('tasks')), 'access_kartu_stock') >= 0,},
+        {name:'Surat Jalan',route:'/suratJalan',icon:'mdi-ballot-recount-outline', shown: true},
+        {name:'Stock Opname',route:'/stockOpname',icon:'mdi-clipboard-check-outline', shown: true},
+        {name:'Kelola',route:'/kelola',icon:'mdi-settings-outline',shown: true, children:[
+          {name:'Kelola Karyawan',route:'/kelolaKaryawan',icon:'mdi-account-key-outline', shown: _.indexOf(JSON.parse(localStorage.getItem('tasks')), 'access_kelola_barang') >= 0},
+          {name:'Kelola Barang',route:'/kelolaBarang',icon:'mdi-briefcase-check-outline', shown: _.indexOf(JSON.parse(localStorage.getItem('tasks')), 'access_kelola_karyawan') >= 0,}
         ]}
       ],
       drawer: null,
