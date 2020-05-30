@@ -315,8 +315,31 @@
                         <v-container>
                             <v-row justify="center">
                                 <v-btn class="mt-n12" color="red darken-1" text @click="close">Close</v-btn>
-                                <v-btn class="mt-n12" color="blue darken-1" text @click="isiDisiniJarJanganLupav_if_form_validatenya">Save</v-btn>
+                                <v-btn class="mt-n12" color="blue darken-1" text @click="confirmUpdatePassword">Save</v-btn>
                             </v-row>
+                        </v-container>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+
+            <v-dialog persistent v-model="popUpConfirmEditPassword" width="500px">
+                <v-card>
+                    <v-card-title>Konfirmasi</v-card-title>
+                    <v-card-text>Apakah Anda Yakin ingin mengubah password <b>{{tempnameKaryawan}}</b>?</v-card-text>
+                    <v-card-actions>
+                        <v-container>
+                            <v-row justify="center">
+                                <v-btn class="mt-n5" color="red darken-1" text @click="close">Tidak</v-btn>
+                                <v-btn class="mt-n5" color="blue darken-1" text @click="updatePassword">Ya</v-btn>
+                            </v-row>
+                            <div v-if="loadingConfirm">
+                                <v-progress-linear
+                                    indeterminate
+                                    height="8"
+                                    color="yellow darken-2"
+                                >
+                                </v-progress-linear>
+                            </div>
                         </v-container>
                     </v-card-actions>
                 </v-card>
@@ -729,6 +752,7 @@ export default {
             popUpConfirmSave: false,
             popUpConfirmDelete: false,
             popUpEditPassword: false,
+            popUpConfirmEditPassword: false,
             panel: false,
             selectedIndex: -1,
             // -----
@@ -782,6 +806,7 @@ export default {
             this.popupDetails = true
         },
         close() {
+            this.popUpConfirmEditPassword = false
             this.popupDetails = false
             this.popUpConfirmSave = false
             this.popUpConfirmDelete = false
@@ -846,6 +871,28 @@ export default {
         confirmDelete(item){
             this.karyawan = item
             this.popUpConfirmDelete = true
+        },
+        confirmUpdatePassword() {
+            if(this.$refs.form.validate()) {
+                this.popUpEditPassword = false
+                this.popUpConfirmEditPassword = true
+            }
+        },
+        updatePassword(){
+            this.loadingConfirm = true
+            api.updatePasswordUser(this.karyawan).then(response => {
+                this.snackbarColor = 'success'
+                this.snackbarMessage = response
+            }).catch(error => {
+                this.snackbarColor = 'error'
+                this.snackbarMessage = error
+            }).finally(() => {
+                this.close()
+                this.get()
+                this.loadingConfirm = false
+                this.popUpConfirmSave = false
+                this.snackbar = true
+            })
         },
 
         //this need promise to ensure that the data in the db and vue in synced !!! IMPORTANT !!!

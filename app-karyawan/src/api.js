@@ -127,6 +127,16 @@ const api = {
             })
         })
     },
+    updatePasswordUser(karyawan){
+        return new Promise((resolve, reject) => {
+            axios.put(userTable+'/password', karyawan).then(() => {
+                resolve(updateSuccessMessage)
+            }).catch(error => {
+                if(error.response.status == 500) reject(serverErrorMessage)
+                else reject(insertFailedMessage)
+            })
+        })
+    },
     deleteUser(karyawan){
         return new Promise((resolve, reject) => {
             axios.delete(userTable, {params: {id: karyawan.id}}).then(() => {

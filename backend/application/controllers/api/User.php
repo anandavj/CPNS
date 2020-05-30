@@ -161,116 +161,152 @@ class User extends REST_Controller
         $this->response($result, REST_Controller::HTTP_OK);
     }
 
-    public function index_put()
+    public function index_put($parameter = NULL)
     {
-        $id = $this->put('id');
-        $user_task_group_id = $this->put('userTaskGroupId');
-        $name = $this->put('name');
-        $email = $this->put('email');
-        // $password = $this->put('password');
-        $phone = $this->put('telephone');
-        $address = $this->put('address');
-        $uid = $this->put('uid');
-        $place_of_birth = $this->put('placeOfBirth');
-        $religion = $this->put('religion');
-        $status = $this->put('status');
-        $tasks = $this->put('taskId');
-        $date_of_birth = $this->put('dateOfBirth');
+        if($parameter = NULL){
+            $id = $this->put('id');
+            $user_task_group_id = $this->put('userTaskGroupId');
+            $name = $this->put('name');
+            $email = $this->put('email');
+            // $password = $this->put('password');
+            $phone = $this->put('telephone');
+            $address = $this->put('address');
+            $uid = $this->put('uid');
+            $place_of_birth = $this->put('placeOfBirth');
+            $religion = $this->put('religion');
+            $status = $this->put('status');
+            $tasks = $this->put('taskId');
+            $date_of_birth = $this->put('dateOfBirth');
 
-        if (!isset($id)) {
-            $this->response(
-                array(
-                    'status' => FALSE,
-                    'message' => $this::REQUIRED_PARAMETER_MESSAGE . "id"
-                ),
-                REST_Controller::HTTP_BAD_REQUEST
-            );
-            return;
-        }
-        if ($this->user_model->is_not_exists($id)) {
-            $this->response(
-                array(
-                    'status' => FALSE,
-                    'message' => $this::INVALID_ID_MESSAGE . " id does not exist"
-                ),
-                REST_Controller::HTTP_BAD_REQUEST
-            );
-            return;
-        }
-
-        $datas = array();
-        $update_user_task = 0;
-        if (isset($user_task_group_id)) {
-            if ($this->user_task_group_model->is_not_exists($user_task_group_id)) {
+            if (!isset($id)) {
                 $this->response(
                     array(
                         'status' => FALSE,
-                        'message' => $this::INVALID_ID_MESSAGE . " userTaskGroupId does not exist"
+                        'message' => $this::REQUIRED_PARAMETER_MESSAGE . "id"
                     ),
                     REST_Controller::HTTP_BAD_REQUEST
                 );
                 return;
-            } else if ($this->db->query("SELECT * FROM user WHERE id ='{$id}' AND user_task_group_id='{$user_task_group_id}'")->num_rows() == 0) {
-                $datas = array_merge($datas, array('user_task_group_id' => $user_task_group_id));
-                $update_user_task = 1;
             }
-        }
-        if (isset($name)) {
-            $datas = array_merge($datas, array('name' => $name));
-        }
-        if (isset($email)) {
-            $datas = array_merge($datas, array('email' => $email));
-        }
-        if (isset($phone)) {
-            $datas = array_merge($datas, array('telephone' => $phone));
-        }
-        if (isset($address)) {
-            $datas = array_merge($datas, array('address' => $address));
-        }
-        if (isset($place_of_birth)) {
-            $datas = array_merge($datas, array('place_of_birth' => $place_of_birth));
-        }
-        if (isset($religion)) {
-            $datas = array_merge($datas, array('religion' => $religion));
-        }
-        if (isset($status)) {
-            $datas = array_merge($datas, array('status' => $status ));
-        }
-        if (isset($date_of_birth)) {
-            $datas = array_merge($datas, array('date_of_birth' => $date_of_birth ));
-        }
+            if ($this->user_model->is_not_exists($id)) {
+                $this->response(
+                    array(
+                        'status' => FALSE,
+                        'message' => $this::INVALID_ID_MESSAGE . " id does not exist"
+                    ),
+                    REST_Controller::HTTP_BAD_REQUEST
+                );
+                return;
+            }
 
-        // $userProperties = [
-        //     'email' => $email,
-        //     'password' => $password,
-        // ];
-        // try{
-        //     //update firebase auth
-        //     $this->firebase_auth->updateUser($uid, $userProperties);
+            $datas = array();
+            $update_user_task = 0;
+            if (isset($user_task_group_id)) {
+                if ($this->user_task_group_model->is_not_exists($user_task_group_id)) {
+                    $this->response(
+                        array(
+                            'status' => FALSE,
+                            'message' => $this::INVALID_ID_MESSAGE . " userTaskGroupId does not exist"
+                        ),
+                        REST_Controller::HTTP_BAD_REQUEST
+                    );
+                    return;
+                } else if ($this->db->query("SELECT * FROM user WHERE id ='{$id}' AND user_task_group_id='{$user_task_group_id}'")->num_rows() == 0) {
+                    $datas = array_merge($datas, array('user_task_group_id' => $user_task_group_id));
+                    $update_user_task = 1;
+                }
+            }
+            if (isset($name)) {
+                $datas = array_merge($datas, array('name' => $name));
+            }
+            if (isset($email)) {
+                $datas = array_merge($datas, array('email' => $email));
+            }
+            if (isset($phone)) {
+                $datas = array_merge($datas, array('telephone' => $phone));
+            }
+            if (isset($address)) {
+                $datas = array_merge($datas, array('address' => $address));
+            }
+            if (isset($place_of_birth)) {
+                $datas = array_merge($datas, array('place_of_birth' => $place_of_birth));
+            }
+            if (isset($religion)) {
+                $datas = array_merge($datas, array('religion' => $religion));
+            }
+            if (isset($status)) {
+                $datas = array_merge($datas, array('status' => $status ));
+            }
+            if (isset($date_of_birth)) {
+                $datas = array_merge($datas, array('date_of_birth' => $date_of_birth ));
+            }
 
-            if ($this->user_model->update_user($id, $datas)) {
-                if ($update_user_task) {
-                    $result = $this->group_task_model->get_group_task_where($user_task_group_id);
-                    $tasks = [];
-                    foreach ($result as $row) {
-                        array_push($tasks, $row['task_id']);
+            // $userProperties = [
+            //     'email' => $email,
+            //     'password' => $password,
+            // ];
+            // try{
+            //     //update firebase auth
+            //     $this->firebase_auth->updateUser($uid, $userProperties);
+
+                if ($this->user_model->update_user($id, $datas)) {
+                    if ($update_user_task) {
+                        $result = $this->group_task_model->get_group_task_where($user_task_group_id);
+                        $tasks = [];
+                        foreach ($result as $row) {
+                            array_push($tasks, $row['task_id']);
+                        }
                     }
-                }
-    
-                if(isset($tasks)){
-                    if (!$this->user_task_model->update_user_task($id, $tasks)){
-                        $this->response(
-                            array(
-                                'status' => FALSE,
-                                'message' => $this::UPDATE_FAILED_MESSAGE." Failed to update user_task"
-                            ),
-                            REST_Controller::HTTP_BAD_REQUEST
-                        );
-                        return;
+        
+                    if(isset($tasks)){
+                        if (!$this->user_task_model->update_user_task($id, $tasks)){
+                            $this->response(
+                                array(
+                                    'status' => FALSE,
+                                    'message' => $this::UPDATE_FAILED_MESSAGE." Failed to update user_task"
+                                ),
+                                REST_Controller::HTTP_BAD_REQUEST
+                            );
+                            return;
+                        }
+            
                     }
-          
+        
+                    $this->response(
+                        array(
+                            'status' => TRUE,
+                            'message' => $this::UPDATE_SUCCESS_MESSSAGE
+                        ),
+                        REST_Controller::HTTP_OK
+                    );
+                } else {
+                    $this->response(
+                        array(
+                            'status' => FALSE,
+                            'message' => $this::UPDATE_FAILED_MESSAGE
+                        ),
+                        REST_Controller::HTTP_INTERNAL_SERVER_ERROR
+                    );
                 }
-    
+            // }catch(Exception $e){
+            //     $this->response(
+            //         array(
+            //             'status' => FALSE,
+            //             'message' => $this::UPDATE_FAILED_MESSAGE . " Details: update user task failed"
+            //         ),
+            //         REST_Controller::HTTP_INTERNAL_SERVER_ERROR
+            //     );
+            // }
+        }else{
+            $uid = $this->put('uid');
+            $email = $this->put('email');
+            $password = $this->put('password');
+            $userProperties = [
+                'email' => $email,
+                'password' => $password,
+            ];
+            try{
+                $this->firebase_auth->updateUser($uid, $userProperties);
                 $this->response(
                     array(
                         'status' => TRUE,
@@ -278,24 +314,16 @@ class User extends REST_Controller
                     ),
                     REST_Controller::HTTP_OK
                 );
-            } else {
+            }catch(Exception $e){
                 $this->response(
                     array(
                         'status' => FALSE,
-                        'message' => $this::UPDATE_FAILED_MESSAGE
+                        'message' => $this::UPDATE_FAILED_MESSAGE . " Details: update password failed"
                     ),
                     REST_Controller::HTTP_INTERNAL_SERVER_ERROR
                 );
             }
-        // }catch(Exception $e){
-        //     $this->response(
-        //         array(
-        //             'status' => FALSE,
-        //             'message' => $this::UPDATE_FAILED_MESSAGE . " Details: update user task failed"
-        //         ),
-        //         REST_Controller::HTTP_INTERNAL_SERVER_ERROR
-        //     );
-        // }
+        }
     }
 
     public function index_delete()
