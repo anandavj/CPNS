@@ -927,12 +927,12 @@ export default {
             if(!this.popUpBreakPoint) {
                 return [
                     {text:'name',value:'name'},
-                    {text:'',value:'actions',width:'10%'}
+                    {text:'',value:'actions',width:'15%'}
                 ]
             } else {
                 return [
                     {text:'name',value:'name'},
-                    {text:'',value:'actions',width:'30%'}
+                    {text:'',value:'actions',width:'40%'}
                 ]
             }
         },
@@ -951,6 +951,9 @@ export default {
             if(!this.popupDetails) {
                 this.karyawan = Object.assign({},this.karyawanDefault)
             }
+        },
+        popUpEditPassword() {
+            this.$refs.form.resetValidation()
         }
     }
 
