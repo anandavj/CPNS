@@ -491,6 +491,16 @@ const api = {
                 })
         } )
     },
+    deleteStockOpname(stockOpname){
+        return new Promise((resolve, reject) => {
+            axios.delete(stockOpnameTable, {params: {id: stockOpname.id}}).then(() => {
+                resolve(deleteSuccessMessage)
+            }).catch(error => {
+                if(error.response.status == 500) reject(serverErrorMessage)
+                else reject(deleteFailedMessage)
+            })
+        })
+    },
     /* ================================================================================================================================================= */
     /* ================================================================================================================================================= */
 

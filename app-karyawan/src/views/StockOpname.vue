@@ -275,7 +275,38 @@
                 no-results-text="Nomor Stock Opname tidak ditemukan"
                 class="font-regular font-weight-light"
                 style="cursor:pointer"
-            ></v-data-table>
+            >
+            <template v-slot:item.actions="{ item }">
+                <v-icon v-if="item.status == 'Belum Diperiksa'" class="mr-2" @click.stop="confirmDelete(item)">mdi-delete</v-icon>
+            </template>
+            </v-data-table>
+            <!-- *************************************************************************************************************** -->
+            <!-- Confirm on Delete -->
+            <!-- *************************************************************************************************************** -->
+            <v-dialog persistent v-model="popUpConfirmDelete" width="500px">
+                <v-card>
+                    <v-card-title>Konfirmasi</v-card-title>
+                    <v-card-text>Apakah Anda Yakin ingin menghapus Stock Opname <b>{{stockOpname.id}}</b>?</v-card-text>
+                    <v-card-actions>
+                        <v-container>
+                            <v-row justify="center">
+                                <v-btn class="mt-n5" color="red darken-1" text @click="close">Tidak</v-btn>
+                                <v-btn class="mt-n5" color="blue darken-1" text @click="deleteStockOpname">Ya</v-btn>
+                            </v-row>
+                            <div v-if="loading">
+                                <v-progress-linear
+                                    indeterminate
+                                    height="8"
+                                    color="yellow darken-2"
+                                >
+                                </v-progress-linear>
+                            </div>
+                        </v-container>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+            <!-- *************************************************************************************************************** -->
+            <!-- *************************************************************************************************************** -->
             <!-- *************************************************************************************************************** -->
             <!-- *************************************************************************************************************** -->
             
@@ -716,6 +747,7 @@ export default {
             opnameMessage:null,
             // Misc
             counter:null,
+            popUpConfirmDelete: false
         }
     },
 
@@ -734,6 +766,7 @@ export default {
                 })
         },
         close() {
+            this.get()
             if(this.newStockOpnameDialog) {
                 this.newStockOpnameDialog = false
                 this.stockOpname = Object.assign({},this.stockOpnameDefault)
@@ -754,6 +787,8 @@ export default {
             this.counter = 0
             this.opnameProductList = []
             this.opnameProductSelected = Object.assign({},this.opnameProductSelectedDefault)
+            this.popUpConfirmDelete = false
+            this.stockOpname = this.stockOpnameDefault
         },
         closeProductStockOpname() {
             this.close()
@@ -838,6 +873,24 @@ export default {
                     this.get()
                 })
             
+        },
+        confirmDelete(item){
+            this.stockOpname = item
+            this.popUpConfirmDelete = true
+        },
+        deleteStockOpname(){
+            api.deleteStockOpname(this.stockOpname).then(response => {
+                this.snackbarColor = 'success'
+                this.snackbarMessage = response
+            }).catch(error => {
+                this.snackbarColor = 'error'
+                this.snackbarMessage = error
+            }).finally(() => {
+                this.loading = false
+                this.close()
+                this.snackbar = true
+                this.get()
+            })
         }
     },
 
