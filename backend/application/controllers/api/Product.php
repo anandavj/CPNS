@@ -32,7 +32,7 @@ class Product extends REST_Controller
         $open_price = $this->post('openPrice');
         $bottom_price = $this->post('bottomPrice');
         $tags = $this->post('tags');
-        $images = $this->post('images');
+        // $images = $this->post('images');
         $min_stock = $this->post('minStock');
 
 
@@ -41,7 +41,7 @@ class Product extends REST_Controller
 
 
         if (
-            !isset($name) || !isset($category_id) || !isset($specification) || !isset($unit_id) || !isset($open_price) || !isset($bottom_price) || !isset($tags) || !isset($images) || !isset($product_code) || !isset($retail_id) || !isset($min_stock)
+            !isset($name) || !isset($category_id) || !isset($specification) || !isset($unit_id) || !isset($open_price) || !isset($bottom_price) || !isset($tags) /*|| !isset($images) */|| !isset($product_code) || !isset($retail_id) || !isset($min_stock)
         ) {
             $required_parameters = [];
             if (!isset($name)) array_push($required_parameters, 'name');
@@ -51,7 +51,7 @@ class Product extends REST_Controller
             if (!isset($open_price)) array_push($required_parameters, 'openPrice');
             if (!isset($bottom_price)) array_push($required_parameters, 'bottomPrice');
             if (!isset($tags)) array_push($required_parameters, 'tags');
-            if (!isset($images)) array_push($required_parameters, 'images');
+            // if (!isset($images)) array_push($required_parameters, 'images');
             if (!isset($product_code)) array_push($required_parameters, 'productCode');
             if (!isset($retail_id)) array_push($required_parameters, 'retailId');
             if (!isset($min_stock)) array_push($required_parameters, 'minStock');
@@ -109,17 +109,17 @@ class Product extends REST_Controller
             }
         }
 
-        foreach($images as $image_id){
-            if($this->image_model->is_not_exists($image_id)){
-                $this->response(
-                    array(
-                        'status' => FALSE,
-                        'message' => $this::INVALID_ID_MESSAGE. " atleast one of imageId does not exist"
-                    ),REST_Controller::HTTP_BAD_REQUEST
-                );
-                return;
-            }
-        }
+        // foreach($images as $image_id){
+        //     if($this->image_model->is_not_exists($image_id)){
+        //         $this->response(
+        //             array(
+        //                 'status' => FALSE,
+        //                 'message' => $this::INVALID_ID_MESSAGE. " atleast one of imageId does not exist"
+        //             ),REST_Controller::HTTP_BAD_REQUEST
+        //         );
+        //         return;
+        //     }
+        // }
 
 
         if ($product_id = $this->product_model->insert_product($product_code, $name, $category_id, $specification, $description, $stock, $unit_id, $open_price, $bottom_price, $retail_id, $min_stock)) {
@@ -136,15 +136,15 @@ class Product extends REST_Controller
                 return;
             }
 
-            if(!$this->product_image_model->insert_product_image($product_id, $images)){
-                $this->response(
-                    array(
-                        'status' => FALSE,
-                        'message' => $this::INSERT_FAILED_MESSAGE." failed to insert image tag"
-                    ),REST_Controller::HTTP_INTERNAL_SERVER_ERROR
-                );
-                return;    
-            }
+            // if(!$this->product_image_model->insert_product_image($product_id, $images)){
+            //     $this->response(
+            //         array(
+            //             'status' => FALSE,
+            //             'message' => $this::INSERT_FAILED_MESSAGE." failed to insert image tag"
+            //         ),REST_Controller::HTTP_INTERNAL_SERVER_ERROR
+            //     );
+            //     return;    
+            // }
             
             $this->response(
                 array(
@@ -170,8 +170,8 @@ class Product extends REST_Controller
         if (isset($id)){
             $result = $this->product_model->get_product_where($id);
             $product_tag = $this->product_tag_model->get_product_tag_where($id);
-            $product_image = $this->product_image_model->get_product_image_where($id);
-            $result = array_merge($result[0],array('tags' => $product_tag),array('images' => $product_image));
+            // $product_image = $this->product_image_model->get_product_image_where($id);
+            $result = array_merge($result[0],array('tags' => $product_tag)/* ,array('images' => $product_image) */);
 
             $this->response($result,REST_Controller::HTTP_OK);
         }
@@ -181,8 +181,8 @@ class Product extends REST_Controller
             $result = $this->product_model->get_all_product();
             foreach ($result as $row){
                $product_tag = $this->product_tag_model->get_product_tag_where($row['id']);
-               $product_image = $this->product_image_model->get_product_image_where($row['id']);
-               $temp = array_merge($result[$index], array('tags' => $product_tag, 'images' => $product_image));
+            // $product_image = $this->product_image_model->get_product_image_where($row['id']);
+                $temp = array_merge($result[$index], array('tags' => $product_tag/*, 'images' => $product_image*/));
                $result[$index] = $temp;
                $index++;
             }
@@ -203,7 +203,7 @@ class Product extends REST_Controller
         $open_price = $this->put('openPrice');
         $bottom_price = $this->put('bottomPrice');
         $tags = $this->put('tags');
-        $images = $this->put('images');
+        // $images = $this->put('images');
         $product_code = $this->put('productCode');
         $retail_id = $this->put('retailId');
         $min_stock = $this->put('minStock');
@@ -291,9 +291,9 @@ class Product extends REST_Controller
         }
         if(isset($min_stock)){
             $datas = array_merge($datas, array('min_stock' => $min_stock));
-        }else{
-            $datas = array_merge($datas, array('min_stock' => 0));
-        }
+        }//else{
+        //     $datas = array_merge($datas, array('min_stock' => 0));
+        // }
 
     
         if ($this->product_model->update_product($id, $datas)) {
@@ -310,19 +310,19 @@ class Product extends REST_Controller
                 }
             }
 
-            if(isset($images)){
+            // if(isset($images)){
 
-                if(!$this->product_image_model->update_product_image($id, $images)){
-                    $this->response(
-                        array(
-                            'status' => FALSE,
-                            'message' => $this::UPDATE_FAILED_MESSAGE. " failed to update image tag"
-                        ),REST_Controller::HTTP_INTERNAL_SERVER_ERROR
-                    );
-                    return;
-                }
+            //     if(!$this->product_image_model->update_product_image($id, $images)){
+            //         $this->response(
+            //             array(
+            //                 'status' => FALSE,
+            //                 'message' => $this::UPDATE_FAILED_MESSAGE. " failed to update image tag"
+            //             ),REST_Controller::HTTP_INTERNAL_SERVER_ERROR
+            //         );
+            //         return;
+            //     }
                 
-            }
+            // }
                 $this->response(
                 array(
                     'status' => TRUE,
