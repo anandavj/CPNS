@@ -300,13 +300,15 @@ class Product extends REST_Controller
             if(isset($tags)){
 
                 if(!$this->product_tag_model->update_product_tag($id,$tags)){
-                    $this->response(
-                        array(
-                            'status' => FALSE,
-                            'message' => $this::UPDATE_FAILED_MESSAGE. " failed to update product tag"
-                        ),REST_Controller::HTTP_INTERNAL_SERVER_ERROR
-                    );
-                    return;
+                    if(sizeof($tags) !== 0) {
+                        $this->response(
+                            array(
+                                'status' => FALSE,
+                                'message' => $this::UPDATE_FAILED_MESSAGE. " failed to update product tag"
+                            ),REST_Controller::HTTP_INTERNAL_SERVER_ERROR
+                        );
+                        return;
+                    }
                 }
             }
 

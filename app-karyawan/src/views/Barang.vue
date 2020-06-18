@@ -755,14 +755,14 @@
                                     <td>{{product.productCode}}</td>
                                 </tr>
                                 <tr>
-                                    <td>Retail ID</td>
-                                    <td width="25%" align="end">:</td>
-                                    <td>{{product.retailId}}</td>
-                                </tr>
-                                <tr>
                                     <td>Kategori</td>
                                     <td width="25%" align="end">:</td>
                                     <td>{{categoryName}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Spesifikasi</td>
+                                    <td width="25%" align="end">:</td>
+                                    <td>{{product.specification}}</td>
                                 </tr>
                                 <tr>
                                     <td>Satuan</td>
@@ -784,19 +784,13 @@
                                     <td width="25%" align="end">:</td>
                                     <td>{{product.stock}}</td>
                                 </tr>
-                                <tr>
-                                    <td>Deskripsi</td>
-                                    <td width="25%" align="end">:</td>
-                                    <td>{{product.description}}</td>
-                                </tr>
-
                             </table>
                         </v-col>
                     </v-container>
                 </v-card>
             </v-dialog >
             <!-- Laptop/PC or other md lg device will not display fullscreen dialog -->
-            <v-dialog v-else v-model="popupDetails" width="1000px">
+            <v-dialog v-else v-model="popupDetails" width="700px">
                 <v-card>
                     <v-toolbar dense flat>
                         <span class="title font-weight-light">Detail Barang</span>
@@ -804,7 +798,7 @@
                     </v-toolbar>
                     <v-container>
                         <v-row no-gutters>
-                            <v-col cols="5">
+                            <!-- <v-col cols="5">
                                 <v-row>
                                     <v-col cols="12">
                                         <v-card max-width="400px" color="grey">
@@ -820,8 +814,8 @@
                                         </v-card>
                                     </v-col>
                                 </v-row>
-                            </v-col>
-                            <v-col cols="7" class="px-6">
+                            </v-col> -->
+                            <v-col cols="12" class="px-6">
                                 <v-row>
                                     <v-col cols="12">
                                         <span class="display-1">{{product.name}}</span>
@@ -846,14 +840,14 @@
                                                 <td>{{product.productCode}}</td>
                                             </tr>
                                             <tr>
-                                                <td>Retail ID</td>
-                                                <td width="25%" align="end">:</td>
-                                                <td>{{product.retailId}}</td>
-                                            </tr>
-                                            <tr>
                                                 <td>Kategori</td>
                                                 <td width="25%" align="end">:</td>
                                                 <td>{{categoryName}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Spesifikasi</td>
+                                                <td width="25%" align="end">:</td>
+                                                <td>{{product.specification}}</td>
                                             </tr>
                                             <tr>
                                                 <td>Satuan</td>
@@ -874,11 +868,6 @@
                                                 <td>Stock</td>
                                                 <td width="25%" align="end">:</td>
                                                 <td>{{product.stock}}</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Deskripsi</td>
-                                                <td width="25%" align="end">:</td>
-                                                <td>{{product.description}}</td>
                                             </tr>
 
                                         </table>
@@ -1789,7 +1778,7 @@ export default {
         },
         changeCurr(val) {
             let temp = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'IDR' }).format(val)
-            return temp.slice(0, -3)
+            return temp.slice(0, -7)
         }
     },
     

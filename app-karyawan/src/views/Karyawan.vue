@@ -235,7 +235,7 @@
                                         <tr>
                                             <td>TTL</td>
                                             <td>:</td>
-                                            <td>{{karyawan.placeOfBirth}}, {{karyawan.dateOfBirth}}</td>
+                                            <td>{{karyawan.placeOfBirth}}, {{formatDateList(karyawan.dateOfBirth)}}</td>
                                         </tr>
                                         <tr>
                                             <td>religion</td>
@@ -674,6 +674,7 @@
 <script>
 import api from '@/api.js'
 import _ from 'lodash'
+import moment from 'moment/src/moment'
 export default {
     name: 'Karyawan',
     created() {
@@ -804,6 +805,9 @@ export default {
             this.selectedIndex = this.karyawans.indexOf(item)
             this.karyawan = Object.assign({},item)
             this.popupDetails = true
+        },
+        formatDateList(val) {
+            return val ? moment(val).format('DD/MM/YYYY') : ''
         },
         close() {
             this.popUpConfirmEditPassword = false
