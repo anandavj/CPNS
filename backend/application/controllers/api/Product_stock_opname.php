@@ -124,14 +124,14 @@ class Product_stock_opname extends REST_Controller
         $opname_date = $this->put('opnameDate');
         $status = $this->put('status');
         $description = $this->put('description');
+        $checked = $this->put('checked');
 
-        if (!isset($id) || !isset($opname_id) || !isset($product_id) || !isset($real_stock) || !isset($status) || !isset($description) ) {
+        if (!isset($id) || !isset($opname_id) || !isset($product_id) || !isset($real_stock) || !isset($description) ) {
             $required_parameters = [];
             if (!isset($id)) array_push($required_parameters, 'id');
             if (!isset($opname_id)) array_push($required_parameters, 'opnameId');
             if (!isset($product_id)) array_push($required_parameters, 'productId');
             if (!isset($real_stock)) array_push($required_parameters, 'realStock');
-            if (!isset($status)) array_push($required_parameters, 'status');
             if (!isset($description)) array_push($required_parameters, 'description');
             $this->response(
                 array(
@@ -177,7 +177,7 @@ class Product_stock_opname extends REST_Controller
             return;
         }
 
-        if ($this->product_stock_opname_model->update_product_stock_opname($id, $opname_id, $product_id, $inspector_id, $real_stock, $opname_stock, $opname_date, $status, $description)) {
+        if ($this->product_stock_opname_model->update_product_stock_opname($id, $opname_id, $product_id, $inspector_id, $real_stock, $opname_stock, $opname_date, $status, $description, $checked)) {
             $this->response(
                 array(
                     'status' => TRUE,

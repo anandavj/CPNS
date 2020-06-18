@@ -47,7 +47,7 @@ class Stock_opname extends REST_Controller {
         if($opname_id = $this->stock_opname_model->insert_stock_opname($opname_number, $date_start, $date_finish, $status, $description)){
             foreach($products as $product){
                 if(!isset($product['description'])) $product['description'] = 'undefined';
-                $this->product_stock_opname_model->insert_product_stock_opname($opname_id, $product['productId'], null, $product['realStock'], null, null, $product['status'], $product['description']);
+                $this->product_stock_opname_model->insert_product_stock_opname($opname_id, $product['productId'], null, $product['realStock'], null, null, $product['status'], $product['description'], $product['checked']);
             }
             $this->response(
                 array(
@@ -82,7 +82,8 @@ class Stock_opname extends REST_Controller {
                         'productName' => $product['productName'],
                         'realStock' => $product['realStock'],
                         'opnameStock' => $product['opnameStock'],
-                        'status' => $product['status']
+                        'status' => $product['status'],
+                        'checked' => $product['checked'],
                     ));
             }
             $result = array_merge($result[0], array('products' => $temp));
@@ -104,7 +105,8 @@ class Stock_opname extends REST_Controller {
                             'productName' => $product['productName'],
                             'realStock' => $product['realStock'],
                             'opnameStock' => $product['opnameStock'],
-                            'status' => $product['status']
+                            'status' => $product['status'],
+                            'checked' => $product['checked'],
                         ));
                 }
                 $row = array_merge($res, array('products' => $temp));

@@ -240,45 +240,63 @@ class User extends REST_Controller
             if (isset($date_of_birth)) {
                 $datas = array_merge($datas, array('date_of_birth' => $date_of_birth ));
             }
-            if ($this->user_model->update_user($id, $datas)) {
-                if ($update_user_task) {
-                    $result = $this->group_task_model->get_group_task_where($user_task_group_id);
-                    $tasks = [];
-                    foreach ($result as $row) {
-                        array_push($tasks, $row['task_id']);
-                    }
-                }
-    
-                if(isset($tasks)){
-                    if (!$this->user_task_model->update_user_task($id, $tasks)){
-                        $this->response(
-                            array(
-                                'status' => FALSE,
-                                'message' => $this::UPDATE_FAILED_MESSAGE." Failed to update user_task"
-                            ),
-                            REST_Controller::HTTP_BAD_REQUEST
-                        );
-                        return;
+
+            // $userProperties = [
+            //     'email' => $email,
+            //     'password' => $password,
+            // ];
+            // try{
+            //     //update firebase auth
+            //     $this->firebase_auth->updateUser($uid, $userProperties);
+
+                if ($this->user_model->update_user($id, $datas)) {
+                    if ($update_user_task) {
+                        $result = $this->group_task_model->get_group_task_where($user_task_group_id);
+                        $tasks = [];
+                        foreach ($result as $row) {
+                            array_push($tasks, $row['task_id']);
+                        }
                     }
         
+                    if(isset($tasks)){
+                        if (!$this->user_task_model->update_user_task($id, $tasks)){
+                            $this->response(
+                                array(
+                                    'status' => FALSE,
+                                    'message' => $this::UPDATE_FAILED_MESSAGE." Failed to update user_task"
+                                ),
+                                REST_Controller::HTTP_BAD_REQUEST
+                            );
+                            return;
+                        }
+            
+                    }
+        
+                    $this->response(
+                        array(
+                            'status' => TRUE,
+                            'message' => $this::UPDATE_SUCCESS_MESSSAGE
+                        ),
+                        REST_Controller::HTTP_OK
+                    );
+                } else {
+                    $this->response(
+                        array(
+                            'status' => FALSE,
+                            'message' => $this::UPDATE_FAILED_MESSAGE
+                        ),
+                        REST_Controller::HTTP_INTERNAL_SERVER_ERROR
+                    );
                 }
-    
-                $this->response(
-                    array(
-                        'status' => TRUE,
-                        'message' => $this::UPDATE_SUCCESS_MESSSAGE
-                    ),
-                    REST_Controller::HTTP_OK
-                );
-            } else {
-                $this->response(
-                    array(
-                        'status' => FALSE,
-                        'message' => $this::UPDATE_FAILED_MESSAGE
-                    ),
-                    REST_Controller::HTTP_INTERNAL_SERVER_ERROR
-                );
-            }
+            // }catch(Exception $e){
+            //     $this->response(
+            //         array(
+            //             'status' => FALSE,
+            //             'message' => $this::UPDATE_FAILED_MESSAGE . " Details: update user task failed"
+            //         ),
+            //         REST_Controller::HTTP_INTERNAL_SERVER_ERROR
+            //     );
+            // }
         }else{
             $uid = $this->put('uid');
             $email = $this->put('email');

@@ -480,6 +480,7 @@ const api = {
                 description:productOpname.description,
                 opnameId:productOpname.opnameId,
                 realStock:productOpname.realStock,
+                checked:productOpname.checked,
                 productId:productOpname.productId
             }
 
@@ -490,6 +491,26 @@ const api = {
                     if(error.response.status == 500) reject(serverErrorMessage)
                 })
         } )
+    },
+    verify(productOpname) {
+        return new Promise( (resolve, reject) => {
+            let data = {
+                id:productOpname.id,
+                productId:productOpname.productId,
+                opnameId:productOpname.opnameId,
+                realStock:productOpname.realStock,
+                checked:productOpname.checked,
+                description:productOpname.description,
+                status:productOpname.status,
+                opnameStock:productOpname.opnameStock
+            }
+            axios.put(productStockOpnameTable, data)
+                .then(() => {
+                    resolve(updateSuccessMessage)
+                }) .catch(error => {
+                    if(error.response.status == 500) reject(serverErrorMessage)
+                })
+        })
     },
     deleteStockOpname(stockOpname){
         return new Promise((resolve, reject) => {

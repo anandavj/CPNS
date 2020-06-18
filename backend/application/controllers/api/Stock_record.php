@@ -24,6 +24,8 @@ class Stock_record extends REST_Controller {
         $quantity_out = $this->post('quantityOut');
         $order_status = $this->post('orderStatus');
         $seller = $this->post('seller');
+        
+        
 
         if(!isset($broker) || !isset($order_item) || !isset($order_date) || !isset($order_number) || 
         !isset($quantity_in) || !isset($quantity_out) || !isset($order_status) || !isset($seller)){
@@ -45,15 +47,15 @@ class Stock_record extends REST_Controller {
             return;
         }
 
-        if($this->user_model->is_not_exists($broker)){
-            $this->response(
-                array(
-                    'status' => FALSE,
-                    'message' => $this::INVALID_ID_MESSAGE." broker does not exist"
-                ),REST_Controller::HTTP_BAD_REQUEST
-            );
-            return;
-        };
+        // if($this->user_model->is_not_exists($broker)){
+        //     $this->response(
+        //         array(
+        //             'status' => FALSE,
+        //             'message' => $this::INVALID_ID_MESSAGE." broker does not exist"
+        //         ),REST_Controller::HTTP_BAD_REQUEST
+        //     );
+        //     return;
+        // };
 
         if($this->product_model->is_not_exists($order_item)){
             $this->response(

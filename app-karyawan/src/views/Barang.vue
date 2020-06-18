@@ -164,7 +164,7 @@
             <!-- *************************************************************************************************************** -->
             <!-- Add Barang -->
             <!-- *************************************************************************************************************** -->
-            <v-btn v-if="create_barang" fab dark large color="primary" fixed right bottom @click="popUpNew = !popUpNew">
+            <v-btn v-if="create_barang" fab dark large color="primary" fixed right bottom @click="funcNewProduct">
                 <v-icon dark>mdi-plus</v-icon>
             </v-btn>
             <v-container class="my-n3">
@@ -446,10 +446,10 @@
                                         <v-text-field label="Bottom Price" color="accent" v-model="product.bottomPrice" :rules="rules.productBottomPrice"/>
                                     </v-col>
                                     <v-col cols="12" v-if="popUpBreakPoint" class="my-n4">
-                                        <v-text-field label="Stock" color="accent" v-model="product.stock" :rules="rules.productStock"/>
+                                        <v-text-field :disabled="true" label="Stock" color="accent" v-model="product.stock" :rules="rules.productStock"/>
                                     </v-col>
                                     <v-col cols="4" v-else>
-                                        <v-text-field label="Stock" color="accent" v-model="product.stock" :rules="rules.productStock"/>
+                                        <v-text-field :disabled="true" label="Stock" color="accent" v-model="product.stock" :rules="rules.productStock"/>
                                     </v-col>
                                     <v-col cols="12">
                                         <v-textarea label="Deskripsi (Opsional)" v-model="product.description" outlined/>
@@ -1161,11 +1161,28 @@
                                     <v-text-field label="Bottom Price" color="accent" v-model="product.bottomPrice" :rules="rules.productBottomPrice"/>
                                 </v-col>
                                 <v-col cols="12" v-if="popUpBreakPoint" class="my-n4">
-                                    <v-text-field label="Stock" color="accent" v-model="product.stock" :rules="rules.productStock"/>
+                                    <v-text-field :readonly="true" label="Stock" color="accent" v-model="product.stock" :rules="rules.productStock" append-icon="mdi-pencil-circle" @click:append="openEditStock"/>
                                 </v-col>
                                 <v-col cols="4" v-else>
-                                    <v-text-field label="Stock" color="accent" v-model="product.stock" :rules="rules.productStock"/>
+                                    <v-text-field :readonly="true" label="Stock" color="accent" v-model="product.stock" :rules="rules.productStock" append-icon="mdi-pencil-circle" @click:append="openEditStock"/>
                                 </v-col>
+                                <v-dialog v-model="editStock" persistent max-width="350px" style="z-index:10">
+                                    <v-card>
+                                        <v-form ref="form">
+                                            <v-card-text>
+                                                <v-text-field :rules="rules.productStock" color="accent" outlined v-model.number="formEditStock" label="Stock"/>
+                                            </v-card-text>
+                                        </v-form>
+                                        <v-card-actions>
+                                            <v-container>
+                                                <v-row justify="center">
+                                                    <v-btn class="my-n11" color="red darken-1" text @click="close">Batal</v-btn>
+                                                    <v-btn class="my-n11" color="blue darken-1" text @click="saveEditedStock">Save</v-btn>
+                                                </v-row>
+                                            </v-container>
+                                        </v-card-actions>
+                                    </v-card>
+                                </v-dialog>
                                 <v-col cols="12">
                                     <v-textarea label="Deskripsi (Opsional)" v-model="product.description" outlined/>
                                 </v-col>
@@ -1374,6 +1391,7 @@ export default {
             categories: [],
             units: [],
             tags: [],
+            formEditStock:null,
             formNewCategoryModel:'',
             formNewUnitModel: {
                 name:'',
@@ -1405,6 +1423,7 @@ export default {
             popUpNewTag: false,
             showAdvanceSearchOption: false,
             findStocklowerThanMinStockDialog: false,
+            editStock: false,
             selectedIndex: -1,
             totalStocklowerThanMinStock: 0,
             rules: {
@@ -1476,6 +1495,10 @@ export default {
                 .then(tags => {
                     this.tags = tags
                 })
+        },
+        openEditStock() {
+            this.editStock = true
+            this.formEditStock = this.product.stock
         },
         findStocklowerThanMinStock() { 
             this.findStocklowerThanMinStockDialog = true
@@ -1587,9 +1610,14 @@ export default {
                                         this.popUpNewTag = false
                                         this.formNewTagModel = ''
                                     } else {
-                                        this.popUpEdit = false
-                                        this.product = Object.assign({},this.productDefault)
-                                        this.selectedIndex = -1
+                                        if(this.editStock) {
+                                            this.editStock = false
+                                            this.formEditStock = null
+                                        } else {
+                                            this.popUpEdit = false
+                                            this.product = Object.assign({},this.productDefault)
+                                            this.selectedIndex = -1
+                                        }
                                     }
                                 }
                             }
@@ -1753,6 +1781,85 @@ export default {
                     })
             }
         },
+        saveEditedStock() {
+            if(this.$refs.form.validate()) {
+                let item = {
+                    productId:this.product.id,
+                    name:this.product.name,
+                }
+                // nambah
+                if(+this.formEditStock >= +this.product.stock) {
+                    item.amount = +this.formEditStock - +this.product.stock
+                } else { //kurang
+                    item.amount = +this.product.stock - +this.formEditStock
+                }
+                let datado = {
+                    referenceNumber:'perbaikan',
+                    name:'perbaikan',
+                    date: new Date().toISOString().substr(0, 10),
+                    receiverName:'perbaikan',
+                    address:'perbaikan',
+                    items:[item],
+                    description:'',
+                }
+                // do
+                if(+this.formEditStock >= +this.product.stock) {
+                    datado.status = 'perbaikanMasuk'
+                    datado.type = 0
+                } else { //suratjalan
+                    datado.status = 'perbaikanKeluar'
+                    datado.type = 1
+                }
+                api.addDeliveryOrder(datado)
+                    .then((response) => {
+                        this.snackbarColor = 'success'
+                        this.snackbarMessage = response
+                    }) .catch(error => {
+                        this.snackbarColor = 'error'
+                        this.snackbarMessage = error
+                    })
+                    .then(() => {
+                        let itemAfter = {
+                            id:this.product.id,
+                            name:this.product.name, 
+                        }
+                        if(datado.status == 'perbaikanMasuk') {
+                            itemAfter.stock = +this.product.stock + +item.amount
+                        } else {
+                            itemAfter.stock = +this.product.stock - +item.amount
+                        }
+                        this.product.stock = itemAfter.stock
+                        api.updateProductStock(itemAfter)
+                    })
+                    .then(() => {
+                        let data = {
+                            orderItem : this.product.id,
+                            orderDate : datado.date,
+                            broker: this.$store.state.karyawan.id,
+                            seller:'perbaikan',
+                            orderNumber: datado.referenceNumber
+                        }
+                        if(datado.status == 'perbaikanMasuk') {
+                            data.quantityOut = 0
+                            data.orderStatus = 'Masuk'
+                            data.quantityIn = +item.amount
+                        } else {
+                            data.quantityOut = +item.amount
+                            data.orderStatus = 'Keluar'
+                            data.quantityIn = 0
+                        }
+                        api.addStockRecord(data)
+                    })
+                    .finally(() => {
+                        this.snackbar = true
+                        api.getAllProducts()
+                            .then((products) => {
+                                this.products = products
+                                this.close()
+                            })
+                    })
+            }
+        },
         saveNewProduct() {
             if(this.$refs.form.validate()) {
                 api.addProduct(this.product)
@@ -1779,6 +1886,10 @@ export default {
         changeCurr(val) {
             let temp = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'IDR' }).format(val)
             return temp.slice(0, -7)
+        },
+        funcNewProduct() {
+            this.popUpNew = true
+            this.product.stock = 0
         }
     },
     

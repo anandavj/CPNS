@@ -490,7 +490,13 @@
                                         :disable-sort="true"
                                         :disable-filtering="true"
                                         v-if="!popUpBreakPoint"
+                                        @click:row="verifyPopUpConfirmation"
+                                        style="cursor:pointer"
                                     >
+                                    <template v-slot:item.productName="{ item }">
+                                        <td v-if="item.checked == 0" class="red--text">{{item.productName}}</td>
+                                        <td v-else>{{item.productName}}</td>
+                                    </template>
                                     </v-data-table>
                                     <v-data-table
                                         :headers="productCheckStockOpnameHeader"
@@ -499,6 +505,8 @@
                                         :disable-filtering="true"
                                         v-else
                                         class="mt-n8"
+                                        @click:row="verifyPopUpConfirmation"
+                                        style="cursor:pointer"
                                     >
                                         <template v-slot:body.prepend="{ headers }">
                                             <tr>
@@ -524,9 +532,10 @@
                                                     </div>
                                                 </div>
                                             </v-card>
-                                            <v-card class="mt-1 mb-3 mx-2 pa-2" color="blue lighten-4" v-else>
+                                            <v-card class="mt-1 mb-3 mx-2 pa-2" color="blue lighten-4" v-else @click="verifyPopUpConfirmation(item)">
                                                 <div>
-                                                    <v-card-title class="body-2">{{item.productName}}</v-card-title>
+                                                    <v-card-title v-if="item.checked == 0" class="body-2 red--text">{{item.productName}}</v-card-title>
+                                                    <v-card-title v-else class="body-2">{{item.productName}}</v-card-title>
                                                     <v-card-subtitle>{{item.productId}}</v-card-subtitle>
                                                 </div>
                                                 <div class="d-flex flex-no-wrap justify-space-between mt-n4">
@@ -543,6 +552,20 @@
                                         </template>
                                     </v-data-table>
                                 </v-col>
+                                <v-dialog v-model="verifyPopUp" persistent max-width="430px" style="z-index:10">
+                                    <v-card>
+                                        <v-card-title>Konfirmasi</v-card-title>
+                                        <v-card-text>Apakah Anda Yakin ingin memverifikasi jumlah barang ini?</v-card-text>
+                                        <v-card-actions>
+                                            <v-container>
+                                                <v-row justify="center">
+                                                    <v-btn class="mt-n5" color="red darken-1" text @click="closeVerify">Tidak</v-btn>
+                                                    <v-btn class="mt-n5" color="blue darken-1" text @click="verifyStockOpname">Ya</v-btn>
+                                                </v-row>
+                                            </v-container>
+                                        </v-card-actions>
+                                    </v-card>
+                                </v-dialog>
                             </v-row>
                         </v-card-text>
                     </v-form>
@@ -685,6 +708,7 @@ export default {
             newStockOpnameDialog: false,
             detailsDialog: false,
             opnameProductDialog: false,
+            verifyPopUp: false,
             // Data and Json data preparation goes here
             opnameProductSelected: {},
             opnameProductSelectedDefault: {},
@@ -703,6 +727,7 @@ export default {
                 dateFinish:'',
                 status:'Belum Diperiksa',
                 description:'',
+                checked:null,
                 products:[]
             },
             stockOpnameDefault: {
@@ -712,6 +737,7 @@ export default {
                 dateFinish:'',
                 status:'Belum Diperiksa',
                 description:'',
+                checked:null,
                 products:[]
             },
             newProduct: {
@@ -727,6 +753,7 @@ export default {
                 status:'Belum Diperiksa'
             },
             selectedIndex:-1,
+            selectedIndexTwo:-1,
             // Header goes here
             newProductStockOpnameHeader: [
                 {text:'ID Barang', value:'productId', width:'30%'},
@@ -790,6 +817,10 @@ export default {
             this.popUpConfirmDelete = false
             this.stockOpname = this.stockOpnameDefault
         },
+        closeVerify() {
+            this.opnameProductSelected = Object.assign({},this.opnameProductSelectedDefault)
+            this.verifyPopUp = false
+        },
         closeProductStockOpname() {
             this.close()
             this.get()
@@ -846,11 +877,47 @@ export default {
             this.detailsDialog = false
             this.opnameProductDialog = true
         },
+        verifyPopUpConfirmation(item) {
+            this.selectedIndexTwo = this.stockOpname.products.indexOf(item)
+            this.opnameProductSelected = Object.assign({},item)
+            this.verifyPopUp = true
+        },
+        verifyStockOpname() {
+            // id:productOpname.id,
+            // productId:productOpname.productId,
+            // opnameId:productOpname.opnameId,
+            // realStock:productOpname.realStock,
+            // checked:productOpname.checked,
+            this.opnameProductSelected.opnameId = this.stockOpname.id
+            if(this.opnameProductSelected.description == null) {
+                this.opnameProductSelected.description = '-'
+            }
+            this.opnameProductSelected.checked = 1
+            api.verify(this.opnameProductSelected)
+                .then((response) => {
+                    this.snackbarColor = 'success'
+                    this.snackbarMessage = response
+                }) .catch((error) => {
+                    this.snackbarColor = 'error'
+                    this.snackbarMessage = error
+                }) .finally(() => {
+                    this.snackbar = true
+                    this.opnameProductSelected = Object.assign({},this.opnameProductSelectedDefault)
+                    this.get()
+                    this.close()
+                    this.closeVerify()
+                })
+        },
         submitStockOpnameProduct() {
             this.opnameProductSelected.opnameDate = new Date().toISOString().substr(0, 10)
             this.opnameProductSelected.opnameId = this.stockOpname.id
             if(this.opnameProductSelected.description == null) {
                 this.opnameProductSelected.description = '-'
+            }
+            if(+this.opnameProductSelected.opnameStock != +this.opnameProductSelected.realStock) {
+                this.opnameProductSelected.checked = 0
+            } else {
+                this.opnameProductSelected.checked = 1
             }
             api.updateProductStockOpname(this.opnameProductSelected)
                 .then((response) => {
