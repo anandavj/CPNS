@@ -96,12 +96,99 @@
                 no-results-text="Kategori Tidak Ditemukan"
                 class="font-regular font-weight-light"
                 style="cursor:pointer"
+                @click:row="changeMulti"
             >
                 <template v-slot:item.actions="{ item }">
                     <v-icon class="mr-2" @click.stop="editCategory(item)">mdi-pencil</v-icon>
                     <v-icon @click.stop="deleteCategory(item)">mdi-delete</v-icon>
                 </template>
             </v-data-table>
+            <v-dialog v-model="changePopUp" max-width="600px">
+                <v-card>
+                    <v-toolbar dense flat>
+                        <span class="title font-weight-light">Edit Multi</span>
+                        <v-btn absolute right icon @click="close"><v-icon>mdi-close</v-icon></v-btn>
+                    </v-toolbar>
+                    <v-card-text>
+                        <v-data-table
+                            :headers="editHeader"
+                            :items="choosedProducts"
+                            :disable-sort="true"
+                            :mobile-breakpoint="1"
+                            no-data-text="Tambahkan produk"
+                            class="font-regular font-weight-light"
+                            style="cursor:pointer"
+                        >
+                            <template v-slot:item.actions="{ item }">
+                                <v-icon @click.stop="deleteListProduct(item)">mdi-delete</v-icon>
+                            </template>
+                            <template v-slot:body.append>
+                                <tr>
+                                    <td>
+                                        <v-autocomplete
+                                            color="accent"
+                                            dense
+                                            v-model="newProduct.id"
+                                            chips
+                                            :items="products"
+                                            :clearable="true"
+                                            :auto-select-first="true"
+                                            item-color="blue"
+                                            :search-input.sync="newProductSearchId"
+                                            @click:clear="clearNewProduct"
+                                            @change='onChangenewProductSearchId'
+                                            item-text="id"
+                                            item-value="id"
+                                            :readonly="newProduct.id!=null"
+                                        >
+                                            <template v-slot:selection="data">
+                                                <v-chip color="transparent" class="pa-0">
+                                                    {{data.item.id}}
+                                                </v-chip>
+                                            </template>
+                                        </v-autocomplete>
+                                    </td>
+                                    <td>
+                                        <v-autocomplete
+                                            color="accent"
+                                            dense
+                                            v-model="newProduct.name"
+                                            chips
+                                            :items="products"
+                                            :clearable="true"
+                                            :auto-select-first="true"
+                                            item-color="blue"
+                                            :search-input.sync="newProductSearchName"
+                                            @click:clear="clearNewProduct"
+                                            @change='onChangenewProductSearchProductName'
+                                            item-text="name"
+                                            item-value="name"
+                                            :readonly="newProduct.name!=null"
+                                        >
+                                            <template v-slot:selection="data">
+                                                <v-chip color="transparent" class="pa-0">
+                                                    {{data.item.name}}
+                                                </v-chip>
+                                            </template>
+                                        </v-autocomplete>
+                                    </td>
+                                    <td>
+                                        <v-btn color="green" outlined @click="addNewProduct"><v-icon>mdi-plus</v-icon></v-btn>
+                                    </td>
+                                </tr>
+                            </template>
+                        </v-data-table>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-container>
+                            <v-row justify="center">
+                                <v-btn class="mt-n6" color="red darken-1" text @click="close">close</v-btn>
+                                <v-btn class="mt-n6" :disabled="choosedProducts.length == 0" color="blue white--text" @click="changeMultiSave">Save</v-btn>
+                            </v-row>
+                        </v-container>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
             <!-- *************************************************************************************************************** -->
             <!-- *************************************************************************************************************** -->
             <v-snackbar
@@ -125,6 +212,8 @@
 
 <script>
 import api from "@/api.js"
+import _ from "lodash"
+
 export default {
     name:'Kategori',
     mounted() {
@@ -132,7 +221,13 @@ export default {
     },
     data() {
         return {
+            newProduct: {
+                id:null,
+                name:null,
+            },
             categories:[],
+            products:[],
+            choosedProducts:[],
             category:{
                 id:null,
                 name:''
@@ -142,15 +237,23 @@ export default {
                 name:''
             },
             searchCategory:'',
+            newProductSearchId:'',
+            newProductSearchName:'',
             popUpNew: false,
             popUpEdit: false,
             popUpConfirmSave: false,
             popUpDelete: false,
+            changePopUp: false,
             selectedIndex: -1,
             snackbar: false,
             snackbarMessage: '',
             snackbarColor: '',
             productsUnderSearch: '',
+            editHeader: [
+                {text:'id', value:'id', width:'25%'},
+                {text:'Nama', value:'name'},
+                {value:'actions'}
+            ],
             rules: {
                 newCategory: [
                     v => !!v || 'Nama Kategori Tidak Valid'
@@ -165,6 +268,42 @@ export default {
                 .then(categories => {
                     this.categories = categories
                 })
+            api.getAllProducts()
+                .then(products => {
+                    this.products = products
+                })
+        },
+        clearNewProduct() {
+            this.newProduct = Object.assign({},this.newProductDefault)
+        },
+        changeMultiSave() {
+            this.choosedProducts.forEach(el => {
+                el.categoryId = this.category.id
+                api.updateProduct(el)
+                .then((response) => {
+                    this.snackbarColor = 'success'
+                    this.snackbarMessage = response
+                }) .catch(error => {
+                    this.snackbarColor = 'error'
+                    this.snackbarMessage = error
+                }) .finally(() => {
+                    this.snackbar = true
+                })
+            });
+            this.get()
+            this.close()
+        },
+        onChangenewProductSearchId() {
+            this.newProductSearchId = null
+            this.newProduct.name = _.find(this.products,['id',this.newProduct.id]).name
+        },
+        onChangenewProductSearchProductName() {
+            this.newProductSearchName = null
+            this.newProduct.id = _.find(this.products,['name',this.newProduct.name]).id
+        },
+        addNewProduct() {
+            this.choosedProducts.push(this.newProduct)
+            this.clearNewProduct()
         },
         close() {
             if(this.popUpNew) {
@@ -176,8 +315,24 @@ export default {
                     this.popUpDelete = false
                     this.category= Object.assign({},this.categoryDefault)
                     this.selectedIndex = -1
+                } else {
+                    if(this.changePopUp) {
+                        this.changePopUp = false
+                        this.selectedIndex = -1
+                        this.choosedProducts = []
+                        this.category= Object.assign({},this.categoryDefault)
+                    }
                 }
             }
+        },
+        deleteListProduct(item) {
+            const index = this.choosedProducts.indexOf(item)
+            this.choosedProducts.splice(index, 1)
+        },
+        changeMulti(item) {
+            this.selectedIndex = this.categories.indexOf(item)
+            this.category = Object.assign({},item)
+            this.changePopUp = true
         },
         editCategory(item) {
             this.selectedIndex = this.categories.indexOf(item)

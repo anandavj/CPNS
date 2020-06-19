@@ -462,7 +462,15 @@
                                                         </tr>
                                                     </template>
                                                     <template v-slot:item.amount="{ item }">
-                                                        <span v-if="checkStock(item)"><span class="mr-1 red--text">{{item.amount}}</span><v-icon color="red">mdi-alert-rhombus</v-icon></span>
+                                                        <span v-if="checkStock(item)">
+                                                            <span class="mr-1 red--text">{{item.amount}}</span>
+                                                            <v-tooltip bottom>
+                                                                <template v-slot:activator="{ on, attr }">
+                                                                    <v-icon color="red" v-bind="attr" v-on="on">mdi-alert-rhombus</v-icon>
+                                                                </template>
+                                                                <span>Stok kurang</span>
+                                                            </v-tooltip>
+                                                        </span>
                                                         <span v-else>{{item.amount}}</span>
                                                     </template>
                                                     <template v-slot:item.actions="{ item }" v-if="deliveryOrderEditToggle">
@@ -1855,7 +1863,7 @@ export default {
         },
         advanceSearchStatus(value) {
             if(!this.advanceSearch.status) {
-                return true
+                return value !== 'perbaikanKeluar'
             }
             return value === this.advanceSearch.status;
         },
@@ -1879,7 +1887,7 @@ export default {
         },
         advanceSearchDOStatus(value) {
             if(!this.advanceSearchDO.status) {
-                return true
+                return value !== 'perbaikanMasuk'
             }
             return value === this.advanceSearchDO.status;
         },
