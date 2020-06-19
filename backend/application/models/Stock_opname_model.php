@@ -22,6 +22,7 @@ class Stock_opname_model extends CI_Model
     {
         $this->db->select('id, opname_number as opnameNumber, date_start as dateStart, date_finish as dateFinish, status, description');
         $this->db->from($this::TABLE_NAME);
+        $this->db->order_by('date_start', 'DESC');
         return $this->db->get()->result_array();
     }
 

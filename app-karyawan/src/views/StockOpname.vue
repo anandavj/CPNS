@@ -490,7 +490,7 @@
                                         :disable-sort="true"
                                         :disable-filtering="true"
                                         v-if="!popUpBreakPoint"
-                                        @click:row="verifyPopUpConfirmation"
+                                        @click:row="verifyPopUpConfirmation && edit_verification_stock"
                                         style="cursor:pointer"
                                     >
                                     <template v-slot:item.productName="{ item }">
@@ -505,7 +505,7 @@
                                         :disable-filtering="true"
                                         v-else
                                         class="mt-n8"
-                                        @click:row="verifyPopUpConfirmation"
+                                        @click:row="verifyPopUpConfirmation && edit_verification_stock"
                                         style="cursor:pointer"
                                     >
                                         <template v-slot:body.prepend="{ headers }">
@@ -698,6 +698,7 @@ export default {
             // Search goes here
             create_stock_opname: _.indexOf(JSON.parse(localStorage.getItem('tasks')), 'create_stock_opname') >= 0,
             count_stock_opname: _.indexOf(JSON.parse(localStorage.getItem('tasks')), 'count_stock_opname') >= 0,
+            edit_verification_stock: _.indexOf(JSON.parse(localStorage.getItem('tasks')), 'edit_verification_stock') >= 0,
             searchStockOpnameNumber: '',
             newProductSearchId:'',
             newProductSearchName:'',
@@ -878,9 +879,11 @@ export default {
             this.opnameProductDialog = true
         },
         verifyPopUpConfirmation(item) {
-            this.selectedIndexTwo = this.stockOpname.products.indexOf(item)
-            this.opnameProductSelected = Object.assign({},item)
-            this.verifyPopUp = true
+            if(this.edit_verification_stock){
+                this.selectedIndexTwo = this.stockOpname.products.indexOf(item)
+                this.opnameProductSelected = Object.assign({},item)
+                this.verifyPopUp = true
+            }
         },
         verifyStockOpname() {
             // id:productOpname.id,

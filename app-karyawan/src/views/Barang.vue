@@ -1160,10 +1160,10 @@
                                 <v-col cols="4" v-else>
                                     <v-text-field label="Bottom Price" color="accent" v-model="product.bottomPrice" :rules="rules.productBottomPrice"/>
                                 </v-col>
-                                <v-col cols="12" v-if="popUpBreakPoint" class="my-n4">
+                                <v-col cols="12" v-if="popUpBreakPoint && edit_verification_stock" class="my-n4">
                                     <v-text-field :readonly="true" label="Stock" color="accent" v-model="product.stock" :rules="rules.productStock" append-icon="mdi-pencil-circle" @click:append="openEditStock"/>
                                 </v-col>
-                                <v-col cols="4" v-else>
+                                <v-col cols="4" v-else-if="edit_verification_stock">
                                     <v-text-field :readonly="true" label="Stock" color="accent" v-model="product.stock" :rules="rules.productStock" append-icon="mdi-pencil-circle" @click:append="openEditStock"/>
                                 </v-col>
                                 <v-dialog v-model="editStock" persistent max-width="350px" style="z-index:10">
