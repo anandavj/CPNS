@@ -774,7 +774,7 @@
                                     <td width="25%" align="end">:</td>
                                     <td>{{changeCurr(product.openPrice)}}</td>
                                 </tr>
-                                <tr>
+                                <tr v-if="view_bottom_price">
                                     <td>Bottom Price</td>
                                     <td width="25%" align="end">:</td>
                                     <td>{{changeCurr(product.bottomPrice)}}</td>
@@ -865,7 +865,7 @@
                                                 <td width="25%" align="end">:</td>
                                                 <td>{{changeCurr(product.openPrice)}}</td>
                                             </tr>
-                                            <tr>
+                                            <tr v-if="view_bottom_price">
                                                 <td>Bottom Price</td>
                                                 <td width="25%" align="end">:</td>
                                                 <td>{{changeCurr(product.bottomPrice)}}</td>
@@ -1327,6 +1327,8 @@ export default {
             update_barang: _.indexOf(JSON.parse(localStorage.getItem('tasks')), 'update_barang') >= 0,
             delete_barang: _.indexOf(JSON.parse(localStorage.getItem('tasks')), 'delete_barang') >= 0,
             update_open_price: _.indexOf(JSON.parse(localStorage.getItem('tasks')), 'update_open_price') >= 0,
+            view_bottom_price: _.indexOf(JSON.parse(localStorage.getItem('tasks')), 'view_bottom_price') >= 0,
+            edit_verification_stock: _.indexOf(JSON.parse(localStorage.getItem('tasks')), 'edit_verification_stock') >= 0,
             snackbar: false,
             snackbarMessage: '',
             snackbarColor: '',
