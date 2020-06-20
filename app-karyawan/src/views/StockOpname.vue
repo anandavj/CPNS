@@ -326,8 +326,8 @@
                                     <v-row justify="end">
                                         <v-col cols='2' v-if="!popUpBreakPoint">
                                             <v-menu
-                                                ref="showAdvancedatePickerDateStart"
-                                                v-model="showAdvancedatePickerDateStart"
+                                                ref="showAdvancedatePickerDateStartDetail"
+                                                v-model="showAdvancedatePickerDateStartDetail"
                                                 :close-on-content-click="false"
                                                 transition="scale-transition"
                                                 offset-y
@@ -349,14 +349,14 @@
                                                     class="mr-3"
                                                     ></v-text-field>
                                                 </template>
-                                                <v-date-picker v-model="stockOpname.dateStart" show-current="false" no-title scrollable :weekday-format="dayFormat" @change="showAdvancedatePickerDateStart = false">
+                                                <v-date-picker v-model="stockOpname.dateStart" show-current="false" no-title scrollable :weekday-format="dayFormat" @change="showAdvancedatePickerDateStartDetail = false">
                                                 </v-date-picker>
                                             </v-menu>
                                         </v-col>
                                         <v-col cols='12' v-else>
                                             <v-menu
-                                                ref="showAdvancedatePickerDateStart"
-                                                v-model="showAdvancedatePickerDateStart"
+                                                ref="showAdvancedatePickerDateStartDetail"
+                                                v-model="showAdvancedatePickerDateStartDetail"
                                                 :close-on-content-click="false"
                                                 transition="scale-transition"
                                                 offset-y
@@ -380,14 +380,14 @@
                                                     class="mb-n5"
                                                     ></v-text-field>
                                                 </template>
-                                                <v-date-picker v-model="stockOpname.dateStart" show-current="false" no-title scrollable :weekday-format="dayFormat" @change="showAdvancedatePickerDateStart = false">
+                                                <v-date-picker v-model="stockOpname.dateStart" show-current="false" no-title scrollable :weekday-format="dayFormat" @change="showAdvancedatePickerDateStartDetail = false">
                                                 </v-date-picker>
                                             </v-menu>
                                         </v-col>
                                         <v-col cols='2' v-if="!popUpBreakPoint">
                                             <v-menu
-                                                ref="showAdvancedatePickerDateFinish"
-                                                v-model="showAdvancedatePickerDateFinish"
+                                                ref="showAdvancedatePickerDateFinishDetail"
+                                                v-model="showAdvancedatePickerDateFinishDetail"
                                                 :close-on-content-click="false"
                                                 transition="scale-transition"
                                                 offset-y
@@ -409,14 +409,14 @@
                                                     class="mr-3"
                                                     ></v-text-field>
                                                 </template>
-                                                <v-date-picker v-model="stockOpname.dateFinish" show-current="false" no-title scrollable :weekday-format="dayFormat" @change="showAdvancedatePickerDateFinish = false">
+                                                <v-date-picker v-model="stockOpname.dateFinish" show-current="false" no-title scrollable :weekday-format="dayFormat" @change="showAdvancedatePickerDateFinishDetail = false">
                                                 </v-date-picker>
                                             </v-menu>
                                         </v-col>
                                         <v-col cols='12' v-else>
                                             <v-menu
-                                                ref="showAdvancedatePickerDateFinish"
-                                                v-model="showAdvancedatePickerDateFinish"
+                                                ref="showAdvancedatePickerDateFinishDetail"
+                                                v-model="showAdvancedatePickerDateFinishDetail"
                                                 :close-on-content-click="false"
                                                 transition="scale-transition"
                                                 offset-y
@@ -439,7 +439,7 @@
                                                     :persistent-hint="true"
                                                     ></v-text-field>
                                                 </template>
-                                                <v-date-picker v-model="stockOpname.dateFinish" show-current="false" no-title scrollable :weekday-format="dayFormat" @change="showAdvancedatePickerDateFinish = false">
+                                                <v-date-picker v-model="stockOpname.dateFinish" show-current="false" no-title scrollable :weekday-format="dayFormat" @change="showAdvancedatePickerDateFinishDetail = false">
                                                 </v-date-picker>
                                             </v-menu>
                                         </v-col>
@@ -705,6 +705,8 @@ export default {
             // Boolean data status goes here
             showAdvancedatePickerDateStart: false,
             showAdvancedatePickerDateFinish: false,
+            showAdvancedatePickerDateStartDetail: false,
+            showAdvancedatePickerDateFinishDetail: false,
             // Dialog goes here
             newStockOpnameDialog: false,
             detailsDialog: false,

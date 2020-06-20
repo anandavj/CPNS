@@ -1959,6 +1959,8 @@ export default {
                                 }
                             });
                             this.deliveryOrder = Object.assign({},this.deliveryOrderDefault)
+                            // There's a bug in delivery order section, haven't found the cause why the items array didn't reset when create new DO
+                            this.deliveryOrder.items = []
                             this.selectedIndex = -1
                             this.popUpNewDO = false
                         })
