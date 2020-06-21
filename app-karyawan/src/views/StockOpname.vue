@@ -490,7 +490,7 @@
                                         :disable-sort="true"
                                         :disable-filtering="true"
                                         v-if="!popUpBreakPoint"
-                                        @click:row="verifyPopUpConfirmation && edit_verification_stock"
+                                        @click:row="verifyPopUpConfirmation"
                                         style="cursor:pointer"
                                     >
                                     <template v-slot:item.productName="{ item }">
@@ -505,7 +505,7 @@
                                         :disable-filtering="true"
                                         v-else
                                         class="mt-n8"
-                                        @click:row="verifyPopUpConfirmation && edit_verification_stock"
+                                        @click:row="verifyPopUpConfirmation"
                                         style="cursor:pointer"
                                     >
                                         <template v-slot:body.prepend="{ headers }">
