@@ -730,7 +730,7 @@ export default {
                 dateFinish:'',
                 status:'Belum Diperiksa',
                 description:'',
-                checked:null,
+                checked:0,
                 products:[]
             },
             stockOpnameDefault: {
@@ -740,20 +740,22 @@ export default {
                 dateFinish:'',
                 status:'Belum Diperiksa',
                 description:'',
-                checked:null,
+                checked:0,
                 products:[]
             },
             newProduct: {
                 productId:null,
                 productName:null,
                 realStock:null,
-                status:'Belum Diperiksa'
+                status:'Belum Diperiksa',
+                checked: 0
             },
             newProductDefault: {
                 productId:null,
                 productName:null,
                 realStock:null,
-                status:'Belum Diperiksa'
+                status:'Belum Diperiksa',
+                checked: 0
             },
             selectedIndex:-1,
             selectedIndexTwo:-1,
@@ -881,7 +883,7 @@ export default {
             this.opnameProductDialog = true
         },
         verifyPopUpConfirmation(item) {
-            if(this.edit_verification_stock){
+            if(this.edit_verification_stock && item.checked == 0){
                 this.selectedIndexTwo = this.stockOpname.products.indexOf(item)
                 this.opnameProductSelected = Object.assign({},item)
                 this.verifyPopUp = true
