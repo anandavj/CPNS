@@ -275,6 +275,7 @@
                 no-results-text="Nomor Stock Opname tidak ditemukan"
                 class="font-regular font-weight-light"
                 style="cursor:pointer"
+                :search="searchStockOpnameNumber"
             >
             <template v-slot:item.actions="{ item }">
                 <v-icon v-if="item.status == 'Belum Diperiksa'" class="mr-2" @click.stop="confirmDelete(item)">mdi-delete</v-icon>
