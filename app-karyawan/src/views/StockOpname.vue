@@ -882,7 +882,8 @@ export default {
             this.opnameProductDialog = true
         },
         verifyPopUpConfirmation(item) {
-            if(this.edit_verification_stock){
+            console.log(item)
+            if(this.edit_verification_stock && item.status == "Selesai" && item.checked == 0){
                 this.selectedIndexTwo = this.stockOpname.products.indexOf(item)
                 this.opnameProductSelected = Object.assign({},item)
                 this.verifyPopUp = true
@@ -942,8 +943,9 @@ export default {
                     } else {
                         this.stockOpname.status = 'Proses'
                     }
-                    api.updateStockOpname(this.stockOpname)
-                    this.get()
+                    api.updateStockOpname(this.stockOpname).finally(() => {
+                        this.close()
+                    })
                 })
             
         },
