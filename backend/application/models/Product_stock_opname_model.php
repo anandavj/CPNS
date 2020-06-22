@@ -68,7 +68,7 @@ class product_stock_opname_model extends CI_Model
                 'opname_date' => $opname_date,
                 'status' => $status,
                 'description' => $description,
-                'checked' => $checked
+                // 'checked' => $checked
             ),"id = '{$id}'"
         );
 
