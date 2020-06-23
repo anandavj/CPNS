@@ -32,7 +32,7 @@
                             <v-card-text>
                                 <v-row>
                                     <v-col cols="12">
-                                        <v-text-field color="accent" label="Nama Divisi" v-model="divisi.name"/>
+                                        <v-text-field color="accent" label="Nama Divisi" v-model="divisi.name" :rules="nameRules"/>
                                     </v-col>
                                     <v-col cols="12">
                                         <div class="title mt-n3">Permission</div>
@@ -57,8 +57,8 @@
                         <v-card-actions>
                             <v-container>
                                 <v-row justify="center">
-                                    <v-btn class="my-n5" color="red darken-1" text @click="close">Tidak</v-btn>
-                                    <v-btn class="my-n5" color="blue darken-1" text @click="saveNewDivisi">Ya</v-btn>
+                                    <v-btn class="my-n5" color="red darken-1" text @click="close">Close</v-btn>
+                                    <v-btn class="my-n5" color="blue darken-1" text @click="saveNewDivisi">Save</v-btn>
                                 </v-row>
                             </v-container>
                         </v-card-actions>
@@ -349,7 +349,8 @@ export default {
             popUpEdit: false,
             popUpConfirmSave: false,
             popUpConfirmDelete: false,
-            selectedIndex: -1
+            selectedIndex: -1,
+            nameRules: [v => !!v || 'Name Harus Diisi'],
         }
     },
 
@@ -377,30 +378,32 @@ export default {
             this.popUpDetails = true
         },
         saveNewDivisi() {
-            this.loadingAddNewDivisi = true
-            api.insertUserTaskGroup(this.divisi).then(() => {
-                api.insertGroupTask(this.divisi).then(response => {
-                    this.snackbarColor = 'success'
-                    this.snackbarMessage = response
+            if(this.$refs.validate()){
+                this.loadingAddNewDivisi = true
+                api.insertUserTaskGroup(this.divisi).then(() => {
+                    api.insertGroupTask(this.divisi).then(response => {
+                        this.snackbarColor = 'success'
+                        this.snackbarMessage = response
+                    }).catch(error => {
+                        this.snackbarColor = 'error'
+                        this.snackbarMessage = error
+                    }).finally(() => {
+                        this.loadingAddNewDivisi = false
+                        this.divisi = this.divisiDefault
+                        this.snackbar = true
+                        this.get()
+                        this.close()
+                    })
                 }).catch(error => {
                     this.snackbarColor = 'error'
                     this.snackbarMessage = error
-                }).finally(() => {
                     this.loadingAddNewDivisi = false
                     this.divisi = this.divisiDefault
                     this.snackbar = true
                     this.get()
                     this.close()
                 })
-            }).catch(error => {
-                this.snackbarColor = 'error'
-                this.snackbarMessage = error
-                this.loadingAddNewDivisi = false
-                this.divisi = this.divisiDefault
-                this.snackbar = true
-                this.get()
-                this.close()
-            })
+            }
         },
         editDivisi(item) {
             this.divisi = Object.assign({}, item)
@@ -418,30 +421,32 @@ export default {
         },
         //this need promise to ensure that the data in the db and vue in synced !!! IMPORTANT !!!
         updateDivisi() {
-            this.loadingUpdateDivisi = true
-            api.updateUserTaskGroup(this.divisi).then(() => {
-                api.updateGroupTask(this.divisi).then(response => {
-                    this.snackbarColor = 'success'
-                    this.snackbarMessage = response
+            if(this.$refs.form.validate()){
+                this.loadingUpdateDivisi = true
+                api.updateUserTaskGroup(this.divisi).then(() => {
+                    api.updateGroupTask(this.divisi).then(response => {
+                        this.snackbarColor = 'success'
+                        this.snackbarMessage = response
+                    }).catch(error => {
+                        this.snackbarColor = 'error'
+                        this.snackbarMessage = error
+                    }).finally(() => {
+                        this.loadingUpdateDivisi = false
+                        this.divisi = this.divisiDefault
+                        this.snackbar = true
+                        this.get()
+                        this.close()
+                    })
                 }).catch(error => {
+                    this.loadingUpdateDivisi = false
                     this.snackbarColor = 'error'
                     this.snackbarMessage = error
-                }).finally(() => {
-                    this.loadingUpdateDivisi = false
                     this.divisi = this.divisiDefault
                     this.snackbar = true
                     this.get()
                     this.close()
                 })
-            }).catch(error => {
-                this.loadingUpdateDivisi = false
-                this.snackbarColor = 'error'
-                this.snackbarMessage = error
-                this.divisi = this.divisiDefault
-                this.snackbar = true
-                this.get()
-                this.close()
-            })
+            }
         },
         deleteDivisi() {
             this.loadingDeleteDivisi = true

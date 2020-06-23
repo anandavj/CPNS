@@ -605,8 +605,8 @@
                     <v-card-actions>
                         <v-container>
                             <v-row justify="center">
-                                <v-btn class="mt-n5" color="red darken-1" text @click="close">Tidak</v-btn>
-                                <v-btn class="mt-n5" color="blue darken-1" text @click="save">Ya</v-btn>
+                                <v-btn class="mt-n5" color="red darken-1" text @click="close">Close</v-btn>
+                                <v-btn class="mt-n5" color="blue darken-1" text @click="save">Save</v-btn>
                             </v-row>
                             <div v-if="loadingConfirm">
                                 <v-progress-linear
@@ -822,8 +822,8 @@ export default {
             this.karyawan = Object.assign({},this.karyawanDefault)
         },
         saveNewKaryawan() {
-            this.loading = true
             if(this.$refs.form.validate()) {
+                this.loading = true
                 api.insertUser(this.karyawan).then(response => {
                     this.snackbarColor = 'success'
                     this.snackbarMessage = response
