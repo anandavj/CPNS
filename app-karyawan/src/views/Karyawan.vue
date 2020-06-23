@@ -135,8 +135,8 @@
                         <v-card-actions>
                             <v-container>
                                 <v-row justify="center">
-                                    <v-btn class="mt-n5" color="red darken-1" text @click="close">Tidak</v-btn>
-                                    <v-btn class="mt-n5" color="blue darken-1" text @click="saveNewKaryawan">Ya</v-btn>
+                                    <v-btn class="mt-n5" color="red darken-1" text @click="close">Close</v-btn>
+                                    <v-btn class="mt-n5" color="blue darken-1" text @click="saveNewKaryawan">Save</v-btn>
                                 </v-row>
                                 <div v-if="loading">
                                     <v-progress-linear
