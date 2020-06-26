@@ -918,6 +918,7 @@ export default {
         submitStockOpnameProduct() {
             this.opnameProductSelected.opnameDate = new Date().toISOString().substr(0, 10)
             this.opnameProductSelected.opnameId = this.stockOpname.id
+            this.opnameProductSelected.inspectorId = this.$store.state.karyawan.id
             if(this.opnameProductSelected.description == null) {
                 this.opnameProductSelected.description = '-'
             }
