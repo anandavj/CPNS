@@ -1008,8 +1008,12 @@ export default {
             ]
         }
     },
+
     watch: {
         close() {
+            this.$refs.form.resetValidation()
+        },
+        newStockOpnameDialog() {
             this.$refs.form.resetValidation()
         }
     }
