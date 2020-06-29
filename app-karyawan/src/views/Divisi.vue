@@ -142,7 +142,7 @@
                         <v-card-text>
                             <v-row>
                                 <v-col cols="12">
-                                    <v-text-field label="Nama Divisi" v-model="divisi.name"/>
+                                    <v-text-field label="Nama Divisi" v-model="divisi.name" :rules="nameRules"/>
                                 </v-col>
                                 <v-col cols="12">
                                     <div class="title mt-n3">Permission</div>
@@ -185,7 +185,7 @@
                         <v-card-text>
                             <v-row>
                                 <v-col cols="12">
-                                    <v-text-field label="Nama Divisi" v-model="divisi.name"/>
+                                    <v-text-field label="Nama Divisi" v-model="divisi.name" :rules="nameRules"/>
                                 </v-col>
                                 <v-col cols="12">
                                     <div class="title mt-n3">Permission</div>
@@ -378,7 +378,7 @@ export default {
             this.popUpDetails = true
         },
         saveNewDivisi() {
-            if(this.$refs.validate()){
+            if(this.$refs.form.validate()){
                 this.loadingAddNewDivisi = true
                 api.insertUserTaskGroup(this.divisi).then(() => {
                     api.insertGroupTask(this.divisi).then(response => {
