@@ -810,6 +810,7 @@ export default {
             return val ? moment(val).format('DD/MM/YYYY') : ''
         },
         close() {
+            this.$refs.form.resetValidation()
             this.popUpConfirmEditPassword = false
             this.popupDetails = false
             this.popUpConfirmSave = false
@@ -918,6 +919,7 @@ export default {
                 this.snackbarColor = 'error'
                 this.snackbarMessage = error
             }).finally(() => {
+                this.close()
                 this.get()
                 this.loadingConfirm = false
                 this.popUpConfirmSave = false

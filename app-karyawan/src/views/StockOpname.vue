@@ -53,6 +53,7 @@
                                                         @click:clear="stockOpname.dateStart = null"
                                                         dense
                                                         class="mr-3"
+                                                        :rules="tanggalMulaiRules"
                                                         ></v-text-field>
                                                     </template>
                                                     <v-date-picker v-model="stockOpname.dateStart" show-current="false" no-title scrollable :weekday-format="dayFormat" @change="showAdvancedatePickerDateStart = false">
@@ -81,6 +82,7 @@
                                                         @click:clear="stockOpname.dateStart = null"
                                                         dense
                                                         class="mb-n5"
+                                                        :rules="tanggalMulaiRules"
                                                         ></v-text-field>
                                                     </template>
                                                     <v-date-picker v-model="stockOpname.dateStart" show-current="false" no-title scrollable :weekday-format="dayFormat" @change="showAdvancedatePickerDateStart = false">
@@ -153,10 +155,10 @@
                                         </v-row>
                                     </v-col>
                                     <v-col cols='8' class='my-n5' v-if="!popUpBreakPoint">
-                                        <v-text-field v-model="stockOpname.opnameNumber" dense color='accent' outlined label="Nomor Stock Opname"/>
+                                        <v-text-field v-model="stockOpname.opnameNumber" dense color='accent' outlined label="Nomor Stock Opname" :rules="nomorStockOpnameRules"/>
                                     </v-col>
                                     <v-col cols='12' class='my-n5' v-else>
-                                        <v-text-field v-model="stockOpname.opnameNumber" dense color='accent' outlined label="Nomor Stock Opname"/>
+                                        <v-text-field v-model="stockOpname.opnameNumber" dense color='accent' outlined label="Nomor Stock Opname" :rules="nomorStockOpnameRules"/>
                                     </v-col>
                                     <v-col cols='4' class='my-n5' v-if="!popUpBreakPoint">
                                         <v-select
@@ -178,7 +180,7 @@
                                             color="accent"
                                         ></v-select>
                                     </v-col>
-                                    <v-col cols='12' class='my-n5'>
+                                    <v-col cols='12' >
                                         <v-textarea v-model="stockOpname.description" dense color="accent" outlined :auto-grow="true" label="keterangan"></v-textarea>
                                     </v-col>
                                     <v-col cols='12' class='my-n4'>
@@ -348,6 +350,7 @@
                                                     @click:clear="stockOpname.dateStart = null"
                                                     dense
                                                     class="mr-3"
+                                                    :rules="tanggalMulaiRules"
                                                     ></v-text-field>
                                                 </template>
                                                 <v-date-picker v-model="stockOpname.dateStart" show-current="false" no-title scrollable :weekday-format="dayFormat" @change="showAdvancedatePickerDateStartDetail = false">
@@ -379,6 +382,7 @@
                                                     hint="Tanggal Mulai"
                                                     :persistent-hint="true"
                                                     class="mb-n5"
+                                                    :rules="tanggalMulaiRules"
                                                     ></v-text-field>
                                                 </template>
                                                 <v-date-picker v-model="stockOpname.dateStart" show-current="false" no-title scrollable :weekday-format="dayFormat" @change="showAdvancedatePickerDateStartDetail = false">
@@ -727,8 +731,8 @@ export default {
             stockOpname: {
                 id:null,
                 opnameNumber:'',
-                dateStart:'',
-                dateFinish:'',
+                dateStart: new Date().toISOString().substr(0, 10),
+                dateFinish: new Date().toISOString().substr(0, 10),
                 status:'Belum Diperiksa',
                 description:'',
                 checked:null,
@@ -737,8 +741,8 @@ export default {
             stockOpnameDefault: {
                 id:null,
                 opnameNumber:'',
-                dateStart:'',
-                dateFinish:'',
+                dateStart: new Date().toISOString().substr(0, 10),
+                dateFinish: new Date().toISOString().substr(0, 10),
                 status:'Belum Diperiksa',
                 description:'',
                 checked:null,
@@ -778,7 +782,10 @@ export default {
             opnameMessage:null,
             // Misc
             counter:null,
-            popUpConfirmDelete: false
+            popUpConfirmDelete: false,
+            nomorStockOpnameRules: [v => !!v || 'Nomor Stock Opname Harus Diisi'],
+            tanggalMulaiRules: [v => !!v || 'Tanggal Mulai Harus Diisi'],
+            tanggalSelesaiRules: [v => !!v || 'Tanggal Selesai Harus Diisi'],
         }
     },
 
@@ -797,6 +804,7 @@ export default {
                 })
         },
         close() {
+            this.$refs.resetValidation()
             this.get()
             if(this.newStockOpnameDialog) {
                 this.newStockOpnameDialog = false
@@ -843,16 +851,18 @@ export default {
             this.newProduct.productId = _.find(this.products,['name',this.newProduct.productName]).id
         },
         addNewProduct() {
-            this.newProduct.realStock = _.find(this.products,['id',this.newProduct.productId]).stock
-            this.stockOpname.products.push(this.newProduct)
-            this.clearNewProduct()
+            if(_.findIndex(this.stockOpname.products, {productId: this.newProduct.productId}) == -1){
+                this.newProduct.realStock = _.find(this.products,['id',this.newProduct.productId]).stock
+                this.stockOpname.products.push(this.newProduct)
+                this.clearNewProduct()
+            }
         },
         clearNewProduct() {
             this.newProduct = Object.assign({},this.newProductDefault)
         },
         insertStockOpname() {
-
-            api.addStockOpname(this.stockOpname)
+            if(this.$refs.form.validate()){
+                api.addStockOpname(this.stockOpname)
                 .then((response) => {
                     this.snackbarColor = 'success'
                     this.snackbarMessage = response
@@ -865,6 +875,7 @@ export default {
                     this.stockOpname = Object.assign({},this.stockOpnameDefault)
                     this.close()
                 })
+            }
         },
         details(item) {
             this.selectedIndex = this.stockOpnames.indexOf(item)
