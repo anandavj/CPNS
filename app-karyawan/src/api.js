@@ -419,8 +419,8 @@ const api = {
     deleteDeliveryOrder(id) {
         return new Promise( (resolve, reject) => {
             axios.delete(deliveryOrderTable, {params: {id: id}})
-                .then((response) => {
-                    resolve(response.data)
+                .then(() => {
+                    resolve(deleteSuccessMessage)
                 }) .catch(error => {
                     if(error.response.status == 500) reject(serverErrorMessage)
                 })
