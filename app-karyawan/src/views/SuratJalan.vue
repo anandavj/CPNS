@@ -1741,7 +1741,7 @@ export default {
                 {id:1, name:'Belum Diproses', color:'yellow'},
                 {id:2, name:'Dikirim', color:'blue'},
                 {id:3, name:'Selesai', color:'green'},
-                {id:4, name:'Batal', color:'red'}
+                // {id:4, name:'Batal', color:'red'}
             ],
             statusDO: [
                 {id:1, name:'Belum Diproses', color:'yellow'},
@@ -1999,15 +1999,17 @@ export default {
         // Detail Surat Jalan
         detailSuratJalan(item) {
             this.selectedIndex = this.suratJalans.indexOf(item)
-            this.deliveryOrder = Object.assign({},item)
-            this.temp = Object.assign({},item)
+            this.deliveryOrder = _.cloneDeep(item)
+            this.temp = _.cloneDeep(item)
             this.popUpDetailSuratJalan = true
+            this.tempIn = _.cloneDeep(this.deliveryOrder.items)
         },
         detailDO(item) {
             this.selectedIndex = this.deliveryOrders.indexOf(item)
-            this.deliveryOrder = Object.assign({},item)
-            this.temp = Object.assign({},item)
+            this.deliveryOrder = _.cloneDeep(item)
+            this.temp = _.cloneDeep(item)
             this.popUpDetailDO = true
+            this.tempIn = _.cloneDeep(this.deliveryOrder.items)
         },
         productNameWithSpec(item) {
             return _.find(this.products,['id',item.productId]).name
@@ -2023,16 +2025,17 @@ export default {
                 if(this.popUpDetailSuratJalan) {
                     if(this.deliveryOrderEditToggle) {
                         this.deliveryOrderEditToggle = false
+                        this.deliveryOrder.items = Object.assign({},this.tempIn)
                         this.deliveryOrder = Object.assign({},this.temp)
-                        this.tempOut.forEach(el => {
-                            this.deliveryOrder.items.push(el)
-                        })
-                        this.tempIn.forEach(el => {
-                            const idx = this.deliveryOrder.items.indexOf(el)
-                            this.deliveryOrder.items.splice(idx, 1)
-                        })
-                        this.tempOut = []
-                        this.tempIn = []
+                        // this.tempOut.forEach(el => {
+                        //     this.deliveryOrder.items.push(el)
+                        // })
+                        // this.tempIn.forEach(el => {
+                        //     const idx = this.deliveryOrder.items.indexOf(el)
+                        //     this.deliveryOrder.items.splice(idx, 1)
+                        // })
+                        // this.tempOut = []
+                        // this.tempIn = []
                         this.deliveryOrderNewItem = Object.assign({},this.deliveryOrderNewItemDefault)
                     }
                     this.popUpDetailSuratJalan = false
@@ -2053,16 +2056,17 @@ export default {
                             if(this.popUpDetailDO) {
                                 if(this.deliveryOrderEditToggle) {
                                     this.deliveryOrderEditToggle = false
+                                    this.deliveryOrder.items = Object.assign({},this.tempIn)
                                     this.deliveryOrder = Object.assign({},this.temp)
-                                    this.tempOut.forEach(el => {
-                                        this.deliveryOrder.items.push(el)
-                                    })
-                                    this.tempIn.forEach(el => {
-                                        const idx = this.deliveryOrder.items.indexOf(el)
-                                        this.deliveryOrder.items.splice(idx, 1)
-                                    })
-                                    this.tempOut = []
-                                    this.tempIn = []
+                                    // this.tempOut.forEach(el => {
+                                    //     this.deliveryOrder.items.push(el)
+                                    // })
+                                    // this.tempIn.forEach(el => {
+                                    //     const idx = this.deliveryOrder.items.indexOf(el)
+                                    //     this.deliveryOrder.items.splice(idx, 1)
+                                    // })
+                                    // this.tempOut = []
+                                    // this.tempIn = []
                                     this.deliveryOrderNewItem = Object.assign({},this.deliveryOrderNewItemDefault)
                                 }
                                 this.popUpDetailDO = false
@@ -2089,8 +2093,16 @@ export default {
             }
         },
         addSuratJalanNewItem() {
-            this.tempIn.push(this.deliveryOrderNewItem)
-            this.deliveryOrder.items.push(this.deliveryOrderNewItem)
+            // this.tempIn.push(this.deliveryOrderNewItem)
+            // this.deliveryOrder.items.push(this.deliveryOrderNewItem)
+            var idx = _.findIndex(this.deliveryOrder.items, {productId: this.deliveryOrderNewItem.productId})
+            if(idx == -1) {
+                this.deliveryOrder.items.push(this.deliveryOrderNewItem)
+            } else {
+                var temp = this.deliveryOrder.items[idx]
+                temp.amount = +temp.amount + +this.deliveryOrderNewItem.amount
+                this.deliveryOrder.items.splice(idx, 1, temp)
+            }
             this.deliveryOrderNewItem = Object.assign({},this.deliveryOrderNewItemDefault)
             document.getElementById("focusGained").focus()
         },
@@ -2116,7 +2128,7 @@ export default {
         },
         deleteSuratJalanDetailsItem(item) {
             const idx = this.deliveryOrder.items.indexOf(item)
-            this.tempOut.push(item)
+            // this.tempOut.push(item)
             this.deliveryOrder.items.splice(idx, 1)
         },
         // Proses Surat jalan
