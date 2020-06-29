@@ -804,7 +804,6 @@ export default {
                 })
         },
         close() {
-            this.$refs.resetValidation()
             this.get()
             if(this.newStockOpnameDialog) {
                 this.newStockOpnameDialog = false
