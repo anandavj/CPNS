@@ -318,11 +318,11 @@
                                     <v-card-text>
                                         <v-row>
                                             <v-col cols="12" class="my-n8">
-                                                <!-- <v-row justify="space-between" v-if="deliveryOrder.status == 'Belum Diproses'"> -->
-                                                <v-row justify="end" v-if="deliveryOrder.status == 'Belum Diproses'">
-                                                    <!-- <v-col>
+                                                <v-row justify="space-between" v-if="deliveryOrder.status == 'Belum Diproses'">
+                                                <!-- <v-row justify="end" v-if="deliveryOrder.status == 'Belum Diproses'"> -->
+                                                    <v-col>
                                                         <v-switch :disabled="deliveryOrderEditToggle" value v-model="deliveryOrderEditToggle" class="pa-0 ma-0" label="Edit Surat Jalan"></v-switch>
-                                                    </v-col> -->
+                                                    </v-col>
                                                     <!-- Tanggal -->
                                                     <v-col cols="5" v-if="popUpBreakPoint">
                                                         <v-text-field v-model="formatDateDetails" dense color="accent" outlined filled disabled label="Tanggal"/>
@@ -1138,11 +1138,11 @@
                                     <v-card-text>
                                         <v-row>
                                             <v-col cols="12" class="my-n8">
-                                                <!-- <v-row justify="space-between" v-if="deliveryOrder.status == 'Belum Diproses'"> -->
-                                                <v-row justify="end" v-if="deliveryOrder.status == 'Belum Diproses'">
-                                                    <!-- <v-col>
+                                                <v-row justify="space-between" v-if="deliveryOrder.status == 'Belum Diproses'">
+                                                <!-- <v-row justify="end" v-if="deliveryOrder.status == 'Belum Diproses'"> -->
+                                                    <v-col>
                                                         <v-switch :disabled="deliveryOrderEditToggle" value v-model="deliveryOrderEditToggle" class="pa-0 ma-0" label="Edit DO"></v-switch>
-                                                    </v-col> -->
+                                                    </v-col>
                                                     <!-- Tanggal -->
                                                     <v-col cols="5" v-if="popUpBreakPoint">
                                                         <v-text-field v-model="formatDateDetails" dense color="accent" outlined filled disabled label="Tanggal"/>
@@ -1910,6 +1910,35 @@ export default {
             this.popUpNewDO = !this.popUpNewDO
             this.deliveryOrder.type = +0
         },
+        saveNewBarang() {
+            api.updateDeliveryOrder(this.deliveryOrder)
+                .then((response) => {
+                    this.snackbarColor = 'success'
+                    this.snackbarMessage = response
+                }) .catch(error => {
+                    this.snackbarColor = 'error'
+                    this.snackbarMessage = error
+                }) .finally(() => {
+                    this.snackbar = true
+                    this.suratJalans = []
+                    this.deliveryOrders = []
+                    api.getAllDeliveryOrder()
+                        .then(deliveryOrders => {
+                            deliveryOrders.forEach(deliveryOrder => {
+                                if(deliveryOrder.type == 1) {
+                                    this.suratJalans.push(deliveryOrder)
+                                } else {
+                                    this.deliveryOrders.push(deliveryOrder)
+                                }
+                            });
+                            this.deliveryOrder = Object.assign({},this.deliveryOrderDefault)
+                            this.selectedIndex = -1
+                            this.popUpDetailSuratJalan = false
+                            this.popUpDetailDO = false
+                            this.deliveryOrderEditToggle = false
+                        })
+                })
+        },
         // Save New Surat Jalan
         saveNewSuratJalan() {
             api.addDeliveryOrder(this.deliveryOrder)
@@ -1989,6 +2018,7 @@ export default {
                 this.popUpNewSuratJalan = false
                 this.deliveryOrderNewItem = Object.assign({},this.deliveryOrderNewItemDefault)
                 this.deliveryOrder = Object.assign({},this.deliveryOrderDefault)
+                this.deliveryOrder.items = []
             } else {
                 if(this.popUpDetailSuratJalan) {
                     if(this.deliveryOrderEditToggle) {
