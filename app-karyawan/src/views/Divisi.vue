@@ -111,6 +111,7 @@
                 <v-card>
                     <v-toolbar dense flat>
                         <span class="title font-weight-light">Detail Divisi</span>
+                        
                         <v-btn absolute right icon @click="close"><v-icon>mdi-close</v-icon></v-btn>
                     </v-toolbar>
                     {{divisi}}
@@ -123,7 +124,40 @@
                         <span class="title font-weight-light">Detail Divisi</span>
                         <v-btn absolute right icon @click="close"><v-icon>mdi-close</v-icon></v-btn>
                     </v-toolbar>
-                    {{divisi}}
+                    <v-container>
+                        <v-col cols="12">
+                            <table class="descTable">
+                                <tr>
+                                    <td>ID Divisi</td>
+                                    <td width="25%" align="end">:</td>
+                                    <td>{{ divisi.id }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Nama Divisi</td>
+                                    <td width="25%" align="end">:</td>
+                                    <td>{{ divisi.name }}</td>
+                                </tr>
+                            </table>
+                        </v-col>
+                        <v-col cols="12">
+                            <div class="title mt-n3">Permission</div>
+                            <v-expansion-panels accordion class="elevation-0" :multiple="true" v-model="panel">
+                                <v-expansion-panel v-for="(permission,index) in task" :key="index">
+                                    <v-expansion-panel-header>{{permission.modul}}</v-expansion-panel-header>
+                                    <v-expansion-panel-content v-for="(permissionList,idx) in permission.action" :key="idx">
+                                        <v-checkbox
+                                            disabled
+                                            v-model="divisi.taskId"
+                                            :label="permissionList.label"
+                                            :value="permissionList.id"
+                                            class="font-weight-light my-n3"
+                                            color="accent"
+                                        />
+                                    </v-expansion-panel-content>
+                                </v-expansion-panel>
+                            </v-expansion-panels>
+                        </v-col>
+                    </v-container>
                 </v-card>
             </v-dialog>
             <!-- *************************************************************************************************************** -->
@@ -464,7 +498,6 @@ export default {
             });
         },
         close() {
-            this.divisi = this.divisiDefault
             this.selectedIndex = -1
             this.popUpDetails = false
             this.popUpNew = false
@@ -472,6 +505,7 @@ export default {
             this.popUpConfirmSave = false
             this.popUpConfirmDelete = false
             this.panel = []
+            this.divisi = Object.assign({},this.divisiDefault)
         }
     },
 
@@ -484,6 +518,19 @@ export default {
                 return false
             }
         }
+    },
+    watch: {
+        close(){
+            this.$refs.form.resetValidation()
+        },
+        popUpNew(){
+            this.$refs.form.resetValidation()
+        },
+        popupDetails() {
+            if(!this.popupDetails) {
+                this.divisi = Object.assign({},this.divisiDefault)
+            }
+        },
     }
 }
 </script>

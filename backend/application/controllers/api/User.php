@@ -250,14 +250,14 @@ class User extends REST_Controller
             //     $this->firebase_auth->updateUser($uid, $userProperties);
 
                 if ($this->user_model->update_user($id, $datas)) {
-                    if ($update_user_task) {
-                        $result = $this->group_task_model->get_group_task_where($user_task_group_id);
-                        $tasks = [];
-                        foreach ($result as $row) {
-                            array_push($tasks, $row['task_id']);
-                        }
-                    }
-        
+                    // if ($update_user_task) {
+                    //     $result = $this->group_task_model->get_group_task_where($user_task_group_id);
+                    //     $tasks = [];
+                    //     foreach ($result as $row) {
+                    //         array_push($tasks, $row['task_id']);
+                    //     }
+                    // }
+                    
                     if(isset($tasks)){
                         if (!$this->user_task_model->update_user_task($id, $tasks)){
                             $this->response(
