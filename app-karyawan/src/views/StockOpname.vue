@@ -1001,6 +1001,15 @@ export default {
                 {value:'actions'}
             ]
         }
+    },
+
+    watch: {
+        close() {
+            this.$refs.form.resetValidation()
+        },
+        newStockOpnameDialog() {
+            this.$refs.form.resetValidation()
+        }
     }
 }
 </script>
