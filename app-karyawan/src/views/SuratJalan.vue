@@ -351,35 +351,35 @@
                                                 </v-row>
                                             </v-col>
                                             <!-- Nama Penerima -->
-                                            <v-col cols="12" class="my-n5" v-if="popUpBreakPoint">
-                                                <v-text-field v-model="deliveryOrder.receiverName" dense color="accent" outlined :filled="!deliveryOrderEditToggle" :disabled="!deliveryOrderEditToggle" label="Nama Penerima"/>
+                                            <v-col cols="12" class="mt-n5" v-if="popUpBreakPoint">
+                                                <v-text-field :rules="rules.name" v-model="deliveryOrder.receiverName" dense color="accent" outlined :filled="!deliveryOrderEditToggle" :disabled="!deliveryOrderEditToggle" label="Nama Penerima"/>
                                             </v-col>
                                             <v-col cols="6" class="my-n5" v-else>
-                                                <v-text-field v-model="deliveryOrder.receiverName" dense color="accent" outlined :filled="!deliveryOrderEditToggle" :disabled="!deliveryOrderEditToggle" label="Nama Penerima"/>
+                                                <v-text-field :rules="rules.name" v-model="deliveryOrder.receiverName" dense color="accent" outlined :filled="!deliveryOrderEditToggle" :disabled="!deliveryOrderEditToggle" label="Nama Penerima"/>
                                             </v-col>
                                             <!--  -->
                                             <!-- Nomor Surat -->
-                                            <v-col cols="12" class="my-n5" v-if="popUpBreakPoint">
-                                                <v-text-field v-model="deliveryOrder.referenceNumber" dense color="accent" outlined :filled="!deliveryOrderEditToggle" :disabled="!deliveryOrderEditToggle" label="Nomor Surat"/>
+                                            <v-col cols="12" v-if="popUpBreakPoint">
+                                                <v-text-field :rules="rules.number" v-model="deliveryOrder.referenceNumber" dense color="accent" outlined :filled="!deliveryOrderEditToggle" :disabled="!deliveryOrderEditToggle" label="Nomor Surat"/>
                                             </v-col>
                                             <v-col cols="6" class="my-n5" v-else>
-                                                <v-text-field v-model="deliveryOrder.referenceNumber" dense color="accent" outlined :filled="!deliveryOrderEditToggle" :disabled="!deliveryOrderEditToggle" label="Nomor Surat"/>
+                                                <v-text-field :rules="rules.number" v-model="deliveryOrder.referenceNumber" dense color="accent" outlined :filled="!deliveryOrderEditToggle" :disabled="!deliveryOrderEditToggle" label="Nomor Surat"/>
                                             </v-col>
                                             <!--  -->
                                             <!-- Alamat -->
-                                            <v-col cols="12" class="my-n5" v-if="popUpBreakPoint">
-                                                <v-text-field v-model="deliveryOrder.address" dense color="accent" outlined :filled="!deliveryOrderEditToggle" :disabled="!deliveryOrderEditToggle" label="Alamat"/>
+                                            <v-col cols="12" v-if="popUpBreakPoint">
+                                                <v-text-field :rules="rules.address" v-model="deliveryOrder.address" dense color="accent" outlined :filled="!deliveryOrderEditToggle" :disabled="!deliveryOrderEditToggle" label="Alamat"/>
                                             </v-col>
-                                            <v-col cols="6" class="my-n5" v-else>
-                                                <v-text-field v-model="deliveryOrder.address" dense color="accent" outlined :filled="!deliveryOrderEditToggle" :disabled="!deliveryOrderEditToggle" label="Alamat"/>
+                                            <v-col cols="6" v-else>
+                                                <v-text-field :rules="rules.address" v-model="deliveryOrder.address" dense color="accent" outlined :filled="!deliveryOrderEditToggle" :disabled="!deliveryOrderEditToggle" label="Alamat"/>
                                             </v-col>
                                             <!--  -->
                                             <!-- Nama Surat -->
-                                            <v-col cols="12" class="my-n5" v-if="popUpBreakPoint">
-                                                <v-text-field v-model="deliveryOrder.name" dense color="accent" outlined :filled="!deliveryOrderEditToggle" :disabled="!deliveryOrderEditToggle" label="Nama Surat"/>
+                                            <v-col cols="12"  v-if="popUpBreakPoint">
+                                                <v-text-field :rules="rules.doName" v-model="deliveryOrder.name" dense color="accent" outlined :filled="!deliveryOrderEditToggle" :disabled="!deliveryOrderEditToggle" label="Nama Surat"/>
                                             </v-col>
-                                            <v-col cols="6" class="my-n5" v-else>
-                                                <v-text-field v-model="deliveryOrder.name" dense color="accent" outlined :filled="!deliveryOrderEditToggle" :disabled="!deliveryOrderEditToggle" label="Nama Surat"/>
+                                            <v-col cols="6" v-else>
+                                                <v-text-field :rules="rules.doName" v-model="deliveryOrder.name" dense color="accent" outlined :filled="!deliveryOrderEditToggle" :disabled="!deliveryOrderEditToggle" label="Nama Surat"/>
                                             </v-col>
                                             <!--  -->
                                             <v-col cols="12" class="my-n5">
@@ -592,6 +592,27 @@
                                         </v-row>
                                     </v-container>
                                 </v-card-actions>
+                                <v-card-actions v-if="!deliveryOrderEditToggle && deliveryOrder.status == 'Belum Diproses'">
+                                    <v-container>
+                                        <v-row justify="center">
+                                            <v-btn color="red darken-1 white--text" @click="confirmDelete = !confirmDelete">Hapus Surat Jalan</v-btn>
+                                        </v-row>
+                                    </v-container>
+                                </v-card-actions>
+                            </v-card>
+                        </v-dialog>
+                        <v-dialog persistent v-model="confirmDelete" width="500px">
+                            <v-card>
+                                <v-card-title>Konfirmasi</v-card-title>
+                                <v-card-text>Apakah Anda Yakin ingin Menghapus Surat Jalan ini?</v-card-text>
+                                <v-card-actions>
+                                    <v-container>
+                                        <v-row justify="center">
+                                            <v-btn class="mt-n5" color="red darken-1" text @click="confirmDelete = !confirmDelete">Tidak</v-btn>
+                                            <v-btn class="mt-n5" color="blue darken-1" text @click="deleteDeliveryOrder">Ya</v-btn>
+                                        </v-row>
+                                    </v-container>
+                                </v-card-actions>
                             </v-card>
                         </v-dialog>
                         <!--  -->
@@ -628,35 +649,35 @@
                                                     </v-row>
                                                 </v-col>
                                                 <!-- Nama Penerima -->
-                                                <v-col cols="12" class="my-n5" v-if="popUpBreakPoint">
-                                                    <v-text-field v-model="deliveryOrder.receiverName" dense color="accent" outlined label="Nama Penerima"/>
+                                                <v-col cols="12" class="mt-n5" v-if="popUpBreakPoint">
+                                                    <v-text-field :rules="rules.name" v-model="deliveryOrder.receiverName" dense color="accent" outlined label="Nama Penerima"/>
                                                 </v-col>
                                                 <v-col cols="6" class="my-n5" v-else>
-                                                    <v-text-field v-model="deliveryOrder.receiverName" dense color="accent" outlined label="Nama Penerima"/>
+                                                    <v-text-field :rules="rules.name" v-model="deliveryOrder.receiverName" dense color="accent" outlined label="Nama Penerima"/>
                                                 </v-col>
                                                 <!--  -->
                                                 <!-- Nomor Surat -->
-                                                <v-col cols="12" class="my-n5" v-if="popUpBreakPoint">
-                                                    <v-text-field v-model="deliveryOrder.referenceNumber" dense color="accent" outlined label="Nomor Surat"/>
+                                                <v-col cols="12" v-if="popUpBreakPoint">
+                                                    <v-text-field :rules="rules.number" v-model="deliveryOrder.referenceNumber" dense color="accent" outlined label="Nomor Surat"/>
                                                 </v-col>
                                                 <v-col cols="6" class="my-n5" v-else>
-                                                    <v-text-field v-model="deliveryOrder.referenceNumber" dense color="accent" outlined label="Nomor Surat"/>
+                                                    <v-text-field :rules="rules.number" v-model="deliveryOrder.referenceNumber" dense color="accent" outlined label="Nomor Surat"/>
                                                 </v-col>
                                                 <!--  -->
                                                 <!-- Alamat -->
-                                                <v-col cols="12" class="my-n5" v-if="popUpBreakPoint">
-                                                    <v-text-field v-model="deliveryOrder.address" dense color="accent" outlined label="Alamat"/>
+                                                <v-col cols="12" v-if="popUpBreakPoint">
+                                                    <v-text-field :rules="rules.address" v-model="deliveryOrder.address" dense color="accent" outlined label="Alamat"/>
                                                 </v-col>
-                                                <v-col cols="6" class="my-n5" v-else>
-                                                    <v-text-field v-model="deliveryOrder.address" dense color="accent" outlined label="Alamat"/>
+                                                <v-col cols="6"  v-else>
+                                                    <v-text-field :rules="rules.address" v-model="deliveryOrder.address" dense color="accent" outlined label="Alamat"/>
                                                 </v-col>
                                                 <!--  -->
                                                 <!-- Nama Surat -->
-                                                <v-col cols="12" class="my-n5" v-if="popUpBreakPoint">
-                                                    <v-text-field v-model="deliveryOrder.name" dense color="accent" outlined label="Nama Surat"/>
+                                                <v-col cols="12" v-if="popUpBreakPoint">
+                                                    <v-text-field :rules="rules.doName" v-model="deliveryOrder.name" dense color="accent" outlined label="Nama Surat"/>
                                                 </v-col>
-                                                <v-col cols="6" class="my-n5" v-else>
-                                                    <v-text-field v-model="deliveryOrder.name" dense color="accent" outlined label="Nama Surat"/>
+                                                <v-col cols="6" v-else>
+                                                    <v-text-field :rules="rules.doName" v-model="deliveryOrder.name" dense color="accent" outlined label="Nama Surat"/>
                                                 </v-col>
                                                 <!--  -->
                                                 <v-col cols="12" class="my-n5">
@@ -1785,6 +1806,7 @@ export default {
             showAdvanceSearchOption: false,
             showAdvancedatePickerMenuAdd: false,
             popUpconfirmFinishing: false,
+            confirmDelete: false,
             searchId:'',
             searchName:'',
             /* --------------------             -------------------- */
@@ -1799,8 +1821,22 @@ export default {
             showAdvancedatePickerMenuAddDO: false,
             popUpDetailDO: false,
             popUpProsesDO: false,
-            popUpNewDO: false
+            popUpNewDO: false,
             /* --------------------    -------------------- */
+            rules: {
+                name: [
+                    v => !!v || 'Nama Harus Diisi'
+                ],
+                number: [
+                    v => !!v || 'Nomor Surat Harus Diisi'
+                ],
+                address: [
+                    v => !!v || 'Alamat Harus Diisi'
+                ],
+                doName: [
+                    v => !!v || 'Nama Surat Harus Diisi'
+                ]
+            }
         }
     },
     methods: {
@@ -1911,45 +1947,71 @@ export default {
             this.deliveryOrder.type = +0
         },
         saveNewBarang() {
-            api.updateDeliveryOrder(this.deliveryOrder)
-                .then((response) => {
-                    this.snackbarColor = 'success'
-                    this.snackbarMessage = response
-                }) .catch(error => {
-                    this.snackbarColor = 'error'
-                    this.snackbarMessage = error
-                }) .finally(() => {
-                    this.snackbar = true
-                    this.suratJalans = []
-                    this.deliveryOrders = []
-                    api.getAllDeliveryOrder()
-                        .then(deliveryOrders => {
-                            deliveryOrders.forEach(deliveryOrder => {
-                                if(deliveryOrder.type == 1) {
-                                    this.suratJalans.push(deliveryOrder)
-                                } else {
-                                    this.deliveryOrders.push(deliveryOrder)
-                                }
-                            });
-                            this.deliveryOrder = Object.assign({},this.deliveryOrderDefault)
-                            this.selectedIndex = -1
-                            this.popUpDetailSuratJalan = false
-                            this.popUpDetailDO = false
-                            this.deliveryOrderEditToggle = false
-                        })
-                })
+            if(this.$refs.form.validate()) {
+                api.updateDeliveryOrder(this.deliveryOrder)
+                    .then((response) => {
+                        this.snackbarColor = 'success'
+                        this.snackbarMessage = response
+                    }) .catch(error => {
+                        this.snackbarColor = 'error'
+                        this.snackbarMessage = error
+                    }) .finally(() => {
+                        this.snackbar = true
+                        this.suratJalans = []
+                        this.deliveryOrders = []
+                        api.getAllDeliveryOrder()
+                            .then(deliveryOrders => {
+                                deliveryOrders.forEach(deliveryOrder => {
+                                    if(deliveryOrder.type == 1) {
+                                        this.suratJalans.push(deliveryOrder)
+                                    } else {
+                                        this.deliveryOrders.push(deliveryOrder)
+                                    }
+                                });
+                                this.deliveryOrder = Object.assign({},this.deliveryOrderDefault)
+                                this.selectedIndex = -1
+                                this.popUpDetailSuratJalan = false
+                                this.popUpDetailDO = false
+                                this.deliveryOrderEditToggle = false
+                            })
+                    })
+            }
         },
         // Save New Surat Jalan
         saveNewSuratJalan() {
-            api.addDeliveryOrder(this.deliveryOrder)
-                .then((response) => {
-                    this.snackbarColor = 'success'
-                    this.snackbarMessage = response
-                }) .catch(error => {
+            if(this.$refs.form.validate()) {
+                var idx = _.findIndex(this.suratJalans, {referenceNumber: this.deliveryOrder.referenceNumber})
+                if(idx == -1) {
+                    api.addDeliveryOrder(this.deliveryOrder)
+                        .then((response) => {
+                            this.snackbarColor = 'success'
+                            this.snackbarMessage = response
+                        }) .catch(error => {
+                            this.snackbarColor = 'error'
+                            this.snackbarMessage = error
+                        }) .finally(() => {
+                            this.snackbar = true
+                            this.suratJalans = []
+                            this.deliveryOrders = []
+                            api.getAllDeliveryOrder()
+                                .then(deliveryOrders => {
+                                    deliveryOrders.forEach(deliveryOrder => {
+                                        if(deliveryOrder.type == 1) {
+                                            this.suratJalans.push(deliveryOrder)
+                                        } else {
+                                            this.deliveryOrders.push(deliveryOrder)
+                                        }
+                                    });
+                                    this.deliveryOrder = Object.assign({},this.deliveryOrderDefault)
+                                    this.deliveryOrder.items = []
+                                    this.selectedIndex = -1
+                                    this.popUpNewSuratJalan = false
+                                })
+                        })
+                } else {
                     this.snackbarColor = 'error'
-                    this.snackbarMessage = error
-                }) .finally(() => {
                     this.snackbar = true
+                    this.snackbarMessage = 'Nomor Surat Sudah Terdaftar'
                     this.suratJalans = []
                     this.deliveryOrders = []
                     api.getAllDeliveryOrder()
@@ -1962,10 +2024,12 @@ export default {
                                 }
                             });
                             this.deliveryOrder = Object.assign({},this.deliveryOrderDefault)
+                            this.deliveryOrder.items = []
                             this.selectedIndex = -1
                             this.popUpNewSuratJalan = false
                         })
-                })
+                }
+            }
         },
         saveNewDO() {
             api.addDeliveryOrder(this.deliveryOrder)
@@ -2097,7 +2161,9 @@ export default {
             // this.deliveryOrder.items.push(this.deliveryOrderNewItem)
             var idx = _.findIndex(this.deliveryOrder.items, {productId: this.deliveryOrderNewItem.productId})
             if(idx == -1) {
-                this.deliveryOrder.items.push(this.deliveryOrderNewItem)
+                if(this.deliveryOrderNewItem.amount == null) {
+                    this.deliveryOrderNewItem.amount = 0
+                } this.deliveryOrder.items.push(this.deliveryOrderNewItem)
             } else {
                 var temp = this.deliveryOrder.items[idx]
                 temp.amount = +temp.amount + +this.deliveryOrderNewItem.amount
@@ -2286,6 +2352,35 @@ export default {
                 }
             }
         },
+        deleteDeliveryOrder() {
+            api.deleteDeliveryOrder(this.deliveryOrder.id)
+                .then((response) => {
+                    this.snackbarColor = 'success'
+                    this.snackbarMessage = response
+                }) .catch(error => {
+                    this.snackbarColor = 'error'
+                    this.snackbarMessage = error
+                }) .finally(() => {
+                    this.snackbar = true
+                    this.suratJalans = []
+                    this.deliveryOrders = []
+                    api.getAllDeliveryOrder()
+                        .then(deliveryOrders => {
+                            deliveryOrders.forEach(deliveryOrder => {
+                                if(deliveryOrder.type == 1) {
+                                    this.suratJalans.push(deliveryOrder)
+                                } else {
+                                    this.deliveryOrders.push(deliveryOrder)
+                                }
+                            });
+                            this.deliveryOrder = Object.assign({},this.deliveryOrderDefault)
+                            this.deliveryOrder.items = []
+                            this.selectedIndex = -1
+                            this.popUpDetailSuratJalan = false
+                            this.confirmDelete = false
+                        })
+                })
+        },
         checkStock(item) {
             if(+item.stock < +item.amount) return true
         },
@@ -2294,7 +2389,11 @@ export default {
                 if(+el.stock < +el.amount) {
                     return true
                 }
-            } return false
+            }
+            if(item.items.length == 0) {
+                return true
+            }
+            return false
         },
         /* --------------------             -------------------- */
         /* -------------------- DO -------------------- */
@@ -2341,6 +2440,12 @@ export default {
             }
         }
     },
+
+    watch: {
+        close() {
+            this.$refs.form.resetValidation()
+        }
+    }
 }
 </script>
 
