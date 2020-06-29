@@ -952,6 +952,12 @@ export default {
     },
 
     watch: {
+        close(){
+            this.$refs.form.resetValidation()
+        },
+        popUpNew(){
+            this.$refs.form.resetValidation()
+        },
         popupDetails() {
             if(!this.popupDetails) {
                 this.karyawan = Object.assign({},this.karyawanDefault)
