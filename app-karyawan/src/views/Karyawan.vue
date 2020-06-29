@@ -810,7 +810,6 @@ export default {
             return val ? moment(val).format('DD/MM/YYYY') : ''
         },
         close() {
-            this.$refs.form.resetValidation()
             this.popUpConfirmEditPassword = false
             this.popupDetails = false
             this.popUpConfirmSave = false
