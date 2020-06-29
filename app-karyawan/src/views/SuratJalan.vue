@@ -1042,7 +1042,7 @@
                                                 <v-card-subtitle>{{ item.referenceNumber }}</v-card-subtitle>
                                             </div>
                                             <div>
-                                                <v-btn @click.stop="prosesDO(item)" :disabled="item.status != 'Belum Diproses'" dense color="white--text green" small :dark="item.status == 'Belum Diproses'" fab class="my-5 mx-1">
+                                                <v-btn @click.stop="prosesDO(item)" :disabled="item.status != 'Belum Diproses' || item.items.length == 0" dense color="white--text green" small :dark="item.status == 'Belum Diproses'" fab class="my-5 mx-1">
                                                     <v-icon>mdi-truck-check</v-icon>
                                                 </v-btn>
                                             </div>
@@ -1106,7 +1106,7 @@
                                     <span>{{ formatDateList(item.date) }}</span>
                                 </template>
                                 <template v-slot:item.actions="{ item }">
-                                    <v-btn dense color="white--text green" :disabled="item.status != 'Belum Diproses'" @click.stop="prosesDO(item)">Bongkar</v-btn>
+                                    <v-btn dense color="white--text green" :disabled="item.status != 'Belum Diproses' || item.items.length == 0" @click.stop="prosesDO(item)">Bongkar</v-btn>
                                 </template>
                             </v-data-table>
                             <!-- Pop Up Proses Surat Jalan -->
@@ -1192,35 +1192,35 @@
                                                 </v-row>
                                             </v-col>
                                             <!-- Nama Penerima -->
-                                            <v-col cols="12" class="my-n5" v-if="popUpBreakPoint">
-                                                <v-text-field v-model="deliveryOrder.receiverName" dense color="accent" outlined :filled="!deliveryOrderEditToggle" :disabled="!deliveryOrderEditToggle" label="Nama Penerima"/>
+                                            <v-col cols="12" class="mt-n5" v-if="popUpBreakPoint">
+                                                <v-text-field :rules="rules.name" v-model="deliveryOrder.receiverName" dense color="accent" outlined :filled="!deliveryOrderEditToggle" :disabled="!deliveryOrderEditToggle" label="Nama Penerima"/>
                                             </v-col>
                                             <v-col cols="6" class="my-n5" v-else>
-                                                <v-text-field v-model="deliveryOrder.receiverName" dense color="accent" outlined :filled="!deliveryOrderEditToggle" :disabled="!deliveryOrderEditToggle" label="Nama Penerima"/>
+                                                <v-text-field :rules="rules.name" v-model="deliveryOrder.receiverName" dense color="accent" outlined :filled="!deliveryOrderEditToggle" :disabled="!deliveryOrderEditToggle" label="Nama Penerima"/>
                                             </v-col>
                                             <!--  -->
                                             <!-- Nomor Surat -->
-                                            <v-col cols="12" class="my-n5" v-if="popUpBreakPoint">
-                                                <v-text-field v-model="deliveryOrder.referenceNumber" dense color="accent" outlined :filled="!deliveryOrderEditToggle" :disabled="!deliveryOrderEditToggle" label="Nomor Surat"/>
+                                            <v-col cols="12" v-if="popUpBreakPoint">
+                                                <v-text-field :rules="rules.number" v-model="deliveryOrder.referenceNumber" dense color="accent" outlined :filled="!deliveryOrderEditToggle" :disabled="!deliveryOrderEditToggle" label="Nomor Surat"/>
                                             </v-col>
                                             <v-col cols="6" class="my-n5" v-else>
-                                                <v-text-field v-model="deliveryOrder.referenceNumber" dense color="accent" outlined :filled="!deliveryOrderEditToggle" :disabled="!deliveryOrderEditToggle" label="Nomor Surat"/>
+                                                <v-text-field :rules="rules.number" v-model="deliveryOrder.referenceNumber" dense color="accent" outlined :filled="!deliveryOrderEditToggle" :disabled="!deliveryOrderEditToggle" label="Nomor Surat"/>
                                             </v-col>
                                             <!--  -->
                                             <!-- Alamat -->
-                                            <v-col cols="12" class="my-n5" v-if="popUpBreakPoint">
-                                                <v-text-field v-model="deliveryOrder.address" dense color="accent" outlined :filled="!deliveryOrderEditToggle" :disabled="!deliveryOrderEditToggle" label="Alamat"/>
+                                            <v-col cols="12" v-if="popUpBreakPoint">
+                                                <v-text-field :rules="rules.address" v-model="deliveryOrder.address" dense color="accent" outlined :filled="!deliveryOrderEditToggle" :disabled="!deliveryOrderEditToggle" label="Alamat"/>
                                             </v-col>
-                                            <v-col cols="6" class="my-n5" v-else>
-                                                <v-text-field v-model="deliveryOrder.address" dense color="accent" outlined :filled="!deliveryOrderEditToggle" :disabled="!deliveryOrderEditToggle" label="Alamat"/>
+                                            <v-col cols="6" v-else>
+                                                <v-text-field :rules="rules.address" v-model="deliveryOrder.address" dense color="accent" outlined :filled="!deliveryOrderEditToggle" :disabled="!deliveryOrderEditToggle" label="Alamat"/>
                                             </v-col>
                                             <!--  -->
                                             <!-- Nama Surat -->
-                                            <v-col cols="12" class="my-n5" v-if="popUpBreakPoint">
-                                                <v-text-field v-model="deliveryOrder.name" dense color="accent" outlined :filled="!deliveryOrderEditToggle" :disabled="!deliveryOrderEditToggle" label="Nama Surat"/>
+                                            <v-col cols="12" v-if="popUpBreakPoint">
+                                                <v-text-field :rules="rules.doName" v-model="deliveryOrder.name" dense color="accent" outlined :filled="!deliveryOrderEditToggle" :disabled="!deliveryOrderEditToggle" label="Nama Surat"/>
                                             </v-col>
-                                            <v-col cols="6" class="my-n5" v-else>
-                                                <v-text-field v-model="deliveryOrder.name" dense color="accent" outlined :filled="!deliveryOrderEditToggle" :disabled="!deliveryOrderEditToggle" label="Nama Surat"/>
+                                            <v-col cols="6" v-else>
+                                                <v-text-field :rules="rules.doName" v-model="deliveryOrder.name" dense color="accent" outlined :filled="!deliveryOrderEditToggle" :disabled="!deliveryOrderEditToggle" label="Nama Surat"/>
                                             </v-col>
                                             <!--  -->
                                             <v-col cols="12" class="my-n5">
@@ -1420,6 +1420,27 @@
                                         </v-row>
                                     </v-container>
                                 </v-card-actions>
+                                <v-card-actions v-if="!deliveryOrderEditToggle && deliveryOrder.status == 'Belum Diproses'">
+                                    <v-container>
+                                        <v-row justify="center">
+                                            <v-btn color="red darken-1 white--text" @click="confirmDeleteDO = !confirmDeleteDO">Hapus Delivery Order</v-btn>
+                                        </v-row>
+                                    </v-container>
+                                </v-card-actions>
+                            </v-card>
+                        </v-dialog>
+                        <v-dialog persistent v-model="confirmDeleteDO" width="500px">
+                            <v-card>
+                                <v-card-title>Konfirmasi</v-card-title>
+                                <v-card-text>Apakah Anda Yakin ingin Menghapus Delivery Order ini?</v-card-text>
+                                <v-card-actions>
+                                    <v-container>
+                                        <v-row justify="center">
+                                            <v-btn class="mt-n5" color="red darken-1" text @click="confirmDeleteDO = !confirmDeleteDO">Tidak</v-btn>
+                                            <v-btn class="mt-n5" color="blue darken-1" text @click="deleteDeliveryOrder">Ya</v-btn>
+                                        </v-row>
+                                    </v-container>
+                                </v-card-actions>
                             </v-card>
                         </v-dialog>
                         <!--  -->
@@ -1456,35 +1477,35 @@
                                                     </v-row>
                                                 </v-col>
                                                 <!-- Nama Penerima -->
-                                                <v-col cols="12" class="my-n5" v-if="popUpBreakPoint">
-                                                    <v-text-field v-model="deliveryOrder.receiverName" dense color="accent" outlined label="Nama Penerima"/>
+                                                <v-col cols="12" class="mt-n5" v-if="popUpBreakPoint">
+                                                    <v-text-field :rules="rules.name" v-model="deliveryOrder.receiverName" dense color="accent" outlined label="Nama Penerima"/>
                                                 </v-col>
                                                 <v-col cols="6" class="my-n5" v-else>
-                                                    <v-text-field v-model="deliveryOrder.receiverName" dense color="accent" outlined label="Nama Penerima"/>
+                                                    <v-text-field :rules="rules.name" v-model="deliveryOrder.receiverName" dense color="accent" outlined label="Nama Penerima"/>
                                                 </v-col>
                                                 <!--  -->
                                                 <!-- Nomor Surat -->
-                                                <v-col cols="12" class="my-n5" v-if="popUpBreakPoint">
-                                                    <v-text-field v-model="deliveryOrder.referenceNumber" dense color="accent" outlined label="Nomor Surat"/>
+                                                <v-col cols="12" v-if="popUpBreakPoint">
+                                                    <v-text-field :rules="rules.number" v-model="deliveryOrder.referenceNumber" dense color="accent" outlined label="Nomor Surat"/>
                                                 </v-col>
                                                 <v-col cols="6" class="my-n5" v-else>
-                                                    <v-text-field v-model="deliveryOrder.referenceNumber" dense color="accent" outlined label="Nomor Surat"/>
+                                                    <v-text-field :rules="rules.number" v-model="deliveryOrder.referenceNumber" dense color="accent" outlined label="Nomor Surat"/>
                                                 </v-col>
                                                 <!--  -->
                                                 <!-- Alamat -->
-                                                <v-col cols="12" class="my-n5" v-if="popUpBreakPoint">
-                                                    <v-text-field v-model="deliveryOrder.address" dense color="accent" outlined label="Alamat"/>
+                                                <v-col cols="12" v-if="popUpBreakPoint">
+                                                    <v-text-field :rules="rules.address" v-model="deliveryOrder.address" dense color="accent" outlined label="Alamat"/>
                                                 </v-col>
-                                                <v-col cols="6" class="my-n5" v-else>
-                                                    <v-text-field v-model="deliveryOrder.address" dense color="accent" outlined label="Alamat"/>
+                                                <v-col cols="6" v-else>
+                                                    <v-text-field :rules="rules.address" v-model="deliveryOrder.address" dense color="accent" outlined label="Alamat"/>
                                                 </v-col>
                                                 <!--  -->
                                                 <!-- Nama Surat -->
-                                                <v-col cols="12" class="my-n5" v-if="popUpBreakPoint">
-                                                    <v-text-field v-model="deliveryOrder.name" dense color="accent" outlined label="Nama Surat"/>
+                                                <v-col cols="12" v-if="popUpBreakPoint">
+                                                    <v-text-field :rules="rules.doName" dense color="accent" outlined label="Nama Surat"/>
                                                 </v-col>
-                                                <v-col cols="6" class="my-n5" v-else>
-                                                    <v-text-field v-model="deliveryOrder.name" dense color="accent" outlined label="Nama Surat"/>
+                                                <v-col cols="6" v-else>
+                                                    <v-text-field :rules="rules.doName" v-model="deliveryOrder.name" dense color="accent" outlined label="Nama Surat"/>
                                                 </v-col>
                                                 <!--  -->
                                                 <v-col cols="12" class="my-n5">
@@ -1807,6 +1828,7 @@ export default {
             showAdvancedatePickerMenuAdd: false,
             popUpconfirmFinishing: false,
             confirmDelete: false,
+            confirmDeleteDO: false,
             searchId:'',
             searchName:'',
             /* --------------------             -------------------- */
@@ -2032,33 +2054,35 @@ export default {
             }
         },
         saveNewDO() {
-            api.addDeliveryOrder(this.deliveryOrder)
-                .then((response) => {
-                    this.snackbarColor = 'success'
-                    this.snackbarMessage = response
-                }) .catch(error => {
-                    this.snackbarColor = 'error'
-                    this.snackbarMessage = error
-                }) .finally(() => {
-                    this.snackbar = true
-                    this.suratJalans = []
-                    this.deliveryOrders = []
-                    api.getAllDeliveryOrder()
-                        .then(deliveryOrders => {
-                            deliveryOrders.forEach(deliveryOrder => {
-                                if(deliveryOrder.type == 1) {
-                                    this.suratJalans.push(deliveryOrder)
-                                } else {
-                                    this.deliveryOrders.push(deliveryOrder)
-                                }
-                            });
-                            this.deliveryOrder = Object.assign({},this.deliveryOrderDefault)
-                            // There's a bug in delivery order section, haven't found the cause why the items array didn't reset when create new DO
-                            this.deliveryOrder.items = []
-                            this.selectedIndex = -1
-                            this.popUpNewDO = false
-                        })
-                })
+            if(this.$refs.form.validate()) {
+                api.addDeliveryOrder(this.deliveryOrder)
+                    .then((response) => {
+                        this.snackbarColor = 'success'
+                        this.snackbarMessage = response
+                    }) .catch(error => {
+                        this.snackbarColor = 'error'
+                        this.snackbarMessage = error
+                    }) .finally(() => {
+                        this.snackbar = true
+                        this.suratJalans = []
+                        this.deliveryOrders = []
+                        api.getAllDeliveryOrder()
+                            .then(deliveryOrders => {
+                                deliveryOrders.forEach(deliveryOrder => {
+                                    if(deliveryOrder.type == 1) {
+                                        this.suratJalans.push(deliveryOrder)
+                                    } else {
+                                        this.deliveryOrders.push(deliveryOrder)
+                                    }
+                                });
+                                this.deliveryOrder = Object.assign({},this.deliveryOrderDefault)
+                                // There's a bug in delivery order section, haven't found the cause why the items array didn't reset when create new DO
+                                this.deliveryOrder.items = []
+                                this.selectedIndex = -1
+                                this.popUpNewDO = false
+                            })
+                    })
+            }
         },
         // Detail Surat Jalan
         detailSuratJalan(item) {
@@ -2378,6 +2402,8 @@ export default {
                             this.selectedIndex = -1
                             this.popUpDetailSuratJalan = false
                             this.confirmDelete = false
+                            this.confirmDeleteDO = false
+                            this.popUpDetailDO = false
                         })
                 })
         },
