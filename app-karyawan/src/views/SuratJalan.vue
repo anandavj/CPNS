@@ -174,6 +174,7 @@
                                 @click:row="detailSuratJalan"
                                 class="font-regular font-weight-light"
                                 style="cursor:pointer; background-color:#F5F5F5"
+                                no-results-text="Tidak Ada Surat Jalan"
                             >
                                 <template v-slot:item="{ item }"> 
                                     <v-card @click.stop="detailSuratJalan(item)" class="mt-1 mb-3 mx-2 pa-2" color="white" outlined>
@@ -245,6 +246,7 @@
                                 @click:row="detailSuratJalan"
                                 class="font-regular font-weight-light"
                                 style="cursor:pointer"
+                                no-results-text="Tidak Ada Surat Jalan"
                             >
                                 <template v-slot:item.date="{ item }">
                                     <span>{{ formatDateList(item.date) }}</span>
@@ -588,7 +590,7 @@
                                     <v-container>
                                         <v-row justify="center">
                                             <v-btn color="red darken-1" text @click="close">Cancel</v-btn>
-                                            <v-btn color="blue white--text" @click="saveNewBarang">Save</v-btn>
+                                            <v-btn :disabled="deliveryOrder.items.length == 0" color="blue white--text" @click="saveNewBarang">Save</v-btn>
                                         </v-row>
                                     </v-container>
                                 </v-card-actions>
@@ -867,7 +869,7 @@
                                         <v-container>
                                             <v-row justify="center">
                                                 <v-btn class="mt-n12" color="red darken-1" text @click="close">Batal</v-btn>
-                                                <v-btn class="mt-n12" color="blue white--text" @click="saveNewSuratJalan">Buat Surat Jalan</v-btn>
+                                                <v-btn :disabled="deliveryOrder.items.length == 0" class="mt-n12" color="blue white--text" @click="saveNewSuratJalan">Buat Surat Jalan</v-btn>
                                             </v-row>
                                         </v-container>
                                     </v-card-actions>
@@ -1033,6 +1035,7 @@
                                 @click:row="detailDO"
                                 class="font-regular font-weight-light"
                                 style="cursor:pointer; background-color:#F5F5F5"
+                                no-results-text="Tidak Ada Delivery Order"
                             >
                                 <template v-slot:item="{ item }"> 
                                     <v-card @click.stop="detailDO(item)" class="mt-1 mb-3 mx-2 pa-2" color="white" outlined>
@@ -1101,12 +1104,13 @@
                                 @click:row="detailDO"
                                 class="font-regular font-weight-light"
                                 style="cursor:pointer"
+                                no-results-text="Tidak Ada Delivery Order"
                             >
                                 <template v-slot:item.date="{ item }">
                                     <span>{{ formatDateList(item.date) }}</span>
                                 </template>
                                 <template v-slot:item.actions="{ item }">
-                                    <v-btn dense color="white--text green" :disabled="item.status != 'Belum Diproses' || item.items.length == 0" @click.stop="prosesDO(item)">Bongkar</v-btn>
+                                    <v-btn dense color="white--text green"  v-if="item.status == 'Belum Diproses'" :disabled="item.items.length == 0" @click.stop="prosesDO(item)">Bongkar</v-btn>
                                 </template>
                             </v-data-table>
                             <!-- Pop Up Proses Surat Jalan -->
@@ -1416,7 +1420,7 @@
                                     <v-container>
                                         <v-row justify="center">
                                             <v-btn color="red darken-1" text @click="close">Cancel</v-btn>
-                                            <v-btn color="blue white--text" @click="saveNewBarang">Save</v-btn>
+                                            <v-btn :disabled="deliveryOrder.items.length == 0" color="blue white--text" @click="saveNewBarang">Save</v-btn>
                                         </v-row>
                                     </v-container>
                                 </v-card-actions>
@@ -1695,7 +1699,7 @@
                                         <v-container>
                                             <v-row justify="center">
                                                 <v-btn class="mt-n12" color="red darken-1" text @click="close">Batal</v-btn>
-                                                <v-btn class="mt-n12" color="blue white--text" @click="saveNewDO">Buat DO</v-btn>
+                                                <v-btn :disabled="deliveryOrder.items.length == 0" class="mt-n12" color="blue white--text" @click="saveNewDO">Buat DO</v-btn>
                                             </v-row>
                                         </v-container>
                                     </v-card-actions>
@@ -2055,33 +2059,56 @@ export default {
         },
         saveNewDO() {
             if(this.$refs.form.validate()) {
-                api.addDeliveryOrder(this.deliveryOrder)
-                    .then((response) => {
-                        this.snackbarColor = 'success'
-                        this.snackbarMessage = response
-                    }) .catch(error => {
-                        this.snackbarColor = 'error'
-                        this.snackbarMessage = error
-                    }) .finally(() => {
-                        this.snackbar = true
-                        this.suratJalans = []
-                        this.deliveryOrders = []
-                        api.getAllDeliveryOrder()
-                            .then(deliveryOrders => {
-                                deliveryOrders.forEach(deliveryOrder => {
-                                    if(deliveryOrder.type == 1) {
-                                        this.suratJalans.push(deliveryOrder)
-                                    } else {
-                                        this.deliveryOrders.push(deliveryOrder)
-                                    }
-                                });
-                                this.deliveryOrder = Object.assign({},this.deliveryOrderDefault)
-                                // There's a bug in delivery order section, haven't found the cause why the items array didn't reset when create new DO
-                                this.deliveryOrder.items = []
-                                this.selectedIndex = -1
-                                this.popUpNewDO = false
-                            })
-                    })
+                var idx =  _.findIndex(this.deliveryOrders, {referenceNumber: this.deliveryOrder.referenceNumber})
+                if(idx == -1) {
+                    api.addDeliveryOrder(this.deliveryOrder)
+                        .then((response) => {
+                            this.snackbarColor = 'success'
+                            this.snackbarMessage = response
+                        }) .catch(error => {
+                            this.snackbarColor = 'error'
+                            this.snackbarMessage = error
+                        }) .finally(() => {
+                            this.snackbar = true
+                            this.suratJalans = []
+                            this.deliveryOrders = []
+                            api.getAllDeliveryOrder()
+                                .then(deliveryOrders => {
+                                    deliveryOrders.forEach(deliveryOrder => {
+                                        if(deliveryOrder.type == 1) {
+                                            this.suratJalans.push(deliveryOrder)
+                                        } else {
+                                            this.deliveryOrders.push(deliveryOrder)
+                                        }
+                                    });
+                                    this.deliveryOrder = Object.assign({},this.deliveryOrderDefault)
+                                    // There's a bug in delivery order section, haven't found the cause why the items array didn't reset when create new DO
+                                    this.deliveryOrder.items = []
+                                    this.selectedIndex = -1
+                                    this.popUpNewDO = false
+                                })
+                        })
+                } else {
+                    this.snackbarColor = 'error'
+                    this.snackbar = true
+                    this.snackbarMessage = 'Nomor Surat Sudah Terdaftar'
+                    this.suratJalans = []
+                    this.deliveryOrders = []
+                    api.getAllDeliveryOrder()
+                        .then(deliveryOrders => {
+                            deliveryOrders.forEach(deliveryOrder => {
+                                if(deliveryOrder.type == 1) {
+                                    this.suratJalans.push(deliveryOrder)
+                                } else {
+                                    this.deliveryOrders.push(deliveryOrder)
+                                }
+                            });
+                            this.deliveryOrder = Object.assign({},this.deliveryOrderDefault)
+                            this.deliveryOrder.items = []
+                            this.selectedIndex = -1
+                            this.popUpNewSuratJalan = false
+                        })
+                }
             }
         },
         // Detail Surat Jalan
@@ -2469,6 +2496,18 @@ export default {
 
     watch: {
         close() {
+            this.$refs.form.resetValidation()
+        },
+        popUpNewSuratJalan() {
+            this.$refs.form.resetValidation()
+        },
+        popUpDetailSuratJalan() {
+            this.$refs.form.resetValidation()
+        },
+        popUpNewDO() {
+            this.$refs.form.resetValidation()
+        },
+        popUpDetailDO() {
             this.$refs.form.resetValidation()
         }
     }

@@ -22,6 +22,7 @@ class Delivery_order_model extends CI_Model{
     public function get_all_delivery_order(){
         $this->db->select("id,  name, reference_number as referenceNumber, receiver_name as receiverName, address, description, date, status, type");
         $this->db->from($this::TABLE_NAME);
+        $this->db->order_by('date');
         return $this->db->get()->result_array();
 
     }
