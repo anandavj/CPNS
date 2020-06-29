@@ -861,19 +861,25 @@ export default {
         },
         insertStockOpname() {
             if(this.$refs.form.validate()){
-                api.addStockOpname(this.stockOpname)
-                .then((response) => {
-                    this.snackbarColor = 'success'
-                    this.snackbarMessage = response
-                }) .catch(error => {
+                if(_.findIndex(this.stockOpnames, {opnameNumber: this.stockOpname.opnameNumber}) == -1){
+                    api.addStockOpname(this.stockOpname)
+                    .then((response) => {
+                        this.snackbarColor = 'success'
+                        this.snackbarMessage = response
+                    }) .catch(error => {
+                        this.snackbarColor = 'error'
+                        this.snackbarMessage = error
+                    }) .finally(() => {
+                        this.snackbar = true
+                        this.get()
+                        this.stockOpname = Object.assign({},this.stockOpnameDefault)
+                        this.close()
+                    })
+                }else{
                     this.snackbarColor = 'error'
-                    this.snackbarMessage = error
-                }) .finally(() => {
+                    this.snackbarMessage = 'Nomor Surat Sudah Terdaftar'
                     this.snackbar = true
-                    this.get()
-                    this.stockOpname = Object.assign({},this.stockOpnameDefault)
-                    this.close()
-                })
+                }
             }
         },
         details(item) {
@@ -1000,6 +1006,11 @@ export default {
                 {text:'Status', value:'status'},
                 {value:'actions'}
             ]
+        }
+    },
+    watch: {
+        close() {
+            this.$refs.form.resetValidation()
         }
     }
 }
