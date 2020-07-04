@@ -320,7 +320,7 @@
                                     <v-card-text>
                                         <v-row>
                                             <v-col cols="12" class="my-n8">
-                                                <v-row justify="space-between" v-if="deliveryOrder.status == 'Belum Diproses'">
+                                                <v-row justify="space-between" v-if="deliveryOrder.status == 'Belum Diproses' && create_surat_jalan">
                                                 <!-- <v-row justify="end" v-if="deliveryOrder.status == 'Belum Diproses'"> -->
                                                     <v-col>
                                                         <v-switch :disabled="deliveryOrderEditToggle" value v-model="deliveryOrderEditToggle" class="pa-0 ma-0" label="Edit Surat Jalan"></v-switch>
@@ -594,7 +594,7 @@
                                         </v-row>
                                     </v-container>
                                 </v-card-actions>
-                                <v-card-actions v-if="!deliveryOrderEditToggle && deliveryOrder.status == 'Belum Diproses'">
+                                <v-card-actions v-if="!deliveryOrderEditToggle && deliveryOrder.status == 'Belum Diproses'  && create_surat_jalan">
                                     <v-container>
                                         <v-row justify="center">
                                             <v-btn color="red darken-1 white--text" @click="confirmDelete = !confirmDelete">Hapus Surat Jalan</v-btn>
@@ -1163,7 +1163,7 @@
                                     <v-card-text>
                                         <v-row>
                                             <v-col cols="12" class="my-n8">
-                                                <v-row justify="space-between" v-if="deliveryOrder.status == 'Belum Diproses'">
+                                                <v-row justify="space-between" v-if="deliveryOrder.status == 'Belum Diproses' && create_surat_jalan">
                                                 <!-- <v-row justify="end" v-if="deliveryOrder.status == 'Belum Diproses'"> -->
                                                     <v-col>
                                                         <v-switch :disabled="deliveryOrderEditToggle" value v-model="deliveryOrderEditToggle" class="pa-0 ma-0" label="Edit DO"></v-switch>
@@ -1424,7 +1424,7 @@
                                         </v-row>
                                     </v-container>
                                 </v-card-actions>
-                                <v-card-actions v-if="!deliveryOrderEditToggle && deliveryOrder.status == 'Belum Diproses'">
+                                <v-card-actions v-if="!deliveryOrderEditToggle && deliveryOrder.status == 'Belum Diproses' && create_surat_jalan">
                                     <v-container>
                                         <v-row justify="center">
                                             <v-btn color="red darken-1 white--text" @click="confirmDeleteDO = !confirmDeleteDO">Hapus Delivery Order</v-btn>
