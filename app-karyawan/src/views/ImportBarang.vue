@@ -13,7 +13,7 @@
             fileValidateTypeLabelExpectedTypes="Hanya menerima format XLS dan XLSX"
         />
         <v-card v-if="myFiles.length!=0" outlined color="transparent" class='text-center'>
-            <v-btn @click="process" width="7%" height="50px"></v-btn>
+            <v-btn :disabled="loading" @click="process" width="7%" height="50px" class="green white--text">Upload</v-btn>
         </v-card>
         <v-snackbar
             v-model="snackbar"
@@ -48,6 +48,7 @@ export default {
     data() {
         return {
             myFiles: [],
+            loading: false,
             snackbar: false,
             snackbarMessage: '',
             snackbarColor: '',
@@ -82,6 +83,7 @@ export default {
         },
 
         process() {
+            this.loading = true
             api.importExcel(this.myFiles[0])
                 .then((response) => {
                     this.snackbarColor = 'success'
@@ -92,6 +94,7 @@ export default {
                 }) .finally(() => {
                     this.snackbar = true
                     this.myFiles = []
+                    this.loading = false
                 })
         }
     }
