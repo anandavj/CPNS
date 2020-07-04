@@ -64,9 +64,8 @@ class Product_model extends CI_Model{
     }
 
     public function is_name_and_specification_exists($name, $specification){
-        $specification = str_replace("'
-        ", "''", $specification);
-        if($this->db->get_where($this::TABLE_NAME, `name='{$name}' AND specification=$specification`)->num_rows() > 0) return true;
+
+        if($this->db->get_where($this::TABLE_NAME, array('name' => $name, 'specification' => $specification))->num_rows() > 0) return true;
         else return false;
     }
 
