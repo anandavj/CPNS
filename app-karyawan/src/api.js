@@ -291,6 +291,27 @@ const api = {
                 })
         } )
     },
+    updateCategory(category) {
+        return new Promise( (resolve, reject) => {
+            axios.put(categoryTable, category)
+                .then(() => {
+                    resolve(updateSuccessMessage)
+                }) .catch(error => {
+                    if(error.response.status == 500) reject(serverErrorMessage)
+                })
+        } )
+    },
+    deleteCategory(category) {
+        return new Promise( (resolve, reject) => {
+            axios.delete(categoryTable, {params: {id: category.id}})
+                .then(() => {
+                    resolve(deleteSuccessMessage);
+                })
+                .catch(error => {
+                    if(error.response.status == 500) reject(serverErrorMessage)
+                })
+        } )
+    },
 
     // UNIT
     getAllUnit() {
@@ -309,6 +330,27 @@ const api = {
                 .then(() => {
                     resolve(insertSuccessMessage)
                 }) .catch(error => {
+                    if(error.response.status == 500) reject(serverErrorMessage)
+                })
+        } )
+    },
+    updateUnit(unit) {
+        return new Promise( (resolve, reject) => {
+            axios.put(unitTable, unit)
+                .then(() => {
+                    resolve(updateSuccessMessage)
+                }) .catch(error => {
+                    if(error.response.status == 500) reject(serverErrorMessage)
+                })
+        } )
+    },
+    deleteUnit(unit) {
+        return new Promise( (resolve, reject) => {
+            axios.delete(unitTable, {params: {id: unit.id}})
+                .then(() => {
+                    resolve(deleteSuccessMessage);
+                })
+                .catch(error => {
                     if(error.response.status == 500) reject(serverErrorMessage)
                 })
         } )
